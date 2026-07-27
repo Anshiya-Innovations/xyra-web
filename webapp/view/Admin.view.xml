@@ -1,0 +1,195 @@
+<mvc:View
+    controllerName="xyraweb.controller.AdminDashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f">
+
+<Page
+    id="adminPage"
+    title="XYRA- Admin Dashboard">
+
+    <!-- Header Buttons -->
+    <headerContent>
+
+        <Button id="_IDGenButton2"
+            icon="sap-icon://bell"
+            tooltip="Notifications"
+            type="Transparent"/>
+
+        <Button id="_IDGenButton3"
+            icon="sap-icon://employee"
+            text="Admin"
+            type="Transparent"/>
+
+        <Button id="_IDGenButton4"
+            icon="sap-icon://log"
+            text="Logout"
+            type="Reject"
+            press="onLogout"/>
+
+    </headerContent>
+
+    <content>
+
+        <VBox id="_IDGenVBox2"
+            width="100%"
+            class="sapUiMediumMargin">
+
+            <Title id="_IDGenTitle1"
+                text="Dashboard"
+                level="H2"
+                class="sapUiSmallMarginBottom"/>
+
+            <f:GridContainer id="_IDGenGridContainer"
+                snapToRow="true"
+                allowDenseFill="true">
+
+                <!-- User Management -->
+                <GenericTile id="_IDGenGenericTile"
+                    header="User Management"
+                    press="onUserManagement">
+                    <TileContent id="_IDGenTileContent">
+                        <ImageContent id="_IDGenImageContent" src="sap-icon://group"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Role Management -->
+                <GenericTile id="_IDGenGenericTile1"
+                    header="Role Management"
+                    press="onRoleManagement">
+                    <TileContent id="_IDGenTileContent1">
+                        <ImageContent id="_IDGenImageContent1" src="sap-icon://role"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Control Management -->
+                <GenericTile id="_IDGenGenericTile2"
+                    header="Control Management"
+                    press="onControlManagement">
+                    <TileContent id="_IDGenTileContent2">
+                        <ImageContent id="_IDGenImageContent2" src="sap-icon://shield"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Control Monitoring -->
+                <GenericTile id="_IDGenGenericTile3"
+                    header="Control Monitoring"
+                    press="onControlMonitoring">
+                    <TileContent id="_IDGenTileContent3">
+                        <ImageContent id="_IDGenImageContent3" src="sap-icon://activity-items"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- AI Insights -->
+                <GenericTile id="_IDGenGenericTile4"
+                    header="AI Insights"
+                    press="onAIInsights">
+                    <TileContent id="_IDGenTileContent4">
+                        <ImageContent id="_IDGenImageContent4" src="sap-icon://machine"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- SOX Compliance -->
+                <GenericTile id="_IDGenGenericTile5"
+                    header="SOX Compliance"
+                    press="onSOXCompliance">
+                    <TileContent id="_IDGenTileContent5">
+                        <ImageContent id="_IDGenImageContent5" src="sap-icon://accept"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Reports -->
+                <GenericTile id="_IDGenGenericTile6"
+                    header="Reports"
+                    press="onReports">
+                    <TileContent id="_IDGenTileContent6">
+                        <ImageContent id="_IDGenImageContent6" src="sap-icon://business-objects-experience"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Audit Logs -->
+                <GenericTile id="_IDGenGenericTile7"
+                    header="Audit Logs"
+                    press="onAuditLogs">
+                    <TileContent id="_IDGenTileContent7">
+                        <ImageContent id="_IDGenImageContent7" src="sap-icon://history"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Configuration -->
+                <GenericTile id="_IDGenGenericTile8"
+                    header="Configuration"
+                    press="onConfiguration">
+                    <TileContent id="_IDGenTileContent8">
+                        <ImageContent id="_IDGenImageContent8" src="sap-icon://action-settings"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Access Management -->
+                <GenericTile id="_IDGenGenericTile9"
+                    header="Access Management"
+                    press="onAccessManagement">
+                    <TileContent id="_IDGenTileContent9">
+                        <ImageContent id="_IDGenImageContent9" src="sap-icon://key-user-settings"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Risk Analytics -->
+                <GenericTile id="_IDGenGenericTile10"
+                    header="Risk Analytics"
+                    press="onRiskAnalytics">
+                    <TileContent id="_IDGenTileContent10">
+                        <ImageContent id="_IDGenImageContent10" src="sap-icon://line-chart"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Emergency Access -->
+                <GenericTile id="_IDGenGenericTile11"
+                    header="Emergency Access"
+                    press="onEmergencyAccess">
+                    <TileContent id="_IDGenTileContent11">
+                        <ImageContent id="_IDGenImageContent11" src="sap-icon://warning"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- System Health -->
+                <GenericTile id="_IDGenGenericTile12"
+                    header="System Health"
+                    press="onSystemHealth">
+                    <TileContent id="_IDGenTileContent12">
+                        <ImageContent id="_IDGenImageContent12" src="sap-icon://sys-monitor"/>
+                    </TileContent>
+                </GenericTile>
+
+                <!-- Profile -->
+                <GenericTile id="_IDGenGenericTile13"
+                    header="Profile"
+                    press="onProfile">
+                    <TileContent id="_IDGenTileContent13">
+                        <ImageContent id="_IDGenImageContent13" src="sap-icon://person-placeholder"/>
+                    </TileContent>
+                </GenericTile>
+
+            </f:GridContainer>
+
+        </VBox>
+
+    </content>
+
+    <footer>
+
+        <Toolbar id="_IDGenToolbar">
+
+            <ToolbarSpacer id="_IDGenToolbarSpacer"/>
+
+            <Text id="_IDGenText3" text="© 2026 Forte Innovations"/>
+
+            <ToolbarSpacer id="_IDGenToolbarSpacer1"/>
+
+        </Toolbar>
+
+    </footer>
+
+</Page>
+
+</mvc:View>

@@ -1,6 +1,122 @@
-<mvc:View controllerName="xyraweb.controller.Login"
+<mvc:View
+    controllerName="xyraweb.controller.Login"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
-    <Page id="page" title="{i18n>title}">
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Page
+        id="loginPage"
+        showHeader="false"
+        enableScrolling="false"
+        class="sapUiNoContentPadding">
+
+        <content>
+
+            <FlexBox
+                id="loginContainer"
+                fitContainer="true"
+                justifyContent="Center"
+                alignItems="Center"
+                direction="Column"
+                renderType="Div">
+
+                <Panel id="_IDGenPanel1"
+                    width="400px"
+                    backgroundDesign="Solid">
+
+                    <content>
+
+                        <VBox id="_IDGenVBox"
+                            width="auto"
+                            alignItems="Stretch"
+                            class="sapUiMediumMargin">
+
+                            <Title id="_IDGenTitle"
+                                text="XYRA"
+                                level="H2"
+                                textAlign="Center"
+                                width="100%"
+                                class="sapUiSmallMarginBottom"/>
+
+                            <Text id="_IDGenText"
+                                text="Future of Control Monitoring"
+                                textAlign="Center"
+                                width="100%"
+                                wrapping="true"
+                                class="sapUiMediumMarginBottom"/>
+
+                            <Label id="_IDGenLabel"
+                                text="Role"
+                                required="true"/>
+
+                            <Select
+                                id="role"
+                                width="100%"
+                                class="sapUiSmallMarginBottom">
+
+                                <items>
+                                    <core:Item id="_IDGenItem" key="" text="-- Select Role --"/>
+                                    <core:Item id="_IDGenItem1" key="ADMIN" text="Admin"/>
+                                    <core:Item id="_IDGenItem2" key="ACM" text="EX Collection Manager"/>
+                                    <core:Item id="_IDGenItem3" key="REV1" text="Reviewer 1"/>
+                                    <core:Item id="_IDGenItem4" key="REV2" text="Reviewer 2"/>
+                                    <core:Item id="_IDGenItem5" key="FF" text="Firefighter"/>
+                                    <core:Item id="_IDGenItem6" key="AUDITOR" text="Auditor"/>
+                                </items>
+
+                            </Select>
+
+                            <Label id="_IDGenLabel1"
+                                text="Username"
+                                required="true"/>
+
+                            <Input
+                                id="username"
+                                width="100%"
+                                placeholder="Enter Username"
+                                class="sapUiSmallMarginBottom"/>
+
+                            <Label id="_IDGenLabel2"
+                                text="Password"
+                                required="true"/>
+
+                            <Input
+                                id="password"
+                                type="Password"
+                                width="100%"
+                                placeholder="Enter Password"
+                                class="sapUiSmallMarginBottom"/>
+
+                            <CheckBox id="_IDGenCheckBox"
+                                text="Remember Me"
+                                class="sapUiMediumMarginBottom"/>
+
+                            <Button id="_IDGenButton"
+                                text="LOGIN"
+                                type="Emphasized"
+                                width="100%"
+                                press="onLogin"/>
+
+                            <VBox id="_IDGenVBox1"
+                                width="100%"
+                                alignItems="Center"
+                                class="sapUiLargeMarginTop">
+
+                                <Text id="_IDGenText1" text="Version 1.0.0"/>
+                                <Text id="_IDGenText2" text="© 2026 Forte Innovations"/>
+
+                            </VBox>
+
+                        </VBox>
+
+                    </content>
+
+                </Panel>
+
+            </FlexBox>
+
+        </content>
+
     </Page>
+
 </mvc:View>

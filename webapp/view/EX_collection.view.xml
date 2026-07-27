@@ -1,0 +1,116 @@
+<mvc:View
+    controllerName="xyraweb.controller.EXCollectionManager"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page
+        id="exManagerPage"
+        title="EX Collection Manager">
+
+        <headerContent>
+
+            <Button
+                text="Logout"
+                type="Reject"
+                icon="sap-icon://log"
+                press="onLogout"/>
+
+        </headerContent>
+
+        <content>
+
+            <VBox
+                class="sapUiLargeMargin"
+                width="100%">
+
+                <Title
+                    text="Welcome EX Collection Manager"
+                    level="H2"/>
+
+                <Text
+                    text="Manage evidence collection and assign review activities."
+                    class="sapUiSmallMarginBottom"/>
+
+                <Toolbar>
+
+                    <Title text="Evidence Collection Queue"/>
+
+                    <ToolbarSpacer/>
+
+                    <Button
+                        text="Refresh"
+                        icon="sap-icon://refresh"
+                        press="onRefresh"/>
+
+                </Toolbar>
+
+                <Table
+                    width="100%"
+                    inset="false">
+
+                    <columns>
+
+                        <Column>
+                            <Text text="Request ID"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Control ID"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Business User"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Evidence"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Status"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Action"/>
+                        </Column>
+
+                    </columns>
+
+                    <items>
+
+                        <ColumnListItem>
+
+                            <cells>
+
+                                <Text text="REQ1001"/>
+
+                                <Text text="SOX-001"/>
+
+                                <Text text="John"/>
+
+                                <Text text="User Access Report"/>
+
+                                <ObjectStatus
+                                    text="Pending"
+                                    state="Warning"/>
+
+                                <Button
+                                    text="Assign Reviewer"
+                                    type="Emphasized"
+                                    press="onAssign"/>
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                    </items>
+
+                </Table>
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

@@ -1,0 +1,104 @@
+<mvc:View
+    controllerName="xyraweb.controller.Reviewer1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page
+        id="reviewer1Page"
+        title="Reviewer 1 Dashboard">
+
+        <headerContent>
+
+            <Button
+                text="Logout"
+                type="Reject"
+                icon="sap-icon://log"
+                press="onLogout"/>
+
+        </headerContent>
+
+        <content>
+
+            <VBox
+                class="sapUiLargeMargin"
+                width="100%">
+
+                <Title
+                    text="Welcome Reviewer 1"
+                    level="H2"/>
+
+                <Text
+                    text="AI Enabled Control Monitoring System"/>
+
+                <Toolbar
+                    class="sapUiMediumMarginTop">
+
+                    <Title text="Pending Reviews"/>
+
+                    <ToolbarSpacer/>
+
+                    <Button
+                        text="Refresh"
+                        icon="sap-icon://refresh"
+                        press="onRefresh"/>
+
+                </Toolbar>
+
+                <Table
+                    inset="false">
+
+                    <columns>
+
+                        <Column>
+                            <Text text="Request ID"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="User"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="System"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Risk"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Status"/>
+                        </Column>
+
+                    </columns>
+
+                    <items>
+
+                        <ColumnListItem>
+
+                            <cells>
+
+                                <Text text="REQ1001"/>
+                                <Text text="John"/>
+                                <Text text="SAP ECC"/>
+                                <ObjectStatus
+                                    text="Medium"
+                                    state="Warning"/>
+                                <ObjectStatus
+                                    text="Pending"
+                                    state="Warning"/>
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                    </items>
+
+                </Table>
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

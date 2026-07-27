@@ -1,0 +1,131 @@
+<mvc:View
+    controllerName="xyraweb.controller.Auditor"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page
+        id="auditorPage"
+        title="Auditor Dashboard">
+
+        <headerContent>
+
+            <Button
+                text="Logout"
+                type="Reject"
+                icon="sap-icon://log"
+                press="onLogout"/>
+
+        </headerContent>
+
+        <content>
+
+            <VBox
+                width="100%"
+                class="sapUiLargeMargin">
+
+                <Title
+                    text="Welcome Auditor"
+                    level="H2"/>
+
+                <Text
+                    text="Audit Review & Compliance Monitoring"
+                    class="sapUiSmallMarginBottom"/>
+
+                <Toolbar>
+
+                    <Title text="Audit Summary"/>
+
+                    <ToolbarSpacer/>
+
+                    <Button
+                        text="Refresh"
+                        icon="sap-icon://refresh"
+                        press="onRefresh"/>
+
+                </Toolbar>
+
+                <Table
+                    width="100%"
+                    inset="false">
+
+                    <columns>
+
+                        <Column>
+                            <Text text="Control ID"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Process"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Reviewer"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Status"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Risk"/>
+                        </Column>
+
+                    </columns>
+
+                    <items>
+
+                        <ColumnListItem>
+
+                            <cells>
+
+                                <Text text="SOX-001"/>
+
+                                <Text text="User Access Review"/>
+
+                                <Text text="Reviewer 2"/>
+
+                                <ObjectStatus
+                                    text="Approved"
+                                    state="Success"/>
+
+                                <ObjectStatus
+                                    text="Low"
+                                    state="Success"/>
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                        <ColumnListItem>
+
+                            <cells>
+
+                                <Text text="SOX-002"/>
+
+                                <Text text="Firefighter Log Review"/>
+
+                                <Text text="Reviewer 1"/>
+
+                                <ObjectStatus
+                                    text="Pending"
+                                    state="Warning"/>
+
+                                <ObjectStatus
+                                    text="High"
+                                    state="Error"/>
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                    </items>
+
+                </Table>
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

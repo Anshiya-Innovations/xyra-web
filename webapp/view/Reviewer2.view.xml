@@ -1,0 +1,133 @@
+<mvc:View
+    controllerName="xyraweb.controller.Reviewer2"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page
+        id="reviewer2Page"
+        title="Reviewer 2 Dashboard">
+
+        <headerContent>
+            <Button
+                text="Logout"
+                icon="sap-icon://log"
+                type="Reject"
+                press="onLogout"/>
+        </headerContent>
+
+        <content>
+
+            <VBox
+                width="100%"
+                class="sapUiLargeMargin">
+
+                <Title
+                    text="Welcome Reviewer 2"
+                    level="H2"/>
+
+                <Text
+                    text="Final Review & Approval Dashboard"
+                    class="sapUiSmallMarginBottom"/>
+
+                <Toolbar>
+
+                    <Title text="Pending Final Reviews"/>
+
+                    <ToolbarSpacer/>
+
+                    <Button
+                        text="Refresh"
+                        icon="sap-icon://refresh"
+                        press="onRefresh"/>
+
+                </Toolbar>
+
+                <Table
+                    inset="false">
+
+                    <columns>
+
+                        <Column width="8rem">
+                            <Text text="Request ID"/>
+                        </Column>
+
+                        <Column width="10rem">
+                            <Text text="User"/>
+                        </Column>
+
+                        <Column width="10rem">
+                            <Text text="System"/>
+                        </Column>
+
+                        <Column width="8rem">
+                            <Text text="Risk"/>
+                        </Column>
+
+                        <Column width="8rem">
+                            <Text text="Reviewer 1"/>
+                        </Column>
+
+                        <Column width="8rem">
+                            <Text text="Status"/>
+                        </Column>
+
+                        <Column width="12rem">
+                            <Text text="Action"/>
+                        </Column>
+
+                    </columns>
+
+                    <items>
+
+                        <ColumnListItem>
+
+                            <cells>
+
+                                <Text text="REQ1001"/>
+
+                                <Text text="John"/>
+
+                                <Text text="SAP S/4HANA"/>
+
+                                <ObjectStatus
+                                    text="High"
+                                    state="Error"/>
+
+                                <ObjectStatus
+                                    text="Approved"
+                                    state="Success"/>
+
+                                <ObjectStatus
+                                    text="Pending Final Approval"
+                                    state="Warning"/>
+
+                                <HBox>
+
+                                    <Button
+                                        text="Approve"
+                                        type="Accept"
+                                        press="onApprove"/>
+
+                                    <Button
+                                        text="Reject"
+                                        type="Reject"
+                                        class="sapUiTinyMarginBegin"
+                                        press="onReject"/>
+
+                                </HBox>
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                    </items>
+
+                </Table>
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

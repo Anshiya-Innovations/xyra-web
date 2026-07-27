@@ -1,0 +1,116 @@
+<mvc:View
+    controllerName="xyraweb.controller.Firefighter"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page
+        id="firefighterPage"
+        title="Firefighter Dashboard">
+
+        <headerContent>
+
+            <Button
+                text="Logout"
+                icon="sap-icon://log"
+                type="Reject"
+                press="onLogout"/>
+
+        </headerContent>
+
+        <content>
+
+            <VBox
+                width="100%"
+                class="sapUiLargeMargin">
+
+                <Title
+                    text="Welcome Firefighter User"
+                    level="H2"/>
+
+                <Text
+                    text="Emergency Access Management"
+                    class="sapUiSmallMarginBottom"/>
+
+                <Toolbar>
+
+                    <Title text="Emergency Access Requests"/>
+
+                    <ToolbarSpacer/>
+
+                    <Button
+                        text="Refresh"
+                        icon="sap-icon://refresh"
+                        press="onRefresh"/>
+
+                </Toolbar>
+
+                <Table
+                    width="100%"
+                    inset="false">
+
+                    <columns>
+
+                        <Column>
+                            <Text text="Request ID"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="System"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Firefighter ID"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Reason"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Status"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Action"/>
+                        </Column>
+
+                    </columns>
+
+                    <items>
+
+                        <ColumnListItem>
+
+                            <cells>
+
+                                <Text text="FF1001"/>
+
+                                <Text text="SAP S/4HANA"/>
+
+                                <Text text="FF_ADMIN"/>
+
+                                <Text text="Production Support"/>
+
+                                <ObjectStatus
+                                    text="Pending"
+                                    state="Warning"/>
+
+                                <Button
+                                    text="Start Session"
+                                    type="Emphasized"
+                                    press="onStartSession"/>
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                    </items>
+
+                </Table>
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>
