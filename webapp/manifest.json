@@ -98,11 +98,7 @@
         "pattern": "Reviewer2",
         "target": "Reviewer2"
       },
-      {
-        "name": "Firefighter",
-        "pattern": "Firefighter",
-        "target": "Firefighter"
-      },
+      
       {
         "name": "Auditor",
         "pattern": "Auditor",
