@@ -84,9 +84,9 @@
         "target": "Admin"
       },
       {
-        "name": "EXCollectionManager",
-        "pattern": "EXCollectionManager",
-        "target": "EXCollectionManager"
+        "name": "EscalationManager",
+        "pattern": "EscalationManager",
+        "target":  "EscalationManager"
       },
       {
         "name": "Reviewer1",
@@ -122,9 +122,9 @@
         "viewName": "Admin"
       },
 
-      "EXCollectionManager": {
-        "viewId": "EXCollectionManager",
-        "viewName": "EXCollectionManager"
+      "EscalationManager": {
+        "viewId": "EscalationManager",
+        "viewName": "EscalationManager"
       },
 
       "Reviewer1": {
@@ -137,10 +137,7 @@
         "viewName": "Reviewer2"
       },
 
-      "Firefighter": {
-        "viewId": "Firefighter",
-        "viewName": "Firefighter"
-      },
+     
       "Auditor": {
         "viewId": "Auditor",
         "viewName": "Auditor"
