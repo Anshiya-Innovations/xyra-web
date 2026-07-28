@@ -13,6 +13,45 @@ sap.ui.define([
 ) {
     "use strict";
 
+    // xyra-core runs as its own separate server/module — not bundled with this
+    // UI5 app — so this is a plain cross-origin fetch() call, not an OData model
+    // binding. Point this at wherever `cds watch` is actually serving xyra-core.
+    var AUTH_BASE_URL = "http://localhost:4004";
+
+    // ponytail: hardcoded to the one fixed test tenant for now — there's no
+    // Host-header-based Tenant Resolver yet, so the frontend can't discover the
+    // subdomain any other way. Replace with real tenant resolution once that
+    // exists (e.g. reading it from the browser's own hostname).
+    var TEST_SUBDOMAIN = "xyrademo";
+
+    // Maps each dropdown selection to what a successful login response must look
+    // like for that selection to be accepted. Role alone tells ADMIN / ACM /
+    // AUDITOR apart (one account each); REV1 vs REV2 share the same REVIEWER role,
+    // so those two also require an exact email match to tell them apart.
+    var ROLE_EXPECTATIONS = {
+        ADMIN: { role: "ADMIN" },
+        ACM: { role: "ESCALATION_MANAGER" },
+        AUDITOR: { role: "AUDITOR" },
+        REV1: { role: "REVIEWER", email: "reviewer1@xyrademo.test" },
+        REV2: { role: "REVIEWER", email: "reviewer2@xyrademo.test" }
+    };
+
+    var ROUTE_FOR_ROLE = {
+        ADMIN: "Admin",
+        ACM: "EscalationManager",
+        REV1: "Reviewer1",
+        REV2: "Reviewer2",
+        AUDITOR: "Auditor"
+    };
+
+    // .trim() only strips actual whitespace — zero-width characters (U+200B etc.)
+    // are Unicode "format" characters, not whitespace, so they survive it silently.
+    // Real-world case: copy-pasting a password out of a rendered markdown table
+    // brought one along invisibly, and the login kept failing with no visible cause.
+    function stripInvisible(sValue) {
+        return sValue.replace(/[\u200B-\u200D\uFEFF\u00A0]/g, "").trim();
+    }
+
     return Controller.extend("xyraweb.controller.Login", {
 
         onInit: function () {
@@ -26,8 +65,8 @@ sap.ui.define([
             var oPass = this.byId("password");
 
             var sRole = oRole.getSelectedKey();
-            var sUser = oUser.getValue().trim();
-            var sPass = oPass.getValue().trim();
+            var sEmail = stripInvisible(oUser.getValue());
+            var sPass = stripInvisible(oPass.getValue());
 
             // Reset Value States
             oUser.setValueState(ValueState.None);
@@ -39,10 +78,10 @@ sap.ui.define([
                 return;
             }
 
-            if (!sUser) {
+            if (!sEmail) {
                 oUser.setValueState(ValueState.Error);
-                oUser.setValueStateText("Username is required");
-                MessageBox.error("Please enter your username.");
+                oUser.setValueStateText("Email is required");
+                MessageBox.error("Please enter your email.");
                 return;
             }
 
@@ -52,49 +91,38 @@ sap.ui.define([
                 MessageBox.error("Please enter your password.");
                 return;
             }
-            if (sRole === "ADMIN") {
-            UIComponent.getRouterFor(this).navTo("Admin");
-            }
-    
 
             BusyIndicator.show(0);
 
-            // Simulate Login
-            setTimeout(function () {
+            fetch(AUTH_BASE_URL + "/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: TEST_SUBDOMAIN, email: sEmail, password: sPass })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
 
-                BusyIndicator.hide();
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Login failed.");
+                        return;
+                    }
 
-                var oRouter = UIComponent.getRouterFor(this);
+                    var oExpected = ROLE_EXPECTATIONS[sRole];
+                    var bRoleMatches = oExpected && oData.role === oExpected.role;
+                    var bEmailMatches = !oExpected || !oExpected.email || oData.email === oExpected.email;
 
-                switch (sRole) {
+                    if (!bRoleMatches || !bEmailMatches) {
+                        MessageBox.error("This account does not match the selected role.");
+                        return;
+                    }
 
-                    case "ADMIN":
-                        oRouter.navTo("Admin");
-                        break;
-
-                    case "ACM":
-                        oRouter.navTo("EXCollectionManager");
-                        break;
-
-                    case "REV1":
-                        oRouter.navTo("Reviewer1");
-                        break;
-
-                    case "REV2":
-                        oRouter.navTo("Reviewer2");
-                        break;
-
-                    
-
-                    case "AUDITOR":
-                        oRouter.navTo("Auditor");
-                        break;
-
-                    default:
-                        MessageBox.error("Invalid role selected.");
-                }
-
-            }.bind(this), 1000);
+                    UIComponent.getRouterFor(this).navTo(ROUTE_FOR_ROLE[sRole]);
+                }.bind(this))
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
 
         },
 

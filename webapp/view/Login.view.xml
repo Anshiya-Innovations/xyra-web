@@ -67,13 +67,14 @@
                             </Select>
 
                             <Label id="_IDGenLabel1"
-                                text="Username"
+                                text="Email"
                                 required="true"/>
 
                             <Input
                                 id="username"
                                 width="100%"
-                                placeholder="Enter Username"
+                                type="Email"
+                                placeholder="Enter Email"
                                 class="sapUiSmallMarginBottom"/>
 
                             <Label id="_IDGenLabel2"

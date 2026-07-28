@@ -1,5 +1,5 @@
 <mvc:View
-    controllerName="xyraweb.controller.EXCollectionManager"
+    controllerName="xyraweb.controller.EscalationManager"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
 

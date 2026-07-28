@@ -4,7 +4,7 @@ sap.ui.define([
 ], function (Controller, MessageToast) {
     "use strict";
 
-    return Controller.extend("xyraweb.controller.AdminDashboard", {
+    return Controller.extend("xyraweb.controller.Admin", {
 
         onInit: function () {
 
