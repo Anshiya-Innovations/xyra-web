@@ -57,10 +57,10 @@
                                 <items>
                                     <core:Item id="_IDGenItem" key="" text="-- Select Role --"/>
                                     <core:Item id="_IDGenItem1" key="ADMIN" text="Admin"/>
-                                    <core:Item id="_IDGenItem2" key="ACM" text="EX Collection Manager"/>
+                                    <core:Item id="_IDGenItem2" key="ACM" text="Escalation Manager"/>
                                     <core:Item id="_IDGenItem3" key="REV1" text="Reviewer 1"/>
                                     <core:Item id="_IDGenItem4" key="REV2" text="Reviewer 2"/>
-                                    <core:Item id="_IDGenItem5" key="FF" text="Firefighter"/>
+        
                                     <core:Item id="_IDGenItem6" key="AUDITOR" text="Auditor"/>
                                 </items>
 

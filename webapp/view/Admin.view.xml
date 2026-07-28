@@ -143,16 +143,8 @@
                     </TileContent>
                 </GenericTile>
 
-                <!-- Emergency Access -->
-                <GenericTile id="_IDGenGenericTile11"
-                    header="Emergency Access"
-                    press="onEmergencyAccess">
-                    <TileContent id="_IDGenTileContent11">
-                        <ImageContent id="_IDGenImageContent11" src="sap-icon://warning"/>
-                    </TileContent>
-                </GenericTile>
-
-                <!-- System Health -->
+                
+<!-- System Health -->
                 <GenericTile id="_IDGenGenericTile12"
                     header="System Health"
                     press="onSystemHealth">

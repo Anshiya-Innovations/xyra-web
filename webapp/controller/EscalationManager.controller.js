@@ -9,7 +9,7 @@ sap.ui.define([
 ) {
     "use strict";
 
-    return Controller.extend("xyraweb.controller.EXCollectionManager", {
+    return Controller.extend("xyraweb.controller.EscalationManager", {
 
         onInit: function () {
 

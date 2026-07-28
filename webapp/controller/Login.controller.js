@@ -84,9 +84,7 @@ sap.ui.define([
                         oRouter.navTo("Reviewer2");
                         break;
 
-                    case "FF":
-                        oRouter.navTo("Firefighter");
-                        break;
+                    
 
                     case "AUDITOR":
                         oRouter.navTo("Auditor");
