@@ -130,6 +130,32 @@ sap.ui.define([
 
             oEvent.getSource().setValueState(ValueState.None);
 
+        },
+
+        onEmailLiveChange: function (oEvent) {
+            var oInput = oEvent.getSource();
+            oInput.setValueState(ValueState.None);
+
+            var sValue = oEvent.getParameter("value") || oInput.getValue() || "";
+            var sLower = sValue.toLowerCase();
+
+            if (sValue !== sLower) {
+                var oDomRef = oInput.getDomRef("inner") || oInput.getFocusDomRef();
+                var iStart = oDomRef ? oDomRef.selectionStart : null;
+                var iEnd = oDomRef ? oDomRef.selectionEnd : null;
+
+                oInput.setValue(sLower);
+
+                if (oDomRef && iStart !== null && iEnd !== null) {
+                    setTimeout(function () {
+                        try {
+                            oDomRef.setSelectionRange(iStart, iEnd);
+                        } catch (e) {
+                            // ignore setSelectionRange errors on unmapped input types
+                        }
+                    }, 0);
+                }
+            }
         }
 
     });

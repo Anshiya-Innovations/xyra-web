@@ -75,6 +75,7 @@
                                 width="100%"
                                 type="Email"
                                 placeholder="Enter Email"
+                                liveChange="onEmailLiveChange"
                                 class="sapUiSmallMarginBottom"/>
 
                             <Label id="_IDGenLabel2"

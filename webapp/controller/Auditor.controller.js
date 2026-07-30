@@ -16,15 +16,24 @@ sap.ui.define([
         },
 
         onRefresh: function () {
-
             MessageToast.show("Audit data refreshed.");
+        },
 
+        onProfilePress: function (oEvent) {
+            var oButton = oEvent.getSource();
+            var oPopover = this.byId("auditorProfilePopover");
+            if (oPopover) {
+                oPopover.openBy(oButton);
+            }
+        },
+
+        onActionPress: function (oEvent) {
+            var sText = oEvent.getSource().getText() || oEvent.getSource().getTooltip() || "Action";
+            MessageToast.show("Auditor Action: " + sText);
         },
 
         onLogout: function () {
-
             UIComponent.getRouterFor(this).navTo("Login");
-
         }
 
     });

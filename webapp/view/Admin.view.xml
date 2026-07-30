@@ -2,186 +2,223 @@
     controllerName="xyraweb.controller.Admin"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
-    xmlns:f="sap.f">
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
+    height="100%">
 
-<Page
-    id="adminPage"
-    title="XYRA- Admin Dashboard">
+    <tnt:ToolPage id="adminToolPage" sideExpanded="true">
 
-    <!-- Header Buttons -->
-    <headerContent>
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Role Management" icon="sap-icon://manager" key="RoleManagement" select="onRoleManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="380 Roles" state="Indication17" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
 
-        <Button id="_IDGenButton2"
-            icon="sap-icon://bell"
-            tooltip="Notifications"
-            type="Transparent"/>
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="156 Controls" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
 
-        <Button id="_IDGenButton3"
-            icon="sap-icon://employee"
-            text="Admin"
-            type="Transparent"/>
+                    <tnt:NavigationListItem text="Control Monitoring" icon="sap-icon://inspection" key="ControlMonitoring" select="onControlMonitoring">
+                        <tnt:tag>
+                            <ObjectStatus text="Healthy" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
 
-        <Button id="_IDGenButton4"
-            icon="sap-icon://log"
-            text="Logout"
-            type="Reject"
-            press="onLogout"/>
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://machine" key="AIInsights" select="onAIInsights">
+                        <tnt:tag>
+                            <ObjectStatus text="New" state="Indication15" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
 
-    </headerContent>
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag>
+                            <ObjectStatus text="98.4%" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
 
-    <content>
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://business-objects-experience" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
 
-        <VBox id="_IDGenVBox2"
-            width="100%"
-            class="sapUiMediumMargin">
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
+                        <tnt:tag>
+                            <ObjectStatus text="3 Risks" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
 
-            <Title id="_IDGenTitle1"
-                text="Dashboard"
-                level="H2"
-                class="sapUiSmallMarginBottom"/>
+                    <tnt:NavigationListItem text="System Health" icon="sap-icon://sys-monitor" key="SystemHealth" select="onSystemHealth"/>
+                </tnt:NavigationList>
 
-            <f:GridContainer id="_IDGenGridContainer"
-                snapToRow="true"
-                allowDenseFill="true">
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
 
-                <!-- User Management -->
-                <GenericTile id="_IDGenGenericTile"
-                    header="User Management"
-                    press="onUserManagement">
-                    <TileContent id="_IDGenTileContent">
-                        <ImageContent id="_IDGenImageContent" src="sap-icon://group"/>
-                    </TileContent>
-                </GenericTile>
+        <tnt:mainContents>
+            <Page
+                id="adminPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
 
-                <!-- Role Management -->
-                <GenericTile id="_IDGenGenericTile1"
-                    header="Role Management"
-                    press="onRoleManagement">
-                    <TileContent id="_IDGenTileContent1">
-                        <ImageContent id="_IDGenImageContent1" src="sap-icon://role"/>
-                    </TileContent>
-                </GenericTile>
+                <dependents>
+                    <ResponsivePopover
+                        id="adminProfilePopover"
+                        title="Administrator Profile"
+                        placement="Bottom"
+                        contentWidth="320px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <Avatar displaySize="M" initials="SA" backgroundColor="Accent6" class="sapUiSmallMarginEnd"/>
+                                    <VBox>
+                                        <Title text="System Administrator" level="H3"/>
+                                        <Text text="Global Administrator"/>
+                                        <ObjectStatus text="Online" state="Success"/>
+                                    </VBox>
+                                </HBox>
+                                <VBox class="sapUiSmallMarginBottom">
+                                    <Label text="Admin ID" design="Bold"/>
+                                    <Text text="ADM001"/>
+                                    <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="Security &amp; Compliance"/>
+                                    <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="admin@xyra.ai"/>
+                                    <Label text="Last Login" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="Current Session"/>
+                                    <Label text="Theme / Language" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="SAP Horizon / English"/>
+                                </VBox>
+                                <HBox justifyContent="End" class="sapUiSmallMarginTop">
+                                    <Button text="Profile" icon="sap-icon://person-placeholder" type="Transparent" class="sapUiTinyMarginEnd" press="onProfile"/>
+                                    <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
+                                </HBox>
+                            </VBox>
+                        </content>
+                    </ResponsivePopover>
+                </dependents>
 
-                <!-- Control Management -->
-                <GenericTile id="_IDGenGenericTile2"
-                    header="Control Management"
-                    press="onControlManagement">
-                    <TileContent id="_IDGenTileContent2">
-                        <ImageContent id="_IDGenImageContent2" src="sap-icon://shield"/>
-                    </TileContent>
-                </GenericTile>
+                <customHeader>
+                    <OverflowToolbar height="4.5rem" class="sapUiSmallMarginBottom">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"/>
 
-                <!-- Control Monitoring -->
-                <GenericTile id="_IDGenGenericTile3"
-                    header="Control Monitoring"
-                    press="onControlMonitoring">
-                    <TileContent id="_IDGenTileContent3">
-                        <ImageContent id="_IDGenImageContent3" src="sap-icon://activity-items"/>
-                    </TileContent>
-                </GenericTile>
+                        <HBox alignItems="Center" class="sapUiTinyMarginBegin">
+                            <Avatar src="sap-icon://shield" displaySize="S" type="Icon" class="sapUiTinyMarginEnd"/>
+                            <VBox justifyContent="Center">
+                                <Title text="XYRA - Admin Dashboard" level="H4" class="sapUiNoMargin"/>
+                                <Text text="AI Powered Security, Risk &amp; Compliance Platform" class="textMuted sapUiNoMargin"/>
+                            </VBox>
+                        </HBox>
+                        <ToolbarSpacer/>
+                        <HBox alignItems="Center" justifyContent="Center">
+                            <ObjectStatus text="July 30, 2026" icon="sap-icon://appointment-2" state="Information" class="sapUiTinyMarginEnd"/>
+                            <ObjectStatus text="Production Environment" state="Success"/>
+                        </HBox>
+                        <ToolbarSpacer/>
+                        <Button id="_IDGenButton2" icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                        <Button icon="sap-icon://search" tooltip="Search" type="Transparent" press="onSearchPress"/>
+                        <Button icon="sap-icon://action-settings" tooltip="Settings" type="Transparent" press="onConfiguration"/>
+                        <Button icon="sap-icon://sys-help" tooltip="Help" type="Transparent" press="onHelpPress"/>
+                        <Button id="_IDGenButton3" icon="sap-icon://employee" text="Admin" type="Transparent" press="onAdminProfilePress"/>
+                        <Button id="_IDGenButton4" icon="sap-icon://log" text="Logout" type="Reject" press="onLogout"/>
+                    </OverflowToolbar>
+                </customHeader>
 
-                <!-- AI Insights -->
-                <GenericTile id="_IDGenGenericTile4"
-                    header="AI Insights"
-                    press="onAIInsights">
-                    <TileContent id="_IDGenTileContent4">
-                        <ImageContent id="_IDGenImageContent4" src="sap-icon://machine"/>
-                    </TileContent>
-                </GenericTile>
+                <content>
+                    <VBox id="_IDGenVBox2" width="100%" class="sapUiSmallMargin">
 
-                <!-- SOX Compliance -->
-                <GenericTile id="_IDGenGenericTile5"
-                    header="SOX Compliance"
-                    press="onSOXCompliance">
-                    <TileContent id="_IDGenTileContent5">
-                        <ImageContent id="_IDGenImageContent5" src="sap-icon://accept"/>
-                    </TileContent>
-                </GenericTile>
+                        <!-- TOP KPI SECTION (6 Cards) -->
+                        <Title text="Key Performance Indicators" level="H3" class="sapUiSmallMarginBottom"/>
+                        
+                        <layout:Grid containerQuery="true" defaultSpan="XL2 L4 M6 S12" class="sapUiSmallMarginBottom">
+                            
+                            <!-- KPI 1: Users -->
+                            <GenericTile header="Users" subheader="Active Enterprise Users" class="sapUiTinyMargin">
+                                <TileContent footer="12% vs last month">
+                                    <NumericContent value="1,420" valueColor="Good" indicator="Up" icon="sap-icon://group"/>
+                                </TileContent>
+                            </GenericTile>
 
-                <!-- Reports -->
-                <GenericTile id="_IDGenGenericTile6"
-                    header="Reports"
-                    press="onReports">
-                    <TileContent id="_IDGenTileContent6">
-                        <ImageContent id="_IDGenImageContent6" src="sap-icon://business-objects-experience"/>
-                    </TileContent>
-                </GenericTile>
+                            <!-- KPI 2: Roles -->
+                            <GenericTile header="Roles" subheader="Configured SAP Roles" class="sapUiTinyMargin">
+                                <TileContent footer="Active role matrix">
+                                    <NumericContent value="380" valueColor="Neutral" icon="sap-icon://role"/>
+                                </TileContent>
+                            </GenericTile>
 
-                <!-- Audit Logs -->
-                <GenericTile id="_IDGenGenericTile7"
-                    header="Audit Logs"
-                    press="onAuditLogs">
-                    <TileContent id="_IDGenTileContent7">
-                        <ImageContent id="_IDGenImageContent7" src="sap-icon://history"/>
-                    </TileContent>
-                </GenericTile>
+                            <!-- KPI 3: Controls -->
+                            <GenericTile header="Controls" subheader="Active Governance Controls" class="sapUiTinyMargin">
+                                <TileContent footer="95% Compliant">
+                                    <NumericContent value="156" valueColor="Good" indicator="Up" icon="sap-icon://shield"/>
+                                </TileContent>
+                            </GenericTile>
 
-                <!-- Configuration -->
-                <GenericTile id="_IDGenGenericTile8"
-                    header="Configuration"
-                    press="onConfiguration">
-                    <TileContent id="_IDGenTileContent8">
-                        <ImageContent id="_IDGenImageContent8" src="sap-icon://action-settings"/>
-                    </TileContent>
-                </GenericTile>
+                            <!-- KPI 4: Open Reviews -->
+                            <GenericTile header="Open Reviews" subheader="Pending Approvals" class="sapUiTinyMargin">
+                                <TileContent footer="8 High Priority">
+                                    <NumericContent value="24" valueColor="Critical" indicator="Down" icon="sap-icon://edit"/>
+                                </TileContent>
+                            </GenericTile>
 
-                <!-- Access Management -->
-                <GenericTile id="_IDGenGenericTile9"
-                    header="Access Management"
-                    press="onAccessManagement">
-                    <TileContent id="_IDGenTileContent9">
-                        <ImageContent id="_IDGenImageContent9" src="sap-icon://key-user-settings"/>
-                    </TileContent>
-                </GenericTile>
+                            <!-- KPI 5: Critical Risks -->
+                            <GenericTile header="Critical Risks" subheader="SOD &amp; Privilege Alerts" class="sapUiTinyMargin">
+                                <TileContent footer="-2 resolved today">
+                                    <NumericContent value="3" valueColor="Error" indicator="Down" icon="sap-icon://alert"/>
+                                </TileContent>
+                            </GenericTile>
 
-                <!-- Risk Analytics -->
-                <GenericTile id="_IDGenGenericTile10"
-                    header="Risk Analytics"
-                    press="onRiskAnalytics">
-                    <TileContent id="_IDGenTileContent10">
-                        <ImageContent id="_IDGenImageContent10" src="sap-icon://line-chart"/>
-                    </TileContent>
-                </GenericTile>
+                            <!-- KPI 6: Compliance Score -->
+                            <GenericTile header="Compliance Score" subheader="SOX &amp; GRC Rating" class="sapUiTinyMargin">
+                                <TileContent footer="Target 95%">
+                                    <NumericContent value="98.4%" valueColor="Good" indicator="Up" icon="sap-icon://accept"/>
+                                </TileContent>
+                            </GenericTile>
 
-                
-<!-- System Health -->
-                <GenericTile id="_IDGenGenericTile12"
-                    header="System Health"
-                    press="onSystemHealth">
-                    <TileContent id="_IDGenTileContent12">
-                        <ImageContent id="_IDGenImageContent12" src="sap-icon://sys-monitor"/>
-                    </TileContent>
-                </GenericTile>
+                        </layout:Grid>
 
-                <!-- Profile -->
-                <GenericTile id="_IDGenGenericTile13"
-                    header="Profile"
-                    press="onProfile">
-                    <TileContent id="_IDGenTileContent13">
-                        <ImageContent id="_IDGenImageContent13" src="sap-icon://person-placeholder"/>
-                    </TileContent>
-                </GenericTile>
+                        <!-- QUICK ACTIONS SECTION -->
+                        <Panel headerText="Quick Actions" expandable="false" class="sapUiSmallMarginBottom">
+                            <OverflowToolbar>
+                                <Button text="Create User" icon="sap-icon://add-user" type="Emphasized" press="onQuickAction"/>
+                                <Button text="Create Role" icon="sap-icon://add-process" type="Ghost" press="onQuickAction"/>
+                                <Button text="Create Control" icon="sap-icon://add-filter" type="Ghost" press="onQuickAction"/>
+                                <Button text="Generate Report" icon="sap-icon://excel-attachment" press="onReports"/>
+                                <Button text="Run AI Scan" icon="sap-icon://machine" type="Attention" press="onAIInsights"/>
+                                <Button text="Risk Dashboard" icon="sap-icon://line-chart" press="onRiskAnalytics"/>
+                                <Button text="Emergency Access" icon="sap-icon://warning" type="Negative" press="onEmergencyAccess"/>
+                                <Button text="Audit Center" icon="sap-icon://activity-items" press="onAuditLogs"/>
+                            </OverflowToolbar>
+                        </Panel>
 
-            </f:GridContainer>
+                    </VBox>
+                </content>
 
-        </VBox>
+                <footer>
+                    <OverflowToolbar id="_IDGenToolbar">
+                        <Text id="_IDGenText3" text="© 2026 Forte Innovations"/>
+                        <ToolbarSpacer id="_IDGenToolbarSpacer"/>
+                        <Text text="Version 1.0 | Status: Operational"/>
+                        <ToolbarSpacer id="_IDGenToolbarSpacer1"/>
+                    </OverflowToolbar>
+                </footer>
 
-    </content>
+            </Page>
+        </tnt:mainContents>
 
-    <footer>
-
-        <Toolbar id="_IDGenToolbar">
-
-            <ToolbarSpacer id="_IDGenToolbarSpacer"/>
-
-            <Text id="_IDGenText3" text="© 2026 Forte Innovations"/>
-
-            <ToolbarSpacer id="_IDGenToolbarSpacer1"/>
-
-        </Toolbar>
-
-    </footer>
-
-</Page>
-
+    </tnt:ToolPage>
 </mvc:View>

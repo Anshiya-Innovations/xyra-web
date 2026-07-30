@@ -103,6 +103,11 @@
         "name": "Auditor",
         "pattern": "Auditor",
         "target": "Auditor"
+      },
+      {
+        "name": "AccessManagement",
+        "pattern": "AccessManagement",
+        "target": "AccessManagement"
       }
     ],
 
@@ -133,10 +138,14 @@
         "viewName": "Reviewer2"
       },
 
-     
       "Auditor": {
         "viewId": "Auditor",
         "viewName": "Auditor"
+      },
+
+      "AccessManagement": {
+        "viewId": "AccessManagement",
+        "viewName": "AccessManagement"
       }
 
     }

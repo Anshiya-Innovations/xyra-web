@@ -1,104 +1,304 @@
 <mvc:View
     controllerName="xyraweb.controller.Reviewer1"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
 
     <Page
         id="reviewer1Page"
-        title="Reviewer 1 Dashboard">
+        showHeader="true"
+        enableScrolling="true"
+        class="sapUiContentPadding">
 
-        <headerContent>
+        <dependents>
+            <!-- Reviewer 1 Profile Popover -->
+            <ResponsivePopover
+                id="rev1ProfilePopover"
+                title="Reviewer 1 Profile"
+                placement="Bottom"
+                contentWidth="320px">
+                <content>
+                    <VBox class="sapUiMediumMargin">
+                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                            <Avatar displaySize="M" initials="R1" backgroundColor="Accent1" class="sapUiSmallMarginEnd"/>
+                            <VBox>
+                                <Title text="Manual Reviewer" level="H3"/>
+                                <Text text="Reviewer Level 1"/>
+                                <ObjectStatus text="Online" state="Success"/>
+                            </VBox>
+                        </HBox>
+                        <VBox class="sapUiSmallMarginBottom">
+                            <Label text="Reviewer ID" design="Bold"/>
+                            <Text text="REV001"/>
+                            <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="Internal Controls"/>
+                            <Label text="Business Unit" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="SAP Governance"/>
+                            <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="reviewer1@xyra.ai"/>
+                            <Label text="Assigned Reviews" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="18"/>
+                            <Label text="Completed Reviews" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="145"/>
+                            <Label text="Pending Reviews" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="7"/>
+                        </VBox>
+                        <HBox justifyContent="End" class="sapUiSmallMarginTop">
+                            <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
+                        </HBox>
+                    </VBox>
+                </content>
+            </ResponsivePopover>
+        </dependents>
 
-            <Button
-                text="Logout"
-                type="Reject"
-                icon="sap-icon://log"
-                press="onLogout"/>
+        <customHeader>
+            <OverflowToolbar height="4.5rem" class="sapUiSmallMarginBottom">
+                <!-- Left Side Profile Button -->
+                <Button
+                    text="REV1"
+                    icon="sap-icon://employee"
+                    type="Transparent"
+                    press="onProfilePress"/>
+                
+                <ToolbarSeparator/>
 
-        </headerContent>
+                <!-- Center Title & Subtitle -->
+                <VBox justifyContent="Center" class="sapUiTinyMarginBegin">
+                    <Title text="XYRA - Reviewer 1 Dashboard" level="H4" class="sapUiNoMargin"/>
+                    <Text text="Manual Control Review - Internal Control Monitoring Platform" class="textMuted sapUiNoMargin"/>
+                </VBox>
+
+                <ToolbarSpacer/>
+
+                <!-- Right Side Action Buttons -->
+                <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onActionPress"/>
+                <Button icon="sap-icon://search" tooltip="Search" type="Transparent" press="onActionPress"/>
+                <Button icon="sap-icon://sys-help" tooltip="Help" type="Transparent" press="onActionPress"/>
+                <Button icon="sap-icon://action-settings" tooltip="Settings" type="Transparent" press="onActionPress"/>
+                <Button
+                    text="Logout"
+                    type="Reject"
+                    icon="sap-icon://log"
+                    press="onLogout"/>
+            </OverflowToolbar>
+        </customHeader>
 
         <content>
+            <VBox width="100%" class="sapUiSmallMargin">
 
-            <VBox
-                class="sapUiLargeMargin"
-                width="100%">
+                <!-- KPI CARDS (6 Cards) -->
+                <Title text="Review Queue Analytics" level="H3" class="sapUiSmallMarginBottom"/>
 
-                <Title
-                    text="Welcome Reviewer 1"
-                    level="H2"/>
+                <layout:Grid containerQuery="true" defaultSpan="XL2 L4 M6 S12" class="sapUiSmallMarginBottom">
 
-                <Text
-                    text="AI Enabled Control Monitoring System"/>
+                    <GenericTile header="Pending Reviews" subheader="Requires Immediate Review" class="sapUiTinyMargin">
+                        <TileContent footer="Target &lt; 24h">
+                            <NumericContent value="18" valueColor="Critical" indicator="Up" icon="sap-icon://pending"/>
+                        </TileContent>
+                    </GenericTile>
 
-                <Toolbar
-                    class="sapUiMediumMarginTop">
+                    <GenericTile header="Completed Reviews" subheader="Total Processed" class="sapUiTinyMargin">
+                        <TileContent footer="98% on-time">
+                            <NumericContent value="145" valueColor="Good" indicator="Up" icon="sap-icon://accept"/>
+                        </TileContent>
+                    </GenericTile>
 
-                    <Title text="Pending Reviews"/>
+                    <GenericTile header="High Priority Controls" subheader="SOD &amp; Privilege Controls" class="sapUiTinyMargin">
+                        <TileContent footer="Urgent Attention">
+                            <NumericContent value="5" valueColor="Error" indicator="Up" icon="sap-icon://alert"/>
+                        </TileContent>
+                    </GenericTile>
 
+                    <GenericTile header="Evidence Pending" subheader="Awaiting Documentation" class="sapUiTinyMargin">
+                        <TileContent footer="3 Reminders Sent">
+                            <NumericContent value="7" valueColor="Critical" indicator="Down" icon="sap-icon://document"/>
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile header="Approved Reviews" subheader="Verified Controls" class="sapUiTinyMargin">
+                        <TileContent footer="132 Approved">
+                            <NumericContent value="132" valueColor="Good" icon="sap-icon://sys-enter"/>
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile header="Today's Tasks" subheader="Scheduled Reviews" class="sapUiTinyMargin">
+                        <TileContent footer="4 Completed">
+                            <NumericContent value="12" valueColor="Neutral" icon="sap-icon://appointment-2"/>
+                        </TileContent>
+                    </GenericTile>
+
+                </layout:Grid>
+
+                <!-- FILTER BAR (Issues 1 & 2: Aligned grid, All Statuses on same grid row, no nested scrollbar) -->
+                <Panel headerText="Filter &amp; Search Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom noInternalScroll">
+                    <layout:Grid containerQuery="true" defaultSpan="XL3 L3 M6 S12">
+                        <SearchField placeholder="Search reviews..." search="onRefresh"/>
+                        <Input placeholder="Review ID (e.g. REV1001)"/>
+                        <Input placeholder="Request ID (e.g. REQ1001)"/>
+                        <Input placeholder="Control ID (e.g. SOX-001)"/>
+                        <Input placeholder="Business User"/>
+                        <Input placeholder="Application (e.g. SAP ECC)"/>
+                        <Select width="100%">
+                            <core:Item key="" text="All Risk Levels"/>
+                            <core:Item key="High" text="High Risk"/>
+                            <core:Item key="Medium" text="Medium Risk"/>
+                            <core:Item key="Low" text="Low Risk"/>
+                        </Select>
+                        <Select width="100%">
+                            <core:Item key="" text="All Statuses"/>
+                            <core:Item key="Pending" text="Pending"/>
+                            <core:Item key="Approved" text="Approved"/>
+                            <core:Item key="Rejected" text="Rejected"/>
+                        </Select>
+                    </layout:Grid>
+                    <OverflowToolbar class="sapUiTinyMarginTop">
+                        <ToolbarSpacer/>
+                        <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onRefresh"/>
+                        <Button text="Reset" type="Transparent" icon="sap-icon://reset" press="onActionPress"/>
+                        <Button text="Refresh" icon="sap-icon://refresh" press="onRefresh"/>
+                        <Button text="Export" icon="sap-icon://excel-attachment" press="onActionPress"/>
+                    </OverflowToolbar>
+                </Panel>
+
+                <!-- QUICK ACTIONS BAR -->
+                <OverflowToolbar class="sapUiSmallMarginBottom">
+                    <Title text="Quick Actions" level="H5"/>
                     <ToolbarSpacer/>
+                    <Button text="Approve Selected" type="Accept" icon="sap-icon://accept" press="onApproveSelectedPress"/>
+                    <Button text="Reject Selected" type="Reject" icon="sap-icon://decline" press="onRejectSelectedPress"/>
+                    <Button text="Request Evidence" type="Ghost" icon="sap-icon://document" press="onActionPress"/>
+                    <Button text="Export Excel" icon="sap-icon://excel-attachment" press="onActionPress"/>
+                    <Button text="Generate Report" icon="sap-icon://pdf-attachment" press="onActionPress"/>
+                    <Button text="Refresh Queue" icon="sap-icon://refresh" press="onRefresh"/>
+                </OverflowToolbar>
 
-                    <Button
-                        text="Refresh"
-                        icon="sap-icon://refresh"
-                        press="onRefresh"/>
+                <!-- MAIN TABLE CONTENT (Issues 3 & 4: MultiSelect row checkboxes, no horizontal scrollbar) -->
+                <Panel headerText="Manual Review Queue" expandable="false" class="sapUiSmallMarginBottom">
+                    <Table id="reviewer1Table" inset="false" width="100%" mode="MultiSelect" selectionChange="onSelectionChange">
+                        <columns>
+                            <Column width="7rem"><Text text="Review ID"/></Column>
+                            <Column width="7rem"><Text text="Request ID"/></Column>
+                            <Column width="7rem"><Text text="Control ID"/></Column>
+                            <Column width="9rem" minScreenWidth="Tablet" demandPopin="true"><Text text="Business User"/></Column>
+                            <Column width="8rem" minScreenWidth="Tablet" demandPopin="true"><Text text="Application"/></Column>
+                            <Column width="11rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Control Name"/></Column>
+                            <Column width="7rem"><Text text="Risk Level"/></Column>
+                            <Column width="8rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Evidence Status"/></Column>
+                            <Column width="8rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Assigned Date"/></Column>
+                            <Column width="8rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Due Date"/></Column>
+                            <Column width="9rem"><Text text="Current Status"/></Column>
+                            <Column width="12rem"><Text text="Actions"/></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <ObjectIdentifier title="REV-101" subtitle="Manual"/>
+                                    <Text text="REQ1001"/>
+                                    <Text text="SOX-001"/>
+                                    <HBox alignItems="Center">
+                                        <Avatar initials="JD" displaySize="XS" class="sapUiTinyMarginEnd"/>
+                                        <Text text="John Doe"/>
+                                    </HBox>
+                                    <Text text="SAP ECC"/>
+                                    <Text text="User Access Review"/>
+                                    <ObjectStatus text="Medium" state="Warning" icon="sap-icon://alert"/>
+                                    <ObjectStatus text="Submitted" state="Success"/>
+                                    <Text text="2026-07-25"/>
+                                    <Text text="2026-07-30"/>
+                                    <ObjectStatus text="Pending Review" state="Warning"/>
+                                    <HBox>
+                                        <Button text="Approve" type="Accept" icon="sap-icon://accept" class="sapUiTinyMarginEnd" press="onActionPress"/>
+                                        <Button text="Reject" type="Reject" icon="sap-icon://decline" press="onActionPress"/>
+                                    </HBox>
+                                </cells>
+                            </ColumnListItem>
 
-                </Toolbar>
+                            <ColumnListItem>
+                                <cells>
+                                    <ObjectIdentifier title="REV-102" subtitle="Manual"/>
+                                    <Text text="REQ1002"/>
+                                    <Text text="SOX-004"/>
+                                    <HBox alignItems="Center">
+                                        <Avatar initials="AS" displaySize="XS" class="sapUiTinyMarginEnd"/>
+                                        <Text text="Alice Smith"/>
+                                    </HBox>
+                                    <Text text="SAP S/4HANA"/>
+                                    <Text text="Privileged Access Review"/>
+                                    <ObjectStatus text="High" state="Error" icon="sap-icon://warning"/>
+                                    <ObjectStatus text="Pending" state="Warning"/>
+                                    <Text text="2026-07-26"/>
+                                    <Text text="2026-07-31"/>
+                                    <ObjectStatus text="In Progress" state="Information"/>
+                                    <HBox>
+                                        <Button text="Approve" type="Accept" icon="sap-icon://accept" class="sapUiTinyMarginEnd" press="onActionPress"/>
+                                        <Button text="Reject" type="Reject" icon="sap-icon://decline" press="onActionPress"/>
+                                    </HBox>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
 
-                <Table
-                    inset="false">
+                <!-- DETAIL & AI INSIGHTS SECTION -->
+                <layout:Grid containerQuery="true" defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                    
+                    <!-- AI Insights -->
+                    <Panel headerText="AI Insights &amp; Control Analytics" expandable="true" expanded="true">
+                        <VBox class="sapUiSmallMargin">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                <Label text="Evidence Completeness Score" design="Bold"/>
+                                <ObjectStatus text="92% High" state="Success"/>
+                            </HBox>
+                            <ProgressIndicator percentValue="92" displayValue="92%" state="Success" class="sapUiSmallMarginBottom"/>
 
-                    <columns>
+                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                <Label text="Compliance &amp; SOD Risk Prediction" design="Bold"/>
+                                <ObjectStatus text="Low Risk Violation" state="Information"/>
+                            </HBox>
+                            <Text text="AI Recommendation: Evidence matches standard SAP authorization rules. Proceed with Level 1 approval." class="sapUiSmallMarginBottom"/>
 
-                        <Column>
-                            <Text text="Request ID"/>
-                        </Column>
+                            <MessageStrip text="No duplicate evidence documents detected for current user REQ1001." type="Success" showIcon="true"/>
+                        </VBox>
+                    </Panel>
 
-                        <Column>
-                            <Text text="User"/>
-                        </Column>
+                    <!-- Workflow Timeline -->
+                    <Panel headerText="Review Workflow Lifecycle" expandable="true" expanded="true">
+                        <VBox class="sapUiSmallMargin">
+                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                <core:Icon src="sap-icon://accept" color="green" class="sapUiSmallMarginEnd"/>
+                                <Text text="Step 1: Assigned to Reviewer 1 (July 25, 2026)"/>
+                            </HBox>
+                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                <core:Icon src="sap-icon://accept" color="green" class="sapUiSmallMarginEnd"/>
+                                <Text text="Step 2: Evidence Uploaded by Business User (July 26, 2026)"/>
+                            </HBox>
+                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                <core:Icon src="sap-icon://process" color="orange" class="sapUiSmallMarginEnd"/>
+                                <Text text="Step 3: Manual Control Review (In Progress)"/>
+                            </HBox>
+                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                <core:Icon src="sap-icon://future" color="gray" class="sapUiSmallMarginEnd"/>
+                                <Text text="Step 4: Technical Reviewer 2 Validation (Pending)"/>
+                            </HBox>
+                        </VBox>
+                    </Panel>
 
-                        <Column>
-                            <Text text="System"/>
-                        </Column>
-
-                        <Column>
-                            <Text text="Risk"/>
-                        </Column>
-
-                        <Column>
-                            <Text text="Status"/>
-                        </Column>
-
-                    </columns>
-
-                    <items>
-
-                        <ColumnListItem>
-
-                            <cells>
-
-                                <Text text="REQ1001"/>
-                                <Text text="John"/>
-                                <Text text="SAP ECC"/>
-                                <ObjectStatus
-                                    text="Medium"
-                                    state="Warning"/>
-                                <ObjectStatus
-                                    text="Pending"
-                                    state="Warning"/>
-
-                            </cells>
-
-                        </ColumnListItem>
-
-                    </items>
-
-                </Table>
+                </layout:Grid>
 
             </VBox>
-
         </content>
 
-    </Page>
+        <!-- FOOTER (Issue 6: Removed ONLY 'SAP BTP Trial') -->
+        <footer>
+            <OverflowToolbar>
+                <Text text="© 2026 Forte Innovations"/>
+                <ToolbarSpacer/>
+                <Text text="XYRA Internal Control Platform | Version 1.0"/>
+                <ToolbarSpacer/>
+            </OverflowToolbar>
+        </footer>
 
+    </Page>
 </mvc:View>

@@ -20,7 +20,38 @@ sap.ui.define([
         },
 
         onAssign: function () {
+            var oDialog = this.byId("assignReviewerDialog");
+            if (oDialog && oDialog.isOpen()) {
+                oDialog.close();
+            }
             MessageToast.show("Reviewer assigned successfully.");
+        },
+
+        onProfilePress: function (oEvent) {
+            var oButton = oEvent.getSource();
+            var oPopover = this.byId("escProfilePopover");
+            if (oPopover) {
+                oPopover.openBy(oButton);
+            }
+        },
+
+        onOpenAssignDialog: function () {
+            var oDialog = this.byId("assignReviewerDialog");
+            if (oDialog) {
+                oDialog.open();
+            }
+        },
+
+        onCloseAssignDialog: function () {
+            var oDialog = this.byId("assignReviewerDialog");
+            if (oDialog) {
+                oDialog.close();
+            }
+        },
+
+        onActionPress: function (oEvent) {
+            var sText = oEvent.getSource().getText() || oEvent.getSource().getTooltip() || "Action";
+            MessageToast.show("Escalation Manager: " + sText);
         },
 
         onLogout: function () {

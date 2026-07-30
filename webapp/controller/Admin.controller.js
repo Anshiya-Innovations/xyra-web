@@ -10,6 +10,31 @@ sap.ui.define([
 
         },
 
+        onSideNavToggle: function () {
+            var oToolPage = this.byId("adminToolPage");
+            if (oToolPage) {
+                var bSideExpanded = oToolPage.getSideExpanded();
+                oToolPage.setSideExpanded(!bSideExpanded);
+            }
+            var oSideNav = this.byId("sideNavigation");
+            if (oSideNav) {
+                var bExpanded = oSideNav.getExpanded();
+                oSideNav.setExpanded(!bExpanded);
+            }
+        },
+
+        onSideNavItemSelect: function (oEvent) {
+            var oItem = oEvent.getParameter("item");
+            if (oItem) {
+                var sKey = oItem.getKey();
+                if (sKey && this[sKey]) {
+                    this[sKey]();
+                } else if (sKey) {
+                    this.getOwnerComponent().getRouter().navTo(sKey);
+                }
+            }
+        },
+
         onUserManagement: function () {
             this.getOwnerComponent().getRouter().navTo("UserManagement");
         },
@@ -66,12 +91,34 @@ sap.ui.define([
             this.getOwnerComponent().getRouter().navTo("Profile");
         },
 
+        onAdminProfilePress: function (oEvent) {
+            var oButton = oEvent.getSource();
+            var oPopover = this.byId("adminProfilePopover");
+            if (oPopover) {
+                oPopover.openBy(oButton);
+            }
+        },
+
+        onNotificationPress: function () {
+            MessageToast.show("System Notifications: 0 Critical Alerts");
+        },
+
+        onSearchPress: function () {
+            MessageToast.show("Search initiated");
+        },
+
+        onHelpPress: function () {
+            MessageToast.show("SAP Build Work Zone Help Documentation loaded");
+        },
+
+        onQuickAction: function (oEvent) {
+            var sText = oEvent.getSource().getText();
+            MessageToast.show("Action triggered: " + sText);
+        },
+
         onLogout: function () {
-
             MessageToast.show("Logged Out Successfully");
-
             this.getOwnerComponent().getRouter().navTo("Login");
-
         }
 
     });

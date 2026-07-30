@@ -1,131 +1,286 @@
 <mvc:View
     controllerName="xyraweb.controller.Auditor"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
 
     <Page
         id="auditorPage"
-        title="Auditor Dashboard">
+        showHeader="true"
+        enableScrolling="true"
+        class="sapUiContentPadding">
 
-        <headerContent>
+        <dependents>
+            <!-- Auditor Profile Popover -->
+            <ResponsivePopover
+                id="auditorProfilePopover"
+                title="Auditor Profile"
+                placement="Bottom"
+                contentWidth="320px">
+                <content>
+                    <VBox class="sapUiMediumMargin">
+                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                            <Avatar displaySize="M" initials="AO" backgroundColor="Accent5" class="sapUiSmallMarginEnd"/>
+                            <VBox>
+                                <Title text="Internal Audit Officer" level="H3"/>
+                                <Text text="Senior Internal Auditor"/>
+                                <ObjectStatus text="Online" state="Success"/>
+                            </VBox>
+                        </HBox>
+                        <VBox class="sapUiSmallMarginBottom">
+                            <Label text="Auditor ID" design="Bold"/>
+                            <Text text="AUD001"/>
+                            <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="Internal Audit &amp; Compliance"/>
+                            <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="auditor@xyra.ai"/>
+                            <Label text="Region" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="Global"/>
+                            <Label text="Assigned Audits" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="12 Active Audits"/>
+                            <Label text="Completed Audits" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="88 Audits Passed"/>
+                            <Label text="Pending Findings" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="3 Open Findings"/>
+                        </VBox>
+                        <HBox justifyContent="End" class="sapUiSmallMarginTop">
+                            <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
+                        </HBox>
+                    </VBox>
+                </content>
+            </ResponsivePopover>
+        </dependents>
 
-            <Button
-                text="Logout"
-                type="Reject"
-                icon="sap-icon://log"
-                press="onLogout"/>
+        <customHeader>
+            <OverflowToolbar height="4.5rem" class="sapUiSmallMarginBottom">
+                <Button
+                    text="AUDITOR"
+                    icon="sap-icon://employee"
+                    type="Transparent"
+                    press="onProfilePress"/>
 
-        </headerContent>
+                <ToolbarSeparator/>
+
+                <VBox justifyContent="Center" class="sapUiTinyMarginBegin">
+                    <Title text="XYRA - Auditor Dashboard" level="H4" class="sapUiNoMargin"/>
+                    <Text text="Internal Audit &amp; Compliance Portal - AI Powered SAP Security Audit Platform" class="textMuted sapUiNoMargin"/>
+                </VBox>
+
+                <ToolbarSpacer/>
+
+                <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onActionPress"/>
+                <Button icon="sap-icon://search" tooltip="Search" type="Transparent" press="onActionPress"/>
+                <Button icon="sap-icon://sys-help" tooltip="Help" type="Transparent" press="onActionPress"/>
+                <Button icon="sap-icon://action-settings" tooltip="Settings" type="Transparent" press="onActionPress"/>
+                <Button
+                    text="Logout"
+                    type="Reject"
+                    icon="sap-icon://log"
+                    press="onLogout"/>
+            </OverflowToolbar>
+        </customHeader>
 
         <content>
+            <VBox width="100%" class="sapUiSmallMargin">
 
-            <VBox
-                width="100%"
-                class="sapUiLargeMargin">
+                <!-- TOP KPI DASHBOARD (6 Cards) -->
+                <Title text="Audit Performance &amp; Governance Overview" level="H3" class="sapUiSmallMarginBottom"/>
 
-                <Title
-                    text="Welcome Auditor"
-                    level="H2"/>
+                <layout:Grid containerQuery="true" defaultSpan="XL2 L4 M6 S12" class="sapUiSmallMarginBottom">
 
-                <Text
-                    text="Audit Review & Compliance Monitoring"
-                    class="sapUiSmallMarginBottom"/>
+                    <GenericTile header="Pending Audits" subheader="Scheduled Audit Reviews" class="sapUiTinyMargin">
+                        <TileContent footer="12 In Progress">
+                            <NumericContent value="12" valueColor="Critical" indicator="Up" icon="sap-icon://inspection"/>
+                        </TileContent>
+                    </GenericTile>
 
-                <Toolbar>
+                    <GenericTile header="Completed Audits" subheader="Archived Audit Logs" class="sapUiTinyMargin">
+                        <TileContent footer="88 Verified">
+                            <NumericContent value="88" valueColor="Good" indicator="Up" icon="sap-icon://accept"/>
+                        </TileContent>
+                    </GenericTile>
 
-                    <Title text="Audit Summary"/>
+                    <GenericTile header="Critical Findings" subheader="High Severity Deficiencies" class="sapUiTinyMargin">
+                        <TileContent footer="Remediation Active">
+                            <NumericContent value="2" valueColor="Error" indicator="Down" icon="sap-icon://alert"/>
+                        </TileContent>
+                    </GenericTile>
 
+                    <GenericTile header="Open Findings" subheader="Control Violations" class="sapUiTinyMargin">
+                        <TileContent footer="3 Pending Response">
+                            <NumericContent value="3" valueColor="Error" indicator="Down" icon="sap-icon://warning"/>
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile header="Compliance Score" subheader="SOX / ISO Rating" class="sapUiTinyMargin">
+                        <TileContent footer="Target 95%">
+                            <NumericContent value="96.8%" valueColor="Good" indicator="Up" icon="sap-icon://sys-enter-2"/>
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile header="Audit Progress" subheader="Q3 Audit Cycle" class="sapUiTinyMargin">
+                        <TileContent footer="82% Overall Progress">
+                            <NumericContent value="82%" valueColor="Neutral" icon="sap-icon://line-chart"/>
+                        </TileContent>
+                    </GenericTile>
+
+                </layout:Grid>
+
+                <!-- FILTER BAR (Aligned 4-column grid, no internal scroll) -->
+                <Panel headerText="Filter Audit Records" expandable="true" expanded="true" class="sapUiSmallMarginBottom noInternalScroll">
+                    <layout:Grid containerQuery="true" defaultSpan="XL3 L3 M6 S12">
+                        <SearchField placeholder="Search audit logs..." search="onRefresh"/>
+                        <Input placeholder="Audit ID (e.g. AUD-101)"/>
+                        <Input placeholder="Business User"/>
+                        <Input placeholder="Application (e.g. SAP ECC)"/>
+                        <Input placeholder="Control ID (e.g. SOX-001)"/>
+                        <Select width="100%">
+                            <core:Item key="" text="All Risk Levels"/>
+                            <core:Item key="High" text="High"/>
+                            <core:Item key="Medium" text="Medium"/>
+                            <core:Item key="Low" text="Low"/>
+                        </Select>
+                        <Select width="100%">
+                            <core:Item key="" text="All Compliance Statuses"/>
+                            <core:Item key="Compliant" text="Compliant"/>
+                            <core:Item key="NonCompliant" text="Non-Compliant"/>
+                        </Select>
+                        <DatePicker placeholder="Audit Date" width="100%"/>
+                    </layout:Grid>
+                    <OverflowToolbar class="sapUiTinyMarginTop">
+                        <ToolbarSpacer/>
+                        <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onRefresh"/>
+                        <Button text="Reset" type="Transparent" icon="sap-icon://reset" press="onActionPress"/>
+                        <Button text="Refresh" icon="sap-icon://refresh" press="onRefresh"/>
+                        <Button text="Export" icon="sap-icon://excel-attachment" press="onActionPress"/>
+                    </OverflowToolbar>
+                </Panel>
+
+                <!-- QUICK ACTIONS -->
+                <OverflowToolbar class="sapUiSmallMarginBottom">
+                    <Title text="Auditor Quick Actions" level="H5"/>
                     <ToolbarSpacer/>
+                    <Button text="Start Audit" type="Emphasized" icon="sap-icon://play" press="onActionPress"/>
+                    <Button text="Raise Finding" type="Reject" icon="sap-icon://add-filter" press="onActionPress"/>
+                    <Button text="Generate Report" icon="sap-icon://pdf-attachment" press="onActionPress"/>
+                    <Button text="Download Evidence" icon="sap-icon://download" press="onActionPress"/>
+                    <Button text="Export Report" icon="sap-icon://excel-attachment" press="onActionPress"/>
+                    <Button text="Assign Review" icon="sap-icon://personnel" press="onActionPress"/>
+                    <Button text="Refresh" icon="sap-icon://refresh" press="onRefresh"/>
+                </OverflowToolbar>
 
-                    <Button
-                        text="Refresh"
-                        icon="sap-icon://refresh"
-                        press="onRefresh"/>
+                <!-- MAIN TABLE (Responsive column pop-in to prevent horizontal scroll) -->
+                <Panel headerText="Audit Review Queue &amp; Compliance Logs" expandable="false" class="sapUiSmallMarginBottom">
+                    <Table id="auditorTable" inset="false" width="100%" sticky="HeaderColumn,HeaderRow">
+                        <columns>
+                            <Column width="7rem"><Text text="Audit ID"/></Column>
+                            <Column width="7rem"><Text text="Control ID"/></Column>
+                            <Column width="8rem" minScreenWidth="Tablet" demandPopin="true"><Text text="Application"/></Column>
+                            <Column width="11rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Business Process"/></Column>
+                            <Column width="8rem"><Text text="Business User"/></Column>
+                            <Column width="8rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Control Owner"/></Column>
+                            <Column width="6rem"><Text text="Risk"/></Column>
+                            <Column width="10rem" minScreenWidth="Tablet" demandPopin="true"><Text text="Compliance %"/></Column>
+                            <Column width="8rem"><Text text="Status"/></Column>
+                            <Column width="7rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Assigned Date"/></Column>
+                            <Column width="7rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Due Date"/></Column>
+                            <Column width="8rem"><Text text="Action"/></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <ObjectIdentifier title="AUD-101" subtitle="SOX"/>
+                                    <Text text="SOX-001"/>
+                                    <Text text="SAP ECC"/>
+                                    <Text text="User Access Review"/>
+                                    <Text text="John"/>
+                                    <Text text="Reviewer 2"/>
+                                    <ObjectStatus text="Low" state="Success" icon="sap-icon://sys-enter"/>
+                                    <ProgressIndicator percentValue="98" displayValue="98%" state="Success"/>
+                                    <ObjectStatus text="Approved" state="Success"/>
+                                    <Text text="2026-07-20"/>
+                                    <Text text="2026-07-28"/>
+                                    <Button text="View Details" icon="sap-icon://hint" press="onActionPress"/>
+                                </cells>
+                            </ColumnListItem>
 
-                </Toolbar>
+                            <ColumnListItem>
+                                <cells>
+                                    <ObjectIdentifier title="AUD-102" subtitle="SOD"/>
+                                    <Text text="SOX-002"/>
+                                    <Text text="SAP S/4HANA"/>
+                                    <Text text="Firefighter Log Review"/>
+                                    <Text text="Jane"/>
+                                    <Text text="Reviewer 1"/>
+                                    <ObjectStatus text="High" state="Error" icon="sap-icon://alert"/>
+                                    <ProgressIndicator percentValue="65" displayValue="65%" state="Warning"/>
+                                    <ObjectStatus text="Pending" state="Warning"/>
+                                    <Text text="2026-07-22"/>
+                                    <Text text="2026-07-30"/>
+                                    <Button text="View Details" icon="sap-icon://hint" press="onActionPress"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
 
-                <Table
-                    width="100%"
-                    inset="false">
+                <!-- AI INSIGHTS & AUDIT TIMELINE -->
+                <layout:Grid containerQuery="true" defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                    
+                    <Panel headerText="AI Audit Analytics &amp; Risk Insights" expandable="true" expanded="true">
+                        <VBox class="sapUiSmallMargin">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                <Label text="Overall Audit Compliance Score" design="Bold"/>
+                                <ObjectStatus text="96.8% Compliant" state="Success"/>
+                            </HBox>
+                            <ProgressIndicator percentValue="97" displayValue="97%" state="Success" class="sapUiSmallMarginBottom"/>
 
-                    <columns>
+                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                <Label text="AI Deficiencies Prediction" design="Bold"/>
+                                <ObjectStatus text="Zero Critical Anomalies" state="Success"/>
+                            </HBox>
+                            <Text text="AI Audit Scanner completed analysis on 1,420 user accounts across SAP ECC &amp; S/4HANA. All controls comply with SOX 404 specs." class="sapUiSmallMarginBottom"/>
+                            <MessageStrip text="Control Effectiveness score calculated at 98.2%. Confidence rating: 99%." type="Success" showIcon="true"/>
+                        </VBox>
+                    </Panel>
 
-                        <Column>
-                            <Text text="Control ID"/>
-                        </Column>
+                    <Panel headerText="Audit Lifecycle Timeline" expandable="true" expanded="true">
+                        <VBox class="sapUiSmallMargin">
+                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                <core:Icon src="sap-icon://accept" color="green" class="sapUiSmallMarginEnd"/>
+                                <Text text="Step 1: Audit Scope &amp; Schedule Created"/>
+                            </HBox>
+                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                <core:Icon src="sap-icon://accept" color="green" class="sapUiSmallMarginEnd"/>
+                                <Text text="Step 2: Evidence Collected &amp; Validated"/>
+                            </HBox>
+                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                <core:Icon src="sap-icon://process" color="orange" class="sapUiSmallMarginEnd"/>
+                                <Text text="Step 3: Internal Control Testing (Active)"/>
+                            </HBox>
+                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                <core:Icon src="sap-icon://future" color="gray" class="sapUiSmallMarginEnd"/>
+                                <Text text="Step 4: Final Management Report &amp; Closure"/>
+                            </HBox>
+                        </VBox>
+                    </Panel>
 
-                        <Column>
-                            <Text text="Process"/>
-                        </Column>
-
-                        <Column>
-                            <Text text="Reviewer"/>
-                        </Column>
-
-                        <Column>
-                            <Text text="Status"/>
-                        </Column>
-
-                        <Column>
-                            <Text text="Risk"/>
-                        </Column>
-
-                    </columns>
-
-                    <items>
-
-                        <ColumnListItem>
-
-                            <cells>
-
-                                <Text text="SOX-001"/>
-
-                                <Text text="User Access Review"/>
-
-                                <Text text="Reviewer 2"/>
-
-                                <ObjectStatus
-                                    text="Approved"
-                                    state="Success"/>
-
-                                <ObjectStatus
-                                    text="Low"
-                                    state="Success"/>
-
-                            </cells>
-
-                        </ColumnListItem>
-
-                        <ColumnListItem>
-
-                            <cells>
-
-                                <Text text="SOX-002"/>
-
-                                <Text text="Firefighter Log Review"/>
-
-                                <Text text="Reviewer 1"/>
-
-                                <ObjectStatus
-                                    text="Pending"
-                                    state="Warning"/>
-
-                                <ObjectStatus
-                                    text="High"
-                                    state="Error"/>
-
-                            </cells>
-
-                        </ColumnListItem>
-
-                    </items>
-
-                </Table>
+                </layout:Grid>
 
             </VBox>
-
         </content>
 
-    </Page>
+        <!-- FOOTER (Removed ONLY 'SAP BTP Trial') -->
+        <footer>
+            <OverflowToolbar>
+                <Text text="© 2026 Forte Innovations"/>
+                <ToolbarSpacer/>
+                <Text text="XYRA Internal Audit Platform | Version 1.0"/>
+                <ToolbarSpacer/>
+            </OverflowToolbar>
+        </footer>
 
+    </Page>
 </mvc:View>

@@ -1,1 +1,65 @@
-/* Enter your custom styles here */
+/* Modern SAP Fiori Horizon Custom Styles & Full Viewport Responsiveness */
+
+html, body, #content, #container, #container-uiarea, .sapUiBody {
+    height: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    background-color: #f5f7fa;
+}
+
+.sapTNTToolPage {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.sapUiContentPadding {
+    background-color: #f5f7fa;
+}
+
+/* Header Non-clipping & Vertical Alignment Fix */
+.sapMBar {
+    min-height: 4.5rem !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.textMuted {
+    color: #64748b !important;
+    font-size: 0.85rem !important;
+}
+
+/* Table Horizontal Scroll Elimination & Panel Content Overflow */
+.noInternalScroll .sapMPanelContent,
+.noInternalScroll .sapMList,
+.noInternalScroll .sapMTable {
+    overflow-x: hidden !important;
+}
+
+.sapMTable {
+    overflow-x: hidden !important;
+}
+
+/* Create User Button Text Centering Fix */
+.createUserBtn {
+    min-width: 8.5rem !important;
+    text-align: center !important;
+}
+
+.createUserBtn .sapMBtnInner {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 0 1.25rem !important;
+    box-sizing: border-box !important;
+}
+
+.createUserBtn .sapMBtnContent {
+    width: 100% !important;
+    text-align: center !important;
+    font-weight: 600 !important;
+    line-height: normal !important;
+    display: block !important;
+}
