@@ -2,23 +2,69 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
-    "sap/ui/model/json/JSONModel"
-], function (Controller, MessageToast, MessageBox, JSONModel) {
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/BusyIndicator",
+    "xyraweb/model/config"
+], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config) {
     "use strict";
+
+    // The create dialog only asks for a Persona, not a role code or a display
+    // name — this is the one place both get derived from it. Persona label is
+    // reused as the user's `name` too, since it's the only way to tell
+    // "Reviewer 1" and "Reviewer 2" apart later (they share the same REVIEWER
+    // role, same as the login page's own role/email matching).
+    var PERSONA_TO_ROLE = {
+        "Escalation Manager": "ESCALATION_MANAGER",
+        "Reviewer 1": "REVIEWER",
+        "Reviewer 2": "REVIEWER",
+        "Auditor": "AUDITOR"
+    };
+
+    var ROLE_TO_PERSONA = {
+        ADMIN: "Admin",
+        ESCALATION_MANAGER: "Escalation Manager",
+        REVIEWER: "Reviewer",
+        AUDITOR: "Auditor"
+    };
 
     return Controller.extend("xyraweb.controller.AccessManagement", {
 
         onInit: function () {
-            var oData = {
-                users: [
-                    { userId: "USR001", email: "manager@xyra.ai", persona: "Escalation Manager", status: "Active", createdDate: "2026-07-28" },
-                    { userId: "USR002", email: "reviewer1@xyra.ai", persona: "Reviewer 1", status: "Active", createdDate: "2026-07-29" },
-                    { userId: "USR003", email: "reviewer2@xyra.ai", persona: "Reviewer 2", status: "Active", createdDate: "2026-07-29" },
-                    { userId: "USR004", email: "auditor@xyra.ai", persona: "Auditor", status: "Active", createdDate: "2026-07-30" }
-                ]
-            };
-            var oModel = new JSONModel(oData);
-            this.getView().setModel(oModel, "userModel");
+            this.getView().setModel(new JSONModel({ users: [], busy: false }), "userModel");
+            this._loadUsers();
+        },
+
+        _loadUsers: function () {
+            var oModel = this.getView().getModel("userModel");
+            oModel.setProperty("/busy", true);
+
+            return fetch(Config.AUTH_BASE_URL + "/api/admin/listUsers", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: Config.TEST_SUBDOMAIN })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    var aUsers = (oData.value || []).map(function (oUser) {
+                        return {
+                            id: oUser.id,
+                            userId: oUser.id,
+                            name: oUser.name,
+                            email: oUser.email,
+                            persona: ROLE_TO_PERSONA[oUser.role] || oUser.role,
+                            role: oUser.role,
+                            status: oUser.status,
+                            createdDate: (oUser.createdAt || "").slice(0, 10)
+                        };
+                    });
+                    oModel.setProperty("/users", aUsers);
+                })
+                .catch(function () {
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                })
+                .finally(function () {
+                    oModel.setProperty("/busy", false);
+                });
         },
 
         onNavBack: function () {
@@ -40,82 +86,119 @@ sap.ui.define([
         },
 
         onSubmitCreateUser: function () {
+            var oNameInput = this.byId("createNameInput");
             var oEmailInput = this.byId("createEmailInput");
             var oPasswordInput = this.byId("createPasswordInput");
             var oPersonaSelect = this.byId("createPersonaSelect");
 
+            var sName = oNameInput ? oNameInput.getValue().trim() : "";
             var sEmail = oEmailInput ? oEmailInput.getValue().trim() : "";
             var sPassword = oPasswordInput ? oPasswordInput.getValue().trim() : "";
             var sPersona = oPersonaSelect ? oPersonaSelect.getSelectedKey() : "";
 
-            if (!sEmail || !sPassword || !sPersona) {
-                MessageBox.error("Please fill in User Email, Password, and select a Persona.");
+            if (!sName || !sEmail || !sPassword || !sPersona) {
+                MessageBox.error("Please fill in Name, Email, Password, and select a Persona.");
                 return;
             }
 
-            if (sPersona === "Admin") {
+            var sRoleCode = PERSONA_TO_ROLE[sPersona];
+            if (!sRoleCode) {
                 MessageBox.error("Admin role creation is restricted.");
                 return;
             }
 
-            var oModel = this.getView().getModel("userModel");
-            var aUsers = oModel.getProperty("/users");
-            var sNewId = "USR00" + (aUsers.length + 1);
+            BusyIndicator.show(0);
 
-            aUsers.push({
-                userId: sNewId,
-                email: sEmail,
-                persona: sPersona,
-                status: "Active",
-                createdDate: new Date().toISOString().slice(0, 10)
-            });
+            fetch(Config.AUTH_BASE_URL + "/api/admin/createUser", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    subdomain: Config.TEST_SUBDOMAIN,
+                    name: sName,
+                    email: sEmail,
+                    password: sPassword,
+                    roleCode: sRoleCode
+                })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
 
-            oModel.setProperty("/users", aUsers);
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Could not create user.");
+                        return;
+                    }
 
-            if (oEmailInput) { oEmailInput.setValue(""); }
-            if (oPasswordInput) { oPasswordInput.setValue(""); }
-            if (oPersonaSelect) { oPersonaSelect.setSelectedKey(""); }
+                    if (oNameInput) { oNameInput.setValue(""); }
+                    if (oEmailInput) { oEmailInput.setValue(""); }
+                    if (oPasswordInput) { oPasswordInput.setValue(""); }
+                    if (oPersonaSelect) { oPersonaSelect.setSelectedKey(""); }
 
-            MessageToast.show("User provisioned successfully: " + sEmail + " as " + sPersona);
-            this.onCloseCreateUserDialog();
+                    MessageToast.show("User provisioned successfully: " + sEmail + " as " + sPersona);
+                    this.onCloseCreateUserDialog();
+                    this._loadUsers();
+                }.bind(this))
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onRowResetPassword: function (oEvent) {
             var oItem = oEvent.getSource().getParent().getParent();
             var oContext = oItem.getBindingContext("userModel");
-            var sEmail = oContext ? oContext.getProperty("email") : "user@xyra.ai";
-            this._openResetDialog(sEmail);
+            var sEmail = oContext ? oContext.getProperty("email") : "";
+            var sUserId = oContext ? oContext.getProperty("userId") : "";
+            this._openResetDialog(sEmail, sUserId);
         },
 
         onRowRemoveUser: function (oEvent) {
             var oItem = oEvent.getSource().getParent().getParent();
             var oContext = oItem.getBindingContext("userModel");
-            var sPath = oContext.getPath();
-            var sEmail = oContext ? oContext.getProperty("email") : "user@xyra.ai";
-            var oModel = this.getView().getModel("userModel");
+            var sEmail = oContext ? oContext.getProperty("email") : "";
+            var sUserId = oContext ? oContext.getProperty("userId") : "";
 
             MessageBox.confirm("Are you sure you want to remove user access for " + sEmail + "?", {
                 title: "Confirm Removal",
                 onClose: function (oAction) {
-                    if (oAction === MessageBox.Action.OK) {
-                        var aUsers = oModel.getProperty("/users");
-                        var iIndex = parseInt(sPath.split("/").pop(), 10);
-                        if (iIndex >= 0 && iIndex < aUsers.length) {
-                            aUsers.splice(iIndex, 1);
-                            oModel.setProperty("/users", aUsers);
-                            MessageToast.show("User access removed for " + sEmail);
-                        }
+                    if (oAction !== MessageBox.Action.OK) {
+                        return;
                     }
-                }
+
+                    BusyIndicator.show(0);
+
+                    fetch(Config.AUTH_BASE_URL + "/api/admin/removeUser", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ subdomain: Config.TEST_SUBDOMAIN, userId: sUserId })
+                    })
+                        .then(function (oResponse) { return oResponse.json(); })
+                        .then(function (oData) {
+                            BusyIndicator.hide();
+
+                            if (!oData.success) {
+                                MessageBox.error(oData.message || "Could not remove user.");
+                                return;
+                            }
+
+                            MessageToast.show("User access removed for " + sEmail);
+                            this._loadUsers();
+                        }.bind(this))
+                        .catch(function () {
+                            BusyIndicator.hide();
+                            MessageBox.error("Could not reach the server. Is xyra-core running?");
+                        });
+                }.bind(this)
             });
         },
 
-        _openResetDialog: function (sEmail) {
+        _openResetDialog: function (sEmail, sUserId) {
             var oDialog = this.byId("resetPasswordDialog");
             var oText = this.byId("resetUserEmailText");
             if (oText) {
                 oText.setText(sEmail);
             }
+            this._sResetUserId = sUserId;
             if (oDialog) {
                 oDialog.open();
             }
@@ -147,13 +230,35 @@ sap.ui.define([
 
             var oText = this.byId("resetUserEmailText");
             var sEmail = oText ? oText.getText() : "User";
+            var sUserId = this._sResetUserId;
 
-            MessageToast.show("Password successfully reset for " + sEmail);
+            BusyIndicator.show(0);
 
-            if (oNewPass) { oNewPass.setValue(""); }
-            if (oConfPass) { oConfPass.setValue(""); }
+            fetch(Config.AUTH_BASE_URL + "/api/admin/resetPassword", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: Config.TEST_SUBDOMAIN, userId: sUserId, newPassword: sNew })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
 
-            this.onCloseResetPasswordDialog();
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Could not reset password.");
+                        return;
+                    }
+
+                    MessageToast.show("Password successfully reset for " + sEmail);
+
+                    if (oNewPass) { oNewPass.setValue(""); }
+                    if (oConfPass) { oConfPass.setValue(""); }
+
+                    this.onCloseResetPasswordDialog();
+                }.bind(this))
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         }
 
     });

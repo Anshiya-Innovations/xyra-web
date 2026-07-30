@@ -3,26 +3,17 @@ sap.ui.define([
     "sap/ui/core/UIComponent",
     "sap/m/MessageBox",
     "sap/ui/core/BusyIndicator",
-    "sap/ui/core/ValueState"
+    "sap/ui/core/ValueState",
+    "xyraweb/model/config"
 ], function (
     Controller,
     UIComponent,
     MessageBox,
     BusyIndicator,
-    ValueState
+    ValueState,
+    Config
 ) {
     "use strict";
-
-    // xyra-core runs as its own separate server/module — not bundled with this
-    // UI5 app — so this is a plain cross-origin fetch() call, not an OData model
-    // binding. Point this at wherever `cds watch` is actually serving xyra-core.
-    var AUTH_BASE_URL = "http://localhost:4004";
-
-    // ponytail: hardcoded to the one fixed test tenant for now — there's no
-    // Host-header-based Tenant Resolver yet, so the frontend can't discover the
-    // subdomain any other way. Replace with real tenant resolution once that
-    // exists (e.g. reading it from the browser's own hostname).
-    var TEST_SUBDOMAIN = "xyrademo";
 
     // Maps each dropdown selection to what a successful login response must look
     // like for that selection to be accepted. Role alone tells ADMIN / ACM /
@@ -94,10 +85,10 @@ sap.ui.define([
 
             BusyIndicator.show(0);
 
-            fetch(AUTH_BASE_URL + "/api/auth/login", {
+            fetch(Config.AUTH_BASE_URL + "/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ subdomain: TEST_SUBDOMAIN, email: sEmail, password: sPass })
+                body: JSON.stringify({ subdomain: Config.TEST_SUBDOMAIN, email: sEmail, password: sPass })
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
