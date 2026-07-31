@@ -1,8 +1,12 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
-    "sap/ui/model/json/JSONModel"
-], function (Controller, MessageToast, JSONModel) {
+    "sap/m/MessageBox",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/BusyIndicator",
+    "xyraweb/model/config",
+    "xyraweb/model/session"
+], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config, Session) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Configuration", {
@@ -41,6 +45,49 @@ sap.ui.define([
                 ]
             });
             this.getView().setModel(oODataServices, "odataModel");
+
+            this._loadConnection();
+        },
+
+        _loadConnection: function () {
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                this.getOwnerComponent().getRouter().navTo("Login");
+                return;
+            }
+
+            BusyIndicator.show(0);
+
+            fetch(Config.AUTH_BASE_URL + "/api/system-config/getSystemConnection", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: oSession.subdomain })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Could not load connection settings.");
+                        return;
+                    }
+
+                    if (!oData.hasConnection) {
+                        return;
+                    }
+
+                    if (this.byId("sysName")) { this.byId("sysName").setValue(oData.systemName || ""); }
+                    if (this.byId("hostName")) { this.byId("hostName").setValue(oData.hostName || ""); }
+                    if (this.byId("sysId")) { this.byId("sysId").setValue(oData.systemId || ""); }
+                    if (this.byId("client")) { this.byId("client").setValue(oData.client || ""); }
+                    if (this.byId("instanceNum")) { this.byId("instanceNum").setValue(oData.instanceNo || ""); }
+                    if (this.byId("port")) { this.byId("port").setValue(oData.port || ""); }
+                }.bind(this))
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onSideNavToggle: function () {
@@ -139,11 +186,96 @@ sap.ui.define([
         },
 
         onTestConnection: function () {
-            MessageToast.show("SAP S/4HANA Connection Verified: 200 OK (42ms)");
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                return;
+            }
+
+            var sHostName = this.byId("hostName") ? this.byId("hostName").getValue().trim() : "";
+            var sPort = this.byId("port") ? this.byId("port").getValue().trim() : "";
+            var oStatus = this.byId("connectionStatusText");
+            var oLastValidation = this.byId("lastValidationText");
+
+            if (!sHostName || !sPort) {
+                MessageToast.show("Enter Host Name/IP and Port before testing.");
+                return;
+            }
+
+            BusyIndicator.show(0);
+
+            fetch(Config.AUTH_BASE_URL + "/api/system-config/testSystemConnection", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: oSession.subdomain, hostName: sHostName, port: sPort })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+
+                    if (oStatus) {
+                        oStatus.setText(oData.success ? "Connected" : "Unreachable");
+                        oStatus.setState(oData.success ? "Success" : "Error");
+                        oStatus.setIcon(oData.success ? "sap-icon://sys-enter-2" : "sap-icon://alert");
+                    }
+                    if (oLastValidation) {
+                        oLastValidation.setText(new Date().toLocaleString());
+                    }
+
+                    MessageToast.show(oData.message);
+                })
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageToast.show("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onSaveConfiguration: function () {
-            MessageToast.show("Configuration Saved Successfully to SAP Destination Service.");
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                return;
+            }
+
+            var sSystemId = this.byId("sysId") ? this.byId("sysId").getValue().trim() : "";
+            var sClient = this.byId("client") ? this.byId("client").getValue().trim() : "";
+
+            if (!sSystemId || !sClient) {
+                MessageToast.show("System ID (SID) and Client are required.");
+                return;
+            }
+
+            BusyIndicator.show(0);
+
+            fetch(Config.AUTH_BASE_URL + "/api/system-config/saveSystemConnection", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    subdomain: oSession.subdomain,
+                    systemName: this.byId("sysName") ? this.byId("sysName").getValue() : "",
+                    hostName: this.byId("hostName") ? this.byId("hostName").getValue() : "",
+                    systemId: sSystemId,
+                    client: sClient,
+                    instanceNo: this.byId("instanceNum") ? this.byId("instanceNum").getValue() : "",
+                    port: this.byId("port") ? this.byId("port").getValue() : "",
+                    jwtToken: this.byId("jwtToken") ? this.byId("jwtToken").getValue() : ""
+                })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+
+                    if (!oData.success) {
+                        MessageToast.show(oData.message || "Could not save configuration.");
+                        return;
+                    }
+
+                    MessageToast.show("Configuration Saved Successfully.");
+                })
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageToast.show("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onResetConfiguration: function () {
@@ -216,6 +348,7 @@ sap.ui.define([
         },
 
         onLogout: function () {
+            Session.clear();
             MessageToast.show("Logged Out Successfully");
             this.getOwnerComponent().getRouter().navTo("Login");
         }

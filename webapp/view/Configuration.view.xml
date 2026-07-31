@@ -182,10 +182,10 @@
                                     <Button text="Test Connection" type="Accept" icon="sap-icon://accept" press="onTestConnection" width="12rem"/>
 
                                     <Label text="Connection Status"/>
-                                    <ObjectStatus text="Connected" state="Success" icon="sap-icon://sys-enter-2"/>
+                                    <ObjectStatus id="connectionStatusText" text="Not tested yet" state="None" icon="sap-icon://question-mark"/>
 
                                     <Label text="Last Validation"/>
-                                    <Text text="31-Jul-2026 13:00" class="textMuted"/>
+                                    <Text id="lastValidationText" text="—" class="textMuted"/>
                                 </form:content>
                             </form:SimpleForm>
                         </Panel>

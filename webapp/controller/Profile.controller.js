@@ -1,13 +1,63 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/m/MessageToast"
-], function (Controller, MessageToast) {
+    "sap/m/MessageToast",
+    "sap/m/MessageBox",
+    "sap/ui/core/BusyIndicator",
+    "xyraweb/model/config",
+    "xyraweb/model/session"
+], function (Controller, MessageToast, MessageBox, BusyIndicator, Config, Session) {
     "use strict";
+
+    var ROLE_LABELS = {
+        ADMIN: "Global Administrator",
+        ESCALATION_MANAGER: "Escalation Manager",
+        REVIEWER: "Reviewer",
+        AUDITOR: "Auditor"
+    };
 
     return Controller.extend("xyraweb.controller.Profile", {
 
         onInit: function () {
+            this._loadProfile();
+        },
 
+        _loadProfile: function () {
+            var oSession = Session.get();
+            if (!oSession || !oSession.userId) {
+                MessageBox.error("No active session. Please log in again.");
+                this.getOwnerComponent().getRouter().navTo("Login");
+                return;
+            }
+
+            BusyIndicator.show(0);
+
+            fetch(Config.AUTH_BASE_URL + "/api/profile/getProfile", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: oSession.subdomain, userId: oSession.userId })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Could not load profile.");
+                        return;
+                    }
+
+                    if (this.byId("profFullName")) { this.byId("profFullName").setValue(oData.name || ""); }
+                    if (this.byId("profEmail")) { this.byId("profEmail").setValue(oData.email || ""); }
+                    if (this.byId("profPhone")) { this.byId("profPhone").setValue(oData.phone || ""); }
+                    if (this.byId("profDepartment")) { this.byId("profDepartment").setValue(oData.department || ""); }
+                    if (this.byId("profOrg")) { this.byId("profOrg").setValue(oData.organization || ""); }
+                    if (this.byId("profAdminId")) { this.byId("profAdminId").setValue((oData.id || "").slice(0, 8).toUpperCase()); }
+                    if (this.byId("profPersona")) { this.byId("profPersona").setValue(ROLE_LABELS[oData.role] || oData.role || ""); }
+                    if (this.byId("profSubdomain")) { this.byId("profSubdomain").setValue(oSession.subdomain || ""); }
+                }.bind(this))
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onSideNavToggle: function () {
@@ -114,28 +164,98 @@ sap.ui.define([
                 return;
             }
 
-            MessageToast.show("Password updated successfully!");
-            if (oCurrentPass) { oCurrentPass.setValue(""); }
-            if (oNewPass) { oNewPass.setValue(""); }
-            if (oConfirmPass) { oConfirmPass.setValue(""); }
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                return;
+            }
+
+            BusyIndicator.show(0);
+
+            fetch(Config.AUTH_BASE_URL + "/api/profile/changePassword", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    subdomain: oSession.subdomain,
+                    userId: oSession.userId,
+                    currentPassword: sCurrent,
+                    newPassword: sNew
+                })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+
+                    if (!oData.success) {
+                        MessageToast.show(oData.message || "Could not change password.");
+                        return;
+                    }
+
+                    MessageToast.show("Password updated successfully!");
+                    if (oCurrentPass) { oCurrentPass.setValue(""); }
+                    if (oNewPass) { oNewPass.setValue(""); }
+                    if (oConfirmPass) { oConfirmPass.setValue(""); }
+                })
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageToast.show("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onSaveProfile: function () {
-            MessageToast.show("Personal & Account details saved successfully.");
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                return;
+            }
+
+            var sName = this.byId("profFullName") ? this.byId("profFullName").getValue().trim() : "";
+            if (!sName) {
+                MessageToast.show("Full Name is required.");
+                return;
+            }
+
+            BusyIndicator.show(0);
+
+            fetch(Config.AUTH_BASE_URL + "/api/profile/updateProfile", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    subdomain: oSession.subdomain,
+                    userId: oSession.userId,
+                    name: sName,
+                    phone: this.byId("profPhone") ? this.byId("profPhone").getValue() : "",
+                    department: this.byId("profDepartment") ? this.byId("profDepartment").getValue() : "",
+                    organization: this.byId("profOrg") ? this.byId("profOrg").getValue() : ""
+                })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+
+                    if (!oData.success) {
+                        MessageToast.show(oData.message || "Could not save profile.");
+                        return;
+                    }
+
+                    MessageToast.show("Personal & Account details saved successfully.");
+                }.bind(this))
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageToast.show("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onResetProfile: function () {
-            var aInputIds = [
-                "profFullName", "profEmail", "profPhone", "profDepartment", "profOrg",
-                "profCurrentPass", "profNewPass", "profConfirmPass"
-            ];
-            aInputIds.forEach(function (sId) {
+            var aPasswordIds = ["profCurrentPass", "profNewPass", "profConfirmPass"];
+            aPasswordIds.forEach(function (sId) {
                 var oInput = this.byId(sId);
                 if (oInput) {
                     oInput.setValue("");
                 }
             }.bind(this));
-            MessageToast.show("All profile text details have been reset.");
+            this._loadProfile();
+            MessageToast.show("Changes discarded — reloaded from server.");
         },
 
         onNotificationPress: function () {
@@ -148,6 +268,7 @@ sap.ui.define([
         },
 
         onLogout: function () {
+            Session.clear();
             MessageToast.show("Logged Out Successfully");
             this.getOwnerComponent().getRouter().navTo("Login");
         }

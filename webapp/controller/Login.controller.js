@@ -4,14 +4,16 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/core/BusyIndicator",
     "sap/ui/core/ValueState",
-    "xyraweb/model/config"
+    "xyraweb/model/config",
+    "xyraweb/model/session"
 ], function (
     Controller,
     UIComponent,
     MessageBox,
     BusyIndicator,
     ValueState,
-    Config
+    Config,
+    Session
 ) {
     "use strict";
 
@@ -107,6 +109,15 @@ sap.ui.define([
                         MessageBox.error("This account does not match the selected role.");
                         return;
                     }
+
+                    Session.save({
+                        userId: oData.userId,
+                        tenantId: oData.tenantId,
+                        subdomain: Config.TEST_SUBDOMAIN,
+                        role: oData.role,
+                        name: oData.name,
+                        email: oData.email
+                    });
 
                     UIComponent.getRouterFor(this).navTo(ROUTE_FOR_ROLE[sRole]);
                 }.bind(this))
