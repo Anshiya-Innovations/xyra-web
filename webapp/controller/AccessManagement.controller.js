@@ -8,11 +8,6 @@ sap.ui.define([
 ], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config) {
     "use strict";
 
-    // The create dialog only asks for a Persona, not a role code or a display
-    // name — this is the one place both get derived from it. Persona label is
-    // reused as the user's `name` too, since it's the only way to tell
-    // "Reviewer 1" and "Reviewer 2" apart later (they share the same REVIEWER
-    // role, same as the login page's own role/email matching).
     var PERSONA_TO_ROLE = {
         "Escalation Manager": "ESCALATION_MANAGER",
         "Reviewer 1": "REVIEWER",
@@ -32,6 +27,88 @@ sap.ui.define([
         onInit: function () {
             this.getView().setModel(new JSONModel({ users: [], busy: false }), "userModel");
             this._loadUsers();
+        },
+
+        onSideNavToggle: function () {
+            var oToolPage = this.byId("accessToolPage");
+            if (oToolPage) {
+                var bSideExpanded = oToolPage.getSideExpanded();
+                oToolPage.setSideExpanded(!bSideExpanded);
+            }
+            var oSideNav = this.byId("sideNavigation");
+            if (oSideNav) {
+                var bExpanded = oSideNav.getExpanded();
+                oSideNav.setExpanded(!bExpanded);
+            }
+        },
+
+        onSideNavItemSelect: function (oEvent) {
+            var oItem = oEvent.getParameter("item");
+            if (oItem) {
+                var sKey = oItem.getKey();
+                if (sKey && this[sKey]) {
+                    this[sKey]();
+                } else if (sKey) {
+                    this.getOwnerComponent().getRouter().navTo(sKey);
+                }
+            }
+        },
+
+        onAdmin: function () {
+            this.getOwnerComponent().getRouter().navTo("Admin");
+        },
+
+        onRoleManagement: function () {
+            this.getOwnerComponent().getRouter().navTo("RoleManagement");
+        },
+
+        onControlManagement: function () {
+            this.getOwnerComponent().getRouter().navTo("ControlManagement");
+        },
+
+        onControlMonitoring: function () {
+            this.getOwnerComponent().getRouter().navTo("ControlMonitoring");
+        },
+
+        onAIInsights: function () {
+            this.getOwnerComponent().getRouter().navTo("AIInsights");
+        },
+
+        onSOXCompliance: function () {
+            this.getOwnerComponent().getRouter().navTo("SOXCompliance");
+        },
+
+        onReports: function () {
+            this.getOwnerComponent().getRouter().navTo("Reports");
+        },
+
+        onAuditLogs: function () {
+            this.getOwnerComponent().getRouter().navTo("AuditLogs");
+        },
+
+        onConfiguration: function () {
+            this.getOwnerComponent().getRouter().navTo("Configuration");
+        },
+
+        onAccessManagement: function () {
+            this.getOwnerComponent().getRouter().navTo("AccessManagement");
+        },
+
+        onRiskAnalytics: function () {
+            this.getOwnerComponent().getRouter().navTo("RiskAnalytics");
+        },
+
+        onSystemHealth: function () {
+            this.getOwnerComponent().getRouter().navTo("SystemHealth");
+        },
+
+        onProfile: function () {
+            this.getOwnerComponent().getRouter().navTo("Profile");
+        },
+
+        onLogout: function () {
+            MessageToast.show("Logged Out Successfully");
+            this.getOwnerComponent().getRouter().navTo("Login");
         },
 
         _loadUsers: function () {

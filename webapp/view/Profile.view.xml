@@ -1,0 +1,208 @@
+<mvc:View
+    controllerName="xyraweb.controller.Profile"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="profileToolPage" sideExpanded="true">
+
+        <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="Profile" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://shield" key="Admin" select="onAdmin"/>
+
+                    <tnt:NavigationListItem text="Role Management" icon="sap-icon://manager" key="RoleManagement" select="onRoleManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="380 Roles" state="Indication17" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="156 Controls" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Control Monitoring" icon="sap-icon://inspection" key="ControlMonitoring" select="onControlMonitoring">
+                        <tnt:tag>
+                            <ObjectStatus text="Healthy" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://machine" key="AIInsights" select="onAIInsights">
+                        <tnt:tag>
+                            <ObjectStatus text="New" state="Indication15" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag>
+                            <ObjectStatus text="98.4%" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://business-objects-experience" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
+                        <tnt:tag>
+                            <ObjectStatus text="3 Risks" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="System Health" icon="sap-icon://sys-monitor" key="SystemHealth" select="onSystemHealth"/>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="profilePage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <!-- PAGE HEADER WITH TITLE & SUBTITLE -->
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+                        <Avatar initials="SA" displaySize="S" backgroundColor="Accent6" class="sapUiTinyMarginEnd"/>
+                        <VBox justifyContent="Center">
+                            <Title text="👤 XYRA – User Profile &amp; Account Settings" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Manage user details, security credentials, and enterprise permissions." class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+
+                        <Button icon="sap-icon://home" tooltip="Admin Dashboard" type="Transparent" press="onAdmin" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+
+                        <!-- USER PROFILE HEADER CARD -->
+                        <Panel expandable="false" class="sapUiSmallMarginBottom">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMargin">
+                                <HBox alignItems="Center">
+                                    <Avatar displaySize="L" initials="SA" backgroundColor="Accent6" class="sapUiMediumMarginEnd"/>
+                                    <VBox>
+                                        <Title text="System Administrator" level="H2"/>
+                                        <Text text="Global Administrator • Security &amp; Compliance" class="textMuted sapUiTinyMarginBottom"/>
+                                        <HBox alignItems="Center">
+                                            <ObjectStatus text="Online" state="Success" icon="sap-icon://sys-enter-2" class="sapUiSmallMarginEnd"/>
+                                            <ObjectStatus text="Admin ID: ADM001" state="Information" class="sapUiSmallMarginEnd"/>
+                                            <ObjectStatus text="Session: Active (24h Token)" state="None"/>
+                                        </HBox>
+                                    </VBox>
+                                </HBox>
+                                <VBox alignItems="End">
+                                    <Button text="Edit Profile Picture" icon="sap-icon://edit" type="Transparent" press="onQuickAction"/>
+                                    <Text text="Last Login: 31-Jul-2026 14:39 IST" class="textMuted sapUiTinyMarginTop"/>
+                                </VBox>
+                            </HBox>
+                        </Panel>
+
+                        <!-- SECTION 1 – PERSONAL & ACCOUNT DETAILS -->
+                        <Panel headerText="Personal &amp; Account Details" expandable="false" class="sapUiSmallMarginBottom">
+                            <form:SimpleForm editable="true" layout="ColumnLayout">
+                                <form:content>
+                                    <core:Title text="Personal Details"/>
+
+                                    <Label text="Full Name"/>
+                                    <Input id="profFullName" value="System Administrator"/>
+
+                                    <Label text="Email Address"/>
+                                    <Input id="profEmail" type="Email" value="admin@xyra.ai"/>
+
+                                    <Label text="Phone Number"/>
+                                    <Input id="profPhone" type="Number" value="15550192834" liveChange="onPhoneLiveChange"/>
+
+                                    <Label text="Department"/>
+                                    <Input id="profDepartment" value="Security &amp; Compliance"/>
+
+                                    <Label text="Organization"/>
+                                    <Input id="profOrg" value="XYRA Enterprise Solutions"/>
+
+                                    <core:Title text="Account &amp; System Details"/>
+
+                                    <Label text="Admin ID"/>
+                                    <Input id="profAdminId" value="ADM001" editable="false"/>
+
+                                    <Label text="Assigned Persona"/>
+                                    <Input id="profPersona" value="Global Administrator" editable="false"/>
+
+                                    <Label text="Enterprise Subdomain"/>
+                                    <Input id="profSubdomain" value="xyra-prod" editable="false"/>
+
+                                    <Label text="Account Status"/>
+                                    <ObjectStatus text="ACTIVE" state="Success" icon="sap-icon://sys-enter-2"/>
+                                </form:content>
+                            </form:SimpleForm>
+                        </Panel>
+
+                        <!-- SECTION 2 – SECURITY & CREDENTIALS -->
+                        <Panel headerText="Security &amp; Password Settings" expandable="false" class="sapUiSmallMarginBottom">
+                            <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="4" labelSpanS="12" emptySpanXL="5" emptySpanL="5" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1">
+                                <form:content>
+                                    <core:Title text="Password Management"/>
+
+                                    <Label text="Current Password"/>
+                                    <Input id="profCurrentPass" type="Password" placeholder="Enter current password"/>
+
+                                    <Label text="New Password"/>
+                                    <Input id="profNewPass" type="Password" placeholder="Enter new password"/>
+
+                                    <Label text="Confirm New Password"/>
+                                    <Input id="profConfirmPass" type="Password" placeholder="Re-enter new password"/>
+
+                                    <Label text=""/>
+                                    <HBox class="sapUiTinyMarginTop">
+                                        <Button text="Save Password" type="Emphasized" icon="sap-icon://save" press="onSavePassword"/>
+                                    </HBox>
+                                </form:content>
+                            </form:SimpleForm>
+                        </Panel>
+
+                        <!-- BOTTOM ACTION BAR -->
+                        <HBox justifyContent="End" class="sapUiMediumMarginTop sapUiSmallMarginBottom">
+                            <Button text="Save Profile Changes" type="Emphasized" icon="sap-icon://save" press="onSaveProfile" class="sapUiTinyMarginEnd"/>
+                            <Button text="Reset" type="Transparent" icon="sap-icon://reset" press="onResetProfile" class="sapUiTinyMarginEnd"/>
+                            <Button text="Back to Dashboard" type="Ghost" icon="sap-icon://home" press="onAdmin"/>
+                        </HBox>
+
+                    </VBox>
+                </content>
+
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations"/>
+                        <ToolbarSpacer/>
+                        <Text text="Version 1.0 | Status: Active"/>
+                    </OverflowToolbar>
+                </footer>
+
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>

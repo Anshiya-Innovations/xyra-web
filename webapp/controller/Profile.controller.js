@@ -4,14 +4,14 @@ sap.ui.define([
 ], function (Controller, MessageToast) {
     "use strict";
 
-    return Controller.extend("xyraweb.controller.Admin", {
+    return Controller.extend("xyraweb.controller.Profile", {
 
         onInit: function () {
 
         },
 
         onSideNavToggle: function () {
-            var oToolPage = this.byId("adminToolPage");
+            var oToolPage = this.byId("profileToolPage");
             if (oToolPage) {
                 var bSideExpanded = oToolPage.getSideExpanded();
                 oToolPage.setSideExpanded(!bSideExpanded);
@@ -27,7 +27,9 @@ sap.ui.define([
             var oItem = oEvent.getParameter("item");
             if (oItem) {
                 var sKey = oItem.getKey();
-                if (sKey) {
+                if (sKey && this[sKey]) {
+                    this[sKey]();
+                } else if (sKey) {
                     this.getOwnerComponent().getRouter().navTo(sKey);
                 }
             }
@@ -35,10 +37,6 @@ sap.ui.define([
 
         onAdmin: function () {
             this.getOwnerComponent().getRouter().navTo("Admin");
-        },
-
-        onUserManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("UserManagement");
         },
 
         onRoleManagement: function () {
@@ -81,10 +79,6 @@ sap.ui.define([
             this.getOwnerComponent().getRouter().navTo("RiskAnalytics");
         },
 
-        onEmergencyAccess: function () {
-            this.getOwnerComponent().getRouter().navTo("EmergencyAccess");
-        },
-
         onSystemHealth: function () {
             this.getOwnerComponent().getRouter().navTo("SystemHealth");
         },
@@ -93,24 +87,59 @@ sap.ui.define([
             this.getOwnerComponent().getRouter().navTo("Profile");
         },
 
-        onAdminProfilePress: function (oEvent) {
-            var oButton = oEvent.getSource();
-            var oPopover = this.byId("adminProfilePopover");
-            if (oPopover) {
-                oPopover.openBy(oButton);
+        onPhoneLiveChange: function (oEvent) {
+            var sValue = oEvent.getParameter("value") || "";
+            var sCleaned = sValue.replace(/[^0-9]/g, "");
+            if (sValue !== sCleaned) {
+                oEvent.getSource().setValue(sCleaned);
             }
         },
 
+        onSavePassword: function () {
+            var oCurrentPass = this.byId("profCurrentPass");
+            var oNewPass = this.byId("profNewPass");
+            var oConfirmPass = this.byId("profConfirmPass");
+
+            var sCurrent = oCurrentPass ? oCurrentPass.getValue() : "";
+            var sNew = oNewPass ? oNewPass.getValue() : "";
+            var sConfirm = oConfirmPass ? oConfirmPass.getValue() : "";
+
+            if (!sCurrent || !sNew || !sConfirm) {
+                MessageToast.show("Please enter Current Password, New Password, and Confirm Password.");
+                return;
+            }
+
+            if (sNew !== sConfirm) {
+                MessageToast.show("New Password and Confirm Password do not match.");
+                return;
+            }
+
+            MessageToast.show("Password updated successfully!");
+            if (oCurrentPass) { oCurrentPass.setValue(""); }
+            if (oNewPass) { oNewPass.setValue(""); }
+            if (oConfirmPass) { oConfirmPass.setValue(""); }
+        },
+
+        onSaveProfile: function () {
+            MessageToast.show("Personal & Account details saved successfully.");
+        },
+
+        onResetProfile: function () {
+            var aInputIds = [
+                "profFullName", "profEmail", "profPhone", "profDepartment", "profOrg",
+                "profCurrentPass", "profNewPass", "profConfirmPass"
+            ];
+            aInputIds.forEach(function (sId) {
+                var oInput = this.byId(sId);
+                if (oInput) {
+                    oInput.setValue("");
+                }
+            }.bind(this));
+            MessageToast.show("All profile text details have been reset.");
+        },
+
         onNotificationPress: function () {
-            MessageToast.show("System Notifications: 0 Critical Alerts");
-        },
-
-        onSearchPress: function () {
-            MessageToast.show("Search initiated");
-        },
-
-        onHelpPress: function () {
-            MessageToast.show("SAP Build Work Zone Help Documentation loaded");
+            MessageToast.show("System Notifications: Account operational.");
         },
 
         onQuickAction: function (oEvent) {

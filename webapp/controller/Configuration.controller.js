@@ -68,6 +68,10 @@ sap.ui.define([
             }
         },
 
+        onAdmin: function () {
+            this.getOwnerComponent().getRouter().navTo("Admin");
+        },
+
         onUserManagement: function () {
             this.getOwnerComponent().getRouter().navTo("UserManagement");
         },

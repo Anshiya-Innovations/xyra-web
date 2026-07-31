@@ -6,144 +6,209 @@
     xmlns:core="sap.ui.core"
     xmlns:layout="sap.ui.layout"
     xmlns:form="sap.ui.layout.form"
+    xmlns:tnt="sap.tnt"
     height="100%">
 
-    <Page
-        id="accessManagementPage"
-        showHeader="true"
-        enableScrolling="true"
-        class="sapUiContentPadding">
+    <tnt:ToolPage id="accessToolPage" sideExpanded="true">
 
-        <dependents>
-            <!-- CREATE USER DIALOG -->
-            <Dialog
-                id="createUserDialog"
-                title="Create User / Provision Access"
-                contentWidth="450px">
+        <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="AccessManagement" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://shield" key="Admin" select="onAdmin"/>
+
+                    <tnt:NavigationListItem text="Role Management" icon="sap-icon://manager" key="RoleManagement" select="onRoleManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="380 Roles" state="Indication17" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="156 Controls" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Control Monitoring" icon="sap-icon://inspection" key="ControlMonitoring" select="onControlMonitoring">
+                        <tnt:tag>
+                            <ObjectStatus text="Healthy" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://machine" key="AIInsights" select="onAIInsights">
+                        <tnt:tag>
+                            <ObjectStatus text="New" state="Indication15" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag>
+                            <ObjectStatus text="98.4%" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://business-objects-experience" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
+                        <tnt:tag>
+                            <ObjectStatus text="3 Risks" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="System Health" icon="sap-icon://sys-monitor" key="SystemHealth" select="onSystemHealth"/>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="accessManagementPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <dependents>
+                    <!-- CREATE USER DIALOG -->
+                    <Dialog
+                        id="createUserDialog"
+                        title="Create User / Provision Access"
+                        contentWidth="450px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Label text="User Name" required="true"/>
+                                <Input id="createNameInput" placeholder="e.g. Jane Doe" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="User Email" required="true"/>
+                                <Input id="createEmailInput" type="Email" placeholder="e.g. user@xyra.ai" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Password" required="true"/>
+                                <Input id="createPasswordInput" type="Password" placeholder="Enter temporary password" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Persona / Role" required="true"/>
+                                <Select id="createPersonaSelect" forceSelection="false" width="100%">
+                                    <core:Item key="" text="-- Select Persona --"/>
+                                    <core:Item key="Escalation Manager" text="Escalation Manager"/>
+                                    <core:Item key="Reviewer 1" text="Reviewer 1"/>
+                                    <core:Item key="Reviewer 2" text="Reviewer 2"/>
+                                    <core:Item key="Auditor" text="Auditor"/>
+                                </Select>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Create User" type="Emphasized" press="onSubmitCreateUser" class="createUserBtn"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseCreateUserDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- RESET PASSWORD DIALOG -->
+                    <Dialog
+                        id="resetPasswordDialog"
+                        title="Reset User Password"
+                        contentWidth="400px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Label text="User Email" design="Bold"/>
+                                <Text id="resetUserEmailText" text="selected.user@xyra.ai" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="New Password" required="true" class="sapUiTinyMarginTop"/>
+                                <Input id="newPasswordInput" type="Password" placeholder="Enter new password"/>
+
+                                <Label text="Confirm New Password" required="true" class="sapUiTinyMarginTop"/>
+                                <Input id="confirmPasswordInput" type="Password" placeholder="Enter new password"/>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Reset Password" type="Emphasized" icon="sap-icon://reset" press="onSubmitResetPassword"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseResetPasswordDialog"/>
+                        </endButton>
+                    </Dialog>
+                </dependents>
+
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+                        <Avatar src="sap-icon://key-user-settings" displaySize="S" type="Icon" class="sapUiTinyMarginEnd"/>
+                        <VBox justifyContent="Center">
+                            <Title text="XYRA - Access Management" level="H4" class="sapUiNoMargin"/>
+                            <Text text="User Access Provisioning &amp; Persona Management" class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+                        <ObjectStatus text="Active Security Policy" state="Success" icon="sap-icon://shield" class="sapUiSmallMarginEnd"/>
+                        <Button icon="sap-icon://home" tooltip="Home" type="Transparent" press="onNavBack" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
                 <content>
-                    <VBox class="sapUiMediumMargin">
-                        <Label text="User Name" required="true"/>
-                        <Input id="createNameInput" placeholder="e.g. Jane Doe" class="sapUiSmallMarginBottom"/>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
 
-                        <Label text="User Email" required="true"/>
-                        <Input id="createEmailInput" type="Email" placeholder="e.g. user@xyra.ai" class="sapUiSmallMarginBottom"/>
+                        <!-- MANAGED ENTERPRISE USERS TABLE -->
+                        <Panel expandable="false" class="noInternalScroll sapUiMediumMarginTop">
+                            <headerToolbar>
+                                <OverflowToolbar height="3.5rem">
+                                    <Title text="Provisioned Enterprise Users" level="H3" class="sapUiSmallMarginBegin"/>
+                                    <ToolbarSpacer/>
+                                    <Button text="Create User" type="Emphasized" press="onOpenCreateUserDialog" class="createUserBtn sapUiSmallMarginEnd"/>
+                                </OverflowToolbar>
+                            </headerToolbar>
 
-                        <Label text="Password" required="true"/>
-                        <Input id="createPasswordInput" type="Password" placeholder="Enter temporary password" class="sapUiSmallMarginBottom"/>
+                            <Table id="usersTable" items="{userModel>/users}" mode="None" width="100%" class="sapUiNoMargin" busy="{userModel>/busy}" busyIndicatorDelay="0">
+                                <columns>
+                                    <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Name"/></Column>
+                                    <Column><Text text="Email ID"/></Column>
+                                    <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Persona / Role"/></Column>
+                                    <Column minScreenWidth="Phone" demandPopin="true" popinDisplay="Inline"><Text text="Status"/></Column>
+                                    <Column minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"><Text text="Created Date"/></Column>
+                                    <Column hAlign="Center"><Text text="Actions"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{userModel>name}"/>
+                                            <Text text="{userModel>email}"/>
+                                            <ObjectStatus text="{userModel>persona}" state="Information"/>
+                                            <ObjectStatus text="{userModel>status}" state="Success"/>
+                                            <Text text="{userModel>createdDate}"/>
+                                            <HBox justifyContent="Center" alignItems="Center">
+                                                <Button icon="sap-icon://reset" text="Reset Password" type="Transparent" press="onRowResetPassword"/>
+                                                <Button icon="sap-icon://delete" text="Remove" type="Reject" press="onRowRemoveUser" class="sapUiTinyMarginBegin"/>
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </Panel>
 
-                        <Label text="Persona / Role" required="true"/>
-                        <Select id="createPersonaSelect" forceSelection="false" width="100%">
-                            <core:Item key="" text="-- Select Persona --"/>
-                            <core:Item key="Escalation Manager" text="Escalation Manager"/>
-                            <core:Item key="Reviewer 1" text="Reviewer 1"/>
-                            <core:Item key="Reviewer 2" text="Reviewer 2"/>
-                            <core:Item key="Auditor" text="Auditor"/>
-                        </Select>
                     </VBox>
                 </content>
-                <beginButton>
-                    <Button text="Create User" type="Emphasized" press="onSubmitCreateUser" class="createUserBtn"/>
-                </beginButton>
-                <endButton>
-                    <Button text="Cancel" press="onCloseCreateUserDialog"/>
-                </endButton>
-            </Dialog>
 
-            <!-- RESET PASSWORD DIALOG -->
-            <Dialog
-                id="resetPasswordDialog"
-                title="Reset User Password"
-                contentWidth="400px">
-                <content>
-                    <VBox class="sapUiMediumMargin">
-                        <Label text="User Email" design="Bold"/>
-                        <Text id="resetUserEmailText" text="selected.user@xyra.ai" class="sapUiSmallMarginBottom"/>
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations"/>
+                        <ToolbarSpacer/>
+                        <Text text="Version 1.0 | Status: Active"/>
+                    </OverflowToolbar>
+                </footer>
 
-                        <Label text="New Password" required="true" class="sapUiTinyMarginTop"/>
-                        <Input id="newPasswordInput" type="Password" placeholder="Enter new password"/>
+            </Page>
+        </tnt:mainContents>
 
-                        <Label text="Confirm New Password" required="true" class="sapUiTinyMarginTop"/>
-                        <Input id="confirmPasswordInput" type="Password" placeholder="Enter new password"/>
-                    </VBox>
-                </content>
-                <beginButton>
-                    <Button text="Reset Password" type="Emphasized" icon="sap-icon://reset" press="onSubmitResetPassword"/>
-                </beginButton>
-                <endButton>
-                    <Button text="Cancel" press="onCloseResetPasswordDialog"/>
-                </endButton>
-            </Dialog>
-        </dependents>
-
-        <customHeader>
-            <OverflowToolbar height="4.5rem">
-                <Button
-                    icon="sap-icon://nav-back"
-                    tooltip="Back to Admin Dashboard"
-                    type="Transparent"
-                    press="onNavBack"
-                    class="sapUiTinyMarginBegin"/>
-                <Avatar src="sap-icon://key-user-settings" displaySize="S" type="Icon" class="sapUiTinyMarginEnd"/>
-                <VBox justifyContent="Center">
-                    <Title text="XYRA - Access Management" level="H4" class="sapUiNoMargin"/>
-                    <Text text="User Access Provisioning &amp; Persona Management" class="textMuted sapUiNoMargin"/>
-                </VBox>
-                <ToolbarSpacer/>
-                <ObjectStatus text="Active Security Policy" state="Success" icon="sap-icon://shield" class="sapUiSmallMarginEnd"/>
-                <Button icon="sap-icon://home" tooltip="Home" type="Transparent" press="onNavBack" class="sapUiTinyMarginEnd"/>
-            </OverflowToolbar>
-        </customHeader>
-
-        <content>
-            <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
-
-                <!-- MANAGED ENTERPRISE USERS TABLE -->
-                <Panel expandable="false" class="noInternalScroll sapUiMediumMarginTop">
-                    <headerToolbar>
-                        <OverflowToolbar height="3.5rem">
-                            <Title text="Provisioned Enterprise Users" level="H3" class="sapUiSmallMarginBegin"/>
-                            <ToolbarSpacer/>
-                            <Button text="Create User" type="Emphasized" press="onOpenCreateUserDialog" class="createUserBtn sapUiSmallMarginEnd"/>
-                        </OverflowToolbar>
-                    </headerToolbar>
-
-                    <Table id="usersTable" items="{userModel>/users}" mode="None" width="100%" class="sapUiNoMargin" busy="{userModel>/busy}" busyIndicatorDelay="0">
-                        <columns>
-                            <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Name"/></Column>
-                            <Column><Text text="Email ID"/></Column>
-                            <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Persona / Role"/></Column>
-                            <Column minScreenWidth="Phone" demandPopin="true" popinDisplay="Inline"><Text text="Status"/></Column>
-                            <Column minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"><Text text="Created Date"/></Column>
-                            <Column hAlign="Center"><Text text="Actions"/></Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <Text text="{userModel>name}"/>
-                                    <Text text="{userModel>email}"/>
-                                    <ObjectStatus text="{userModel>persona}" state="Information"/>
-                                    <ObjectStatus text="{userModel>status}" state="Success"/>
-                                    <Text text="{userModel>createdDate}"/>
-                                    <HBox justifyContent="Center" alignItems="Center">
-                                        <Button icon="sap-icon://reset" text="Reset Password" type="Transparent" press="onRowResetPassword"/>
-                                        <Button icon="sap-icon://delete" text="Remove" type="Reject" press="onRowRemoveUser" class="sapUiTinyMarginBegin"/>
-                                    </HBox>
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
-                </Panel>
-
-            </VBox>
-        </content>
-
-        <footer>
-            <OverflowToolbar>
-                <Text text="© 2026 Forte Innovations"/>
-                <ToolbarSpacer/>
-                <Text text="Version 1.0 | Status: Active"/>
-            </OverflowToolbar>
-        </footer>
-
-    </Page>
+    </tnt:ToolPage>
 </mvc:View>

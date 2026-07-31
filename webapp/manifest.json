@@ -116,6 +116,11 @@
           "name": "Configuration",
           "pattern": "Configuration",
           "target": "Configuration"
+        },
+        {
+          "name": "Profile",
+          "pattern": "Profile",
+          "target": "Profile"
         }
       ],
 
@@ -143,6 +148,9 @@
         },
         "Configuration": {
           "viewName": "Configuration"
+        },
+        "Profile": {
+          "viewName": "Profile"
         }
       }
     }
