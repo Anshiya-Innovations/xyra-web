@@ -1,0 +1,206 @@
+Configuration page
+
+Design a professional SAP Enterprise Configuration page for the XYRA application.
+
+The purpose of this page is to configure SAP S/4HANA connectivity before automated monitoring begins.
+
+IMPORTANT
+
+Do NOT modify:
+
+• Enterprise Management Sidebar
+• Header
+• Footer
+• Backend Integration
+• CAP Services
+• APIs
+• Routing
+• Controller Logic
+• XML IDs
+
+Only create the frontend UI.
+
+===============================================================================
+
+Page Title
+
+⚙ XYRA – SAP S/4HANA Monitoring Configuration
+
+Subtitle
+
+Configure SAP S/4HANA connectivity and monitoring before automation starts.
+
+===============================================================================
+
+Section 1 – SAP S/4HANA Connection
+
+Display a professional SAP Fiori form.
+
+Fields
+
+• System Name
+• Host
+• System ID (SID)
+• Client
+• Port
+• Protocol
+• Username
+• Password
+• Authentication Type
+
+Buttons
+
+• Test Connection
+• Save
+
+Display Connection Status using SAP ObjectStatus.
+
+===============================================================================
+
+Section 2 – SAP Cloud Connector
+
+Display
+
+• Connector Name
+• Virtual Host
+• Virtual Port
+• Location ID
+• Backend System
+• Connection Status
+
+Buttons
+
+• Test Connector
+• Synchronize
+
+===============================================================================
+
+Section 3 – Destination Service
+
+Fields
+
+• Destination Name
+• URL
+• Authentication
+• Proxy Type
+• Cloud Connector
+• Status
+
+Buttons
+
+• Create Destination
+• Test Destination
+
+===============================================================================
+
+Section 4 – OData Services
+
+Display a responsive table.
+
+Columns
+
+• Service Name
+• Endpoint
+• Version
+• Status
+
+Buttons
+
+• Activate
+• Test
+• Refresh
+
+===============================================================================
+
+Section 5 – Monitoring Configuration
+
+Business Requirement:
+
+The SAP Platform Team and Automation Team configure the systems that need to be monitored.
+
+Provide configuration options for:
+
+• SAP Systems to Monitor
+  - SAP S/4HANA
+  - SAP ECC
+  - SAP GRC
+  - SAP SuccessFactors
+  - SAP Ariba
+
+• Business Controls
+  - Segregation of Duties
+  - Firefighter Monitoring
+  - Critical Authorization
+  - User Access Review
+  - Sensitive Transactions
+  - Emergency Access
+
+• Monitoring Frequency
+  - Hourly
+  - Daily
+  - Weekly
+  - Monthly
+
+• Start Time
+
+• Time Zone
+
+• Control Owner
+
+• Automation Team
+
+• Email Notification
+
+Switches
+
+• Enable Monitoring
+
+• Enable Automatic Validation
+
+• Enable Audit Logging
+
+===============================================================================
+
+Validation Checklist
+
+Display:
+
+✓ SAP S/4HANA Connected
+
+✓ Cloud Connector Connected
+
+✓ Destination Configured
+
+✓ OData Services Active
+
+✓ Systems Selected
+
+✓ Controls Selected
+
+✓ Monitoring Schedule Configured
+
+✓ Monitoring Enabled
+
+===============================================================================
+
+Action Buttons
+
+• Save Configuration
+
+• Validate Configuration
+
+• Start Monitoring
+
+===============================================================================
+
+Use SAP Fiori Horizon styling.
+
+Use only SAPUI5 controls.
+
+Responsive design.
+
+No horizontal scrolling.
+
+Do not include deviation detection or workflow routing on this page.
+
+This page is only for preparing the environment so that the automation engine can later run on the configured schedule and identify deviations.

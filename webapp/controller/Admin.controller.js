@@ -27,9 +27,7 @@ sap.ui.define([
             var oItem = oEvent.getParameter("item");
             if (oItem) {
                 var sKey = oItem.getKey();
-                if (sKey && this[sKey]) {
-                    this[sKey]();
-                } else if (sKey) {
+                if (sKey) {
                     this.getOwnerComponent().getRouter().navTo(sKey);
                 }
             }

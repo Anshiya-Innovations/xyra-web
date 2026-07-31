@@ -20,137 +20,131 @@
     }
   },
   "sap.ui5": {
-  "flexEnabled": true,
+    "flexEnabled": true,
 
-  "rootView": {
-    "viewName": "xyraweb.view.App",
-    "type": "XML",
-    "id": "App",
-    "async": true
-  },
-
-  "dependencies": {
-    "minUI5Version": "1.150.0",
-    "libs": {
-      "sap.m": {},
-      "sap.ui.core": {},
-      "sap.ui.layout": {}
-    }
-  },
-
-  "contentDensities": {
-    "compact": true,
-    "cozy": true
-  },
-
-  "models": {
-    "i18n": {
-      "type": "sap.ui.model.resource.ResourceModel",
-      "settings": {
-        "bundleName": "xyraweb.i18n.i18n"
-      }
-    }
-  },
-
-  "resources": {
-    "css": [
-      {
-        "uri": "css/style.css"
-      }
-    ]
-  },
-
-  "routing": {
-    "config": {
-      "routerClass": "sap.m.routing.Router",
-      "viewType": "XML",
-      "viewPath": "xyraweb.view",
-      "controlId": "app",
-      "controlAggregation": "pages",
-      "async": true,
-      "transition": "slide",
-      "clearControlAggregation": false
+    "rootView": {
+      "viewName": "xyraweb.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
     },
 
-    "routes": [
-      {
-        "name": "Login",
-        "pattern": "",
-        "target": "Login"
-      },
-      {
-        "name": "Admin",
-        "pattern": "Admin",
-        "target": "Admin"
-      },
-      {
-        "name": "EscalationManager",
-        "pattern": "EscalationManager",
-        "target":  "EscalationManager"
-      },
-      {
-        "name": "Reviewer1",
-        "pattern": "Reviewer1",
-        "target": "Reviewer1"
-      },
-      {
-        "name": "Reviewer2",
-        "pattern": "Reviewer2",
-        "target": "Reviewer2"
-      },
-      
-      {
-        "name": "Auditor",
-        "pattern": "Auditor",
-        "target": "Auditor"
-      },
-      {
-        "name": "AccessManagement",
-        "pattern": "AccessManagement",
-        "target": "AccessManagement"
+    "dependencies": {
+      "minUI5Version": "1.150.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {},
+        "sap.tnt": {},
+        "sap.f": {}
       }
-    ],
+    },
 
-    "targets": {
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
 
-      "Login": {
-        "viewId": "Login",
-        "viewName": "Login"
-      },
-
-      "Admin": {
-        "viewId": "Admin",
-        "viewName": "Admin"
-      },
-
-      "EscalationManager": {
-        "viewId": "EscalationManager",
-        "viewName": "EscalationManager"
-      },
-
-      "Reviewer1": {
-        "viewId": "Reviewer1",
-        "viewName": "Reviewer1"
-      },
-
-      "Reviewer2": {
-        "viewId": "Reviewer2",
-        "viewName": "Reviewer2"
-      },
-
-      "Auditor": {
-        "viewId": "Auditor",
-        "viewName": "Auditor"
-      },
-
-      "AccessManagement": {
-        "viewId": "AccessManagement",
-        "viewName": "AccessManagement"
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "xyraweb.i18n.i18n",
+          "supportedLocales": ["en", ""],
+          "fallbackLocale": "en"
+        }
       }
+    },
 
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "xyraweb.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "async": true,
+        "transition": "slide",
+        "clearControlAggregation": true
+      },
+
+      "routes": [
+        {
+          "name": "Login",
+          "pattern": "",
+          "target": "Login"
+        },
+        {
+          "name": "Admin",
+          "pattern": "Admin",
+          "target": "Admin"
+        },
+        {
+          "name": "EscalationManager",
+          "pattern": "EscalationManager",
+          "target": "EscalationManager"
+        },
+        {
+          "name": "Reviewer1",
+          "pattern": "Reviewer1",
+          "target": "Reviewer1"
+        },
+        {
+          "name": "Reviewer2",
+          "pattern": "Reviewer2",
+          "target": "Reviewer2"
+        },
+        {
+          "name": "Auditor",
+          "pattern": "Auditor",
+          "target": "Auditor"
+        },
+        {
+          "name": "AccessManagement",
+          "pattern": "AccessManagement",
+          "target": "AccessManagement"
+        },
+        {
+          "name": "Configuration",
+          "pattern": "Configuration",
+          "target": "Configuration"
+        }
+      ],
+
+      "targets": {
+        "Login": {
+          "viewName": "Login"
+        },
+        "Admin": {
+          "viewName": "Admin"
+        },
+        "EscalationManager": {
+          "viewName": "EscalationManager"
+        },
+        "Reviewer1": {
+          "viewName": "Reviewer1"
+        },
+        "Reviewer2": {
+          "viewName": "Reviewer2"
+        },
+        "Auditor": {
+          "viewName": "Auditor"
+        },
+        "AccessManagement": {
+          "viewName": "AccessManagement"
+        },
+        "Configuration": {
+          "viewName": "Configuration"
+        }
+      }
     }
-
-  }
-
   }
 }

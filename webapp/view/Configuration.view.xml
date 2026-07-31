@@ -1,0 +1,212 @@
+<mvc:View
+    controllerName="xyraweb.controller.Configuration"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="configToolPage" sideExpanded="true">
+
+        <!-- ENTERPRISE MANAGEMENT SIDEBAR (EXACT & UNCHANGED - NO TOUCH) -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="Configuration" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Role Management" icon="sap-icon://manager" key="RoleManagement" select="onRoleManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="380 Roles" state="Indication17" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="156 Controls" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Control Monitoring" icon="sap-icon://inspection" key="ControlMonitoring" select="onControlMonitoring">
+                        <tnt:tag>
+                            <ObjectStatus text="Healthy" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://machine" key="AIInsights" select="onAIInsights">
+                        <tnt:tag>
+                            <ObjectStatus text="New" state="Indication15" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag>
+                            <ObjectStatus text="98.4%" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://business-objects-experience" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
+                        <tnt:tag>
+                            <ObjectStatus text="3 Risks" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="System Health" icon="sap-icon://sys-monitor" key="SystemHealth" select="onSystemHealth"/>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="configurationPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <dependents>
+                    <ResponsivePopover
+                        id="configProfilePopover"
+                        title="Administrator Profile"
+                        placement="Bottom"
+                        contentWidth="320px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <Avatar displaySize="M" initials="SA" backgroundColor="Accent6" class="sapUiSmallMarginEnd"/>
+                                    <VBox>
+                                        <Title text="System Administrator" level="H3"/>
+                                        <Text text="Global Administrator"/>
+                                        <ObjectStatus text="Online" state="Success"/>
+                                    </VBox>
+                                </HBox>
+                                <VBox class="sapUiSmallMarginBottom">
+                                    <Label text="Admin ID" design="Bold"/>
+                                    <Text text="ADM001"/>
+                                    <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="Security &amp; Compliance"/>
+                                    <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="admin@xyra.ai"/>
+                                </VBox>
+                                <HBox justifyContent="End" class="sapUiSmallMarginTop">
+                                    <Button text="Profile" icon="sap-icon://person-placeholder" type="Transparent" class="sapUiTinyMarginEnd" press="onProfile"/>
+                                    <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
+                                </HBox>
+                            </VBox>
+                        </content>
+                    </ResponsivePopover>
+                </dependents>
+
+                <!-- PAGE HEADER WITH TITLE & SUBTITLE -->
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+                        <Avatar src="sap-icon://action-settings" displaySize="S" class="sapUiTinyMarginEnd"/>
+                        <VBox justifyContent="Center">
+                            <Title text="⚙ XYRA – SAP S/4HANA Connection Configuration" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Configure connectivity to SAP S/4HANA before monitoring begins." class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                        <Button icon="sap-icon://search" tooltip="Search" type="Transparent" press="onSearchPress"/>
+                        <Button icon="sap-icon://sys-help" tooltip="Help" type="Transparent" press="onHelpPress"/>
+                        <Button icon="sap-icon://employee" text="Admin" type="Transparent" press="onAdminProfilePress"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+
+                        <!-- SUBTITLE INSTRUCTION MESSAGE STRIP -->
+                        <MessageStrip
+                            text="Configure connectivity to SAP S/4HANA before monitoring begins."
+                            type="Information"
+                            showIcon="true"
+                            class="sapUiSmallMarginBottom"/>
+
+                        <!-- SAP S/4HANA CONNECTION PANEL -->
+                        <Panel headerText="SAP S/4HANA Connection" expandable="false" class="sapUiSmallMarginBottom">
+                            <form:SimpleForm editable="true" layout="ColumnLayout">
+                                <form:content>
+                                    <core:Title text="System Connection Parameters"/>
+
+                                    <Label text="System Name"/>
+                                    <Input id="sysName" value="S4H-PROD-2023"/>
+
+                                    <Label text="Host Name/IP"/>
+                                    <Input id="hostName" value="s4hana.enterprise.xyra.internal"/>
+
+                                    <Label text="System ID (SID)"/>
+                                    <Input id="sysId" type="Number" value="100" liveChange="onNumberLiveChange" placeholder="Numeric System ID (e.g. 100)"/>
+
+                                    <Label text="Client"/>
+                                    <Input id="client" value="100"/>
+
+                                    <Label text="Instance Number"/>
+                                    <Input id="instanceNum" type="Number" value="00" liveChange="onNumberLiveChange" placeholder="Instance Number (e.g. 00)"/>
+
+                                    <Label text="Port"/>
+                                    <Input id="port" type="Number" value="44300" liveChange="onNumberLiveChange" placeholder="Port Number (e.g. 44300)"/>
+
+                                    <core:Title text="Authentication &amp; Token"/>
+
+                                    <Label text="JWT Token"/>
+                                    <TextArea id="jwtToken" rows="3" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlNZUkEgQ29ubmVjdG9yIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" placeholder="Enter JWT Bearer Token..."/>
+                                </form:content>
+                            </form:SimpleForm>
+                        </Panel>
+
+                        <!-- TEST CONNECTION & STATUS PANEL -->
+                        <Panel headerText="Connection Validation &amp; Status" expandable="false" class="sapUiSmallMarginBottom">
+                            <form:SimpleForm editable="false" layout="ColumnLayout">
+                                <form:content>
+                                    <Label text="Test Connection"/>
+                                    <Button text="Test Connection" type="Accept" icon="sap-icon://accept" press="onTestConnection" width="12rem"/>
+
+                                    <Label text="Connection Status"/>
+                                    <ObjectStatus text="Connected" state="Success" icon="sap-icon://sys-enter-2"/>
+
+                                    <Label text="Last Validation"/>
+                                    <Text text="31-Jul-2026 13:00" class="textMuted"/>
+                                </form:content>
+                            </form:SimpleForm>
+                        </Panel>
+
+                        <!-- BOTTOM ACTION BAR -->
+                        <HBox justifyContent="End" class="sapUiMediumMarginTop sapUiSmallMarginBottom">
+                            <Button text="Save Configuration" type="Emphasized" icon="sap-icon://save" press="onSaveConfiguration" class="sapUiTinyMarginEnd"/>
+                            <Button text="Reset" type="Ghost" icon="sap-icon://refresh" press="onResetConfiguration"/>
+                        </HBox>
+
+                    </VBox>
+                </content>
+
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations"/>
+                        <ToolbarSpacer/>
+                        <Text text="Version 1.0 | Status: Active"/>
+                    </OverflowToolbar>
+                </footer>
+
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>
