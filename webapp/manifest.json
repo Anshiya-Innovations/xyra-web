@@ -121,6 +121,26 @@
           "name": "Profile",
           "pattern": "Profile",
           "target": "Profile"
+        },
+        {
+          "name": "ControlManagement",
+          "pattern": "ControlManagement",
+          "target": "ControlManagement"
+        },
+        {
+          "name": "AutomationMonitoring",
+          "pattern": "AutomationMonitoring",
+          "target": "AutomationMonitoring"
+        },
+        {
+          "name": "RoleManagement",
+          "pattern": "RoleManagement",
+          "target": "RoleManagement"
+        },
+        {
+          "name": "RoleReview",
+          "pattern": "RoleReview",
+          "target": "RoleReview"
         }
       ],
 
@@ -151,6 +171,18 @@
         },
         "Profile": {
           "viewName": "Profile"
+        },
+        "ControlManagement": {
+          "viewName": "ControlManagement"
+        },
+        "AutomationMonitoring": {
+          "viewName": "AutomationMonitoring"
+        },
+        "RoleManagement": {
+          "viewName": "RoleManagement"
+        },
+        "RoleReview": {
+          "viewName": "RoleReview"
         }
       }
     }

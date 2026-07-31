@@ -28,12 +28,6 @@
                         </tnt:tag>
                     </tnt:NavigationListItem>
 
-                    <tnt:NavigationListItem text="Control Monitoring" icon="sap-icon://inspection" key="ControlMonitoring" select="onControlMonitoring">
-                        <tnt:tag>
-                            <ObjectStatus text="Healthy" state="Indication16" inverted="true"/>
-                        </tnt:tag>
-                    </tnt:NavigationListItem>
-
                     <tnt:NavigationListItem text="AI Insights" icon="sap-icon://machine" key="AIInsights" select="onAIInsights">
                         <tnt:tag>
                             <ObjectStatus text="New" state="Indication15" inverted="true"/>

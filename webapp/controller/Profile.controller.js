@@ -63,13 +63,7 @@ sap.ui.define([
         onSideNavToggle: function () {
             var oToolPage = this.byId("profileToolPage");
             if (oToolPage) {
-                var bSideExpanded = oToolPage.getSideExpanded();
-                oToolPage.setSideExpanded(!bSideExpanded);
-            }
-            var oSideNav = this.byId("sideNavigation");
-            if (oSideNav) {
-                var bExpanded = oSideNav.getExpanded();
-                oSideNav.setExpanded(!bExpanded);
+                oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
             }
         },
 

@@ -1,7 +1,8 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/m/MessageToast"
-], function (Controller, MessageToast) {
+    "sap/m/MessageToast",
+    "sap/ui/core/UIComponent"
+], function (Controller, MessageToast, UIComponent) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Admin", {
@@ -10,16 +11,19 @@ sap.ui.define([
 
         },
 
+        navToRoute: function (sRouteName) {
+            var oRouter = UIComponent.getRouterFor(this) || (this.getOwnerComponent() && this.getOwnerComponent().getRouter());
+            if (oRouter) {
+                oRouter.navTo(sRouteName);
+            } else {
+                window.location.hash = "#/" + sRouteName;
+            }
+        },
+
         onSideNavToggle: function () {
             var oToolPage = this.byId("adminToolPage");
             if (oToolPage) {
-                var bSideExpanded = oToolPage.getSideExpanded();
-                oToolPage.setSideExpanded(!bSideExpanded);
-            }
-            var oSideNav = this.byId("sideNavigation");
-            if (oSideNav) {
-                var bExpanded = oSideNav.getExpanded();
-                oSideNav.setExpanded(!bExpanded);
+                oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
             }
         },
 
@@ -28,69 +32,69 @@ sap.ui.define([
             if (oItem) {
                 var sKey = oItem.getKey();
                 if (sKey) {
-                    this.getOwnerComponent().getRouter().navTo(sKey);
+                    this.navToRoute(sKey);
                 }
             }
         },
 
         onAdmin: function () {
-            this.getOwnerComponent().getRouter().navTo("Admin");
+            this.navToRoute("Admin");
         },
 
         onUserManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("UserManagement");
+            this.navToRoute("UserManagement");
         },
 
         onRoleManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("RoleManagement");
+            this.navToRoute("RoleManagement");
         },
 
         onControlManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("ControlManagement");
+            this.navToRoute("ControlManagement");
         },
 
         onControlMonitoring: function () {
-            this.getOwnerComponent().getRouter().navTo("ControlMonitoring");
+            this.navToRoute("ControlMonitoring");
         },
 
         onAIInsights: function () {
-            this.getOwnerComponent().getRouter().navTo("AIInsights");
+            this.navToRoute("AIInsights");
         },
 
         onSOXCompliance: function () {
-            this.getOwnerComponent().getRouter().navTo("SOXCompliance");
+            this.navToRoute("SOXCompliance");
         },
 
         onReports: function () {
-            this.getOwnerComponent().getRouter().navTo("Reports");
+            this.navToRoute("Reports");
         },
 
         onAuditLogs: function () {
-            this.getOwnerComponent().getRouter().navTo("AuditLogs");
+            this.navToRoute("AuditLogs");
         },
 
         onConfiguration: function () {
-            this.getOwnerComponent().getRouter().navTo("Configuration");
+            this.navToRoute("Configuration");
         },
 
         onAccessManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("AccessManagement");
+            this.navToRoute("AccessManagement");
         },
 
         onRiskAnalytics: function () {
-            this.getOwnerComponent().getRouter().navTo("RiskAnalytics");
+            this.navToRoute("RiskAnalytics");
         },
 
         onEmergencyAccess: function () {
-            this.getOwnerComponent().getRouter().navTo("EmergencyAccess");
+            this.navToRoute("EmergencyAccess");
         },
 
         onSystemHealth: function () {
-            this.getOwnerComponent().getRouter().navTo("SystemHealth");
+            this.navToRoute("SystemHealth");
         },
 
         onProfile: function () {
-            this.getOwnerComponent().getRouter().navTo("Profile");
+            this.navToRoute("Profile");
         },
 
         onAdminProfilePress: function (oEvent) {
@@ -115,12 +119,16 @@ sap.ui.define([
 
         onQuickAction: function (oEvent) {
             var sText = oEvent.getSource().getText();
-            MessageToast.show("Action triggered: " + sText);
+            if (sText === "Create Control") {
+                this.onControlManagement();
+            } else {
+                MessageToast.show("Action triggered: " + sText);
+            }
         },
 
         onLogout: function () {
             MessageToast.show("Logged Out Successfully");
-            this.getOwnerComponent().getRouter().navTo("Login");
+            this.navToRoute("Login");
         }
 
     });

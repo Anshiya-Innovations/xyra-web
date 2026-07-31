@@ -1,0 +1,307 @@
+<mvc:View
+    controllerName="xyraweb.controller.ControlManagement"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="controlManagementToolPage" sideExpanded="true">
+
+        <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="ControlManagement" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://shield" key="Admin" select="onAdmin"/>
+
+                    <tnt:NavigationListItem text="Role Management" icon="sap-icon://manager" key="RoleManagement" select="onRoleManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="380 Roles" state="Indication17" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="156 Controls" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://machine" key="AIInsights" select="onAIInsights">
+                        <tnt:tag>
+                            <ObjectStatus text="New" state="Indication15" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag>
+                            <ObjectStatus text="98.4%" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://business-objects-experience" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
+                        <tnt:tag>
+                            <ObjectStatus text="3 Risks" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="System Health" icon="sap-icon://sys-monitor" key="SystemHealth" select="onSystemHealth"/>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="controlManagementPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <dependents>
+                    <!-- CREATE CONTROL DIALOG -->
+                    <Dialog
+                        id="createControlDialog"
+                        title="Create Internal Control Rule"
+                        contentWidth="520px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Label text="Control ID" required="true"/>
+                                <Input id="createControlIdInput" placeholder="e.g. CTRL-FIN-006" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Control Name" required="true"/>
+                                <Input id="createControlNameInput" placeholder="e.g. Automated Purchase Order Limit Verification" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Assign Owner" required="true"/>
+                                <Input id="createControlOwnerInput" placeholder="e.g. Sarah Jenkins (Finance Lead)" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Risk Level" required="true"/>
+                                <Select id="createControlRiskSelect" selectedKey="Critical" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Critical" text="Critical"/>
+                                    <core:Item key="High" text="High"/>
+                                    <core:Item key="Medium" text="Medium"/>
+                                    <core:Item key="Low" text="Low"/>
+                                </Select>
+
+                                <Label text="Control Category" required="true"/>
+                                <Select id="createControlCategorySelect" selectedKey="Financial" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Financial" text="Financial"/>
+                                    <core:Item key="SOX" text="SOX Compliance"/>
+                                    <core:Item key="ITGC" text="ITGC"/>
+                                    <core:Item key="Security" text="Security &amp; SoD"/>
+                                </Select>
+
+                                <Label text="Monitoring Frequency" required="true"/>
+                                <Select id="createControlFrequencySelect" selectedKey="Real-time" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Real-time" text="Real-time"/>
+                                    <core:Item key="Daily" text="Daily"/>
+                                    <core:Item key="Weekly" text="Weekly"/>
+                                    <core:Item key="Monthly" text="Monthly"/>
+                                </Select>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Create Control" type="Emphasized" icon="sap-icon://add" press="onSubmitCreateControl"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseCreateControlDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- EDIT CONTROL DIALOG -->
+                    <Dialog
+                        id="editControlDialog"
+                        title="Edit Internal Control Rule"
+                        contentWidth="520px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Label text="Control ID"/>
+                                <Input id="editControlIdInput" editable="false" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Control Name" required="true"/>
+                                <Input id="editControlNameInput" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Assign Owner" required="true"/>
+                                <Input id="editControlOwnerInput" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Risk Level" required="true"/>
+                                <Select id="editControlRiskSelect" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Critical" text="Critical"/>
+                                    <core:Item key="High" text="High"/>
+                                    <core:Item key="Medium" text="Medium"/>
+                                    <core:Item key="Low" text="Low"/>
+                                </Select>
+
+                                <Label text="Control Category" required="true"/>
+                                <Select id="editControlCategorySelect" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Financial" text="Financial"/>
+                                    <core:Item key="SOX" text="SOX Compliance"/>
+                                    <core:Item key="ITGC" text="ITGC"/>
+                                    <core:Item key="Security" text="Security &amp; SoD"/>
+                                </Select>
+
+                                <Label text="Monitoring Frequency" required="true"/>
+                                <Select id="editControlFrequencySelect" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Real-time" text="Real-time"/>
+                                    <core:Item key="Daily" text="Daily"/>
+                                    <core:Item key="Weekly" text="Weekly"/>
+                                    <core:Item key="Monthly" text="Monthly"/>
+                                </Select>
+
+                                <Label text="Control Status" required="true"/>
+                                <Select id="editControlStatusSelect" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Active" text="Active"/>
+                                    <core:Item key="Under Review" text="Under Review"/>
+                                    <core:Item key="Inactive" text="Inactive"/>
+                                </Select>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Save Changes" type="Emphasized" icon="sap-icon://save" press="onSubmitEditControl"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseEditControlDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- ASSIGN OWNER DIALOG -->
+                    <Dialog
+                        id="assignOwnerDialog"
+                        title="Assign Business Owner"
+                        contentWidth="480px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <Avatar icon="sap-icon://person-placeholder" displaySize="S" backgroundColor="Accent6" class="sapUiTinyMarginEnd"/>
+                                    <VBox>
+                                        <Text id="assignControlIdText" text="Control: CTRL-FIN-001" class="sapUiNoMargin"/>
+                                        <Title id="assignControlNameTitle" text="Financial Journal Entry Threshold Audit" level="H5" class="sapUiNoMargin"/>
+                                    </VBox>
+                                </HBox>
+
+                                <Label text="Select or Enter Business Owner" required="true"/>
+                                <ComboBox id="assignOwnerComboBox" width="100%" placeholder="Select or type owner name..." class="sapUiSmallMarginBottom">
+                                    <core:Item key="Sarah Jenkins (Finance Lead)" text="Sarah Jenkins (Finance Lead)"/>
+                                    <core:Item key="Michael Chang (GRC Officer)" text="Michael Chang (GRC Officer)"/>
+                                    <core:Item key="Alex Rivera (Security Admin)" text="Alex Rivera (Security Admin)"/>
+                                    <core:Item key="David Miller (Procurement Manager)" text="David Miller (Procurement Manager)"/>
+                                    <core:Item key="Emma Watson (Compliance Lead)" text="Emma Watson (Compliance Lead)"/>
+                                </ComboBox>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Assign Owner" type="Emphasized" icon="sap-icon://accept" press="onSubmitAssignOwner"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseAssignOwnerDialog"/>
+                        </endButton>
+                    </Dialog>
+                </dependents>
+
+                <!-- PAGE HEADER WITH TITLE & SUBTITLE -->
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+                        <Avatar initials="CM" displaySize="S" backgroundColor="Accent8" class="sapUiTinyMarginEnd"/>
+                        <VBox justifyContent="Center">
+                            <Title text="🛡️ XYRA – Control Management" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Configure internal controls, assign business owners, and define risk monitoring rules." class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+
+                        <Button icon="sap-icon://home" tooltip="Admin Dashboard" type="Transparent" press="onAdmin" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+
+                        <!-- TAB NAVIGATION BUTTONS -->
+                        <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
+                            <Button text="Control Management" icon="sap-icon://shield" type="Emphasized" class="sapUiTinyMarginEnd"/>
+                            <Button text="Automation Monitoring" icon="sap-icon://sys-monitor" type="Transparent" press="onNavAutomationMonitoring"/>
+                        </HBox>
+
+                        <!-- CONTROL MANAGEMENT TABLE -->
+                        <Panel expandable="false" class="sapUiSmallMarginBottom">
+                            <Table id="controlsTable" items="{controlsModel>/controls}" mode="None" width="100%">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Internal Control Directory" level="H3"/>
+                                        <ToolbarSpacer/>
+                                        <SearchField width="16rem" placeholder="Search controls..." search="onSearchControls"/>
+                                        <Select selectedKey="All" change="onFilterCategory">
+                                            <core:Item key="All" text="All Categories"/>
+                                            <core:Item key="Financial" text="Financial"/>
+                                            <core:Item key="SOX" text="SOX Compliance"/>
+                                            <core:Item key="ITGC" text="ITGC"/>
+                                            <core:Item key="Security" text="Security &amp; SoD"/>
+                                        </Select>
+                                        <Button text="Create Control" icon="sap-icon://add" type="Emphasized" press="onCreateControl"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+
+                                <columns>
+                                    <Column width="14%"><Text text="Control ID"/></Column>
+                                    <Column width="22%"><Text text="Control Name"/></Column>
+                                    <Column width="20%"><Text text="Assign Owner"/></Column>
+                                    <Column width="10%"><Text text="Risk Level"/></Column>
+                                    <Column width="12%"><Text text="Category"/></Column>
+                                    <Column width="10%"><Text text="Frequency"/></Column>
+                                    <Column width="6%"><Text text="Status"/></Column>
+                                    <Column width="6%" hAlign="End"><Text text="Actions"/></Column>
+                                </columns>
+
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <ObjectIdentifier title="{controlsModel>id}"/>
+                                            <Text text="{controlsModel>name}"/>
+                                            <Text text="{controlsModel>owner}"/>
+                                            <ObjectStatus text="{controlsModel>riskLevel}" state="{controlsModel>riskState}"/>
+                                            <Text text="{controlsModel>category}"/>
+                                            <Text text="{controlsModel>frequency}"/>
+                                            <ObjectStatus text="{controlsModel>status}" state="{controlsModel>statusState}"/>
+                                            <HBox justifyContent="End">
+                                                <Button icon="sap-icon://edit" type="Transparent" press="onEditControl" tooltip="Edit Control"/>
+                                                <Button icon="sap-icon://person-placeholder" type="Transparent" press="onAssignOwner" tooltip="Assign Owner"/>
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </Panel>
+
+                    </VBox>
+                </content>
+
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations"/>
+                        <ToolbarSpacer/>
+                        <Text text="Version 1.0 | Status: Active"/>
+                    </OverflowToolbar>
+                </footer>
+
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>

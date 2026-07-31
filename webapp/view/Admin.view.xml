@@ -27,12 +27,6 @@
                         </tnt:tag>
                     </tnt:NavigationListItem>
 
-                    <tnt:NavigationListItem text="Control Monitoring" icon="sap-icon://inspection" key="ControlMonitoring" select="onControlMonitoring">
-                        <tnt:tag>
-                            <ObjectStatus text="Healthy" state="Indication16" inverted="true"/>
-                        </tnt:tag>
-                    </tnt:NavigationListItem>
-
                     <tnt:NavigationListItem text="AI Insights" icon="sap-icon://machine" key="AIInsights" select="onAIInsights">
                         <tnt:tag>
                             <ObjectStatus text="New" state="Indication15" inverted="true"/>
@@ -164,7 +158,7 @@
                             </GenericTile>
 
                             <!-- KPI 3: Controls -->
-                            <GenericTile header="Controls" subheader="Active Governance Controls" class="sapUiTinyMargin">
+                            <GenericTile header="Controls" subheader="Active Governance Controls" class="sapUiTinyMargin" press="onControlManagement">
                                 <TileContent footer="95% Compliant">
                                     <NumericContent value="156" valueColor="Good" indicator="Up" icon="sap-icon://shield"/>
                                 </TileContent>
@@ -196,9 +190,9 @@
                         <!-- QUICK ACTIONS SECTION -->
                         <Panel headerText="Quick Actions" expandable="false" class="sapUiSmallMarginBottom">
                             <OverflowToolbar>
-                                <Button text="Create User" icon="sap-icon://add-user" type="Emphasized" press="onQuickAction"/>
+                                <Button text="Create User" icon="sap-icon://add-user" type="Emphasized" press="onAccessManagement"/>
                                 <Button text="Create Role" icon="sap-icon://add-process" type="Ghost" press="onQuickAction"/>
-                                <Button text="Create Control" icon="sap-icon://add-filter" type="Ghost" press="onQuickAction"/>
+                                <Button text="Create Control" icon="sap-icon://add-filter" type="Ghost" press="onControlManagement"/>
                                 <Button text="Generate Report" icon="sap-icon://excel-attachment" press="onReports"/>
                                 <Button text="Run AI Scan" icon="sap-icon://machine" type="Attention" press="onAIInsights"/>
                                 <Button text="Risk Dashboard" icon="sap-icon://line-chart" press="onRiskAnalytics"/>
