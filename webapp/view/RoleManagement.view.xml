@@ -82,7 +82,7 @@
                         <Avatar initials="RM" displaySize="S" backgroundColor="Accent3" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="🛡️ XYRA – Role Management" level="H4" class="sapUiNoMargin"/>
-                            <Text text="Manage SAP enterprise roles, authorization objects, T-Codes, and compliance definitions." class="textMuted sapUiNoMargin"/>
+                            <Text text="Manage enterprise roles, authorization objects, T-Codes, and compliance definitions." class="textMuted sapUiNoMargin"/>
                         </VBox>
                         <ToolbarSpacer/>
 
@@ -109,7 +109,7 @@
                                 <f:header>
                                     <card:Header
                                         title="Role Information"
-                                        subtitle="Core SAP Role Attributes &amp; System Metadata"
+                                        subtitle="Core Role Attributes &amp; System Metadata"
                                         iconSrc="sap-icon://role"/>
                                 </f:header>
                                 <f:content>
@@ -129,7 +129,7 @@
                                                     <core:Item key="Derived Role" text="Derived Role"/>
                                                 </Select>
 
-                                                <Label text="SAP System" required="true"/>
+                                                <Label text="System" required="true"/>
                                                 <Select id="roleSystemSelect" selectedKey="PRD-100" width="100%" class="sapUiSmallMarginBottom">
                                                     <core:Item key="PRD-100" text="PRD-100 (Production)"/>
                                                     <core:Item key="QAS-200" text="QAS-200 (Quality)"/>

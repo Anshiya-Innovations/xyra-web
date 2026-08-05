@@ -69,141 +69,135 @@
                 class="sapUiContentPadding">
 
                 <dependents>
-                    <!-- CREATE CONTROL DIALOG -->
+                    <!-- CREATE SECURITY CONTROL DIALOG -->
                     <Dialog
                         id="createControlDialog"
-                        title="Create Internal Control Rule"
-                        contentWidth="520px">
+                        title="Create Security Control Master"
+                        contentWidth="540px">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Label text="Control ID" required="true"/>
-                                <Input id="createControlIdInput" placeholder="e.g. CTRL-FIN-006" class="sapUiSmallMarginBottom"/>
+                                <Input id="createControlIdInput" placeholder="e.g. NLG-08, NLG-28, NLG-001" class="sapUiSmallMarginBottom"/>
 
-                                <Label text="Control Name" required="true"/>
-                                <Input id="createControlNameInput" placeholder="e.g. Automated Purchase Order Limit Verification" class="sapUiSmallMarginBottom"/>
+                                <Label text="Control Description" required="true"/>
+                                <TextArea id="createControlDescInput" rows="3" width="100%" placeholder="Enter detailed security control description..." class="sapUiSmallMarginBottom"/>
 
-                                <Label text="Assign Owner" required="true"/>
-                                <Input id="createControlOwnerInput" placeholder="e.g. Sarah Jenkins (Finance Lead)" class="sapUiSmallMarginBottom"/>
-
-                                <Label text="Risk Level" required="true"/>
-                                <Select id="createControlRiskSelect" selectedKey="Critical" width="100%" class="sapUiSmallMarginBottom">
-                                    <core:Item key="Critical" text="Critical"/>
-                                    <core:Item key="High" text="High"/>
-                                    <core:Item key="Medium" text="Medium"/>
-                                    <core:Item key="Low" text="Low"/>
+                                <Label text="System Type" required="true"/>
+                                <Select id="createSysType1Select" selectedKey="DEV" width="100%" change="onSysTypeChange" class="sapUiSmallMarginBottom">
+                                    <core:Item key="DEV" text="DEV"/>
+                                    <core:Item key="QAS" text="QAS"/>
+                                    <core:Item key="PRD" text="PRD"/>
                                 </Select>
 
-                                <Label text="Control Category" required="true"/>
-                                <Select id="createControlCategorySelect" selectedKey="Financial" width="100%" class="sapUiSmallMarginBottom">
-                                    <core:Item key="Financial" text="Financial"/>
-                                    <core:Item key="SOX" text="SOX Compliance"/>
-                                    <core:Item key="ITGC" text="ITGC"/>
-                                    <core:Item key="Security" text="Security &amp; SoD"/>
+                                <Label text="System Type"/>
+                                <Select id="createSysType2Select" selectedKey="None" width="100%" change="onSysTypeChange" class="sapUiSmallMarginBottom">
+                                    <core:Item key="None" text="-- None --"/>
+                                    <core:Item key="DEV" text="DEV"/>
+                                    <core:Item key="QAS" text="QAS"/>
+                                    <core:Item key="PRD" text="PRD"/>
                                 </Select>
 
-                                <Label text="Monitoring Frequency" required="true"/>
-                                <Select id="createControlFrequencySelect" selectedKey="Real-time" width="100%" class="sapUiSmallMarginBottom">
-                                    <core:Item key="Real-time" text="Real-time"/>
+                                <Label text="System Type"/>
+                                <Select id="createSysType3Select" selectedKey="None" width="100%" change="onSysTypeChange" class="sapUiSmallMarginBottom">
+                                    <core:Item key="None" text="-- None --"/>
+                                    <core:Item key="DEV" text="DEV"/>
+                                    <core:Item key="QAS" text="QAS"/>
+                                    <core:Item key="PRD" text="PRD"/>
+                                </Select>
+
+                                <Label text="Frequency Run" required="true"/>
+                                <Select id="createFrequencySelect" selectedKey="Daily" width="100%" change="onCreateFrequencyChange" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Monthly (Last day of month)" text="Monthly (Last day of month)"/>
+                                    <core:Item key="Weekly (Every Monday)" text="Weekly (Every Monday)"/>
                                     <core:Item key="Daily" text="Daily"/>
-                                    <core:Item key="Weekly" text="Weekly"/>
-                                    <core:Item key="Monthly" text="Monthly"/>
+                                    <core:Item key="Realtime" text="Realtime"/>
+                                    <core:Item key="Cron Expression" text="Cron Expression"/>
                                 </Select>
+
+                                <VBox id="vboxCreateCron" visible="false" class="sapUiSmallMarginBottom">
+                                    <Label text="Cron Expression" required="true"/>
+                                    <Input id="createCronInput" placeholder="e.g. 0 0 1 * *" liveChange="onCronInputChange" class="sapUiTinyMarginBottom"/>
+                                    <MessageStrip
+                                        text="Examples: '* * * * *' (Realtime) | '0 0 * * *' (Daily) | '0 0 * * 1' (Weekly - Every Monday) | '0 0 L * *' (Monthly - Last day of month)"
+                                        type="Information"
+                                        showIcon="true"/>
+                                </VBox>
+
+                                <Label text="Total Run (Read-Only)"/>
+                                <Input id="createTotalRunInput" value="365" editable="false" class="sapUiSmallMarginBottom"/>
                             </VBox>
                         </content>
                         <beginButton>
-                            <Button text="Create Control" type="Emphasized" icon="sap-icon://add" press="onSubmitCreateControl"/>
+                            <Button text="Save" type="Emphasized" icon="sap-icon://save" press="onSubmitCreateControl"/>
                         </beginButton>
                         <endButton>
                             <Button text="Cancel" press="onCloseCreateControlDialog"/>
                         </endButton>
                     </Dialog>
 
-                    <!-- EDIT CONTROL DIALOG -->
+                    <!-- EDIT SECURITY CONTROL DIALOG -->
                     <Dialog
                         id="editControlDialog"
-                        title="Edit Internal Control Rule"
-                        contentWidth="520px">
+                        title="Edit Security Control Master"
+                        contentWidth="540px">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Label text="Control ID"/>
                                 <Input id="editControlIdInput" editable="false" class="sapUiSmallMarginBottom"/>
 
-                                <Label text="Control Name" required="true"/>
-                                <Input id="editControlNameInput" class="sapUiSmallMarginBottom"/>
+                                <Label text="Control Description" required="true"/>
+                                <TextArea id="editControlDescInput" rows="3" width="100%" class="sapUiSmallMarginBottom"/>
 
-                                <Label text="Assign Owner" required="true"/>
-                                <Input id="editControlOwnerInput" class="sapUiSmallMarginBottom"/>
-
-                                <Label text="Risk Level" required="true"/>
-                                <Select id="editControlRiskSelect" width="100%" class="sapUiSmallMarginBottom">
-                                    <core:Item key="Critical" text="Critical"/>
-                                    <core:Item key="High" text="High"/>
-                                    <core:Item key="Medium" text="Medium"/>
-                                    <core:Item key="Low" text="Low"/>
+                                <Label text="System Type" required="true"/>
+                                <Select id="editSysType1Select" width="100%" change="onSysTypeChange" class="sapUiSmallMarginBottom">
+                                    <core:Item key="DEV" text="DEV"/>
+                                    <core:Item key="QAS" text="QAS"/>
+                                    <core:Item key="PRD" text="PRD"/>
                                 </Select>
 
-                                <Label text="Control Category" required="true"/>
-                                <Select id="editControlCategorySelect" width="100%" class="sapUiSmallMarginBottom">
-                                    <core:Item key="Financial" text="Financial"/>
-                                    <core:Item key="SOX" text="SOX Compliance"/>
-                                    <core:Item key="ITGC" text="ITGC"/>
-                                    <core:Item key="Security" text="Security &amp; SoD"/>
+                                <Label text="System Type"/>
+                                <Select id="editSysType2Select" width="100%" change="onSysTypeChange" class="sapUiSmallMarginBottom">
+                                    <core:Item key="None" text="-- None --"/>
+                                    <core:Item key="DEV" text="DEV"/>
+                                    <core:Item key="QAS" text="QAS"/>
+                                    <core:Item key="PRD" text="PRD"/>
                                 </Select>
 
-                                <Label text="Monitoring Frequency" required="true"/>
-                                <Select id="editControlFrequencySelect" width="100%" class="sapUiSmallMarginBottom">
-                                    <core:Item key="Real-time" text="Real-time"/>
+                                <Label text="System Type"/>
+                                <Select id="editSysType3Select" width="100%" change="onSysTypeChange" class="sapUiSmallMarginBottom">
+                                    <core:Item key="None" text="-- None --"/>
+                                    <core:Item key="DEV" text="DEV"/>
+                                    <core:Item key="QAS" text="QAS"/>
+                                    <core:Item key="PRD" text="PRD"/>
+                                </Select>
+
+                                <Label text="Frequency Run" required="true"/>
+                                <Select id="editFrequencySelect" width="100%" change="onEditFrequencyChange" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Monthly (Last day of month)" text="Monthly (Last day of month)"/>
+                                    <core:Item key="Weekly (Every Monday)" text="Weekly (Every Monday)"/>
                                     <core:Item key="Daily" text="Daily"/>
-                                    <core:Item key="Weekly" text="Weekly"/>
-                                    <core:Item key="Monthly" text="Monthly"/>
+                                    <core:Item key="Realtime" text="Realtime"/>
+                                    <core:Item key="Cron Expression" text="Cron Expression"/>
                                 </Select>
 
-                                <Label text="Control Status" required="true"/>
-                                <Select id="editControlStatusSelect" width="100%" class="sapUiSmallMarginBottom">
-                                    <core:Item key="Active" text="Active"/>
-                                    <core:Item key="Under Review" text="Under Review"/>
-                                    <core:Item key="Inactive" text="Inactive"/>
-                                </Select>
+                                <VBox id="vboxEditCron" visible="false" class="sapUiSmallMarginBottom">
+                                    <Label text="Cron Expression" required="true"/>
+                                    <Input id="editCronInput" placeholder="e.g. 0 0 1 * *" liveChange="onCronInputChange" class="sapUiTinyMarginBottom"/>
+                                    <MessageStrip
+                                        text="Examples: '* * * * *' (Realtime) | '0 0 * * *' (Daily) | '0 0 * * 1' (Weekly - Every Monday) | '0 0 L * *' (Monthly - Last day of month)"
+                                        type="Information"
+                                        showIcon="true"/>
+                                </VBox>
+
+                                <Label text="Total Run (Read-Only)"/>
+                                <Input id="editTotalRunInput" editable="false" class="sapUiSmallMarginBottom"/>
                             </VBox>
                         </content>
                         <beginButton>
-                            <Button text="Save Changes" type="Emphasized" icon="sap-icon://save" press="onSubmitEditControl"/>
+                            <Button text="Save" type="Emphasized" icon="sap-icon://save" press="onSubmitEditControl"/>
                         </beginButton>
                         <endButton>
                             <Button text="Cancel" press="onCloseEditControlDialog"/>
-                        </endButton>
-                    </Dialog>
-
-                    <!-- ASSIGN OWNER DIALOG -->
-                    <Dialog
-                        id="assignOwnerDialog"
-                        title="Assign Business Owner"
-                        contentWidth="480px">
-                        <content>
-                            <VBox class="sapUiMediumMargin">
-                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
-                                    <Avatar icon="sap-icon://person-placeholder" displaySize="S" backgroundColor="Accent6" class="sapUiTinyMarginEnd"/>
-                                    <VBox>
-                                        <Text id="assignControlIdText" text="Control: CTRL-FIN-001" class="sapUiNoMargin"/>
-                                        <Title id="assignControlNameTitle" text="Financial Journal Entry Threshold Audit" level="H5" class="sapUiNoMargin"/>
-                                    </VBox>
-                                </HBox>
-
-                                <Label text="Select or Enter Business Owner" required="true"/>
-                                <ComboBox id="assignOwnerComboBox" width="100%" placeholder="Select or type owner name..." class="sapUiSmallMarginBottom">
-                                    <core:Item key="Sarah Jenkins (Finance Lead)" text="Sarah Jenkins (Finance Lead)"/>
-                                    <core:Item key="Michael Chang (GRC Officer)" text="Michael Chang (GRC Officer)"/>
-                                    <core:Item key="Alex Rivera (Security Admin)" text="Alex Rivera (Security Admin)"/>
-                                    <core:Item key="David Miller (Procurement Manager)" text="David Miller (Procurement Manager)"/>
-                                    <core:Item key="Emma Watson (Compliance Lead)" text="Emma Watson (Compliance Lead)"/>
-                                </ComboBox>
-                            </VBox>
-                        </content>
-                        <beginButton>
-                            <Button text="Assign Owner" type="Emphasized" icon="sap-icon://accept" press="onSubmitAssignOwner"/>
-                        </beginButton>
-                        <endButton>
-                            <Button text="Cancel" press="onCloseAssignOwnerDialog"/>
                         </endButton>
                     </Dialog>
                 </dependents>
@@ -217,10 +211,10 @@
                             type="Transparent"
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
-                        <Avatar initials="CM" displaySize="S" backgroundColor="Accent8" class="sapUiTinyMarginEnd"/>
+                        <Avatar initials="SC" displaySize="S" backgroundColor="Accent8" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
-                            <Title text="🛡️ XYRA – Control Management" level="H4" class="sapUiNoMargin"/>
-                            <Text text="Configure internal controls, assign business owners, and define risk monitoring rules." class="textMuted sapUiNoMargin"/>
+                            <Title text="🛡️ Security Control Master Configuration" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Configure Security Control Rules, Target Environments (DEV/QAS/PRD), and Execution Frequencies." class="textMuted sapUiNoMargin"/>
                         </VBox>
                         <ToolbarSpacer/>
 
@@ -235,53 +229,58 @@
 
                         <!-- TAB NAVIGATION BUTTONS -->
                         <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
-                            <Button text="Control Management" icon="sap-icon://shield" type="Emphasized" class="sapUiTinyMarginEnd"/>
+                            <Button text="Security Control Master Configuration" icon="sap-icon://shield" type="Emphasized" class="sapUiTinyMarginEnd"/>
                             <Button text="Automation Monitoring" icon="sap-icon://sys-monitor" type="Transparent" press="onNavAutomationMonitoring"/>
                         </HBox>
 
-                        <!-- CONTROL MANAGEMENT TABLE -->
+                        <!-- SECURITY CONTROL MASTER TABLE -->
                         <Panel expandable="false" class="sapUiSmallMarginBottom">
                             <Table id="controlsTable" items="{controlsModel>/controls}" mode="None" width="100%">
                                 <headerToolbar>
                                     <OverflowToolbar>
-                                        <Title text="Internal Control Directory" level="H3"/>
+                                        <Title text="Security Control Master Directory" level="H3"/>
                                         <ToolbarSpacer/>
-                                        <SearchField width="16rem" placeholder="Search controls..." search="onSearchControls"/>
-                                        <Select selectedKey="All" change="onFilterCategory">
-                                            <core:Item key="All" text="All Categories"/>
-                                            <core:Item key="Financial" text="Financial"/>
-                                            <core:Item key="SOX" text="SOX Compliance"/>
-                                            <core:Item key="ITGC" text="ITGC"/>
-                                            <core:Item key="Security" text="Security &amp; SoD"/>
-                                        </Select>
-                                        <Button text="Create Control" icon="sap-icon://add" type="Emphasized" press="onCreateControl"/>
+                                        
+                                        <!-- SEARCH CONTROL ID -->
+                                        <SearchField
+                                            id="searchControlId"
+                                            width="16rem"
+                                            placeholder="Search Control ID..."
+                                            search="onSearchControls"
+                                            liveChange="onSearchControls"/>
+
+                                        <!-- + CREATE SECURITY CONTROL BUTTON -->
+                                        <Button text="Create Security Control" icon="sap-icon://add" type="Emphasized" press="onCreateControl"/>
                                     </OverflowToolbar>
                                 </headerToolbar>
 
+                                <!-- TABLE COLUMNS: HEADERS SAY "System Type" WITHOUT NUMBERS -->
                                 <columns>
-                                    <Column width="14%"><Text text="Control ID"/></Column>
-                                    <Column width="22%"><Text text="Control Name"/></Column>
-                                    <Column width="20%"><Text text="Assign Owner"/></Column>
-                                    <Column width="10%"><Text text="Risk Level"/></Column>
-                                    <Column width="12%"><Text text="Category"/></Column>
-                                    <Column width="10%"><Text text="Frequency"/></Column>
-                                    <Column width="6%"><Text text="Status"/></Column>
-                                    <Column width="6%" hAlign="End"><Text text="Actions"/></Column>
+                                    <Column width="12%"><Text text="Control ID"/></Column>
+                                    <Column width="24%"><Text text="Control Description"/></Column>
+                                    <Column width="9%"><Text text="System Type"/></Column>
+                                    <Column width="9%"><Text text="System Type"/></Column>
+                                    <Column width="9%"><Text text="System Type"/></Column>
+                                    <Column width="20%"><Text text="Frequency Run"/></Column>
+                                    <Column width="10%"><Text text="Total Run"/></Column>
+                                    <Column width="7%" hAlign="End"><Text text="Actions"/></Column>
                                 </columns>
 
                                 <items>
                                     <ColumnListItem>
                                         <cells>
                                             <ObjectIdentifier title="{controlsModel>id}"/>
-                                            <Text text="{controlsModel>name}"/>
-                                            <Text text="{controlsModel>owner}"/>
-                                            <ObjectStatus text="{controlsModel>riskLevel}" state="{controlsModel>riskState}"/>
-                                            <Text text="{controlsModel>category}"/>
-                                            <Text text="{controlsModel>frequency}"/>
-                                            <ObjectStatus text="{controlsModel>status}" state="{controlsModel>statusState}"/>
+                                            <Text text="{controlsModel>description}"/>
+
+                                            <ObjectStatus text="{controlsModel>sysType1}" state="Information"/>
+                                            <ObjectStatus text="{controlsModel>sysType2}" state="{= ${controlsModel>sysType2} === 'None' ? 'None' : 'Information' }"/>
+                                            <ObjectStatus text="{controlsModel>sysType3}" state="{= ${controlsModel>sysType3} === 'None' ? 'None' : 'Information' }"/>
+                                            <Text text="{controlsModel>frequencyRun}" wrapping="false"/>
+
+                                            <ObjectStatus text="{controlsModel>totalRun}" state="Success"/>
                                             <HBox justifyContent="End">
-                                                <Button icon="sap-icon://edit" type="Transparent" press="onEditControl" tooltip="Edit Control"/>
-                                                <Button icon="sap-icon://person-placeholder" type="Transparent" press="onAssignOwner" tooltip="Assign Owner"/>
+                                                <Button icon="sap-icon://edit" type="Transparent" press="onEditControl" tooltip="Edit Security Control"/>
+                                                <Button icon="sap-icon://delete" type="Transparent" press="onDeleteControl" tooltip="Delete Security Control"/>
                                             </HBox>
                                         </cells>
                                     </ColumnListItem>
@@ -296,7 +295,7 @@
                     <OverflowToolbar>
                         <Text text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer/>
-                        <Text text="Version 1.0 | Status: Active"/>
+                        <Text text="Security Control Master Configuration v1.0 | Status: Active"/>
                     </OverflowToolbar>
                 </footer>
 

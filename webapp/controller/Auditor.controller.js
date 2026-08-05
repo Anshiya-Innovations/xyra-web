@@ -15,6 +15,25 @@ sap.ui.define([
 
         },
 
+        onSideNavToggle: function () {
+            var oToolPage = this.byId("auditorToolPage");
+            if (oToolPage) {
+                oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
+            }
+        },
+
+        onSideNavItemSelect: function (oEvent) {
+            var oItem = oEvent.getParameter("item");
+            if (oItem) {
+                var sKey = oItem.getKey();
+                if (sKey && this[sKey]) {
+                    this[sKey]();
+                } else if (sKey) {
+                    this.getOwnerComponent().getRouter().navTo(sKey);
+                }
+            }
+        },
+
         onRefresh: function () {
             MessageToast.show("Audit data refreshed.");
         },
@@ -32,9 +51,20 @@ sap.ui.define([
             MessageToast.show("Auditor Action: " + sText);
         },
 
-        onLogout: function () {
-            UIComponent.getRouterFor(this).navTo("Login");
-        }
+        // Navigation Handlers
+        onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
+        onRoleManagement: function () { this.getOwnerComponent().getRouter().navTo("RoleManagement"); },
+        onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
+        onAIInsights: function () { MessageToast.show("Navigating to AI Insights..."); },
+        onSOXCompliance: function () { MessageToast.show("Navigating to SOX Compliance..."); },
+        onReports: function () { this.getOwnerComponent().getRouter().navTo("Reports"); },
+        onAuditLogs: function () { this.getOwnerComponent().getRouter().navTo("AuditLogs"); },
+        onConfiguration: function () { this.getOwnerComponent().getRouter().navTo("Configuration"); },
+        onAccessManagement: function () { this.getOwnerComponent().getRouter().navTo("AccessManagement"); },
+        onRiskAnalytics: function () { MessageToast.show("Navigating to Risk Analytics..."); },
+        onSystemHealth: function () { MessageToast.show("Navigating to System Health..."); },
+        onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); },
+        onLogout: function () { this.getOwnerComponent().getRouter().navTo("Login"); }
 
     });
 

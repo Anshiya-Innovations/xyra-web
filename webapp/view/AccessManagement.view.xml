@@ -165,12 +165,12 @@
 
                             <Table id="usersTable" items="{userModel>/users}" mode="None" width="100%" class="sapUiNoMargin" busy="{userModel>/busy}" busyIndicatorDelay="0">
                                 <columns>
-                                    <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Name"/></Column>
-                                    <Column><Text text="Email ID"/></Column>
-                                    <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Persona / Role"/></Column>
-                                    <Column minScreenWidth="Phone" demandPopin="true" popinDisplay="Inline"><Text text="Status"/></Column>
-                                    <Column minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"><Text text="Created Date"/></Column>
-                                    <Column hAlign="Center"><Text text="Actions"/></Column>
+                                    <Column width="14%" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Name"/></Column>
+                                    <Column width="26%"><Text text="Email ID"/></Column>
+                                    <Column width="14%" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Persona / Role"/></Column>
+                                    <Column width="8%" minScreenWidth="Phone" demandPopin="true" popinDisplay="Inline"><Text text="Status"/></Column>
+                                    <Column width="12%" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"><Text text="Created Date"/></Column>
+                                    <Column width="26%" hAlign="Center"><Text text="Actions"/></Column>
                                 </columns>
                                 <items>
                                     <ColumnListItem>
@@ -181,8 +181,8 @@
                                             <ObjectStatus text="{userModel>status}" state="Success"/>
                                             <Text text="{userModel>createdDate}"/>
                                             <HBox justifyContent="Center" alignItems="Center">
-                                                <Button icon="sap-icon://reset" text="Reset Password" type="Transparent" press="onRowResetPassword"/>
-                                                <Button icon="sap-icon://delete" text="Remove" type="Reject" press="onRowRemoveUser" class="sapUiTinyMarginBegin"/>
+                                                <Button icon="sap-icon://reset" text="Reset Password" type="Transparent" press="onRowResetPassword" class="sapUiTinyMarginEnd"/>
+                                                <Button icon="sap-icon://delete" text="Remove" type="Reject" press="onRowRemoveUser"/>
                                             </HBox>
                                         </cells>
                                     </ColumnListItem>

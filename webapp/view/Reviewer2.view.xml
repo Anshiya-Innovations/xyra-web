@@ -3,8 +3,10 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
     xmlns:core="sap.ui.core"
-    xmlns:layout="sap.ui.layout">
+    xmlns:layout="sap.ui.layout"
+    height="100%">
 
     <Page
         id="reviewer2Page"
@@ -18,32 +20,26 @@
                 id="rev2ProfilePopover"
                 title="Reviewer 2 Profile"
                 placement="Bottom"
-                contentWidth="320px">
+                contentWidth="340px">
                 <content>
                     <VBox class="sapUiMediumMargin">
                         <HBox alignItems="Center" class="sapUiSmallMarginBottom">
                             <Avatar displaySize="M" initials="R2" backgroundColor="Accent3" class="sapUiSmallMarginEnd"/>
                             <VBox>
-                                <Title text="Technical Reviewer" level="H3"/>
-                                <Text text="Reviewer Level 2"/>
-                                <ObjectStatus text="Online" state="Success"/>
+                                <Title text="Manager Exception Reviewer" level="H3"/>
+                                <Text text="Reviewer 2 - Second Level Review"/>
+                                <ObjectStatus text="Active Duty" state="Success"/>
                             </VBox>
                         </HBox>
                         <VBox class="sapUiSmallMarginBottom">
-                            <Label text="Reviewer ID" design="Bold"/>
-                            <Text text="REV002"/>
+                            <Label text="Role" design="Bold"/>
+                            <Text text="Manager Exception Reviewer (Level 2 Reviewer)"/>
                             <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="Internal Controls"/>
-                            <Label text="Business Unit" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="SAP Security"/>
+                            <Text text="SAP Technical Operations &amp; Compliance Governance"/>
                             <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="reviewer2@xyra.ai"/>
-                            <Label text="Assigned Reviews" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="34"/>
-                            <Label text="Completed Reviews" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="196"/>
-                            <Label text="Pending Reviews" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="8"/>
+                            <Text text="basis.manager@xyra.ai"/>
+                            <Label text="Responsibilities" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="Perform second-level review of exception records after Control Exception Reviewer (Reviewer 1) has completed first-level review."/>
                         </VBox>
                         <HBox justifyContent="End" class="sapUiSmallMarginTop">
                             <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
@@ -51,242 +47,420 @@
                     </VBox>
                 </content>
             </ResponsivePopover>
+
+            <!-- VIEW REPORT DIALOG -->
+            <Dialog id="viewReportDialog" title="Exception Report Details" contentWidth="560px">
+                <content>
+                    <VBox class="sapUiMediumMargin">
+                        <Title text="{reviewer2Model>/selectedReport/reportName}" level="H3" class="sapUiTinyMarginBottom"/>
+                        <ObjectStatus text="{reviewer2Model>/selectedReport/reportId}" state="Information" class="sapUiSmallMarginBottom"/>
+
+                        <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                            <VBox>
+                                <Label text="Control ID" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/controlId}"/>
+                                <Label text="SAP System" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Text text="{reviewer2Model>/selectedReport/system}"/>
+                                <Label text="Reviewer 1 Decision" design="Bold" class="sapUiTinyMarginTop"/>
+                                <ObjectStatus text="{reviewer2Model>/selectedReport/reviewer1Decision}" state="Success"/>
+                            </VBox>
+                            <VBox>
+                                <Label text="Business Process" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/businessProcess}"/>
+                                <Label text="Generated Date" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Text text="{reviewer2Model>/selectedReport/generatedDate}"/>
+                                <Label text="Reviewer 2 Status" design="Bold" class="sapUiTinyMarginTop"/>
+                                <ObjectStatus text="{reviewer2Model>/selectedReport/reviewer2Status}" state="{reviewer2Model>/selectedReport/reviewer2State}"/>
+                            </VBox>
+                        </layout:Grid>
+
+                        <Label text="Reviewer 1 Comments" design="Bold"/>
+                        <Text text="{reviewer2Model>/selectedReport/rev1Comments}" class="sapUiSmallMarginBottom"/>
+
+                        <Label text="Reviewer 1 Root Cause Analysis" design="Bold"/>
+                        <Text text="{reviewer2Model>/selectedReport/rev1RcaText}"/>
+                    </VBox>
+                </content>
+                <endButton>
+                    <Button text="Close" press="onCloseViewReportDialog"/>
+                </endButton>
+            </Dialog>
+
+            <!-- VIEW EVIDENCE DIALOG -->
+            <Dialog id="viewEvidenceDialog" title="Supporting Evidence Review" contentWidth="520px">
+                <content>
+                    <VBox class="sapUiMediumMargin">
+                        <Title text="Evidence Files &amp; Audit Logs" level="H4" class="sapUiSmallMarginBottom"/>
+                        <MessageStrip text="Verified supporting evidence extracted from production SAP audit file buffer." type="Success" showIcon="true" class="sapUiSmallMarginBottom"/>
+                        
+                        <List items="{reviewer2Model>/selectedReport/evidenceFiles}">
+                            <StandardListItem title="{title}" description="{description}" icon="sap-icon://pdf-attachment" info="{status}" infoState="Success"/>
+                        </List>
+                    </VBox>
+                </content>
+                <endButton>
+                    <Button text="Close" press="onCloseViewEvidenceDialog"/>
+                </endButton>
+            </Dialog>
+
+            <!-- REQUEST ADDITIONAL EVIDENCE DIALOG -->
+            <Dialog id="requestEvidenceDialog" title="Request Additional Evidence" contentWidth="480px">
+                <content>
+                    <VBox class="sapUiMediumMargin">
+                        <Label text="Specify Required Evidence / Logs" required="true"/>
+                        <TextArea id="inputRequestEvidenceArea" rows="4" width="100%" placeholder="Describe additional evidence, log traces, or system dumps required..." class="sapUiSmallMarginBottom"/>
+                    </VBox>
+                </content>
+                <beginButton>
+                    <Button text="Send Request" type="Emphasized" press="onSubmitRequestEvidence"/>
+                </beginButton>
+                <endButton>
+                    <Button text="Cancel" press="onCloseRequestEvidenceDialog"/>
+                </endButton>
+            </Dialog>
+
+            <!-- APPROVE & FORWARD TO ESCALATION MANAGER DIALOG -->
+            <Dialog id="approveDialog" title="Approve &amp; Forward to Escalation Manager" contentWidth="540px">
+                <content>
+                    <VBox class="sapUiMediumMargin">
+                        <MessageStrip text="Confirm second-level manager approval and forward report to Escalation Manager." type="Success" showIcon="true" class="sapUiSmallMarginBottom"/>
+                        
+                        <Title text="Exception Report Summary" level="H4" class="sapUiTinyMarginBottom"/>
+                        <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                            <VBox>
+                                <Label text="Report ID" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/reportId}"/>
+                                <Label text="Control ID" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Text text="{reviewer2Model>/selectedReport/controlId}"/>
+                            </VBox>
+                            <VBox>
+                                <Label text="Report Name" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/reportName}"/>
+                                <Label text="SAP System" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Text text="{reviewer2Model>/selectedReport/system}"/>
+                            </VBox>
+                        </layout:Grid>
+
+                        <Label text="Manager Root Cause Analysis" design="Bold" class="sapUiTinyMarginTop"/>
+                        <MessageStrip text="{reviewer2Model>/selectedReport/rev2RcaText}" type="None" class="sapUiSmallMarginBottom"/>
+
+                        <Label text="Electronic Signature Confirmation" design="Bold"/>
+                        <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                            <core:Icon src="sap-icon://sys-enter-2" color="#107e3e" class="sapUiSmallMarginEnd"/>
+                            <Text text="Confirmed by {reviewer2Model>/selectedReport/reviewer2Name} ({reviewer2Model>/selectedReport/employeeId}) on {reviewer2Model>/selectedReport/decisionDate}"/>
+                        </HBox>
+                    </VBox>
+                </content>
+                <beginButton>
+                    <Button text="Approve &amp; Forward" type="Accept" icon="sap-icon://accept" press="onConfirmApproveForward"/>
+                </beginButton>
+                <endButton>
+                    <Button text="Cancel" press="onCloseApproveDialog"/>
+                </endButton>
+            </Dialog>
+
+            <!-- REJECT & RETURN TO REVIEWER 1 DIALOG -->
+            <Dialog id="rejectDialog" title="Reject &amp; Return to Reviewer 1" contentWidth="540px">
+                <content>
+                    <VBox class="sapUiMediumMargin">
+                        <MessageStrip text="Reject report and return to Reviewer 1 for correction." type="Warning" showIcon="true" class="sapUiSmallMarginBottom"/>
+                        
+                        <Title text="Exception Report Summary" level="H4" class="sapUiTinyMarginBottom"/>
+                        <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                            <VBox>
+                                <Label text="Report ID" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/reportId}"/>
+                            </VBox>
+                            <VBox>
+                                <Label text="Report Name" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/reportName}"/>
+                            </VBox>
+                        </layout:Grid>
+
+                        <Label text="Manager Root Cause Analysis / Rejection Reason" design="Bold" class="sapUiTinyMarginTop"/>
+                        <MessageStrip text="{reviewer2Model>/selectedReport/rev2RcaText}" type="None" class="sapUiSmallMarginBottom"/>
+
+                        <Label text="Electronic Signature Confirmation" design="Bold"/>
+                        <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                            <core:Icon src="sap-icon://sys-enter-2" color="#107e3e" class="sapUiSmallMarginEnd"/>
+                            <Text text="Confirmed by {reviewer2Model>/selectedReport/reviewer2Name} ({reviewer2Model>/selectedReport/employeeId}) on {reviewer2Model>/selectedReport/decisionDate}"/>
+                        </HBox>
+                    </VBox>
+                </content>
+                <beginButton>
+                    <Button text="Reject &amp; Return" type="Reject" icon="sap-icon://undo" press="onSubmitReject"/>
+                </beginButton>
+                <endButton>
+                    <Button text="Cancel" press="onCloseRejectDialog"/>
+                </endButton>
+            </Dialog>
         </dependents>
 
         <customHeader>
-            <OverflowToolbar height="4.5rem" class="sapUiSmallMarginBottom">
+            <OverflowToolbar height="4.5rem">
+                <!-- Left Side Profile Button -->
                 <Button
                     text="REV2"
                     icon="sap-icon://employee"
                     type="Transparent"
-                    press="onProfilePress"/>
+                    press="onProfilePress"
+                    class="sapUiTinyMarginBegin"/>
 
-                <ToolbarSeparator/>
+                <Avatar initials="R2" displaySize="S" backgroundColor="Accent3" class="sapUiTinyMarginEnd"/>
 
-                <VBox justifyContent="Center" class="sapUiTinyMarginBegin">
-                    <Title text="XYRA - Reviewer 2 Dashboard" level="H4" class="sapUiNoMargin"/>
-                    <Text text="Technical Control Validation - SAP Internal Control Monitoring Platform" class="textMuted sapUiNoMargin"/>
+                <VBox justifyContent="Center">
+                    <Title text="📜 XYRA – Reviewer 2 Dashboard" level="H4" class="sapUiNoMargin"/>
+                    <Text text="Manager Exception Reviewer – Second Level Review &amp; Approval" class="textMuted sapUiNoMargin"/>
                 </VBox>
 
                 <ToolbarSpacer/>
 
-                <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onActionPress"/>
-                <Button icon="sap-icon://search" tooltip="Search" type="Transparent" press="onActionPress"/>
-                <Button icon="sap-icon://sys-help" tooltip="Help" type="Transparent" press="onActionPress"/>
-                <Button icon="sap-icon://action-settings" tooltip="Settings" type="Transparent" press="onActionPress"/>
-                <Button
-                    text="Logout"
-                    icon="sap-icon://log"
-                    type="Reject"
-                    press="onLogout"/>
+                <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                <Button text="Logout" type="Reject" icon="sap-icon://log" press="onLogout" class="sapUiTinyMarginEnd"/>
             </OverflowToolbar>
         </customHeader>
 
         <content>
-            <VBox width="100%" class="sapUiSmallMargin">
+            <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
 
-                <!-- KPI CARDS (6 Cards) -->
-                <Title text="Technical Validation Analytics" level="H3" class="sapUiSmallMarginBottom"/>
+                <!-- BUSINESS ROLE & PURPOSE BANNER -->
+                <MessageStrip
+                    text="Business Role: Manager Exception Reviewer | Purpose: Perform the second-level review of exception records after the Control Exception Reviewer (Reviewer 1) has completed the first-level review."
+                    type="Information"
+                    showIcon="true"
+                    showCloseButton="false"
+                    class="sapUiSmallMarginBottom"/>
 
-                <layout:Grid containerQuery="true" defaultSpan="XL2 L4 M6 S12" class="sapUiSmallMarginBottom">
+                <!-- TOP SLIDE NAVIGATION PILL BUTTONS -->
+                <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <Button id="btnTabReviewQueue" text="Review Queue" icon="sap-icon://table-view" type="Emphasized" press="onSelectTabQueue" class="sapUiTinyMarginEnd"/>
+                    <Button id="btnTabDetailedAnalysis" text="Detailed Review Analysis" icon="sap-icon://inspect" type="Transparent" press="onSelectTabAnalysis"/>
+                </HBox>
 
-                    <GenericTile header="Pending Reviews" subheader="Technical Validation Queue" class="sapUiTinyMargin">
-                        <TileContent footer="8 High Priority">
-                            <NumericContent value="8" valueColor="Critical" indicator="Up" icon="sap-icon://pending"/>
-                        </TileContent>
-                    </GenericTile>
+                <!-- SLIDE 1: REVIEW QUEUE -->
+                <VBox id="vboxReviewQueue" visible="true" width="100%">
 
-                    <GenericTile header="Completed Reviews" subheader="Total Approved / Rejected" class="sapUiTinyMargin">
-                        <TileContent footer="99% SLA Met">
-                            <NumericContent value="196" valueColor="Good" indicator="Up" icon="sap-icon://accept"/>
-                        </TileContent>
-                    </GenericTile>
+                    <!-- FILTER BAR -->
+                    <Panel headerText="Filter Reviewer 2 Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                        <layout:Grid defaultSpan="XL3 L3 M6 S12">
+                            <SearchField id="searchReviewer2" placeholder="Search technical reports..." search="onSearchReports"/>
+                            <Input id="inputReportIdFilter2" placeholder="Report ID (e.g. REP-101)"/>
+                            <Select id="selectSystemFilter2" width="100%" change="onFilterSystem">
+                                <core:Item key="All" text="All Systems"/>
+                                <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
+                                <core:Item key="HDB-10 (HANA)" text="HDB-10 (HANA)"/>
+                                <core:Item key="QAS-200 (Java)" text="QAS-200 (Java)"/>
+                            </Select>
+                            <Select id="selectStatusFilter2" width="100%" change="onFilterStatus">
+                                <core:Item key="All" text="All Reviewer Statuses"/>
+                                <core:Item key="Pending Technical Review" text="Pending Technical Review"/>
+                                <core:Item key="Approved &amp; Forwarded" text="Approved &amp; Forwarded"/>
+                                <core:Item key="Returned to Reviewer 1" text="Returned to Reviewer 1"/>
+                                <core:Item key="Rejected" text="Rejected"/>
+                            </Select>
+                        </layout:Grid>
+                        <OverflowToolbar class="sapUiTinyMarginTop">
+                            <ToolbarSpacer/>
+                            <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchReports"/>
+                            <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetFilters"/>
+                        </OverflowToolbar>
+                    </Panel>
 
-                    <GenericTile header="Critical Controls" subheader="High Impact SOX Rules" class="sapUiTinyMargin">
-                        <TileContent footer="Immediate Validation">
-                            <NumericContent value="4" valueColor="Error" indicator="Up" icon="sap-icon://alert"/>
-                        </TileContent>
-                    </GenericTile>
+                    <!-- SECTION 8: DECISION BUTTONS TOOLBAR -->
+                    <Panel expandable="false" class="sapUiSmallMarginBottom">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <Title text="Reviewer 2 Decision Actions" level="H4"/>
+                                <ToolbarSpacer/>
+                                <Button text="View Report" icon="sap-icon://show" press="onViewReport" class="sapUiTinyMarginEnd"/>
+                                <Button text="View Evidence" icon="sap-icon://document" press="onViewEvidence" class="sapUiTinyMarginEnd"/>
+                                <Button text="Approve &amp; Forward to Escalation Manager" type="Accept" icon="sap-icon://accept" press="onApproveForward" class="sapUiTinyMarginEnd"/>
+                                <Button text="Reject &amp; Return to Reviewer 1" type="Reject" icon="sap-icon://undo" press="onRejectReport" class="sapUiTinyMarginEnd"/>
+                                <Button text="Request Additional Evidence" icon="sap-icon://hint" press="onRequestEvidence"/>
+                            </OverflowToolbar>
+                        </headerToolbar>
+                    </Panel>
 
-                    <GenericTile header="High Risk Requests" subheader="SOD Conflict Alerts" class="sapUiTinyMargin">
-                        <TileContent footer="Requires Approval">
-                            <NumericContent value="6" valueColor="Error" indicator="Down" icon="sap-icon://warning"/>
-                        </TileContent>
-                    </GenericTile>
+                    <!-- SECTION 2: REVIEW QUEUE TABLE -->
+                    <Panel headerText="Exception Records Review Queue (Click Row for Detailed Analysis Slide)" expandable="false" class="sapUiSmallMarginBottom">
+                        <Table
+                            id="reviewer2Table"
+                            items="{reviewer2Model>/reports}"
+                            mode="MultiSelect"
+                            width="100%"
+                            selectionChange="onSelectionChange">
+                            <columns>
+                                <Column width="10%"><Text text="Report ID"/></Column>
+                                <Column width="18%"><Text text="Report Name"/></Column>
+                                <Column width="9%"><Text text="Control ID"/></Column>
+                                <Column width="11%"><Text text="SAP System"/></Column>
+                                <Column width="11%"><Text text="Generated Date"/></Column>
+                                <Column width="12%"><Text text="Reviewer 1 Decision"/></Column>
+                                <Column width="14%"><Text text="Reviewer 1 Comments"/></Column>
+                                <Column width="9%"><Text text="Evidence Status"/></Column>
+                                <Column width="11%"><Text text="Reviewer 2 Status"/></Column>
+                            </columns>
 
-                    <GenericTile header="Evidence Pending" subheader="Log Inspection Needed" class="sapUiTinyMargin">
-                        <TileContent footer="2 Files Attached">
-                            <NumericContent value="3" valueColor="Critical" icon="sap-icon://document"/>
-                        </TileContent>
-                    </GenericTile>
+                            <items>
+                                <ColumnListItem press="onReportRowPress" type="Navigation">
+                                    <cells>
+                                        <ObjectStatus text="{reviewer2Model>reportId}" state="Information"/>
+                                        <ObjectIdentifier title="{reviewer2Model>reportName}" subtitle="{reviewer2Model>controlName}"/>
+                                        <ObjectStatus text="{reviewer2Model>controlId}" state="None"/>
+                                        <Text text="{reviewer2Model>system}"/>
+                                        <Text text="{reviewer2Model>generatedDate}"/>
+                                        <ObjectStatus text="{reviewer2Model>reviewer1Decision}" state="Success" icon="sap-icon://sys-enter-2"/>
+                                        <Text text="{reviewer2Model>rev1Comments}"/>
+                                        <ObjectStatus text="{reviewer2Model>evidenceStatus}" state="Success"/>
+                                        <ObjectStatus text="{reviewer2Model>reviewer2Status}" state="{reviewer2Model>reviewer2State}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
 
-                    <GenericTile header="Today's Reviews" subheader="Completed Sessions" class="sapUiTinyMargin">
-                        <TileContent footer="6 Validated Today">
-                            <NumericContent value="14" valueColor="Neutral" icon="sap-icon://appointment-2"/>
-                        </TileContent>
-                    </GenericTile>
+                </VBox>
 
-                </layout:Grid>
+                <!-- SLIDE 2: DETAILED REVIEW ANALYSIS (PROPER DOWNWARD ALIGNMENT) -->
+                <VBox id="vboxDetailedAnalysis" visible="false" width="100%">
 
-                <!-- FILTER BAR (Issues 1 & 2: Row 1 & Row 2 aligned filter grid, no internal vertical scrollbar) -->
-                <Panel headerText="Filter &amp; Search Technical Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom noInternalScroll">
-                    <layout:Grid containerQuery="true" defaultSpan="XL3 L3 M6 S12">
-                        <!-- Row 1 -->
-                        <SearchField placeholder="Search Technical Reviews..." search="onRefresh"/>
-                        <Input placeholder="Review ID"/>
-                        <Input placeholder="Request ID (e.g. REQ1001)"/>
-                        <Input placeholder="Control ID"/>
-
-                        <!-- Row 2 -->
-                        <Input placeholder="Application (e.g. SAP S/4HANA)"/>
-                        <Input placeholder="Business User"/>
-                        <Select width="100%">
-                            <core:Item key="" text="All Risk Levels"/>
-                            <core:Item key="High" text="High"/>
-                            <core:Item key="Medium" text="Medium"/>
-                            <core:Item key="Low" text="Low"/>
-                        </Select>
-                        <Select width="100%">
-                            <core:Item key="" text="All Priorities"/>
-                            <core:Item key="P1" text="Priority 1"/>
-                            <core:Item key="P2" text="Priority 2"/>
-                        </Select>
-                    </layout:Grid>
-                    <OverflowToolbar class="sapUiTinyMarginTop">
+                    <!-- SLIDE BREADCRUMB HEADER -->
+                    <OverflowToolbar class="sapUiSmallMarginBottom">
+                        <Title text="Detailed Review Analysis – {reviewer2Model>/selectedReport/reportId} ({reviewer2Model>/selectedReport/reportName})" level="H4"/>
                         <ToolbarSpacer/>
-                        <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onRefresh"/>
-                        <Button text="Reset" type="Transparent" icon="sap-icon://reset" press="onActionPress"/>
-                        <Button text="Refresh" icon="sap-icon://refresh" press="onRefresh"/>
-                        <Button text="Export" icon="sap-icon://excel-attachment" press="onActionPress"/>
+                        <ObjectStatus text="{reviewer2Model>/selectedReport/system}" state="Information" class="sapUiTinyMarginEnd"/>
+                        <ObjectStatus text="{reviewer2Model>/selectedReport/reviewer2Status}" state="{reviewer2Model>/selectedReport/reviewer2State}"/>
                     </OverflowToolbar>
-                </Panel>
 
-                <!-- QUICK ACTIONS BAR -->
-                <OverflowToolbar class="sapUiSmallMarginBottom">
-                    <Title text="Quick Action Controls" level="H5"/>
-                    <ToolbarSpacer/>
-                    <Button text="Approve Selected" type="Accept" icon="sap-icon://accept" press="onApproveSelectedPress"/>
-                    <Button text="Reject Selected" type="Reject" icon="sap-icon://decline" press="onRejectSelectedPress"/>
-                    <Button text="Assign Review" type="Ghost" icon="sap-icon://personnel" press="onActionPress"/>
-                    <Button text="Export Excel" icon="sap-icon://excel-attachment" press="onActionPress"/>
-                    <Button text="Generate Report" icon="sap-icon://pdf-attachment" press="onActionPress"/>
-                    <Button text="Refresh Queue" icon="sap-icon://refresh" press="onRefresh"/>
-                </OverflowToolbar>
+                    <!-- SECTION 3: REPORT DETAILS PANEL (DOWNWARD ALIGNMENT) -->
+                    <Panel headerText="3. Report Details" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                        <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiTinyMargin">
+                            <VBox>
+                                <Label text="Control Information" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/controlId} - {reviewer2Model>/selectedReport/controlName}" class="sapUiSmallMarginBottom"/>
 
-                <!-- MAIN TECHNICAL REVIEW QUEUE TABLE (Issues 3 & 4: MultiSelect checkboxes, no horizontal scrollbar) -->
-                <Panel headerText="Technical Review Queue" expandable="false" class="sapUiSmallMarginBottom">
-                    <Table id="reviewer2Table" inset="false" width="100%" mode="MultiSelect" selectionChange="onSelectionChange">
-                        <columns>
-                            <Column width="7rem"><Text text="Review ID"/></Column>
-                            <Column width="8rem"><Text text="Request ID"/></Column>
-                            <Column width="7rem"><Text text="Control ID"/></Column>
-                            <Column width="9rem" minScreenWidth="Tablet" demandPopin="true"><Text text="User"/></Column>
-                            <Column width="9rem" minScreenWidth="Tablet" demandPopin="true"><Text text="System"/></Column>
-                            <Column width="9rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Application"/></Column>
-                            <Column width="7rem"><Text text="Risk"/></Column>
-                            <Column width="7rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Reviewer 1"/></Column>
-                            <Column width="11rem"><Text text="Status"/></Column>
-                            <Column width="12rem"><Text text="Action"/></Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <ObjectIdentifier title="REV2-01" subtitle="Technical"/>
-                                    <Text text="REQ1001"/>
-                                    <Text text="SOX-001"/>
-                                    <HBox alignItems="Center">
-                                        <Avatar initials="J" displaySize="XS" class="sapUiTinyMarginEnd"/>
-                                        <Text text="John"/>
-                                    </HBox>
-                                    <Text text="SAP S/4HANA"/>
-                                    <Text text="SAP Security"/>
-                                    <ObjectStatus text="High" state="Error" icon="sap-icon://warning"/>
-                                    <ObjectStatus text="Approved" state="Success"/>
-                                    <ObjectStatus text="Pending Final Approval" state="Warning"/>
-                                    <HBox>
-                                        <Button text="Approve" type="Accept" icon="sap-icon://accept" press="onApprove"/>
-                                        <Button text="Reject" type="Reject" icon="sap-icon://decline" class="sapUiTinyMarginBegin" press="onReject"/>
-                                    </HBox>
-                                </cells>
-                            </ColumnListItem>
+                                <Label text="Business Process" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/businessProcess}" class="sapUiSmallMarginBottom"/>
 
-                            <ColumnListItem>
-                                <cells>
-                                    <ObjectIdentifier title="REV2-02" subtitle="Technical"/>
-                                    <Text text="REQ1005"/>
-                                    <Text text="SOX-003"/>
-                                    <HBox alignItems="Center">
-                                        <Avatar initials="M" displaySize="XS" class="sapUiTinyMarginEnd"/>
-                                        <Text text="Maria"/>
-                                    </HBox>
-                                    <Text text="SAP HANA DB"/>
-                                    <Text text="Database Admin"/>
-                                    <ObjectStatus text="Critical" state="Error" icon="sap-icon://alert"/>
-                                    <ObjectStatus text="Approved" state="Success"/>
-                                    <ObjectStatus text="In Technical Review" state="Information"/>
-                                    <HBox>
-                                        <Button text="Approve" type="Accept" icon="sap-icon://accept" press="onApprove"/>
-                                        <Button text="Reject" type="Reject" icon="sap-icon://decline" class="sapUiTinyMarginBegin" press="onReject"/>
-                                    </HBox>
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
-                </Panel>
+                                <Label text="Risk Level" design="Bold"/>
+                                <ObjectStatus text="{reviewer2Model>/selectedReport/riskLevel}" state="{reviewer2Model>/selectedReport/riskState}" icon="sap-icon://alert"/>
+                            </VBox>
 
-                <!-- AI TECHNICAL INSIGHTS & TIMELINE -->
-                <layout:Grid containerQuery="true" defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
-                    
-                    <Panel headerText="AI Technical Risk Assessment" expandable="true" expanded="true">
-                        <VBox class="sapUiSmallMargin">
-                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
-                                <Label text="Control Effectiveness Score" design="Bold"/>
-                                <ObjectStatus text="95.8% Optimal" state="Success"/>
-                            </HBox>
-                            <ProgressIndicator percentValue="96" displayValue="96%" state="Success" class="sapUiSmallMarginBottom"/>
+                            <VBox>
+                                <Label text="SAP System" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/system}" class="sapUiSmallMarginBottom"/>
 
-                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
-                                <Label text="Technical Recommendation" design="Bold"/>
-                                <ObjectStatus text="Low SOD Conflict" state="Success"/>
-                            </HBox>
-                            <Text text="AI Technical Analysis confirms zero unmitigated firefighter transactions executed during requested timeframe." class="sapUiSmallMarginBottom"/>
-                            <MessageStrip text="Technical Evidence Verified: Hash checksums match system log archives." type="Success" showIcon="true"/>
+                                <Label text="Generated Date" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/generatedDate}" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Current Reviewer 2 Status" design="Bold"/>
+                                <ObjectStatus text="{reviewer2Model>/selectedReport/reviewer2Status}" state="{reviewer2Model>/selectedReport/reviewer2State}"/>
+                            </VBox>
+                        </layout:Grid>
+                    </Panel>
+
+                    <!-- SECTION 2: REVIEWER 1 REVIEW SUMMARY (DOWNWARD ALIGNMENT) -->
+                    <Panel headerText="2. Reviewer 1 Review Summary" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                        <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiTinyMargin">
+                            <VBox>
+                                <Label text="Reviewer 1 Decision" design="Bold"/>
+                                <ObjectStatus text="{reviewer2Model>/selectedReport/reviewer1Decision}" state="Success" icon="sap-icon://sys-enter-2" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Reviewer 1 Electronic Signature" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/rev1Signature}" class="sapUiSmallMarginBottom"/>
+                            </VBox>
+
+                            <VBox>
+                                <Label text="Review Date" design="Bold"/>
+                                <Text text="{reviewer2Model>/selectedReport/rev1Date}" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Reviewer 1 Root Cause Analysis" design="Bold"/>
+                                <MessageStrip text="{reviewer2Model>/selectedReport/rev1RcaText}" type="Information"/>
+                            </VBox>
+                        </layout:Grid>
+                    </Panel>
+
+                    <!-- SECTION 3: ROOT CAUSE ANALYSIS (MANDATORY) (DOWNWARD ALIGNMENT) -->
+                    <Panel headerText="3. Root Cause Analysis (Mandatory)" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                        <VBox class="sapUiTinyMargin">
+                            <MessageStrip text="Mandatory: Root Cause Analysis is required prior to approving or rejecting this review." type="Warning" showIcon="true" class="sapUiSmallMarginBottom"/>
+                            <Label text="Root Cause Analysis (Mandatory)" required="true" design="Bold"/>
+                            <TextArea
+                                id="inputRcaArea2"
+                                value="{reviewer2Model>/selectedReport/rev2RcaText}"
+                                rows="4"
+                                width="100%"
+                                placeholder="Enter detailed manager Root Cause Analysis explaining second-level validation results, risk assessment, or rejection rationale..."
+                                class="sapUiSmallMarginBottom"/>
                         </VBox>
                     </Panel>
 
-                    <Panel headerText="Technical Validation Lifecycle" expandable="true" expanded="true">
-                        <VBox class="sapUiSmallMargin">
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://accept" color="green" class="sapUiSmallMarginEnd"/>
-                                <Text text="Stage 1: Evidence Submitted &amp; Verified"/>
-                            </HBox>
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://accept" color="green" class="sapUiSmallMarginEnd"/>
-                                <Text text="Stage 2: Level 1 Reviewer Approved"/>
-                            </HBox>
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://process" color="orange" class="sapUiSmallMarginEnd"/>
-                                <Text text="Stage 3: Technical Validation (Active)"/>
-                            </HBox>
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://future" color="gray" class="sapUiSmallMarginEnd"/>
-                                <Text text="Stage 4: Final Sign-off &amp; SAP Audit Log Entry"/>
-                            </HBox>
+                    <!-- SECTION 4: ELECTRONIC SIGNATURE PANEL (DOWNWARD ALIGNMENT) -->
+                    <Panel headerText="4. Electronic Signature Panel" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                        <VBox class="sapUiTinyMargin">
+                            <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                                <VBox>
+                                    <Label text="Reviewer Name" design="Bold"/>
+                                    <Text text="{reviewer2Model>/selectedReport/reviewer2Name}"/>
+                                    
+                                    <Label text="Employee ID" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="{reviewer2Model>/selectedReport/employeeId}"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Decision Date" design="Bold"/>
+                                    <Text text="{reviewer2Model>/selectedReport/decisionDate}"/>
+
+                                    <Label text="Digital Signature Status" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <ObjectStatus text="{reviewer2Model>/selectedReport/sigStatus}" state="Success" icon="sap-icon://sys-enter-2"/>
+                                </VBox>
+                            </layout:Grid>
+
+                            <CheckBox
+                                id="chkElecSignature2"
+                                text="I confirm that I have personally reviewed this exception."
+                                selected="{reviewer2Model>/selectedReport/elecSigConfirmed}"
+                                class="sapUiTinyMarginTop"/>
                         </VBox>
                     </Panel>
 
-                </layout:Grid>
+                    <!-- SECTION 5: REVIEW HISTORY (DOWNWARD ALIGNMENT) -->
+                    <Panel headerText="5. Review History" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                        <Table items="{reviewer2Model>/selectedReport/reviewHistory}" inset="false" width="100%">
+                            <columns>
+                                <Column width="30%"><Text text="Previous Actions"/></Column>
+                                <Column width="35%"><Text text="Reviewer Comments"/></Column>
+                                <Column width="35%"><Text text="Status Timeline"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{action}"/>
+                                        <Text text="{comments}"/>
+                                        <ObjectStatus text="{statusTimeline}" state="Information"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+
+                    <!-- BOTTOM ACTION BAR IN DETAILED ANALYSIS SLIDE -->
+                    <OverflowToolbar class="sapUiSmallMarginTop">
+                        <Button text="Back to Review Queue" icon="sap-icon://nav-back" press="onSelectTabQueue" class="sapUiTinyMarginEnd"/>
+                        <ToolbarSpacer/>
+                        <Button text="Approve &amp; Forward to Escalation Manager" type="Accept" icon="sap-icon://accept" press="onApproveForward" class="sapUiTinyMarginEnd"/>
+                        <Button text="Reject &amp; Return to Reviewer 1" type="Reject" icon="sap-icon://undo" press="onRejectReport"/>
+                    </OverflowToolbar>
+
+                </VBox>
 
             </VBox>
         </content>
 
-        <!-- FOOTER (Issue 6: Removed ONLY 'SAP BTP Trial') -->
         <footer>
             <OverflowToolbar>
                 <Text text="© 2026 Forte Innovations"/>
                 <ToolbarSpacer/>
-                <Text text="XYRA Technical Control Platform | Version 1.0"/>
-                <ToolbarSpacer/>
+                <Text text="XYRA Internal Control Platform | Reviewer 2 (Manager Exception Reviewer) Portal v1.0"/>
             </OverflowToolbar>
         </footer>
 

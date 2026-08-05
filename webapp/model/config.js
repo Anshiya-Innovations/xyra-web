@@ -13,6 +13,7 @@ sap.ui.define([], function () {
     // exists (e.g. reading it from the browser's own hostname).
     var TEST_SUBDOMAIN = "xyrademo";
 
+    
     return {
         AUTH_BASE_URL: AUTH_BASE_URL,
         TEST_SUBDOMAIN: TEST_SUBDOMAIN

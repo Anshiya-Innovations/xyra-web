@@ -46,16 +46,17 @@
                                 class="sapUiMediumMarginBottom"/>
 
                             <Label id="_IDGenLabel"
-                                text="Role"
+                                text="Persona"
                                 required="true"/>
 
                             <Select
                                 id="role"
                                 width="100%"
+                                change="onRoleChange"
                                 class="sapUiSmallMarginBottom">
 
                                 <items>
-                                    <core:Item id="_IDGenItem" key="" text="-- Select Role --"/>
+                                    <core:Item id="_IDGenItem" key="" text="-- Select Persona --"/>
                                     <core:Item id="_IDGenItem1" key="ADMIN" text="Admin"/>
                                     <core:Item id="_IDGenItem2" key="ACM" text="Escalation Manager"/>
                                     <core:Item id="_IDGenItem3" key="REV1" text="Reviewer 1"/>

@@ -1,0 +1,505 @@
+<mvc:View
+    controllerName="xyraweb.controller.Reports"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="reportsToolPage" sideExpanded="true">
+
+        <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="Reports" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://shield" key="Admin" select="onAdmin"/>
+
+                    <tnt:NavigationListItem text="Role Management" icon="sap-icon://manager" key="RoleManagement" select="onRoleManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="380 Roles" state="Indication17" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement">
+                        <tnt:tag>
+                            <ObjectStatus text="156 Controls" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://machine" key="AIInsights" select="onAIInsights">
+                        <tnt:tag>
+                            <ObjectStatus text="New" state="Indication15" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag>
+                            <ObjectStatus text="98.4%" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://business-objects-experience" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
+                        <tnt:tag>
+                            <ObjectStatus text="3 Risks" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="System Health" icon="sap-icon://sys-monitor" key="SystemHealth" select="onSystemHealth"/>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="reportsPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <dependents>
+                    <!-- GENERATE REPORT DIALOG -->
+                    <Dialog
+                        id="generateReportDialog"
+                        title="Generate Custom Enterprise Report"
+                        contentWidth="480px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Label text="Report Name" required="true"/>
+                                <Input id="dialogReportNameInput" placeholder="e.g. Q3 SOX Audit Executive Summary" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Report Type" required="true"/>
+                                <Select id="dialogReportTypeSelect" selectedKey="SOX Compliance" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Reviewer 1" text="Reviewer 1 Report"/>
+                                    <core:Item key="Reviewer 2" text="Reviewer 2 Report"/>
+                                    <core:Item key="Escalation Manager" text="Escalation Manager Report"/>
+                                    <core:Item key="SOX Compliance" text="SOX Compliance Report"/>
+                                    <core:Item key="Role Change" text="Role Change Report"/>
+                                    <core:Item key="User Access Review" text="User Access Review"/>
+                                    <core:Item key="SOD Conflict" text="SOD Conflict Report"/>
+                                    <core:Item key="Elevated Access" text="Elevated Emergency Access"/>
+                                    <core:Item key="Critical Auth" text="Critical Authorization Report"/>
+                                    <core:Item key="Audit Log" text="Audit Log Report"/>
+                                    <core:Item key="AI Risk Analysis" text="AI Risk Analysis Report"/>
+                                </Select>
+
+                                <Label text="System" required="true"/>
+                                <Select id="dialogSystemSelect" selectedKey="PRD-100" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="PRD-100" text="PRD-100 (Production)"/>
+                                    <core:Item key="QAS-200" text="QAS-200 (Quality)"/>
+                                    <core:Item key="DEV-300" text="DEV-300 (Development)"/>
+                                </Select>
+
+                                <Label text="Export Format" required="true"/>
+                                <Select id="dialogFormatSelect" selectedKey="PDF" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="PDF" text="Adobe PDF Document (.pdf)"/>
+                                    <core:Item key="Excel" text="Microsoft Excel Spreadsheet (.xlsx)"/>
+                                    <core:Item key="CSV" text="Comma Separated Values (.csv)"/>
+                                </Select>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Generate Now" type="Emphasized" icon="sap-icon://create" press="onSubmitGenerateReport"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseGenerateReportDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- SCHEDULE REPORT DIALOG -->
+                    <Dialog
+                        id="scheduleReportDialog"
+                        title="Schedule Automated Report Execution"
+                        contentWidth="520px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Label text="Report Name" required="true"/>
+                                <Input id="scheduleReportNameInput" placeholder="e.g. Weekly SOX &amp; SOD Automated Audit" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Report Type" required="true"/>
+                                <Select id="scheduleReportTypeSelect" selectedKey="SOX Compliance" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Reviewer 1" text="Reviewer 1 Report"/>
+                                    <core:Item key="Reviewer 2" text="Reviewer 2 Report"/>
+                                    <core:Item key="Escalation Manager" text="Escalation Manager Report"/>
+                                    <core:Item key="SOX Compliance" text="SOX Compliance Report"/>
+                                    <core:Item key="Role Change" text="Role Change Report"/>
+                                    <core:Item key="User Access Review" text="User Access Review"/>
+                                    <core:Item key="SOD Conflict" text="SOD Conflict Report"/>
+                                    <core:Item key="Elevated Access" text="Elevated Emergency Access"/>
+                                    <core:Item key="Critical Auth" text="Critical Authorization Report"/>
+                                    <core:Item key="Audit Log" text="Audit Log Report"/>
+                                    <core:Item key="AI Risk Analysis" text="AI Risk Analysis Report"/>
+                                </Select>
+
+                                <Label text="System" required="true"/>
+                                <Select id="scheduleSystemSelect" selectedKey="PRD-100" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="PRD-100" text="PRD-100 (Production)"/>
+                                    <core:Item key="QAS-200" text="QAS-200 (Quality)"/>
+                                    <core:Item key="DEV-300" text="DEV-300 (Development)"/>
+                                </Select>
+
+                                <Label text="Recurrence Frequency" required="true"/>
+                                <Select id="scheduleFrequencySelect" selectedKey="Weekly" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="Daily" text="Daily (Every 24 Hours)"/>
+                                    <core:Item key="Weekly" text="Weekly (Every Monday at 09:00 IST)"/>
+                                    <core:Item key="Monthly" text="Monthly (1st Day of Month)"/>
+                                    <core:Item key="Quarterly" text="Quarterly Audit Cycle"/>
+                                </Select>
+
+                                <Label text="Recipient Notification Email(s)"/>
+                                <Input id="scheduleEmailInput" placeholder="e.g. grc-audit@enterprise.com, compliance@xyra.com" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Export Format" required="true"/>
+                                <Select id="scheduleFormatSelect" selectedKey="PDF" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="PDF" text="Adobe PDF Document (.pdf)"/>
+                                    <core:Item key="Excel" text="Microsoft Excel Spreadsheet (.xlsx)"/>
+                                    <core:Item key="CSV" text="Comma Separated Values (.csv)"/>
+                                </Select>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Schedule Job" type="Emphasized" icon="sap-icon://pending" press="onSubmitScheduleReport"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseScheduleReportDialog"/>
+                        </endButton>
+                    </Dialog>
+                </dependents>
+
+                <!-- PAGE HEADER WITH TITLE & SUBTITLE -->
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+                        <Avatar initials="RP" displaySize="S" backgroundColor="Accent5" class="sapUiTinyMarginEnd"/>
+                        <VBox justifyContent="Center">
+                            <Title text="📊 XYRA – Reports" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Enterprise Reporting &amp; Compliance Dashboard" class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+
+                        <Button icon="sap-icon://home" tooltip="Admin Dashboard" type="Transparent" press="onAdmin" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+
+                        <!-- TAB NAVIGATION BUTTONS (EXACTLY MATCHING CONTROL MANAGEMENT) -->
+                        <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
+                            <Button id="btnTabAvailableReports" text="Available Reports" icon="sap-icon://grid" type="Emphasized" press="onSelectTabAvailable" class="sapUiTinyMarginEnd"/>
+                            <Button id="btnTabExecutionHistory" text="Execution History &amp; Export Center" icon="sap-icon://history" type="Transparent" press="onSelectTabHistory"/>
+                        </HBox>
+
+                        <!-- SLIDE 1: AVAILABLE REPORTS & CATALOG -->
+                        <VBox id="vboxAvailableReports" visible="true" width="100%">
+
+                            <!-- SECTION 1: KPI SUMMARY CARDS (4 CARDS) -->
+                            <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiNoMargin">
+                                <f:Card class="sapUiTinyMarginBottom">
+                                    <f:header>
+                                        <card:Header
+                                            title="1,420"
+                                            subtitle="Total Reports"
+                                            iconSrc="sap-icon://excel-attachment"
+                                            statusText="System Total"/>
+                                    </f:header>
+                                </f:Card>
+
+                                <f:Card class="sapUiTinyMarginBottom">
+                                    <f:header>
+                                        <card:Header
+                                            title="24"
+                                            subtitle="Generated Today"
+                                            iconSrc="sap-icon://history"
+                                            statusText="Daily Executions"/>
+                                    </f:header>
+                                </f:Card>
+
+                                <f:Card class="sapUiTinyMarginBottom">
+                                    <f:header>
+                                        <card:Header
+                                            title="12"
+                                            subtitle="Scheduled Reports"
+                                            iconSrc="sap-icon://pending"
+                                            statusText="Automated Jobs"/>
+                                    </f:header>
+                                </f:Card>
+
+                                <f:Card class="sapUiTinyMarginBottom">
+                                    <f:header>
+                                        <card:Header
+                                            title="3"
+                                            subtitle="Pending Exports"
+                                            iconSrc="sap-icon://download"
+                                            statusText="In Queue"/>
+                                    </f:header>
+                                </f:Card>
+                            </layout:Grid>
+
+                            <!-- SECTION 2: SEARCH & FILTERS -->
+                            <Panel expandable="true" expanded="true" class="sapUiSmallMarginTop sapUiSmallMarginBottom">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Report Search &amp; Enterprise Filters" level="H4"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <content>
+                                    <VBox class="sapUiSmallMargin">
+                                        <layout:Grid defaultSpan="XL4 L4 M6 S12" class="sapUiNoMargin">
+                                            <VBox>
+                                                <Label text="Report Type"/>
+                                                <Select id="filterReportType" selectedKey="All" width="100%" class="sapUiSmallMarginBottom">
+                                                    <core:Item key="All" text="All Report Types"/>
+                                                    <core:Item key="Reviewer 1" text="Reviewer 1"/>
+                                                    <core:Item key="Reviewer 2" text="Reviewer 2"/>
+                                                    <core:Item key="Escalation Manager" text="Escalation Manager"/>
+                                                    <core:Item key="SOX Compliance" text="SOX Compliance"/>
+                                                    <core:Item key="Role Change" text="Role Change"/>
+                                                    <core:Item key="User Access Review" text="User Access Review"/>
+                                                    <core:Item key="SOD Conflict" text="SOD Conflicts"/>
+                                                    <core:Item key="Elevated Access" text="Elevated Access Logs"/>
+                                                    <core:Item key="Audit Log" text="Audit Logs"/>
+                                                    <core:Item key="AI Risk Analysis" text="AI Risk Analysis"/>
+                                                </Select>
+                                            </VBox>
+
+                                            <VBox>
+                                                <Label text="System"/>
+                                                <Select id="filterSystem" selectedKey="All" width="100%" class="sapUiSmallMarginBottom">
+                                                    <core:Item key="All" text="All Systems"/>
+                                                    <core:Item key="PRD-100" text="PRD-100 (Production)"/>
+                                                    <core:Item key="QAS-200" text="QAS-200 (Quality)"/>
+                                                    <core:Item key="DEV-300" text="DEV-300 (Development)"/>
+                                                </Select>
+                                            </VBox>
+
+                                            <VBox>
+                                                <Label text="Module"/>
+                                                <Select id="filterModule" selectedKey="All" width="100%" class="sapUiSmallMarginBottom">
+                                                    <core:Item key="All" text="All Modules"/>
+                                                    <core:Item key="FI" text="Financials (FI/CO)"/>
+                                                    <core:Item key="MM" text="Materials Mgmt (MM)"/>
+                                                    <core:Item key="SD" text="Sales &amp; Distribution (SD)"/>
+                                                    <core:Item key="Security" text="Security &amp; SoD"/>
+                                                    <core:Item key="Basis" text="Basis Systems"/>
+                                                </Select>
+                                            </VBox>
+
+                                            <VBox>
+                                                <Label text="Date Range"/>
+                                                <DateRangeSelection id="filterDateRange" placeholder="Select Date Range..." width="100%" class="sapUiSmallMarginBottom"/>
+                                            </VBox>
+
+                                            <VBox>
+                                                <Label text="Generated By"/>
+                                                <Select id="filterGeneratedBy" selectedKey="All" width="100%" class="sapUiSmallMarginBottom">
+                                                    <core:Item key="All" text="All Users / Automation"/>
+                                                    <core:Item key="Automated Engine" text="Automated Engine"/>
+                                                    <core:Item key="Sarah Jenkins" text="Sarah Jenkins (Finance Lead)"/>
+                                                    <core:Item key="Michael Chang" text="Michael Chang (GRC Officer)"/>
+                                                    <core:Item key="Alex Rivera" text="Alex Rivera (Security Admin)"/>
+                                                </Select>
+                                            </VBox>
+
+                                            <VBox>
+                                                <Label text="Status"/>
+                                                <Select id="filterStatus" selectedKey="All" width="100%" class="sapUiSmallMarginBottom">
+                                                    <core:Item key="All" text="All Statuses"/>
+                                                    <core:Item key="Completed" text="Completed"/>
+                                                    <core:Item key="Scheduled" text="Scheduled"/>
+                                                    <core:Item key="Processing" text="Processing"/>
+                                                    <core:Item key="Failed" text="Failed"/>
+                                                </Select>
+                                            </VBox>
+                                        </layout:Grid>
+
+                                        <HBox justifyContent="End" alignItems="Center" class="sapUiTinyMarginTop">
+                                            <SearchField id="filterSearchField" width="18rem" placeholder="Search reports by title..." search="onApplyFilters" class="sapUiTinyMarginEnd"/>
+                                            <Button text="Filter" icon="sap-icon://filter" type="Emphasized" press="onApplyFilters" class="sapUiTinyMarginEnd"/>
+                                            <Button text="Clear Filters" icon="sap-icon://clear-filter" type="Ghost" press="onClearFilters"/>
+                                        </HBox>
+                                    </VBox>
+                                </content>
+                            </Panel>
+
+                            <!-- SECTION 3: QUICK ACTIONS TOOLBAR -->
+                            <Panel expandable="false" class="sapUiSmallMarginBottom">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Quick Actions" level="H4"/>
+                                        <ToolbarSpacer/>
+                                        <Button text="Generate Report" icon="sap-icon://add" type="Emphasized" press="onGenerateReportDialog" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Schedule Report" icon="sap-icon://pending" type="Default" press="onScheduleReportDialog" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Export PDF" icon="sap-icon://pdf-attachment" type="Default" press="onExportPDF" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Export Excel" icon="sap-icon://excel-attachment" type="Default" press="onExportExcel" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Email Report" icon="sap-icon://email" type="Default" press="onEmailReport" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Refresh" icon="sap-icon://refresh" type="Ghost" press="onRefreshReports"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                            </Panel>
+
+                            <!-- SECTION 4: AVAILABLE STANDARD ENTERPRISE REPORTS TABLE -->
+                            <Panel expandable="false" class="sapUiSmallMarginBottom">
+                                <Table id="availableReportsTable" items="{reportsModel>/availableReports}" mode="None" width="100%">
+                                    <headerToolbar>
+                                        <OverflowToolbar>
+                                            <Title text="Available Standard Enterprise Reports" level="H3"/>
+                                            <ToolbarSpacer/>
+                                            <SearchField width="16rem" placeholder="Search available reports..." search="onSearchAvailableReports"/>
+                                            <Select selectedKey="All" change="onFilterAvailableCategory">
+                                                <core:Item key="All" text="All Categories"/>
+                                                <core:Item key="Reviewer 1" text="Reviewer 1"/>
+                                                <core:Item key="Reviewer 2" text="Reviewer 2"/>
+                                                <core:Item key="Escalation Manager" text="Escalation Manager"/>
+                                                <core:Item key="SOX Compliance" text="SOX Compliance"/>
+                                                <core:Item key="Role Change" text="Role Changes"/>
+                                                <core:Item key="User Access Review" text="User Access Review"/>
+                                                <core:Item key="SOD Conflict" text="SOD Conflicts"/>
+                                                <core:Item key="Elevated Access" text="Elevated Access Logs"/>
+                                                <core:Item key="Critical Auth" text="Critical Authorizations"/>
+                                                <core:Item key="Audit Log" text="Audit Logs"/>
+                                                <core:Item key="AI Risk Analysis" text="AI Risk Analysis"/>
+                                            </Select>
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+
+                                    <columns>
+                                        <Column width="22%"><Text text="Report Name"/></Column>
+                                        <Column width="15%"><Text text="Category / Type"/></Column>
+                                        <Column width="33%"><Text text="Description / Scope"/></Column>
+                                        <Column width="18%"><Text text="Last Generated"/></Column>
+                                        <Column width="12%" hAlign="Center"><Text text="Action"/></Column>
+                                    </columns>
+
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <ObjectIdentifier title="{reportsModel>name}" text="{reportsModel>subtitle}"/>
+                                                <ObjectStatus text="{reportsModel>type}" state="Information"/>
+                                                <Text text="{reportsModel>description}"/>
+                                                <Text text="{reportsModel>lastGenerated}"/>
+                                                <HBox justifyContent="Center" alignItems="Center">
+                                                    <Button text="Generate" icon="sap-icon://create" type="Emphasized" press="onGenerateRowReport"/>
+                                                </HBox>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </Panel>
+
+                        </VBox>
+
+                        <!-- SLIDE 2: EXECUTION HISTORY & EXPORT CENTER -->
+                        <VBox id="vboxExecutionHistory" visible="false" width="100%">
+
+                            <!-- SECTION 5: REPORT HISTORY TABLE -->
+                            <Panel expandable="false" class="sapUiSmallMarginBottom">
+                                <Table id="reportsHistoryTable" items="{reportsModel>/history}" mode="None" width="100%">
+                                    <headerToolbar>
+                                        <OverflowToolbar>
+                                            <Title text="Report Execution &amp; Download History" level="H3"/>
+                                            <ToolbarSpacer/>
+                                            <SearchField width="16rem" placeholder="Search execution history..." search="onSearchHistory"/>
+                                            <Select selectedKey="All" change="onFilterHistoryStatus">
+                                                <core:Item key="All" text="All Statuses"/>
+                                                <core:Item key="Completed" text="Completed"/>
+                                                <core:Item key="Scheduled" text="Scheduled"/>
+                                                <core:Item key="Processing" text="Processing"/>
+                                                <core:Item key="Failed" text="Failed"/>
+                                            </Select>
+                                            <Button text="Export" icon="sap-icon://excel-attachment" type="Ghost" press="onExportHistory"/>
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+
+                                    <columns>
+                                        <Column width="20%"><Text text="Report Name"/></Column>
+                                        <Column width="14%"><Text text="Report Type"/></Column>
+                                        <Column width="10%"><Text text="System"/></Column>
+                                        <Column width="16%"><Text text="Generated By"/></Column>
+                                        <Column width="14%"><Text text="Generated Date"/></Column>
+                                        <Column width="12%"><Text text="Status"/></Column>
+                                        <Column width="14%" hAlign="Center"><Text text="Download"/></Column>
+                                    </columns>
+
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <ObjectIdentifier title="{reportsModel>name}"/>
+                                                <Text text="{reportsModel>type}"/>
+                                                <Text text="{reportsModel>system}"/>
+                                                <Text text="{reportsModel>generatedBy}"/>
+                                                <Text text="{reportsModel>generatedDate}"/>
+                                                <ObjectStatus text="{reportsModel>status}" state="{reportsModel>statusState}"/>
+                                                <HBox justifyContent="Center" alignItems="Center">
+                                                    <Button text="PDF" icon="sap-icon://pdf-attachment" type="Transparent" press="onDownloadPDF" class="sapUiTinyMarginEnd"/>
+                                                    <Button text="Excel" icon="sap-icon://excel-attachment" type="Transparent" press="onDownloadExcel"/>
+                                                </HBox>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </Panel>
+
+                            <!-- SECTION 6: EXPORT CENTER & DOWNLOAD HISTORY -->
+                            <f:Card class="sapUiSmallMarginTop">
+                                <f:header>
+                                    <card:Header
+                                        title="Export Center &amp; Download Archives"
+                                        subtitle="Generate batch compliance packages in PDF, Excel, or CSV format"
+                                        iconSrc="sap-icon://download"/>
+                                </f:header>
+                                <f:content>
+                                    <VBox class="sapUiMediumMargin">
+                                        <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                            <VBox>
+                                                <Title text="Batch Export Formats" level="H5"/>
+                                                <Text text="Select your preferred file format to export all currently filtered reports." class="textMuted"/>
+                                            </VBox>
+                                            <HBox>
+                                                <Button text="Export PDF Package" icon="sap-icon://pdf-attachment" type="Emphasized" press="onExportPDF" class="sapUiTinyMarginEnd"/>
+                                                <Button text="Export Excel Package" icon="sap-icon://excel-attachment" type="Default" press="onExportExcel" class="sapUiTinyMarginEnd"/>
+                                                <Button text="Export CSV Data" icon="sap-icon://document" type="Ghost" press="onExportCSV"/>
+                                            </HBox>
+                                        </HBox>
+                                    </VBox>
+                                </f:content>
+                            </f:Card>
+
+                        </VBox>
+
+                    </VBox>
+                </content>
+
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations"/>
+                        <ToolbarSpacer/>
+                        <Text text="Version 1.0 | Status: Active"/>
+                    </OverflowToolbar>
+                </footer>
+
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>

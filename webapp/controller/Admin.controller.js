@@ -49,6 +49,18 @@ sap.ui.define([
             this.navToRoute("RoleManagement");
         },
 
+        onReviewer1: function () {
+            this.navToRoute("Reviewer1");
+        },
+
+        onReviewer2: function () {
+            this.navToRoute("Reviewer2");
+        },
+
+        onEscalationManager: function () {
+            this.navToRoute("EscalationManager");
+        },
+
         onControlManagement: function () {
             this.navToRoute("ControlManagement");
         },
@@ -121,6 +133,8 @@ sap.ui.define([
             var sText = oEvent.getSource().getText();
             if (sText === "Create Control") {
                 this.onControlManagement();
+            } else if (sText === "Generate Report") {
+                this.onReports();
             } else {
                 MessageToast.show("Action triggered: " + sText);
             }

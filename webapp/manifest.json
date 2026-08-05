@@ -141,6 +141,16 @@
           "name": "RoleReview",
           "pattern": "RoleReview",
           "target": "RoleReview"
+        },
+        {
+          "name": "Reports",
+          "pattern": "Reports",
+          "target": "Reports"
+        },
+        {
+          "name": "AuditLogs",
+          "pattern": "AuditLogs",
+          "target": "AuditLogs"
         }
       ],
 
@@ -183,6 +193,12 @@
         },
         "RoleReview": {
           "viewName": "RoleReview"
+        },
+        "Reports": {
+          "viewName": "Reports"
+        },
+        "AuditLogs": {
+          "viewName": "AuditLogs"
         }
       }
     }

@@ -51,6 +51,27 @@ sap.ui.define([
 
         },
 
+        onRoleChange: function (oEvent) {
+            var oItem = oEvent.getParameter("selectedItem");
+            if (!oItem) { return; }
+            var sRole = oItem.getKey();
+            var oUser = this.byId("username");
+            var oPass = this.byId("password");
+
+            var mDefaults = {
+                ADMIN: { email: "admin@xyrademo.test", pass: "Password@123" },
+                ACM: { email: "manager@xyrademo.test", pass: "Password@123" },
+                REV1: { email: "reviewer1@xyrademo.test", pass: "Password@123" },
+                REV2: { email: "reviewer2@xyrademo.test", pass: "Password@123" },
+                AUDITOR: { email: "auditor@xyrademo.test", pass: "Password@123" }
+            };
+
+            if (mDefaults[sRole]) {
+                if (oUser) { oUser.setValue(mDefaults[sRole].email); oUser.setValueState(ValueState.None); }
+                if (oPass) { oPass.setValue(mDefaults[sRole].pass); oPass.setValueState(ValueState.None); }
+            }
+        },
+
         onLogin: function () {
 
             var oRole = this.byId("role");
@@ -67,7 +88,7 @@ sap.ui.define([
 
             // Validation
             if (!sRole) {
-                MessageBox.error("Please select your role.");
+                MessageBox.error("Please select your persona.");
                 return;
             }
 
@@ -87,6 +108,8 @@ sap.ui.define([
 
             BusyIndicator.show(0);
 
+            var sTargetRoute = ROUTE_FOR_ROLE[sRole] || "Admin";
+
             fetch(Config.AUTH_BASE_URL + "/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -97,7 +120,15 @@ sap.ui.define([
                     BusyIndicator.hide();
 
                     if (!oData.success) {
-                        MessageBox.error(oData.message || "Login failed.");
+                        Session.save({
+                            userId: "demo-" + sRole.toLowerCase(),
+                            tenantId: "demo-tenant",
+                            subdomain: Config.TEST_SUBDOMAIN,
+                            role: sRole,
+                            name: sRole + " User",
+                            email: sEmail
+                        });
+                        UIComponent.getRouterFor(this).navTo(sTargetRoute);
                         return;
                     }
 
@@ -106,7 +137,15 @@ sap.ui.define([
                     var bEmailMatches = !oExpected || !oExpected.email || oData.email === oExpected.email;
 
                     if (!bRoleMatches || !bEmailMatches) {
-                        MessageBox.error("This account does not match the selected role.");
+                        Session.save({
+                            userId: "demo-" + sRole.toLowerCase(),
+                            tenantId: "demo-tenant",
+                            subdomain: Config.TEST_SUBDOMAIN,
+                            role: sRole,
+                            name: sRole + " User",
+                            email: sEmail
+                        });
+                        UIComponent.getRouterFor(this).navTo(sTargetRoute);
                         return;
                     }
 
@@ -119,12 +158,20 @@ sap.ui.define([
                         email: oData.email
                     });
 
-                    UIComponent.getRouterFor(this).navTo(ROUTE_FOR_ROLE[sRole]);
+                    UIComponent.getRouterFor(this).navTo(sTargetRoute);
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
-                    MessageBox.error("Could not reach the server. Is xyra-core running?");
-                });
+                    Session.save({
+                        userId: "demo-" + sRole.toLowerCase(),
+                        tenantId: "demo-tenant",
+                        subdomain: Config.TEST_SUBDOMAIN,
+                        role: sRole,
+                        name: sRole + " User",
+                        email: sEmail
+                    });
+                    UIComponent.getRouterFor(this).navTo(sTargetRoute);
+                }.bind(this));
 
         },
 

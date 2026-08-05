@@ -81,8 +81,8 @@
                             class="sapUiTinyMarginBegin"/>
                         <Avatar initials="RR" displaySize="S" backgroundColor="Accent4" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
-                            <Title text="🔍 XYRA – SAP Role Review" level="H4" class="sapUiNoMargin"/>
-                            <Text text="Automated monthly review of manual SAP role changes extracted from production systems and validated against SCS Standards." class="textMuted sapUiNoMargin"/>
+                            <Title text="🔍 XYRA – Role Review" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Automated monthly review of manual role changes extracted from production systems and validated against SCS Standards." class="textMuted sapUiNoMargin"/>
                         </VBox>
                         <ToolbarSpacer/>
 
@@ -149,7 +149,7 @@
                         <!-- MESSAGE STRIP & REVIEW INFORMATION -->
                         <VBox class="sapUiSmallMarginTop sapUiSmallMarginBottom">
                             <MessageStrip
-                                text="SCS Automated Validation: 6 manual SAP role modifications detected for Review Period 'July 2026'. Deviations require mandatory reviewer sign-off prior to SCS compliance lock."
+                                text="SCS Automated Validation: 6 manual role modifications detected for Review Period 'July 2026'. Deviations require mandatory reviewer sign-off prior to SCS compliance lock."
                                 type="Warning"
                                 showIcon="true"
                                 class="sapUiTinyMarginBottom"/>
@@ -168,8 +168,8 @@
                                             <Title text="July 2026 (01-Jul to 31-Jul)" level="H5"/>
                                         </VBox>
                                         <VBox>
-                                            <Label text="SAP System" class="textMuted"/>
-                                            <Title text="PRD-100 (SAP S/4HANA Enterprise)" level="H5"/>
+                                            <Label text="System" class="textMuted"/>
+                                            <Title text="PRD-100 (S/4HANA Enterprise)" level="H5"/>
                                         </VBox>
                                         <VBox>
                                             <Label text="Client" class="textMuted"/>

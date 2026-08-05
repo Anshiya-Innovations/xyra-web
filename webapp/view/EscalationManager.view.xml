@@ -3,8 +3,10 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
     xmlns:core="sap.ui.core"
-    xmlns:layout="sap.ui.layout">
+    xmlns:layout="sap.ui.layout"
+    height="100%">
 
     <Page
         id="exManagerPage"
@@ -18,33 +20,26 @@
                 id="escProfilePopover"
                 title="Escalation Manager Profile"
                 placement="Bottom"
-                contentWidth="24rem"
-                contentHeight="28rem"
-                horizontalScrolling="false"
-                verticalScrolling="false">
+                contentWidth="340px">
                 <content>
                     <VBox class="sapUiMediumMargin">
                         <HBox alignItems="Center" class="sapUiSmallMarginBottom">
                             <Avatar displaySize="M" initials="EM" backgroundColor="Accent4" class="sapUiSmallMarginEnd"/>
                             <VBox>
-                                <Title text="Evidence Collection Manager" level="H3"/>
-                                <Text text="Escalation &amp; Assignment Officer"/>
-                                <ObjectStatus text="Online" state="Success"/>
+                                <Title text="Security Team Lead" level="H3"/>
+                                <Text text="Escalation Manager - Final Sign-off"/>
+                                <ObjectStatus text="Active Manager" state="Success"/>
                             </VBox>
                         </HBox>
                         <VBox class="sapUiSmallMarginBottom">
-                            <Label text="Manager ID" design="Bold"/>
-                            <Text text="ESC001"/>
+                            <Label text="Role" design="Bold"/>
+                            <Text text="Security Team Lead / Manager"/>
                             <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="Internal Controls"/>
-                            <Label text="Business Unit" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="SAP Governance"/>
+                            <Text text="Enterprise Security &amp; Audit Governance"/>
                             <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="escalation.manager@xyra.ai"/>
-                            <Label text="Pending Assignments" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="24"/>
-                            <Label text="Completed Assignments" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="132"/>
+                            <Text text="security.lead@xyra.ai"/>
+                            <Label text="Responsibilities" design="Bold" class="sapUiTinyMarginTop"/>
+                            <Text text="Final report review, verify evidence &amp; remediation, resolve discrepancies, approve/reject, close audit workflow."/>
                         </VBox>
                         <HBox justifyContent="End" class="sapUiSmallMarginTop">
                             <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
@@ -53,271 +48,229 @@
                 </content>
             </ResponsivePopover>
 
-            <!-- Assign Reviewer Dialog -->
-            <Dialog id="assignReviewerDialog" title="Assign Reviewer" contentWidth="420px">
+            <!-- VIEW REPORT DIALOG -->
+            <Dialog id="viewReportDialog" title="Final Audit Report Inspection" contentWidth="600px">
                 <content>
                     <VBox class="sapUiMediumMargin">
-                        <Label text="Select Primary Reviewer" required="true"/>
-                        <Select width="100%" class="sapUiSmallMarginBottom">
-                            <core:Item key="REV1" text="Reviewer 1 (Manual Reviewer - 18 Pending)"/>
-                            <core:Item key="REV2" text="Reviewer 2 (Technical Reviewer - 8 Pending)"/>
+                        <Title text="{escManagerModel>/selectedReport/reportName}" level="H3" class="sapUiTinyMarginBottom"/>
+                        <ObjectStatus text="{escManagerModel>/selectedReport/reportId}" state="Information" class="sapUiSmallMarginBottom"/>
+
+                        <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                            <VBox>
+                                <Label text="Control ID" design="Bold"/>
+                                <Text text="{escManagerModel>/selectedReport/controlId}"/>
+                                <Label text="System" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Text text="{escManagerModel>/selectedReport/system}"/>
+                                <Label text="Compliance Status" design="Bold" class="sapUiTinyMarginTop"/>
+                                <ObjectStatus text="{escManagerModel>/selectedReport/complianceStatus}" state="{escManagerModel>/selectedReport/complianceState}"/>
+                            </VBox>
+                            <VBox>
+                                <Label text="Remediation Status" design="Bold"/>
+                                <ObjectStatus text="{escManagerModel>/selectedReport/remediationStatus}" state="{escManagerModel>/selectedReport/remediationState}"/>
+                                <Label text="Evidence Status" design="Bold" class="sapUiTinyMarginTop"/>
+                                <ObjectStatus text="{escManagerModel>/selectedReport/evidence}" state="Success"/>
+                                <Label text="Final Workflow Status" design="Bold" class="sapUiTinyMarginTop"/>
+                                <ObjectStatus text="{escManagerModel>/selectedReport/workflowStatus}" state="{escManagerModel>/selectedReport/workflowState}"/>
+                            </VBox>
+                        </layout:Grid>
+
+                        <Panel headerText="Reviewer Verification History" expandable="false" class="sapUiSmallMarginBottom">
+                            <VBox class="sapUiTinyMargin">
+                                <Label text="Reviewer 1 Comments (Basis Team):" design="Bold"/>
+                                <Text text="{escManagerModel>/selectedReport/reviewer1Comments}" class="sapUiSmallMarginBottom"/>
+                                
+                                <Label text="Reviewer 2 Comments (Basis Manager):" design="Bold"/>
+                                <Text text="{escManagerModel>/selectedReport/reviewer2Comments}"/>
+                            </VBox>
+                        </Panel>
+
+                        <Label text="Security Manager Resolution Notes" design="Bold"/>
+                        <Text text="{escManagerModel>/selectedReport/managerNotes}"/>
+                    </VBox>
+                </content>
+                <endButton>
+                    <Button text="Close" press="onCloseViewReportDialog"/>
+                </endButton>
+            </Dialog>
+
+            <!-- REQUEST CORRECTION DIALOG -->
+            <Dialog id="requestCorrectionDialog" title="Request Correction / Revision" contentWidth="480px">
+                <content>
+                    <VBox class="sapUiMediumMargin">
+                        <MessageStrip text="Send correction request back to Reviewer 1 or Reviewer 2." type="Warning" showIcon="true" class="sapUiSmallMarginBottom"/>
+                        <Label text="Target Reviewer" required="true"/>
+                        <Select id="selectTargetReviewer" width="100%" class="sapUiSmallMarginBottom">
+                            <core:Item key="REV1" text="Reviewer 1 (Basis Team)"/>
+                            <core:Item key="REV2" text="Reviewer 2 (Basis Manager)"/>
                         </Select>
-                        <Label text="Assignment Priority" required="true"/>
-                        <Select width="100%" class="sapUiSmallMarginBottom">
-                            <core:Item key="P1" text="High (P1)"/>
-                            <core:Item key="P2" text="Medium (P2)"/>
-                            <core:Item key="P3" text="Low (P3)"/>
-                        </Select>
-                        <Label text="Due Date"/>
-                        <DatePicker width="100%" class="sapUiSmallMarginBottom"/>
-                        <Label text="Assignment Comments"/>
-                        <TextArea width="100%" rows="3" placeholder="Enter instructions for reviewer..."/>
+                        <Label text="Correction Instructions" required="true"/>
+                        <TextArea id="inputCorrectionNotesArea" rows="4" width="100%" placeholder="Specify required corrections, evidence re-validation, or log checks..." class="sapUiSmallMarginBottom"/>
                     </VBox>
                 </content>
                 <beginButton>
-                    <Button text="Assign Reviewer" type="Emphasized" press="onAssign"/>
+                    <Button text="Dispatch Request" type="Emphasized" icon="sap-icon://paper-plane" press="onSubmitRequestCorrection"/>
                 </beginButton>
                 <endButton>
-                    <Button text="Cancel" press="onCloseAssignDialog"/>
+                    <Button text="Cancel" press="onCloseRequestCorrectionDialog"/>
+                </endButton>
+            </Dialog>
+
+            <!-- REJECT DIALOG -->
+            <Dialog id="rejectDialog" title="Reject Final Audit Report" contentWidth="480px">
+                <content>
+                    <VBox class="sapUiMediumMargin">
+                        <Label text="Reason for Rejection" required="true"/>
+                        <TextArea id="inputRejectReasonArea" rows="4" width="100%" placeholder="Enter manager rejection justification..." class="sapUiSmallMarginBottom"/>
+                    </VBox>
+                </content>
+                <beginButton>
+                    <Button text="Reject Report" type="Reject" press="onSubmitReject"/>
+                </beginButton>
+                <endButton>
+                    <Button text="Cancel" press="onCloseRejectDialog"/>
+                </endButton>
+            </Dialog>
+
+            <!-- CLOSE AUDIT DIALOG -->
+            <Dialog id="closeAuditDialog" title="Close Audit Workflow" contentWidth="500px">
+                <content>
+                    <VBox class="sapUiMediumMargin">
+                        <MessageStrip text="Closing this audit workflow will generate a final compliance certificate and archive all evidence files." type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
+                        <CheckBox text="Final Evidence Package Verified &amp; Signed" selected="true"/>
+                        <CheckBox text="Remediation Confirmed &amp; Validated" selected="true"/>
+                        <CheckBox text="Audit Trail Hash Checksum Sealed" selected="true"/>
+                    </VBox>
+                </content>
+                <beginButton>
+                    <Button text="Confirm &amp; Close Audit" type="Emphasized" icon="sap-icon://locked" press="onSubmitCloseAudit"/>
+                </beginButton>
+                <endButton>
+                    <Button text="Cancel" press="onCloseCloseAuditDialog"/>
                 </endButton>
             </Dialog>
         </dependents>
 
         <customHeader>
-            <OverflowToolbar height="4.5rem" class="sapUiSmallMarginBottom">
+            <OverflowToolbar height="4.5rem">
+                <!-- Left Side Profile Button -->
                 <Button
                     text="Escalation Manager"
                     icon="sap-icon://manager"
                     type="Transparent"
-                    press="onProfilePress"/>
+                    press="onProfilePress"
+                    class="sapUiTinyMarginBegin"/>
 
-                <ToolbarSeparator/>
+                <Avatar initials="EM" displaySize="S" backgroundColor="Accent4" class="sapUiTinyMarginEnd"/>
 
-                <VBox justifyContent="Center" class="sapUiTinyMarginBegin">
-                    <Title text="XYRA - Escalation Manager Dashboard" level="H4" class="sapUiNoMargin"/>
-                    <Text text="Evidence Collection &amp; Review Assignment" class="textMuted sapUiNoMargin"/>
+                <VBox justifyContent="Center">
+                    <Title text="📜 XYRA – Escalation Manager Dashboard" level="H4" class="sapUiNoMargin"/>
+                    <Text text="Security Team Lead – Final Audit Review, Discrepancy Resolution &amp; Sign-off" class="textMuted sapUiNoMargin"/>
                 </VBox>
 
                 <ToolbarSpacer/>
 
-                <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onActionPress"/>
-                <Button icon="sap-icon://search" tooltip="Search" type="Transparent" press="onActionPress"/>
-                <Button icon="sap-icon://sys-help" tooltip="Help" type="Transparent" press="onActionPress"/>
-                <Button icon="sap-icon://action-settings" tooltip="Settings" type="Transparent" press="onActionPress"/>
-                <Button
-                    text="Logout"
-                    type="Reject"
-                    icon="sap-icon://log"
-                    press="onLogout"/>
+                <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                <Button text="Logout" type="Reject" icon="sap-icon://log" press="onLogout" class="sapUiTinyMarginEnd"/>
             </OverflowToolbar>
         </customHeader>
 
         <content>
-            <VBox width="100%" class="sapUiSmallMargin">
+            <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
 
-                <!-- KPI CARDS (6 Cards) -->
-                <Title text="Evidence &amp; Escalation Overview" level="H3" class="sapUiSmallMarginBottom"/>
+                <!-- BUSINESS ROLE & RESPONSIBILITIES BANNER -->
+                <MessageStrip
+                    text="Business Role: Security Team Lead / Manager | Purpose: Perform final review and approval of reports after Reviewer 2 completes technical review. | Responsibilities: Review final report, verify evidence, verify remediation, resolve discrepancies, approve or reject, and close audit workflow."
+                    type="Information"
+                    showIcon="true"
+                    showCloseButton="false"
+                    class="sapUiSmallMarginBottom"/>
 
-                <layout:Grid containerQuery="true" defaultSpan="XL2 L4 M6 S12" class="sapUiSmallMarginBottom">
-
-                    <GenericTile header="Pending Evidence" subheader="Collection In Progress" class="sapUiTinyMargin">
-                        <TileContent footer="24 Files Awaiting">
-                            <NumericContent value="24" valueColor="Critical" indicator="Up" icon="sap-icon://document-text"/>
-                        </TileContent>
-                    </GenericTile>
-
-                    <GenericTile header="Assigned Reviews" subheader="Under Active Review" class="sapUiTinyMargin">
-                        <TileContent footer="85% Reviewer Capacity">
-                            <NumericContent value="52" valueColor="Good" indicator="Up" icon="sap-icon://employee"/>
-                        </TileContent>
-                    </GenericTile>
-
-                    <GenericTile header="Completed Reviews" subheader="Approved &amp; Archived" class="sapUiTinyMargin">
-                        <TileContent footer="132 Completed">
-                            <NumericContent value="132" valueColor="Good" icon="sap-icon://accept"/>
-                        </TileContent>
-                    </GenericTile>
-
-                    <GenericTile header="Overdue Requests" subheader="SLA Breached" class="sapUiTinyMargin">
-                        <TileContent footer="Escalated to Manager">
-                            <NumericContent value="4" valueColor="Error" indicator="Down" icon="sap-icon://time-overtime"/>
-                        </TileContent>
-                    </GenericTile>
-
-                    <GenericTile header="Critical Risks" subheader="SOD Escalations" class="sapUiTinyMargin">
-                        <TileContent footer="High Priority">
-                            <NumericContent value="3" valueColor="Error" indicator="Up" icon="sap-icon://warning"/>
-                        </TileContent>
-                    </GenericTile>
-
-                    <GenericTile header="Today's Activities" subheader="Assignments &amp; Notifications" class="sapUiTinyMargin">
-                        <TileContent footer="16 Handled Today">
-                            <NumericContent value="16" valueColor="Neutral" icon="sap-icon://activity-items"/>
-                        </TileContent>
-                    </GenericTile>
-
-                </layout:Grid>
-
-                <!-- FILTER BAR (Issue 1 & 2: Aligned grid, All Statuses in same horizontal row, no nested scrollbar) -->
-                <Panel headerText="Filter Evidence Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom noInternalScroll">
-                    <layout:Grid containerQuery="true" defaultSpan="XL3 L3 M6 S12">
-                        <SearchField placeholder="Search evidence &amp; requests..." search="onRefresh"/>
-                        <Input placeholder="Request ID (e.g. REQ1001)"/>
-                        <Input placeholder="Control ID (e.g. SOX-001)"/>
-                        <Input placeholder="Reviewer Name"/>
-                        <Input placeholder="Business User"/>
-                        <Input placeholder="Application"/>
-                        <Select width="100%">
-                            <core:Item key="" text="All Priorities"/>
-                            <core:Item key="P1" text="High (P1)"/>
-                            <core:Item key="P2" text="Medium (P2)"/>
-                            <core:Item key="P3" text="Low (P3)"/>
+                <!-- FILTER BAR -->
+                <Panel headerText="Filter Escalation Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                    <layout:Grid defaultSpan="XL3 L3 M6 S12">
+                        <SearchField id="searchEscalation" placeholder="Search final reports..." search="onSearchReports"/>
+                        <Input id="inputReportIdFilterEsc" placeholder="Report ID (e.g. REP-101)"/>
+                        <Select id="selectSystemFilterEsc" width="100%" change="onFilterSystem">
+                            <core:Item key="All" text="All Systems"/>
+                            <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
+                            <core:Item key="HDB-10 (HANA)" text="HDB-10 (HANA)"/>
+                            <core:Item key="QAS-200 (Java)" text="QAS-200 (Java)"/>
                         </Select>
-                        <Select width="100%">
-                            <core:Item key="" text="All Statuses"/>
-                            <core:Item key="Pending" text="Pending"/>
-                            <core:Item key="Assigned" text="Assigned"/>
-                            <core:Item key="Overdue" text="Overdue"/>
+                        <Select id="selectStatusFilterEsc" width="100%" change="onFilterStatus">
+                            <core:Item key="All" text="All Workflow Statuses"/>
+                            <core:Item key="Pending Final Approval" text="Pending Final Approval"/>
+                            <core:Item key="Approved &amp; Closed" text="Approved &amp; Closed"/>
+                            <core:Item key="Correction Requested" text="Correction Requested"/>
+                            <core:Item key="Rejected" text="Rejected"/>
                         </Select>
                     </layout:Grid>
                     <OverflowToolbar class="sapUiTinyMarginTop">
                         <ToolbarSpacer/>
-                        <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onRefresh"/>
-                        <Button text="Reset" type="Transparent" icon="sap-icon://reset" press="onActionPress"/>
-                        <Button text="Refresh" icon="sap-icon://refresh" press="onRefresh"/>
-                        <Button text="Export" icon="sap-icon://excel-attachment" press="onActionPress"/>
+                        <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchReports"/>
+                        <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetFilters"/>
                     </OverflowToolbar>
                 </Panel>
 
-                <!-- QUICK ACTIONS BAR -->
-                <OverflowToolbar class="sapUiSmallMarginBottom">
-                    <Title text="Quick Management Actions" level="H5"/>
-                    <ToolbarSpacer/>
-                    <Button text="Request Evidence" type="Emphasized" icon="sap-icon://document" press="onActionPress"/>
-                    <Button text="Assign Reviewer" type="Ghost" icon="sap-icon://personnel" press="onOpenAssignDialog"/>
-                    <Button text="Bulk Assignment" icon="sap-icon://group" press="onActionPress"/>
-                    <Button text="Generate Report" icon="sap-icon://pdf-attachment" press="onActionPress"/>
-                    <Button text="Export Excel" icon="sap-icon://excel-attachment" press="onActionPress"/>
-                    <Button text="Download Attachments" icon="sap-icon://download" press="onActionPress"/>
-                    <Button text="Refresh Queue" icon="sap-icon://refresh" press="onRefresh"/>
-                </OverflowToolbar>
+                <!-- QUICK ACTIONS TOOLBAR (EXACTLY MATCHING SPECIFIED 6 BUTTONS) -->
+                <Panel expandable="false" class="sapUiSmallMarginBottom">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="Escalation Manager Quick Actions" level="H4"/>
+                            <ToolbarSpacer/>
+                            <Button text="View Report" icon="sap-icon://show" press="onViewReport" class="sapUiTinyMarginEnd"/>
+                            <Button text="Approve" type="Accept" icon="sap-icon://accept" press="onApprove" class="sapUiTinyMarginEnd"/>
+                            <Button text="Reject" type="Reject" icon="sap-icon://decline" press="onReject" class="sapUiTinyMarginEnd"/>
+                            <Button text="Request Correction" icon="sap-icon://undo" press="onRequestCorrection" class="sapUiTinyMarginEnd"/>
+                            <Button text="Export Final Report" icon="sap-icon://excel-attachment" press="onExportFinalReport" class="sapUiTinyMarginEnd"/>
+                            <Button text="Close Audit" type="Emphasized" icon="sap-icon://locked" press="onCloseAudit"/>
+                        </OverflowToolbar>
+                    </headerToolbar>
+                </Panel>
 
-                <!-- MAIN TABLE -->
-                <Panel headerText="Evidence Collection Queue" expandable="false" class="sapUiSmallMarginBottom">
-                    <Table id="escalationTable" inset="false" width="100%">
+                <!-- MAIN RESPONSIVE SAPUI5 TABLE (No Horizontal Scrolling, Responsive across Desktop/Tablet/Mobile) -->
+                <Panel headerText="Final Audit Approval Queue" expandable="false" class="sapUiSmallMarginBottom">
+                    <Table
+                        id="escalationTable"
+                        items="{escManagerModel>/reports}"
+                        mode="MultiSelect"
+                        width="100%"
+                        selectionChange="onSelectionChange">
                         <columns>
-                            <Column width="8rem"><Text text="Request ID"/></Column>
-                            <Column width="7rem"><Text text="Control ID"/></Column>
-                            <Column width="9rem"><Text text="Business User"/></Column>
-                            <Column width="8rem"><Text text="Application"/></Column>
-                            <Column width="11rem"><Text text="Evidence Name"/></Column>
-                            <Column width="9rem"><Text text="Assigned Reviewer"/></Column>
-                            <Column width="7rem"><Text text="Priority"/></Column>
-                            <Column width="8rem"><Text text="Due Date"/></Column>
-                            <Column width="8rem"><Text text="Status"/></Column>
-                            <Column width="11rem"><Text text="Action"/></Column>
+                            <Column width="10%"><Text text="Report ID"/></Column>
+                            <Column width="18%"><Text text="Report Name"/></Column>
+                            <Column width="12%" minScreenWidth="Desktop" demandPopin="true"><Text text="System"/></Column>
+                            <Column width="15%" minScreenWidth="Desktop" demandPopin="true"><Text text="Reviewer 1 Comments"/></Column>
+                            <Column width="15%" minScreenWidth="Desktop" demandPopin="true"><Text text="Reviewer 2 Comments"/></Column>
+                            <Column width="10%" minScreenWidth="Tablet" demandPopin="true"><Text text="Evidence"/></Column>
+                            <Column width="10%"><Text text="Compliance Status"/></Column>
+                            <Column width="10%"><Text text="Remediation Status"/></Column>
                         </columns>
+
                         <items>
                             <ColumnListItem>
                                 <cells>
-                                    <Text text="REQ1001"/>
-                                    <Text text="SOX-001"/>
-                                    <HBox alignItems="Center">
-                                        <Avatar initials="J" displaySize="XS" class="sapUiTinyMarginEnd"/>
-                                        <Text text="John"/>
-                                    </HBox>
-                                    <Text text="SAP ECC"/>
-                                    <Text text="User Access Report"/>
-                                    <Text text="Reviewer 1"/>
-                                    <ObjectStatus text="High" state="Error"/>
-                                    <Text text="2026-07-31"/>
-                                    <ObjectStatus text="Pending" state="Warning"/>
-                                    <Button
-                                        text="Assign Reviewer"
-                                        type="Emphasized"
-                                        icon="sap-icon://personnel"
-                                        press="onAssign"/>
-                                </cells>
-                            </ColumnListItem>
-
-                            <ColumnListItem>
-                                <cells>
-                                    <Text text="REQ1008"/>
-                                    <Text text="SOX-005"/>
-                                    <HBox alignItems="Center">
-                                        <Avatar initials="S" displaySize="XS" class="sapUiTinyMarginEnd"/>
-                                        <Text text="Sarah"/>
-                                    </HBox>
-                                    <Text text="SAP S/4HANA"/>
-                                    <Text text="Firefighter Session Log"/>
-                                    <Text text="Reviewer 2"/>
-                                    <ObjectStatus text="Critical" state="Error"/>
-                                    <Text text="2026-07-29"/>
-                                    <ObjectStatus text="Overdue" state="Error"/>
-                                    <Button
-                                        text="Assign Reviewer"
-                                        type="Emphasized"
-                                        icon="sap-icon://personnel"
-                                        press="onAssign"/>
+                                    <ObjectStatus text="{escManagerModel>reportId}" state="Information"/>
+                                    <ObjectIdentifier title="{escManagerModel>reportName}" subtitle="{escManagerModel>controlId}"/>
+                                    <Text text="{escManagerModel>system}"/>
+                                    <Text text="{escManagerModel>reviewer1Comments}" maxLines="2"/>
+                                    <Text text="{escManagerModel>reviewer2Comments}" maxLines="2"/>
+                                    <ObjectStatus text="{escManagerModel>evidence}" state="Success" icon="sap-icon://sys-enter-2"/>
+                                    <ObjectStatus text="{escManagerModel>complianceStatus}" state="{escManagerModel>complianceState}"/>
+                                    <ObjectStatus text="{escManagerModel>remediationStatus}" state="{escManagerModel>remediationState}"/>
                                 </cells>
                             </ColumnListItem>
                         </items>
                     </Table>
                 </Panel>
 
-                <!-- AI INSIGHTS & WORKFLOW TIMELINE -->
-                <layout:Grid containerQuery="true" defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
-                    
-                    <Panel headerText="AI Evidence Completeness &amp; Risk Insights" expandable="true" expanded="true">
-                        <VBox class="sapUiSmallMargin">
-                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
-                                <Label text="Evidence Completeness Rating" design="Bold"/>
-                                <ObjectStatus text="88% Complete" state="Success"/>
-                            </HBox>
-                            <ProgressIndicator percentValue="88" displayValue="88%" state="Success" class="sapUiSmallMarginBottom"/>
-
-                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
-                                <Label text="Reviewer Recommendation" design="Bold"/>
-                                <ObjectStatus text="Assign to Reviewer 2" state="Information"/>
-                            </HBox>
-                            <Text text="AI suggests assigning REQ1008 to Reviewer 2 based on technical workload balance and firefighter logs." class="sapUiSmallMarginBottom"/>
-                            <MessageStrip text="No duplicate evidence attachments detected across current queue." type="Information" showIcon="true"/>
-                        </VBox>
-                    </Panel>
-
-                    <Panel headerText="Evidence Collection Lifecycle" expandable="true" expanded="true">
-                        <VBox class="sapUiSmallMargin">
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://accept" color="green" class="sapUiSmallMarginEnd"/>
-                                <Text text="Step 1: Evidence Requested by Escalation Manager"/>
-                            </HBox>
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://accept" color="green" class="sapUiSmallMarginEnd"/>
-                                <Text text="Step 2: Evidence Uploaded by Business Owner"/>
-                            </HBox>
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://process" color="orange" class="sapUiSmallMarginEnd"/>
-                                <Text text="Step 3: Reviewer Assignment &amp; Workload Balancing (Active)"/>
-                            </HBox>
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://future" color="gray" class="sapUiSmallMarginEnd"/>
-                                <Text text="Step 4: Final Sign-off &amp; Compliance Reporting"/>
-                            </HBox>
-                        </VBox>
-                    </Panel>
-
-                </layout:Grid>
-
             </VBox>
         </content>
 
-        <!-- FOOTER (Issue 4: Removed ONLY 'SAP BTP Trial') -->
         <footer>
             <OverflowToolbar>
                 <Text text="© 2026 Forte Innovations"/>
                 <ToolbarSpacer/>
-                <Text text="XYRA Internal Control Platform | Version 1.0"/>
-                <ToolbarSpacer/>
+                <Text text="XYRA Internal Control Platform | Escalation Manager (Security Lead) Portal v1.0"/>
             </OverflowToolbar>
         </footer>
 
