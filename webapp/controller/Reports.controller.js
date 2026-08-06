@@ -425,7 +425,6 @@ sap.ui.define([
         },
 
         onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
-        onRoleManagement: function () { this.getOwnerComponent().getRouter().navTo("RoleManagement"); },
         onReviewer1: function () { this.getOwnerComponent().getRouter().navTo("Reviewer1"); },
         onReviewer2: function () { this.getOwnerComponent().getRouter().navTo("Reviewer2"); },
         onEscalationManager: function () { this.getOwnerComponent().getRouter().navTo("EscalationManager"); },

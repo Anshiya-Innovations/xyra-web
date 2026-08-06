@@ -16,11 +16,6 @@
                 <tnt:NavigationList>
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://shield" key="Admin" select="onAdmin"/>
 
-                    <tnt:NavigationListItem text="Role Management" icon="sap-icon://manager" key="RoleManagement" select="onRoleManagement">
-                        <tnt:tag>
-                            <ObjectStatus text="380 Roles" state="Indication17" inverted="true"/>
-                        </tnt:tag>
-                    </tnt:NavigationListItem>
 
                     <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement">
                         <tnt:tag>

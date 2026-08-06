@@ -15,12 +15,6 @@
                 <tnt:NavigationList>
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://shield" key="Admin" select="onAdmin"/>
 
-                    <tnt:NavigationListItem text="Role Management" icon="sap-icon://manager" key="RoleManagement" select="onRoleManagement">
-                        <tnt:tag>
-                            <ObjectStatus text="380 Roles" state="Indication17" inverted="true"/>
-                        </tnt:tag>
-                    </tnt:NavigationListItem>
-
                     <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement">
                         <tnt:tag>
                             <ObjectStatus text="156 Controls" state="Indication18" inverted="true"/>
@@ -73,11 +67,11 @@
                     <Dialog
                         id="createControlDialog"
                         title="Create Security Control Master"
-                        contentWidth="540px">
+                        contentWidth="620px">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Label text="Control ID" required="true"/>
-                                <Input id="createControlIdInput" placeholder="e.g. NLG-08, NLG-28, NLG-001" class="sapUiSmallMarginBottom"/>
+                                <Input id="createControlIdInput" placeholder="e.g. XYRA-08, XYRA-28, XYRA-001" class="sapUiSmallMarginBottom"/>
 
                                 <Label text="Control Description" required="true"/>
                                 <TextArea id="createControlDescInput" rows="3" width="100%" placeholder="Enter detailed security control description..." class="sapUiSmallMarginBottom"/>
@@ -125,6 +119,70 @@
 
                                 <Label text="Total Run (Read-Only)"/>
                                 <Input id="createTotalRunInput" value="365" editable="false" class="sapUiSmallMarginBottom"/>
+
+                                <!-- RULE BUILDER SECTION -->
+                                <Panel expandable="true" expanded="true" class="sapUiSmallMarginTop">
+                                    <headerToolbar>
+                                        <OverflowToolbar style="Clear">
+                                            <Title text="Rule Configuration" level="H6"/>
+                                            <ToolbarSpacer/>
+                                            <Button text="Add Rule" icon="sap-icon://add" type="Emphasized" press="onAddCreateRule"/>
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+                                    <content>
+                                        <VBox items="{ruleModel>/createRules}">
+                                            <items>
+                                                <VBox class="sapUiSmallMarginBottom sapUiSmallPadding">
+                                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                                                        <Title text="{ruleModel>stepLabel}" level="H6"/>
+                                                        <Button icon="sap-icon://delete" type="Transparent" tooltip="Delete Rule" press="onDeleteCreateRule"/>
+                                                    </HBox>
+                                                    <layout:Grid defaultSpan="L4 M4 S12" class="sapUiNoMargin">
+                                                        <VBox>
+                                                            <Label text="Parameter" required="true"/>
+                                                            <Select selectedKey="{ruleModel>parameter}" width="100%">
+                                                                <core:Item key="" text="-- Select Parameter --"/>
+                                                                <core:Item key="Password Changed" text="Password Changed"/>
+                                                                <core:Item key="User Type" text="User Type"/>
+                                                                <core:Item key="Locked" text="Locked"/>
+                                                                <core:Item key="Failed Logins" text="Failed Logins"/>
+                                                                <core:Item key="Roles Assigned" text="Roles Assigned"/>
+                                                                <core:Item key="Security Policy" text="Security Policy"/>
+                                                                <core:Item key="SDMI_* Exists" text="SDMI_* Exists"/>
+                                                            </Select>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <Label text="Operator" required="true"/>
+                                                            <Select selectedKey="{ruleModel>operator}" width="100%">
+                                                                <core:Item key="" text="-- Select Operator --"/>
+                                                                <core:Item key="Equals" text="Equals"/>
+                                                                <core:Item key="Not Equals" text="Not Equals"/>
+                                                                <core:Item key="Greater Than" text="Greater Than"/>
+                                                                <core:Item key="Less Than" text="Less Than"/>
+                                                                <core:Item key="Contains" text="Contains"/>
+                                                            </Select>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <Label text="Expected Value" required="true"/>
+                                                            <ComboBox value="{ruleModel>expectedValue}" placeholder="Select or Enter Expected Value..." width="100%">
+                                                                <core:Item key="" text="-- Select Expected Value --"/>
+                                                                <core:Item key="True" text="True"/>
+                                                                <core:Item key="False" text="False"/>
+                                                                <core:Item key="B" text="B"/>
+                                                                <core:Item key="A" text="A"/>
+                                                                <core:Item key="Enabled" text="Enabled"/>
+                                                                <core:Item key="Disabled" text="Disabled"/>
+                                                            </ComboBox>
+                                                        </VBox>
+                                                    </layout:Grid>
+                                                </VBox>
+                                            </items>
+                                        </VBox>
+                                        <HBox justifyContent="Center" class="sapUiTinyMarginTop">
+                                            <Button text="+ Add Rule" type="Ghost" icon="sap-icon://add" press="onAddCreateRule"/>
+                                        </HBox>
+                                    </content>
+                                </Panel>
                             </VBox>
                         </content>
                         <beginButton>
@@ -139,7 +197,7 @@
                     <Dialog
                         id="editControlDialog"
                         title="Edit Security Control Master"
-                        contentWidth="540px">
+                        contentWidth="620px">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Label text="Control ID"/>
@@ -191,6 +249,70 @@
 
                                 <Label text="Total Run (Read-Only)"/>
                                 <Input id="editTotalRunInput" editable="false" class="sapUiSmallMarginBottom"/>
+
+                                <!-- RULE BUILDER SECTION -->
+                                <Panel expandable="true" expanded="true" class="sapUiSmallMarginTop">
+                                    <headerToolbar>
+                                        <OverflowToolbar style="Clear">
+                                            <Title text="Rule Configuration" level="H6"/>
+                                            <ToolbarSpacer/>
+                                            <Button text="Add Rule" icon="sap-icon://add" type="Emphasized" press="onAddEditRule"/>
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+                                    <content>
+                                        <VBox items="{ruleModel>/editRules}">
+                                            <items>
+                                                <VBox class="sapUiSmallMarginBottom sapUiSmallPadding">
+                                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                                                        <Title text="{ruleModel>stepLabel}" level="H6"/>
+                                                        <Button icon="sap-icon://delete" type="Transparent" tooltip="Delete Rule" press="onDeleteEditRule"/>
+                                                    </HBox>
+                                                    <layout:Grid defaultSpan="L4 M4 S12" class="sapUiNoMargin">
+                                                        <VBox>
+                                                            <Label text="Parameter" required="true"/>
+                                                            <Select selectedKey="{ruleModel>parameter}" width="100%">
+                                                                <core:Item key="" text="-- Select Parameter --"/>
+                                                                <core:Item key="Password Changed" text="Password Changed"/>
+                                                                <core:Item key="User Type" text="User Type"/>
+                                                                <core:Item key="Locked" text="Locked"/>
+                                                                <core:Item key="Failed Logins" text="Failed Logins"/>
+                                                                <core:Item key="Roles Assigned" text="Roles Assigned"/>
+                                                                <core:Item key="Security Policy" text="Security Policy"/>
+                                                                <core:Item key="SDMI_* Exists" text="SDMI_* Exists"/>
+                                                            </Select>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <Label text="Operator" required="true"/>
+                                                            <Select selectedKey="{ruleModel>operator}" width="100%">
+                                                                <core:Item key="" text="-- Select Operator --"/>
+                                                                <core:Item key="Equals" text="Equals"/>
+                                                                <core:Item key="Not Equals" text="Not Equals"/>
+                                                                <core:Item key="Greater Than" text="Greater Than"/>
+                                                                <core:Item key="Less Than" text="Less Than"/>
+                                                                <core:Item key="Contains" text="Contains"/>
+                                                            </Select>
+                                                        </VBox>
+                                                        <VBox>
+                                                            <Label text="Expected Value" required="true"/>
+                                                            <ComboBox value="{ruleModel>expectedValue}" placeholder="Select or Enter Expected Value..." width="100%">
+                                                                <core:Item key="" text="-- Select Expected Value --"/>
+                                                                <core:Item key="True" text="True"/>
+                                                                <core:Item key="False" text="False"/>
+                                                                <core:Item key="B" text="B"/>
+                                                                <core:Item key="A" text="A"/>
+                                                                <core:Item key="Enabled" text="Enabled"/>
+                                                                <core:Item key="Disabled" text="Disabled"/>
+                                                            </ComboBox>
+                                                        </VBox>
+                                                    </layout:Grid>
+                                                </VBox>
+                                            </items>
+                                        </VBox>
+                                        <HBox justifyContent="Center" class="sapUiTinyMarginTop">
+                                            <Button text="+ Add Rule" type="Ghost" icon="sap-icon://add" press="onAddEditRule"/>
+                                        </HBox>
+                                    </content>
+                                </Panel>
                             </VBox>
                         </content>
                         <beginButton>
@@ -211,9 +333,9 @@
                             type="Transparent"
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
-                        <Avatar initials="SC" displaySize="S" backgroundColor="Accent8" class="sapUiTinyMarginEnd"/>
+                        <Avatar initials="CM" displaySize="S" backgroundColor="Accent8" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
-                            <Title text="🛡️ Security Control Master Configuration" level="H4" class="sapUiNoMargin"/>
+                            <Title text="🛡️ Control Management" level="H4" class="sapUiNoMargin"/>
                             <Text text="Configure Security Control Rules, Target Environments (DEV/QAS/PRD), and Execution Frequencies." class="textMuted sapUiNoMargin"/>
                         </VBox>
                         <ToolbarSpacer/>
@@ -229,7 +351,7 @@
 
                         <!-- TAB NAVIGATION BUTTONS -->
                         <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
-                            <Button text="Security Control Master Configuration" icon="sap-icon://shield" type="Emphasized" class="sapUiTinyMarginEnd"/>
+                            <Button text="Control Management" icon="sap-icon://shield" type="Emphasized" class="sapUiTinyMarginEnd"/>
                             <Button text="Automation Monitoring" icon="sap-icon://sys-monitor" type="Transparent" press="onNavAutomationMonitoring"/>
                         </HBox>
 
@@ -295,7 +417,7 @@
                     <OverflowToolbar>
                         <Text text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer/>
-                        <Text text="Security Control Master Configuration v1.0 | Status: Active"/>
+                        <Text text="Control Management v1.0 | Status: Active"/>
                     </OverflowToolbar>
                 </footer>
 

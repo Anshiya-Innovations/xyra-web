@@ -2,69 +2,125 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
-    "sap/m/MessageBox"
-], function (Controller, JSONModel, MessageToast, MessageBox) {
+    "sap/m/MessageBox",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
+], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.AutomationMonitoring", {
 
         onInit: function () {
             var oData = {
-                jobs: [
+                controls: [
                     {
-                        jobId: "AUTO-JOB-101",
-                        controlName: "Segregation of Duties (SoD) Conflict Scan",
-                        schedule: "Every 15 min",
-                        lastExecution: "31-Jul-2026 17:15 IST",
-                        nextExecution: "31-Jul-2026 17:30 IST",
-                        executionStatus: "SUCCESS",
-                        statusState: "Success",
+                        id: "XYRA-08",
+                        description: "SAP Java Audit Log Filters & Security Event Monitoring",
+                        sysType1: "DEV",
+                        sysType2: "QAS",
+                        sysType3: "PRD",
+                        frequencyRun: "Daily",
+                        cronExpr: "",
+                        totalRun: "365",
+                        deviationLabel: "No Deviation",
+                        deviationState: "None",
+                        deviationClass: "badgeWhite",
                         deviationCount: 0,
-                        deviationState: "None"
+                        rules: [
+                            { parameter: "Password Changed", operator: "Equals", expectedValue: "True", actualValue: "True", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" }
+                        ],
+                        logs: [
+                            { timestamp: "06-Aug-2026 08:00 IST", level: "INFO", levelState: "Information", message: "Automated daily monitoring job initiated." },
+                            { timestamp: "06-Aug-2026 08:01 IST", level: "INFO", levelState: "Information", message: "Connected to SAP S/4HANA PRD system node." },
+                            { timestamp: "06-Aug-2026 08:02 IST", level: "SUCCESS", levelState: "Success", message: "Rule evaluation completed: All parameters matched. 0 deviations detected." }
+                        ]
                     },
                     {
-                        jobId: "AUTO-JOB-102",
-                        controlName: "Financial Journal Entry Threshold Audit",
-                        schedule: "Daily at 00:00",
-                        lastExecution: "31-Jul-2026 00:00 IST",
-                        nextExecution: "01-Aug-2026 00:00 IST",
-                        executionStatus: "FAILED",
-                        statusState: "Error",
-                        deviationCount: 8,
-                        deviationState: "Indication18"
+                        id: "XYRA-28",
+                        description: "SAP HANA Security Audit Logging & Retention Check",
+                        sysType1: "PRD",
+                        sysType2: "QAS",
+                        sysType3: "None",
+                        frequencyRun: "Weekly (Every Monday)",
+                        cronExpr: "",
+                        totalRun: "52",
+                        deviationLabel: "Deviation High",
+                        deviationState: "Error",
+                        deviationClass: "badgeRed",
+                        deviationCount: 5,
+                        rules: [
+                            { parameter: "Roles Assigned", operator: "Equals", expectedValue: "True", actualValue: "False", statusText: "Deviation High (Critical)", statusState: "Error", statusIcon: "sap-icon://alert" }
+                        ],
+                        logs: [
+                            { timestamp: "04-Aug-2026 00:00 IST", level: "INFO", levelState: "Information", message: "Weekly scheduled audit log check started." },
+                            { timestamp: "04-Aug-2026 00:01 IST", level: "WARNING", levelState: "Warning", message: "Parameter 'Roles Assigned' evaluated to 'False' on 5 accounts." },
+                            { timestamp: "04-Aug-2026 00:02 IST", level: "ERROR", levelState: "Error", message: "Rule failure: 5 deviations identified on SAP HANA PRD system." }
+                        ]
                     },
                     {
-                        jobId: "AUTO-JOB-103",
-                        controlName: "SAP Superuser Privilege Escalation Check",
-                        schedule: "Real-time Event Hook",
-                        lastExecution: "31-Jul-2026 17:02 IST",
-                        nextExecution: "Pending Event",
-                        executionStatus: "RUNNING",
-                        statusState: "Information",
+                        id: "XYRA-001",
+                        description: "Segregation of Duties (SoD) Conflict Scan & Privilege Escalation",
+                        sysType1: "DEV",
+                        sysType2: "PRD",
+                        sysType3: "None",
+                        frequencyRun: "Realtime",
+                        cronExpr: "",
+                        totalRun: "Continuous",
+                        deviationLabel: "No Deviation",
+                        deviationState: "None",
+                        deviationClass: "badgeWhite",
+                        deviationCount: 0,
+                        rules: [
+                            { parameter: "Password Changed", operator: "Equals", expectedValue: "True", actualValue: "True", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" },
+                            { parameter: "User Type", operator: "Equals", expectedValue: "B", actualValue: "B", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" },
+                            { parameter: "Locked", operator: "Equals", expectedValue: "True", actualValue: "True", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" }
+                        ],
+                        logs: [
+                            { timestamp: "06-Aug-2026 13:45 IST", level: "INFO", levelState: "Information", message: "Realtime event hook scanner active." },
+                            { timestamp: "06-Aug-2026 13:46 IST", level: "SUCCESS", levelState: "Success", message: "Scanned 1,850 user assignments against SoD conflict rules. Clean." }
+                        ]
+                    },
+                    {
+                        id: "XYRA-002",
+                        description: "Financial Journal Entry Threshold Audit & PO Limit Verification",
+                        sysType1: "PRD",
+                        sysType2: "None",
+                        sysType3: "None",
+                        frequencyRun: "Monthly (Last day of month)",
+                        cronExpr: "",
+                        totalRun: "12",
+                        deviationLabel: "Deviation Low",
+                        deviationState: "Warning",
+                        deviationClass: "badgeYellow",
                         deviationCount: 2,
-                        deviationState: "Indication17"
+                        rules: [
+                            { parameter: "Security Policy", operator: "Equals", expectedValue: "True", actualValue: "False", statusText: "Deviation Low (Minor)", statusState: "Warning", statusIcon: "sap-icon://alert" }
+                        ],
+                        logs: [
+                            { timestamp: "31-Jul-2026 23:59 IST", level: "INFO", levelState: "Information", message: "Monthly financial threshold job triggered." },
+                            { timestamp: "31-Jul-2026 23:59 IST", level: "ERROR", levelState: "Error", message: "2 PO entries exceeded max approval threshold without dual authorization." }
+                        ]
                     },
                     {
-                        jobId: "AUTO-JOB-104",
-                        controlName: "Vendor Master Bank Account Change Verification",
-                        schedule: "Hourly",
-                        lastExecution: "31-Jul-2026 17:00 IST",
-                        nextExecution: "31-Jul-2026 18:00 IST",
-                        executionStatus: "SUCCESS",
-                        statusState: "Success",
+                        id: "XYRA-003",
+                        description: "Automated Kernel Audit Logging & Parameter Validation",
+                        sysType1: "DEV",
+                        sysType2: "QAS",
+                        sysType3: "PRD",
+                        frequencyRun: "Cron Expression",
+                        cronExpr: "0 0 1 * *",
+                        totalRun: "12",
+                        deviationLabel: "No Deviation",
+                        deviationState: "None",
+                        deviationClass: "badgeWhite",
                         deviationCount: 0,
-                        deviationState: "None"
-                    },
-                    {
-                        jobId: "AUTO-JOB-105",
-                        controlName: "Automated Purchase Order Approval Matrix Check",
-                        schedule: "Daily at 06:00",
-                        lastExecution: "31-Jul-2026 06:00 IST",
-                        nextExecution: "01-Aug-2026 06:00 IST",
-                        executionStatus: "FAILED",
-                        statusState: "Error",
-                        deviationCount: 4,
-                        deviationState: "Indication18"
+                        rules: [
+                            { parameter: "SDMI_* Exists", operator: "Equals", expectedValue: "True", actualValue: "True", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" }
+                        ],
+                        logs: [
+                            { timestamp: "01-Aug-2026 00:00 IST", level: "INFO", levelState: "Information", message: "Cron engine executed rule validation." },
+                            { timestamp: "01-Aug-2026 00:01 IST", level: "SUCCESS", levelState: "Success", message: "Kernel audit parameters validated successfully. No deviations." }
+                        ]
                     }
                 ]
             };
@@ -92,55 +148,72 @@ sap.ui.define([
             }
         },
 
-        onTabSelectionChange: function (oEvent) {
-            var sSelectedKey = oEvent.getParameter("item") ? oEvent.getParameter("item").getKey() : "";
-            if (sSelectedKey === "ControlManagement") {
-                this.getOwnerComponent().getRouter().navTo("ControlManagement");
-            }
-        },
-
         onNavControlManagement: function () {
             this.getOwnerComponent().getRouter().navTo("ControlManagement");
         },
 
-        onRetryFailedJobs: function () {
-            MessageBox.confirm("Are you sure you want to retry all 2 failed automation jobs?", {
-                onClose: function (sAction) {
-                    if (sAction === MessageBox.Action.OK) {
-                        MessageToast.show("Retrying failed automation jobs...");
-                    }
+        onViewRule: function (oEvent) {
+            var oItem = oEvent.getSource().getBindingContext("automationModel").getObject();
+            var oDialog = this.byId("ruleDetailsDialog");
+
+            if (this.byId("ruleControlIdTitle")) { this.byId("ruleControlIdTitle").setText("Control ID: " + oItem.id); }
+            if (this.byId("ruleControlDescText")) { this.byId("ruleControlDescText").setText(oItem.description); }
+
+            var oOverallStatus = this.byId("ruleOverallStatus");
+            var oMessageStrip = this.byId("ruleStatusMessageStrip");
+
+            if (oOverallStatus) {
+                oOverallStatus.setText(oItem.deviationLabel);
+                oOverallStatus.setState(oItem.deviationState);
+
+                // Update badge class dynamically
+                oOverallStatus.removeStyleClass("badgeWhite");
+                oOverallStatus.removeStyleClass("badgeYellow");
+                oOverallStatus.removeStyleClass("badgeRed");
+                oOverallStatus.addStyleClass(oItem.deviationClass || "badgeWhite");
+            }
+
+            if (oMessageStrip) {
+                if (oItem.deviationLabel === "No Deviation") {
+                    oMessageStrip.setText("Rule Satisfied: No deviations detected across evaluated system targets.");
+                    oMessageStrip.setType("Success");
+                } else if (oItem.deviationLabel === "Deviation Low") {
+                    oMessageStrip.setText("Deviation Low: Minor deviation detected (" + oItem.deviationCount + " non-critical parameters out of compliance).");
+                    oMessageStrip.setType("Warning");
+                } else {
+                    oMessageStrip.setText("Deviation High: Critical deviation detected (" + oItem.deviationCount + " high-risk security violations identified).");
+                    oMessageStrip.setType("Error");
                 }
-            });
+            }
+
+            var oRuleDetailsModel = new JSONModel({ rules: oItem.rules || [] });
+            this.getView().setModel(oRuleDetailsModel, "ruleDetailsModel");
+
+            if (oDialog) {
+                oDialog.open();
+            }
         },
 
-        onRetrySingleJob: function (oEvent) {
-            var oItem = oEvent.getSource().getBindingContext("automationModel").getObject();
-            MessageToast.show("Retrying automation job: " + oItem.jobId);
+        onCloseRuleDialog: function () {
+            var oDialog = this.byId("ruleDetailsDialog");
+            if (oDialog) {
+                oDialog.close();
+            }
         },
 
         onViewLogs: function (oEvent) {
             var oItem = oEvent.getSource().getBindingContext("automationModel").getObject();
-
             var oDialog = this.byId("jobLogsDialog");
-            var oTitle = this.byId("logJobIdTitle");
-            var oControlText = this.byId("logControlNameText");
-            var oStatus = this.byId("logJobStatus");
 
-            if (oTitle) { oTitle.setText("Job ID: " + oItem.jobId); }
-            if (oControlText) { oControlText.setText("Control: " + oItem.controlName + " (" + oItem.schedule + ")"); }
-            if (oStatus) {
-                oStatus.setText(oItem.executionStatus);
-                oStatus.setState(oItem.statusState);
+            if (this.byId("logJobIdTitle")) { this.byId("logJobIdTitle").setText("Control ID: " + oItem.id); }
+            if (this.byId("logControlNameText")) { this.byId("logControlNameText").setText(oItem.description + " (" + oItem.frequencyRun + ")"); }
+            if (this.byId("logJobStatus")) {
+                var bHasDev = (oItem.deviationCount > 0);
+                this.byId("logJobStatus").setText(bHasDev ? "DEVIATION" : "SUCCESS");
+                this.byId("logJobStatus").setState(bHasDev ? "Error" : "Success");
             }
 
-            var aMockLogs = [
-                { timestamp: oItem.lastExecution, level: "INFO", levelState: "Information", message: "Job initialized via automated schedule engine." },
-                { timestamp: oItem.lastExecution, level: "INFO", levelState: "Information", message: "OData connection established with SAP S/4HANA target endpoint." },
-                { timestamp: oItem.lastExecution, level: oItem.executionStatus === "FAILED" ? "ERROR" : "INFO", levelState: oItem.executionStatus === "FAILED" ? "Error" : "Information", message: oItem.executionStatus === "FAILED" ? "Rule evaluation failed: Timeout waiting for SAP response." : "Scanned 1,420 transactions against control logic." },
-                { timestamp: oItem.lastExecution, level: oItem.executionStatus === "FAILED" ? "ERROR" : "SUCCESS", levelState: oItem.executionStatus === "FAILED" ? "Error" : "Success", message: "Execution finished with " + oItem.deviationCount + " deviations detected." }
-            ];
-
-            var oLogsModel = new JSONModel({ logEntries: aMockLogs });
+            var oLogsModel = new JSONModel({ logEntries: oItem.logs || [] });
             this.getView().setModel(oLogsModel, "logsModel");
 
             if (oDialog) {
@@ -159,23 +232,44 @@ sap.ui.define([
             MessageToast.show("Execution log file downloaded successfully.");
         },
 
-        onSearchJobs: function (oEvent) {
-            var sQuery = oEvent.getParameter("query");
-            MessageToast.show("Searching automation logs: " + sQuery);
-        },
+        onSearchControls: function (oEvent) {
+            var sQuery = "";
+            if (oEvent && typeof oEvent.getParameter === "function") {
+                var sParamQuery = oEvent.getParameter("query");
+                var sParamNewVal = oEvent.getParameter("newValue");
+                sQuery = (sParamQuery !== undefined && sParamQuery !== null && sParamQuery !== "") ? sParamQuery : ((sParamNewVal !== undefined && sParamNewVal !== null) ? sParamNewVal : "");
+            }
+            if ((!sQuery || sQuery === "") && this.byId("searchAutomationId")) {
+                sQuery = this.byId("searchAutomationId").getValue();
+            }
+            sQuery = sQuery ? sQuery.trim() : "";
 
-        onFilterStatus: function (oEvent) {
-            var sKey = oEvent.getParameter("selectedItem").getKey();
-            MessageToast.show("Filtered jobs by status: " + sKey);
-        },
+            var aFilters = [];
+            if (sQuery) {
+                var oFilterId = new Filter("id", FilterOperator.Contains, sQuery);
+                var oFilterDesc = new Filter("description", FilterOperator.Contains, sQuery);
+                var oFilterSys1 = new Filter("sysType1", FilterOperator.Contains, sQuery);
+                var oFilterSys2 = new Filter("sysType2", FilterOperator.Contains, sQuery);
+                var oFilterSys3 = new Filter("sysType3", FilterOperator.Contains, sQuery);
+                var oFilterFreq = new Filter("frequencyRun", FilterOperator.Contains, sQuery);
+                var oFilterDev = new Filter("deviationLabel", FilterOperator.Contains, sQuery);
 
-        onTilePress: function (oEvent) {
-            var sHeader = oEvent.getSource().getHeader();
-            MessageToast.show("KPI Tile clicked: " + sHeader);
+                aFilters.push(new Filter({
+                    filters: [oFilterId, oFilterDesc, oFilterSys1, oFilterSys2, oFilterSys3, oFilterFreq, oFilterDev],
+                    and: false
+                }));
+            }
+
+            var oTable = this.byId("automationTable");
+            if (oTable) {
+                var oBinding = oTable.getBinding("items");
+                if (oBinding) {
+                    oBinding.filter(aFilters);
+                }
+            }
         },
 
         onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
-        onRoleManagement: function () { this.getOwnerComponent().getRouter().navTo("RoleManagement"); },
         onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
         onControlMonitoring: function () { this.getOwnerComponent().getRouter().navTo("ControlMonitoring"); },
         onAIInsights: function () { this.getOwnerComponent().getRouter().navTo("AIInsights"); },

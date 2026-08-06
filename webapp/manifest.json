@@ -132,11 +132,7 @@
           "pattern": "AutomationMonitoring",
           "target": "AutomationMonitoring"
         },
-        {
-          "name": "RoleManagement",
-          "pattern": "RoleManagement",
-          "target": "RoleManagement"
-        },
+
         {
           "name": "RoleReview",
           "pattern": "RoleReview",
@@ -188,9 +184,7 @@
         "AutomationMonitoring": {
           "viewName": "AutomationMonitoring"
         },
-        "RoleManagement": {
-          "viewName": "RoleManagement"
-        },
+
         "RoleReview": {
           "viewName": "RoleReview"
         },

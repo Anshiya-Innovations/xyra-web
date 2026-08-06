@@ -83,9 +83,6 @@ sap.ui.define([
             this.getOwnerComponent().getRouter().navTo("Admin");
         },
 
-        onRoleManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("RoleManagement");
-        },
 
         onControlManagement: function () {
             this.getOwnerComponent().getRouter().navTo("ControlManagement");

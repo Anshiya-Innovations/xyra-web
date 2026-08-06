@@ -83,3 +83,56 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
     vertical-align: middle !important;
     line-height: 1 !important;
 }
+
+/* Deviation Status Badge Styles - Grey Border & Outline Removal */
+.badgeWhite.sapMObjStatusInverted,
+.badgeWhite.sapMObjStatus,
+.badgeWhite {
+    background-color: #ffffff !important;
+    color: #374151 !important;
+    border: 1px solid #cbd5e1 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    font-weight: 600 !important;
+}
+
+.badgeYellow.sapMObjStatusInverted,
+.badgeYellow.sapMObjStatus,
+.badgeYellow {
+    background-color: #eab308 !important;
+    color: #ffffff !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    font-weight: 700 !important;
+}
+
+.badgeRed.sapMObjStatusInverted,
+.badgeRed.sapMObjStatus,
+.badgeRed {
+    background-color: #dc2626 !important;
+    color: #ffffff !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    font-weight: 700 !important;
+}
+
+/* Remove default SAPUI5 grey border box on ObjectStatus badges */
+.sapMObjStatusInverted {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.sapMObjStatusInverted.sapMObjStatusWarning {
+    border: none !important;
+    background-color: #eab308 !important;
+    color: #ffffff !important;
+}
+
+.sapMObjStatusInverted.sapMObjStatusError {
+    border: none !important;
+    background-color: #dc2626 !important;
+    color: #ffffff !important;
+}

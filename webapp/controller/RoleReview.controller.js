@@ -102,10 +102,6 @@ sap.ui.define([
             }
         },
 
-        onNavRoleManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("RoleManagement");
-        },
-
         onApproveItem: function (oEvent) {
             var oContext = oEvent.getSource().getBindingContext("reviewModel");
             var oModel = this.getView().getModel("reviewModel");
@@ -170,7 +166,6 @@ sap.ui.define([
         },
 
         onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
-        onRoleManagement: function () { this.getOwnerComponent().getRouter().navTo("RoleManagement"); },
         onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
         onAIInsights: function () { this.getOwnerComponent().getRouter().navTo("AIInsights"); },
         onSOXCompliance: function () { this.getOwnerComponent().getRouter().navTo("SOXCompliance"); },

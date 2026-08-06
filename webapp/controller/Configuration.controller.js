@@ -117,9 +117,6 @@ sap.ui.define([
             this.getOwnerComponent().getRouter().navTo("UserManagement");
         },
 
-        onRoleManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("RoleManagement");
-        },
 
         onControlManagement: function () {
             this.getOwnerComponent().getRouter().navTo("ControlManagement");

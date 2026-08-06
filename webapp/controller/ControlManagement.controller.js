@@ -14,7 +14,7 @@ sap.ui.define([
             var oData = {
                 controls: [
                     {
-                        id: "NLG-08",
+                        id: "XYRA-08",
                         description: "SAP Java Audit Log Filters & Security Event Monitoring",
                         sysType1: "DEV",
                         sysType2: "QAS",
@@ -22,10 +22,13 @@ sap.ui.define([
                         frequencyRun: "Daily",
                         cronExpr: "",
                         totalRun: "365",
-                        category: "Security"
+                        category: "Security",
+                        rules: [
+                            { id: 1, stepLabel: "Rule 1", parameter: "Password Changed", operator: "Equals", expectedValue: "True" }
+                        ]
                     },
                     {
-                        id: "NLG-28",
+                        id: "XYRA-28",
                         description: "SAP HANA Security Audit Logging & Retention Check",
                         sysType1: "PRD",
                         sysType2: "QAS",
@@ -33,10 +36,13 @@ sap.ui.define([
                         frequencyRun: "Weekly (Every Monday)",
                         cronExpr: "",
                         totalRun: "52",
-                        category: "ITGC"
+                        category: "ITGC",
+                        rules: [
+                            { id: 1, stepLabel: "Rule 1", parameter: "Roles Assigned", operator: "Equals", expectedValue: "True" }
+                        ]
                     },
                     {
-                        id: "NLG-001",
+                        id: "XYRA-001",
                         description: "Segregation of Duties (SoD) Conflict Scan & Privilege Escalation",
                         sysType1: "DEV",
                         sysType2: "PRD",
@@ -44,10 +50,15 @@ sap.ui.define([
                         frequencyRun: "Realtime",
                         cronExpr: "",
                         totalRun: "Continuous",
-                        category: "Security"
+                        category: "Security",
+                        rules: [
+                            { id: 1, stepLabel: "Rule 1", parameter: "Password Changed", operator: "Equals", expectedValue: "True" },
+                            { id: 2, stepLabel: "Then another rule: Rule 2", parameter: "User Type", operator: "Equals", expectedValue: "B" },
+                            { id: 3, stepLabel: "Then: Rule 3", parameter: "Locked", operator: "Equals", expectedValue: "True" }
+                        ]
                     },
                     {
-                        id: "NLG-002",
+                        id: "XYRA-002",
                         description: "Financial Journal Entry Threshold Audit & PO Limit Verification",
                         sysType1: "PRD",
                         sysType2: "None",
@@ -55,10 +66,13 @@ sap.ui.define([
                         frequencyRun: "Monthly (Last day of month)",
                         cronExpr: "",
                         totalRun: "12",
-                        category: "Financial"
+                        category: "Financial",
+                        rules: [
+                            { id: 1, stepLabel: "Rule 1", parameter: "Security Policy", operator: "Equals", expectedValue: "True" }
+                        ]
                     },
                     {
-                        id: "NLG-003",
+                        id: "XYRA-003",
                         description: "Automated Kernel Audit Logging & Parameter Validation",
                         sysType1: "DEV",
                         sysType2: "QAS",
@@ -66,13 +80,112 @@ sap.ui.define([
                         frequencyRun: "Cron Expression",
                         cronExpr: "0 0 1 * *",
                         totalRun: "12",
-                        category: "SOX"
+                        category: "SOX",
+                        rules: [
+                            { id: 1, stepLabel: "Rule 1", parameter: "SDMI_* Exists", operator: "Equals", expectedValue: "True" }
+                        ]
                     }
                 ]
             };
 
             var oModel = new JSONModel(oData);
             this.getView().setModel(oModel, "controlsModel");
+
+            // Initialize Rule Builder Model
+            var oRuleData = {
+                createRules: [
+                    { id: 1, stepLabel: "Rule 1", parameter: "", operator: "", expectedValue: "" }
+                ],
+                editRules: []
+            };
+            var oRuleModel = new JSONModel(oRuleData);
+            this.getView().setModel(oRuleModel, "ruleModel");
+        },
+
+        _getRuleLabel: function (iIndex) {
+            var iNum = iIndex + 1;
+            if (iNum === 1) { return "Rule 1"; }
+            if (iNum === 2) { return "Then another rule: Rule 2"; }
+            return "Then: Rule " + iNum;
+        },
+
+        _validateRules: function (aRules) {
+            if (!aRules || aRules.length === 0) {
+                MessageBox.error("Must fill the rule: Please add at least one Rule before saving.");
+                return false;
+            }
+            for (var i = 0; i < aRules.length; i++) {
+                var r = aRules[i];
+                var sParam = (r.parameter || "").trim();
+                var sOp = (r.operator || "").trim();
+                var sVal = (r.expectedValue || "").trim();
+
+                if (!sParam || sParam.indexOf("-- Select") === 0 || !sOp || sOp.indexOf("-- Select") === 0 || !sVal || sVal.indexOf("-- Select") === 0) {
+                    MessageBox.error("Must fill the rule: Please select Parameter, Operator, and Expected Value for " + (r.stepLabel || ("Rule " + (i + 1))) + ".");
+                    return false;
+                }
+            }
+            return true;
+        },
+
+        onAddCreateRule: function () {
+            var oRuleModel = this.getView().getModel("ruleModel");
+            var aRules = oRuleModel.getProperty("/createRules") || [];
+            var sLabel = this._getRuleLabel(aRules.length);
+            aRules.push({
+                id: Date.now(),
+                stepLabel: sLabel,
+                parameter: "",
+                operator: "",
+                expectedValue: ""
+            });
+            oRuleModel.setProperty("/createRules", aRules);
+        },
+
+        onDeleteCreateRule: function (oEvent) {
+            var oContext = oEvent.getSource().getBindingContext("ruleModel");
+            if (oContext) {
+                var sPath = oContext.getPath();
+                var iIndex = parseInt(sPath.split("/").pop(), 10);
+                var oRuleModel = this.getView().getModel("ruleModel");
+                var aRules = oRuleModel.getProperty("/createRules") || [];
+                aRules.splice(iIndex, 1);
+                var that = this;
+                aRules.forEach(function (r, idx) {
+                    r.stepLabel = that._getRuleLabel(idx);
+                });
+                oRuleModel.setProperty("/createRules", aRules);
+            }
+        },
+
+        onAddEditRule: function () {
+            var oRuleModel = this.getView().getModel("ruleModel");
+            var aRules = oRuleModel.getProperty("/editRules") || [];
+            var sLabel = this._getRuleLabel(aRules.length);
+            aRules.push({
+                id: Date.now(),
+                stepLabel: sLabel,
+                parameter: "",
+                operator: "",
+                expectedValue: ""
+            });
+            oRuleModel.setProperty("/editRules", aRules);
+        },
+
+        onDeleteEditRule: function (oEvent) {
+            var oContext = oEvent.getSource().getBindingContext("ruleModel");
+            if (oContext) {
+                var sPath = oContext.getPath();
+                var iIndex = parseInt(sPath.split("/").pop(), 10);
+                var oRuleModel = this.getView().getModel("ruleModel");
+                var aRules = oRuleModel.getProperty("/editRules") || [];
+                aRules.splice(iIndex, 1);
+                var that = this;
+                aRules.forEach(function (r, idx) {
+                    r.stepLabel = that._getRuleLabel(idx);
+                });
+                oRuleModel.setProperty("/editRules", aRules);
+            }
         },
 
         _calculateCronRunCount: function (sCron) {
@@ -312,7 +425,15 @@ sap.ui.define([
                 return;
             }
 
+            var oRuleModel = this.getView().getModel("ruleModel");
+            var aCreateRules = oRuleModel.getProperty("/createRules") || [];
+
+            if (!this._validateRules(aCreateRules)) {
+                return;
+            }
+
             var sTotalRun = this._calculateTotalRun(sFreq, sCron);
+            var aSavedRules = JSON.parse(JSON.stringify(aCreateRules));
 
             var oModel = this.getView().getModel("controlsModel");
             var aControls = oModel.getProperty("/controls") || [];
@@ -326,15 +447,19 @@ sap.ui.define([
                 frequencyRun: sFreq,
                 cronExpr: sCron,
                 totalRun: sTotalRun,
+                rules: aSavedRules,
                 category: "Security"
             });
 
             oModel.setProperty("/controls", aControls);
             MessageToast.show("Security Control '" + sId + "' Created Successfully!");
 
-            // Reset inputs
+            // Reset inputs & rules
             if (this.byId("createControlIdInput")) { this.byId("createControlIdInput").setValue(""); }
             if (this.byId("createControlDescInput")) { this.byId("createControlDescInput").setValue(""); }
+            oRuleModel.setProperty("/createRules", [
+                { id: 1, stepLabel: "Rule 1", parameter: "", operator: "", expectedValue: "" }
+            ]);
 
             this.onCloseCreateControlDialog();
         },
@@ -358,6 +483,16 @@ sap.ui.define([
                 var sTotal = this._calculateTotalRun(oItem.frequencyRun, oItem.cronExpr);
                 this.byId("editTotalRunInput").setValue(sTotal);
             }
+
+            // Load Rules into Rule Model
+            var aItemRules = oItem.rules;
+            if (!aItemRules || aItemRules.length === 0) {
+                aItemRules = [
+                    { id: 1, stepLabel: "Rule 1", parameter: "", operator: "", expectedValue: "" }
+                ];
+            }
+            var oRuleModel = this.getView().getModel("ruleModel");
+            oRuleModel.setProperty("/editRules", JSON.parse(JSON.stringify(aItemRules)));
 
             var oDialog = this.byId("editControlDialog");
             if (oDialog) {
@@ -396,6 +531,13 @@ sap.ui.define([
                 return;
             }
 
+            var oRuleModel = this.getView().getModel("ruleModel");
+            var aEditRules = oRuleModel.getProperty("/editRules") || [];
+
+            if (!this._validateRules(aEditRules)) {
+                return;
+            }
+
             var sTotalRun = this._calculateTotalRun(sFreq, sCron);
             var oModel = this.getView().getModel("controlsModel");
 
@@ -406,6 +548,7 @@ sap.ui.define([
             oModel.setProperty(this._sEditingPath + "/frequencyRun", sFreq);
             oModel.setProperty(this._sEditingPath + "/cronExpr", sCron);
             oModel.setProperty(this._sEditingPath + "/totalRun", sTotalRun);
+            oModel.setProperty(this._sEditingPath + "/rules", JSON.parse(JSON.stringify(aEditRules)));
 
             MessageToast.show("Security Control Updated Successfully!");
             this.onCloseEditControlDialog();
@@ -432,15 +575,28 @@ sap.ui.define([
         },
 
         onSearchControls: function (oEvent) {
-            var sQuery = oEvent.getParameter("query") || oEvent.getParameter("newValue") || (this.byId("searchControlId") ? this.byId("searchControlId").getValue() : "");
+            var sQuery = "";
+            if (oEvent && typeof oEvent.getParameter === "function") {
+                var sParamQuery = oEvent.getParameter("query");
+                var sParamNewVal = oEvent.getParameter("newValue");
+                sQuery = (sParamQuery !== undefined && sParamQuery !== null && sParamQuery !== "") ? sParamQuery : ((sParamNewVal !== undefined && sParamNewVal !== null) ? sParamNewVal : "");
+            }
+            if ((!sQuery || sQuery === "") && this.byId("searchControlId")) {
+                sQuery = this.byId("searchControlId").getValue();
+            }
             sQuery = sQuery ? sQuery.trim() : "";
 
             var aFilters = [];
             if (sQuery) {
                 var oFilterId = new Filter("id", FilterOperator.Contains, sQuery);
                 var oFilterDesc = new Filter("description", FilterOperator.Contains, sQuery);
+                var oFilterSys1 = new Filter("sysType1", FilterOperator.Contains, sQuery);
+                var oFilterSys2 = new Filter("sysType2", FilterOperator.Contains, sQuery);
+                var oFilterSys3 = new Filter("sysType3", FilterOperator.Contains, sQuery);
+                var oFilterFreq = new Filter("frequencyRun", FilterOperator.Contains, sQuery);
+
                 aFilters.push(new Filter({
-                    filters: [oFilterId, oFilterDesc],
+                    filters: [oFilterId, oFilterDesc, oFilterSys1, oFilterSys2, oFilterSys3, oFilterFreq],
                     and: false
                 }));
             }
@@ -455,7 +611,6 @@ sap.ui.define([
         },
 
         onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
-        onRoleManagement: function () { this.getOwnerComponent().getRouter().navTo("RoleManagement"); },
         onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
         onAIInsights: function () { this.getOwnerComponent().getRouter().navTo("AIInsights"); },
         onSOXCompliance: function () { this.getOwnerComponent().getRouter().navTo("SOXCompliance"); },

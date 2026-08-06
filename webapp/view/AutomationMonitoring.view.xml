@@ -15,12 +15,6 @@
                 <tnt:NavigationList>
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://shield" key="Admin" select="onAdmin"/>
 
-                    <tnt:NavigationListItem text="Role Management" icon="sap-icon://manager" key="RoleManagement" select="onRoleManagement">
-                        <tnt:tag>
-                            <ObjectStatus text="380 Roles" state="Indication17" inverted="true"/>
-                        </tnt:tag>
-                    </tnt:NavigationListItem>
-
                     <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement">
                         <tnt:tag>
                             <ObjectStatus text="156 Controls" state="Indication18" inverted="true"/>
@@ -69,18 +63,66 @@
                 class="sapUiContentPadding">
 
                 <dependents>
+                    <!-- RULE & DEVIATION EVALUATION DIALOG -->
+                    <Dialog
+                        id="ruleDetailsDialog"
+                        title="Security Control Rule Evaluation &amp; Deviation Details"
+                        contentWidth="750px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <VBox>
+                                        <Title id="ruleControlIdTitle" text="Control ID: XYRA-08" level="H3"/>
+                                        <Text id="ruleControlDescText" text="SAP Java Audit Log Filters &amp; Security Event Monitoring" class="textMuted"/>
+                                    </VBox>
+                                    <ObjectStatus id="ruleOverallStatus" text="No Deviation" state="None" inverted="true" class="badgeWhite"/>
+                                </HBox>
+
+                                <MessageStrip
+                                    id="ruleStatusMessageStrip"
+                                    text="Rule Satisfied: All evaluated security parameters meet target specifications with 0 deviations."
+                                    type="Success"
+                                    showIcon="true"
+                                    class="sapUiSmallMarginBottom"/>
+
+                                <Table id="ruleDetailsTable" items="{ruleDetailsModel>/rules}" mode="None" class="sapUiTinyMarginTop">
+                                    <columns>
+                                        <Column width="22%"><Text text="Parameter"/></Column>
+                                        <Column width="15%"><Text text="Operator"/></Column>
+                                        <Column width="18%"><Text text="Expected Value"/></Column>
+                                        <Column width="18%"><Text text="Actual Value"/></Column>
+                                        <Column width="27%"><Text text="Result Status"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{ruleDetailsModel>parameter}" class="fontWeightBold"/>
+                                                <Text text="{ruleDetailsModel>operator}"/>
+                                                <Text text="{ruleDetailsModel>expectedValue}"/>
+                                                <Text text="{ruleDetailsModel>actualValue}"/>
+                                                <ObjectStatus text="{ruleDetailsModel>statusText}" state="{ruleDetailsModel>statusState}" icon="{ruleDetailsModel>statusIcon}"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                        </content>
+                        <endButton>
+                            <Button text="Close" press="onCloseRuleDialog"/>
+                        </endButton>
+                    </Dialog>
+
                     <!-- EXECUTION LOGS DIALOG -->
                     <Dialog
                         id="jobLogsDialog"
-                        title="Monitoring Execution Logs"
+                        title="Automation Execution Logs"
                         contentWidth="680px">
                         <content>
                             <VBox class="sapUiMediumMargin">
-                                <!-- JOB DETAILS HEADER CARD -->
                                 <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
                                     <VBox>
-                                        <Title id="logJobIdTitle" text="Job ID: AUTO-JOB-101" level="H3"/>
-                                        <Text id="logControlNameText" text="Segregation of Duties (SoD) Conflict Scan" class="textMuted"/>
+                                        <Title id="logJobIdTitle" text="Control ID: XYRA-08" level="H3"/>
+                                        <Text id="logControlNameText" text="SAP Java Audit Log Filters &amp; Security Event Monitoring" class="textMuted"/>
                                     </VBox>
                                     <ObjectStatus id="logJobStatus" text="SUCCESS" state="Success" icon="sap-icon://sys-enter-2"/>
                                 </HBox>
@@ -145,46 +187,41 @@
 
                         <!-- AUTOMATION MONITORING TABLE -->
                         <Panel expandable="false" class="sapUiSmallMarginBottom">
-                            <Table id="automationTable" items="{automationModel>/jobs}" mode="None" width="100%">
+                            <Table id="automationTable" items="{automationModel>/controls}" mode="None" width="100%">
                                 <headerToolbar>
                                     <OverflowToolbar>
-                                        <Title text="Automated Control Jobs &amp; Monitoring Logs" level="H3"/>
+                                        <Title text="Security Control Master Directory" level="H3"/>
                                         <ToolbarSpacer/>
-                                        <SearchField width="16rem" placeholder="Search jobs, logs..." search="onSearchJobs"/>
-                                        <Select selectedKey="All" change="onFilterStatus">
-                                            <core:Item key="All" text="All Statuses"/>
-                                            <core:Item key="SUCCESS" text="Success"/>
-                                            <core:Item key="FAILED" text="Failed"/>
-                                            <core:Item key="RUNNING" text="Running"/>
-                                        </Select>
-                                        <Button text="Retry Failed Jobs" icon="sap-icon://refresh" type="Emphasized" press="onRetryFailedJobs"/>
+                                        <SearchField id="searchAutomationId" width="16rem" placeholder="Search Control ID..." search="onSearchControls" liveChange="onSearchControls"/>
                                     </OverflowToolbar>
                                 </headerToolbar>
 
                                 <columns>
-                                    <Column width="10%"><Text text="Job ID"/></Column>
-                                    <Column width="20%"><Text text="Control Name"/></Column>
-                                    <Column width="13%"><Text text="Automation Schedule"/></Column>
-                                    <Column width="14%"><Text text="Last Execution"/></Column>
-                                    <Column width="14%"><Text text="Next Execution"/></Column>
-                                    <Column width="7%"><Text text="Status"/></Column>
-                                    <Column width="8%" hAlign="Center"><Text text="Deviations"/></Column>
-                                    <Column width="14%" hAlign="Center"><Text text="Actions"/></Column>
+                                    <Column width="10%"><Text text="Control ID"/></Column>
+                                    <Column width="26%"><Text text="Control Description"/></Column>
+                                    <Column width="7%" hAlign="Center"><Text text="System Type"/></Column>
+                                    <Column width="7%" hAlign="Center"><Text text="System Type"/></Column>
+                                    <Column width="7%" hAlign="Center"><Text text="System Type"/></Column>
+                                    <Column width="14%"><Text text="Frequency Run"/></Column>
+                                    <Column width="7%" hAlign="Center"><Text text="Total Run"/></Column>
+                                    <Column width="10%" hAlign="Center"><Text text="Deviations"/></Column>
+                                    <Column width="12%" hAlign="Center"><Text text="Actions"/></Column>
                                 </columns>
 
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <ObjectIdentifier title="{automationModel>jobId}"/>
-                                            <Text text="{automationModel>controlName}"/>
-                                            <Text text="{automationModel>schedule}"/>
-                                            <Text text="{automationModel>lastExecution}"/>
-                                            <Text text="{automationModel>nextExecution}"/>
-                                            <ObjectStatus text="{automationModel>executionStatus}" state="{automationModel>statusState}"/>
-                                            <ObjectStatus text="{automationModel>deviationCount} Deviations" state="{automationModel>deviationState}" inverted="true"/>
+                                            <Text text="{automationModel>id}" class="sapUiSelectable fontWeightBold"/>
+                                            <Text text="{automationModel>description}"/>
+                                            <ObjectStatus text="{automationModel>sysType1}" state="{= ${automationModel>sysType1} === 'None' ? 'None' : (${automationModel>sysType1} === 'PRD' ? 'Error' : (${automationModel>sysType1} === 'QAS' ? 'Warning' : 'Information')) }"/>
+                                            <ObjectStatus text="{automationModel>sysType2}" state="{= ${automationModel>sysType2} === 'None' ? 'None' : (${automationModel>sysType2} === 'PRD' ? 'Error' : (${automationModel>sysType2} === 'QAS' ? 'Warning' : 'Information')) }"/>
+                                            <ObjectStatus text="{automationModel>sysType3}" state="{= ${automationModel>sysType3} === 'None' ? 'None' : (${automationModel>sysType3} === 'PRD' ? 'Error' : (${automationModel>sysType3} === 'QAS' ? 'Warning' : 'Information')) }"/>
+                                            <Text text="{automationModel>frequencyRun}"/>
+                                            <Text text="{automationModel>totalRun}" class="fontWeightBold textSuccess"/>
+                                            <ObjectStatus text="{automationModel>deviationLabel}" state="{automationModel>deviationState}" inverted="true" class="{automationModel>deviationClass}"/>
                                             <HBox justifyContent="Center" alignItems="Center">
-                                                <Button text="Logs" type="Emphasized" press="onViewLogs" class="sapUiTinyMarginEnd"/>
-                                                <Button text="Retry" type="Ghost" press="onRetrySingleJob" enabled="{= ${automationModel>executionStatus} === 'FAILED' }"/>
+                                                <Button text="Rule" type="Emphasized" press="onViewRule" class="sapUiTinyMarginEnd"/>
+                                                <Button text="Logs" type="Ghost" press="onViewLogs"/>
                                             </HBox>
                                         </cells>
                                     </ColumnListItem>
@@ -199,7 +236,7 @@
                     <OverflowToolbar>
                         <Text text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer/>
-                        <Text text="Version 1.0 | Status: Active"/>
+                        <Text text="Control Management v1.0 | Status: Active"/>
                     </OverflowToolbar>
                 </footer>
 

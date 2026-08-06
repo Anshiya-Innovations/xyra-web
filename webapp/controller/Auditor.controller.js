@@ -53,7 +53,6 @@ sap.ui.define([
 
         // Navigation Handlers
         onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
-        onRoleManagement: function () { this.getOwnerComponent().getRouter().navTo("RoleManagement"); },
         onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
         onAIInsights: function () { MessageToast.show("Navigating to AI Insights..."); },
         onSOXCompliance: function () { MessageToast.show("Navigating to SOX Compliance..."); },

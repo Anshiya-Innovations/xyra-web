@@ -45,9 +45,6 @@ sap.ui.define([
             this.navToRoute("UserManagement");
         },
 
-        onRoleManagement: function () {
-            this.navToRoute("RoleManagement");
-        },
 
         onReviewer1: function () {
             this.navToRoute("Reviewer1");
