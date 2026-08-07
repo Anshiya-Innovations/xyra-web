@@ -76,7 +76,7 @@
                             class="sapUiTinyMarginBegin"/>
                         <Avatar initials="AL" displaySize="S" backgroundColor="Accent6" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
-                            <Title text="📜 XYRA – Audit Logs" level="H4" class="sapUiNoMargin"/>
+                            <Title text="XYRA – Audit Logs" level="H4" class="sapUiNoMargin"/>
                             <Text text="SAP Security Audit Configuration Validation Dashboard" class="textMuted sapUiNoMargin"/>
                         </VBox>
                         <ToolbarSpacer/>

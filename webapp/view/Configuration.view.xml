@@ -10,12 +10,11 @@
 
     <tnt:ToolPage id="configToolPage" sideExpanded="true">
 
-        <!-- ENTERPRISE MANAGEMENT SIDEBAR (EXACT & UNCHANGED - NO TOUCH) -->
+        <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
         <tnt:sideContent>
             <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="Configuration" itemSelect="onSideNavItemSelect">
                 <tnt:NavigationList>
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://shield" key="Admin" select="onAdmin"/>
-
 
                     <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement">
                         <tnt:tag>
@@ -65,36 +64,193 @@
                 class="sapUiContentPadding">
 
                 <dependents>
-                    <ResponsivePopover
-                        id="configProfilePopover"
-                        title="Administrator Profile"
-                        placement="Bottom"
-                        contentWidth="320px">
+                    <!-- ADD NEW SYSTEM DIALOG / POPUP -->
+                    <Dialog
+                        id="addSystemDialog"
+                        title="Add New SAP System Configuration"
+                        contentWidth="720px">
                         <content>
                             <VBox class="sapUiMediumMargin">
-                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
-                                    <Avatar displaySize="M" initials="SA" backgroundColor="Accent6" class="sapUiSmallMarginEnd"/>
-                                    <VBox>
-                                        <Title text="System Administrator" level="H3"/>
-                                        <Text text="Global Administrator"/>
-                                        <ObjectStatus text="Online" state="Success"/>
-                                    </VBox>
-                                </HBox>
-                                <VBox class="sapUiSmallMarginBottom">
-                                    <Label text="Admin ID" design="Bold"/>
-                                    <Text text="ADM001"/>
-                                    <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
-                                    <Text text="Security &amp; Compliance"/>
-                                    <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
-                                    <Text text="admin@xyra.ai"/>
-                                </VBox>
-                                <HBox justifyContent="End" class="sapUiSmallMarginTop">
-                                    <Button text="Profile" icon="sap-icon://person-placeholder" type="Transparent" class="sapUiTinyMarginEnd" press="onProfile"/>
-                                    <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
-                                </HBox>
+                                <MessageStrip
+                                    text="Fill in SAP System connectivity and environment details below."
+                                    type="Information"
+                                    showIcon="true"
+                                    class="sapUiSmallMarginBottom"/>
+
+                                <form:SimpleForm editable="true" layout="ColumnLayout">
+                                    <form:content>
+                                        <core:Title text="System Identification"/>
+
+                                        <Label text="System ID (SID)" required="true"/>
+                                        <Input id="newSysId" placeholder="e.g. MY8, MQ8, MP8"/>
+
+                                        <Label text="Client" required="true"/>
+                                        <Input id="newClient" placeholder="e.g. 100, 000"/>
+
+                                        <Label text="System Type" required="true"/>
+                                        <Select id="newSysTypeSelect" selectedKey="Quality">
+                                            <core:Item key="Development" text="Development"/>
+                                            <core:Item key="Quality" text="Quality"/>
+                                            <core:Item key="Production" text="Production"/>
+                                        </Select>
+
+                                        <Label text="Host Name" required="true"/>
+                                        <Input id="newHostName" placeholder="e.g. asmy800.jnj.com"/>
+
+                                        <Label text="System Details"/>
+                                        <Input id="newSysDetails" placeholder="e.g. EHP4 FOR SAP CRM 7.0"/>
+
+                                        <core:Title text="Environment &amp; Network"/>
+
+                                        <Label text="Sector"/>
+                                        <Input id="newSector" value="MedTech" placeholder="e.g. MedTech"/>
+
+                                        <Label text="Platform"/>
+                                        <Input id="newPlatform" value="USROTC" placeholder="e.g. USROTC"/>
+
+                                        <Label text="Region"/>
+                                        <Input id="newRegion" value="North America" placeholder="e.g. North America"/>
+
+                                        <Label text="Client Type"/>
+                                        <Select id="newClientTypeSelect" selectedKey="ABAP">
+                                            <core:Item key="ABAP" text="ABAP"/>
+                                            <core:Item key="JAVA" text="JAVA"/>
+                                            <core:Item key="S4/HANA" text="S4/HANA"/>
+                                        </Select>
+
+                                        <Label text="System Version"/>
+                                        <Input id="newSysVersion" value="750" placeholder="e.g. 750, 740"/>
+
+                                        <Label text="Logon Group"/>
+                                        <Input id="newLogonGroup" value="PUBLIC" placeholder="e.g. PUBLIC"/>
+
+                                        <Label text="Port Number"/>
+                                        <Input id="newPortNumber" value="3600" placeholder="e.g. 3600"/>
+
+                                        <Label text="Instance Number"/>
+                                        <Input id="newInstanceNo" value="00" placeholder="e.g. 00"/>
+                                    </form:content>
+                                </form:SimpleForm>
                             </VBox>
                         </content>
-                    </ResponsivePopover>
+                        <beginButton>
+                            <Button text="Save System" type="Emphasized" icon="sap-icon://save" press="onSaveNewSystem"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseAddSystemDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- EDIT SYSTEM DIALOG / POPUP -->
+                    <Dialog
+                        id="editSystemDialog"
+                        title="Edit SAP System Configuration"
+                        contentWidth="720px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <MessageStrip
+                                    text="Modify SAP System connectivity and environment details."
+                                    type="Information"
+                                    showIcon="true"
+                                    class="sapUiSmallMarginBottom"/>
+
+                                <form:SimpleForm editable="true" layout="ColumnLayout">
+                                    <form:content>
+                                        <core:Title text="System Identification"/>
+
+                                        <Label text="System ID (SID)" required="true"/>
+                                        <Input id="editSysId" editable="false"/>
+
+                                        <Label text="Client" required="true"/>
+                                        <Input id="editClient"/>
+
+                                        <Label text="System Type" required="true"/>
+                                        <Select id="editSysTypeSelect" selectedKey="Quality">
+                                            <core:Item key="Development" text="Development"/>
+                                            <core:Item key="Quality" text="Quality"/>
+                                            <core:Item key="Production" text="Production"/>
+                                        </Select>
+
+                                        <Label text="Host Name" required="true"/>
+                                        <Input id="editHostName"/>
+
+                                        <Label text="System Details"/>
+                                        <Input id="editSysDetails"/>
+
+                                        <core:Title text="Environment &amp; Network"/>
+
+                                        <Label text="Sector"/>
+                                        <Input id="editSector"/>
+
+                                        <Label text="Platform"/>
+                                        <Input id="editPlatform"/>
+
+                                        <Label text="Region"/>
+                                        <Input id="editRegion"/>
+
+                                        <Label text="Client Type"/>
+                                        <Select id="editClientTypeSelect">
+                                            <core:Item key="ABAP" text="ABAP"/>
+                                            <core:Item key="JAVA" text="JAVA"/>
+                                            <core:Item key="S4/HANA" text="S4/HANA"/>
+                                        </Select>
+
+                                        <Label text="System Version"/>
+                                        <Input id="editSysVersion"/>
+
+                                        <Label text="Logon Group"/>
+                                        <Input id="editLogonGroup"/>
+
+                                        <Label text="Port Number"/>
+                                        <Input id="editPortNumber"/>
+
+                                        <Label text="Instance Number"/>
+                                        <Input id="editInstanceNo"/>
+                                    </form:content>
+                                </form:SimpleForm>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Save Changes" type="Emphasized" icon="sap-icon://save" press="onSaveEditedSystem"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseEditSystemDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- SYSTEM HISTORY DIALOG -->
+                    <Dialog
+                        id="systemHistoryDialog"
+                        title="SAP System Landscape Audit History"
+                        contentWidth="750px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Table id="historyTable" items="{historyModel>/entries}">
+                                    <columns>
+                                        <Column width="25%"><Text text="Timestamp"/></Column>
+                                        <Column width="18%"><Text text="Action Type"/></Column>
+                                        <Column width="18%"><Text text="System ID"/></Column>
+                                        <Column width="20%"><Text text="User"/></Column>
+                                        <Column width="19%"><Text text="Status"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{historyModel>timestamp}"/>
+                                                <Text text="{historyModel>action}"/>
+                                                <Text text="{historyModel>sysId}" class="fontWeightBold"/>
+                                                <Text text="{historyModel>user}"/>
+                                                <ObjectStatus text="{historyModel>status}" state="{historyModel>statusState}"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                        </content>
+                        <endButton>
+                            <Button text="Close" press="onCloseSystemHistoryDialog"/>
+                        </endButton>
+                    </Dialog>
                 </dependents>
 
                 <!-- PAGE HEADER WITH TITLE & SUBTITLE -->
@@ -108,15 +264,12 @@
                             class="sapUiTinyMarginBegin"/>
                         <Avatar src="sap-icon://action-settings" displaySize="S" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
-                            <Title text="⚙ XYRA – SAP S/4HANA Connection Configuration" level="H4" class="sapUiNoMargin"/>
-                            <Text text="Configure connectivity to SAP S/4HANA before monitoring begins." class="textMuted sapUiNoMargin"/>
+                            <Title text="XYRA – SAP System Landscape Configuration" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Manage and configure SAP S/4HANA &amp; ERP System Landscape connections." class="textMuted sapUiNoMargin"/>
                         </VBox>
                         <ToolbarSpacer/>
 
                         <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
-                        <Button icon="sap-icon://search" tooltip="Search" type="Transparent" press="onSearchPress"/>
-                        <Button icon="sap-icon://sys-help" tooltip="Help" type="Transparent" press="onHelpPress"/>
-                        <Button icon="sap-icon://employee" text="Admin" type="Transparent" press="onAdminProfilePress"/>
                         <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
                     </OverflowToolbar>
                 </customHeader>
@@ -124,65 +277,63 @@
                 <content>
                     <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
 
-                        <!-- SUBTITLE INSTRUCTION MESSAGE STRIP -->
-                        <MessageStrip
-                            text="Configure connectivity to SAP S/4HANA before monitoring begins."
-                            type="Information"
-                            showIcon="true"
-                            class="sapUiSmallMarginBottom"/>
+                        <!-- TOP ACTION BUTTONS BAR -->
+                        <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
+                            <Button text="+ Add New System" icon="sap-icon://add" press="onOpenAddSystemDialog" class="btnPurpleAccent sapUiSmallMarginEnd"/>
+                            <Button text="System History" icon="sap-icon://history" press="onOpenSystemHistory" class="btnPurpleAccent"/>
+                            <ToolbarSpacer/>
+                            <SearchField id="searchSystemId" width="16rem" placeholder="Search System ID / Host..." search="onSearchSystems" liveChange="onSearchSystems"/>
+                        </HBox>
 
-                        <!-- SAP S/4HANA CONNECTION PANEL -->
-                        <Panel headerText="SAP S/4HANA Connection" expandable="false" class="sapUiSmallMarginBottom">
-                            <form:SimpleForm editable="true" layout="ColumnLayout">
-                                <form:content>
-                                    <core:Title text="System Connection Parameters"/>
+                        <!-- SAP SYSTEMS MASTER LANDSCAPE TABLE -->
+                        <Panel expandable="false" class="sapUiSmallMarginBottom">
+                            <Table id="systemsTable" items="{systemModel>/systems}" mode="None" width="100%">
+                                <columns>
+                                    <Column width="7%"><Text text="System ID"/></Column>
+                                    <Column width="5%"><Text text="Client"/></Column>
+                                    <Column width="7%"><Text text="System Type"/></Column>
+                                    <Column width="11%"><Text text="Host Name"/></Column>
+                                    <Column width="17%"><Text text="System Details"/></Column>
+                                    <Column width="6%"><Text text="Sector"/></Column>
+                                    <Column width="6%"><Text text="Platform"/></Column>
+                                    <Column width="8%"><Text text="Region"/></Column>
+                                    <Column width="6%"><Text text="Client Type"/></Column>
+                                    <Column width="6%"><Text text="System Version"/></Column>
+                                    <Column width="6%"><Text text="Logon Group"/></Column>
+                                    <Column width="5%"><Text text="Port Number"/></Column>
+                                    <Column width="5%"><Text text="Instance N..."/></Column>
+                                    <Column width="9%" hAlign="Center"><Text text="Actions"/></Column>
+                                </columns>
 
-                                    <Label text="System Name"/>
-                                    <Input id="sysName" value="S4H-PROD-2023"/>
-
-                                    <Label text="Host Name/IP"/>
-                                    <Input id="hostName" value="s4hana.enterprise.xyra.internal"/>
-
-                                    <Label text="System ID (SID)"/>
-                                    <Input id="sysId" type="Number" value="100" liveChange="onNumberLiveChange" placeholder="Numeric System ID (e.g. 100)"/>
-
-                                    <Label text="Client"/>
-                                    <Input id="client" value="100"/>
-
-                                    <Label text="Instance Number"/>
-                                    <Input id="instanceNum" type="Number" value="00" liveChange="onNumberLiveChange" placeholder="Instance Number (e.g. 00)"/>
-
-                                    <Label text="Port"/>
-                                    <Input id="port" type="Number" value="44300" liveChange="onNumberLiveChange" placeholder="Port Number (e.g. 44300)"/>
-
-                                    <core:Title text="Authentication &amp; Token"/>
-
-                                    <Label text="JWT Token"/>
-                                    <TextArea id="jwtToken" rows="3" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlNZUkEgQ29ubmVjdG9yIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" placeholder="Enter JWT Bearer Token..."/>
-                                </form:content>
-                            </form:SimpleForm>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{systemModel>sysId}" class="fontWeightBold"/>
+                                            <Text text="{systemModel>client}"/>
+                                            <ObjectStatus text="{systemModel>sysType}" state="{= ${systemModel>sysType} === 'Production' ? 'Error' : (${systemModel>sysType} === 'Quality' ? 'Warning' : 'Information') }"/>
+                                            <Text text="{systemModel>hostName}"/>
+                                            <Text text="{systemModel>sysDetails}"/>
+                                            <Text text="{systemModel>sector}"/>
+                                            <Text text="{systemModel>platform}"/>
+                                            <Text text="{systemModel>region}"/>
+                                            <Text text="{systemModel>clientType}"/>
+                                            <Text text="{systemModel>sysVersion}"/>
+                                            <Text text="{systemModel>logonGroup}"/>
+                                            <Text text="{systemModel>portNumber}"/>
+                                            <Text text="{systemModel>instanceNo}"/>
+                                            <HBox justifyContent="Center" alignItems="Center">
+                                                <Button icon="sap-icon://edit" type="Emphasized" press="onEditSystem" tooltip="Edit System" class="sapUiTinyMarginEnd"/>
+                                                <Button icon="sap-icon://delete" type="Reject" press="onDeleteSystem" tooltip="Delete System"/>
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
                         </Panel>
 
-                        <!-- TEST CONNECTION & STATUS PANEL -->
-                        <Panel headerText="Connection Validation &amp; Status" expandable="false" class="sapUiSmallMarginBottom">
-                            <form:SimpleForm editable="false" layout="ColumnLayout">
-                                <form:content>
-                                    <Label text="Test Connection"/>
-                                    <Button text="Test Connection" type="Accept" icon="sap-icon://accept" press="onTestConnection" width="12rem"/>
-
-                                    <Label text="Connection Status"/>
-                                    <ObjectStatus id="connectionStatusText" text="Not tested yet" state="None" icon="sap-icon://question-mark"/>
-
-                                    <Label text="Last Validation"/>
-                                    <Text id="lastValidationText" text="—" class="textMuted"/>
-                                </form:content>
-                            </form:SimpleForm>
-                        </Panel>
-
-                        <!-- BOTTOM ACTION BAR -->
-                        <HBox justifyContent="End" class="sapUiMediumMarginTop sapUiSmallMarginBottom">
-                            <Button text="Save Configuration" type="Emphasized" icon="sap-icon://save" press="onSaveConfiguration" class="sapUiTinyMarginEnd"/>
-                            <Button text="Reset" type="Ghost" icon="sap-icon://refresh" press="onResetConfiguration"/>
+                        <!-- BOTTOM EXPORT ACTION BAR -->
+                        <HBox justifyContent="Start" class="sapUiSmallMarginTop">
+                            <Button text="Export" icon="sap-icon://download" press="onExportSystems" class="btnPurpleAccent"/>
                         </HBox>
 
                     </VBox>
@@ -192,7 +343,7 @@
                     <OverflowToolbar>
                         <Text text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer/>
-                        <Text text="Version 1.0 | Status: Active"/>
+                        <Text text="System Landscape Configuration v1.0 | Status: Active"/>
                     </OverflowToolbar>
                 </footer>
 

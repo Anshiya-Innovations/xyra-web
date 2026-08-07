@@ -118,224 +118,6 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
     font-weight: 700 !important;
 }
 
-/* ===== Modern Login Page ===== */
-
-.xyraLoginBg {
-    height: 100% !important;
-    width: 100% !important;
-    background-color: #F8FAFC !important;
-}
-
-.xyraLoginCard {
-    background-color: #FFFFFF !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 16px !important;
-    padding: 2.5rem 2rem !important;
-    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06) !important;
-}
-
-.xyraLoginLogo {
-    display: block !important;
-    width: 150px !important;
-    height: auto !important;
-    margin: 0 auto 1.5rem !important;
-}
-
-.xyraLoginTitle {
-    color: #0F172A !important;
-    font-weight: 700 !important;
-    margin-bottom: 0.35rem !important;
-}
-
-.xyraLoginSubtitle {
-    color: #64748B !important;
-    font-size: 0.875rem !important;
-    margin-bottom: 1.75rem !important;
-}
-
-.xyraLoginLabel {
-    color: #64748B !important;
-    font-size: 0.8rem !important;
-    font-weight: 600 !important;
-    margin-bottom: 0.4rem !important;
-}
-
-.xyraLoginField {
-    margin-bottom: 1.4rem !important;
-}
-
-.xyraLoginCheckbox {
-    margin-bottom: 1.5rem !important;
-}
-
-/* ===== Global field design (all Input/Select boxes app-wide) ===== */
-
-.sapMInputBaseContentWrapper,
-.sapMSlt {
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 10px !important;
-    background-color: #F8FAFC !important;
-    box-shadow: none !important;
-    height: 46px !important;
-    transition: border-color 0.15s ease;
-}
-
-.sapMInputBaseContentWrapper:hover,
-.sapMSlt:hover {
-    border-color: #533BFF !important;
-}
-
-/* Couldn't pin down which exact element the theme hangs its focus ring off,
-   after several tries — kill outline/box-shadow on the whole field subtree
-   (root, wrapper, every descendant) instead of chasing the specific one. No
-   visual focus state left, on purpose: asked for over trying again. */
-.sapMInputBase,
-.sapMInputBase *,
-.sapMSlt,
-.sapMSlt * {
-    outline: none !important;
-}
-
-.sapMInputBaseContentWrapper:focus-within,
-.sapMSlt:focus-within {
-    border: 1px solid #E2E8F0 !important;
-    box-shadow: none !important;
-}
-
-/* sapUiSizeCompact (set on <body>) hardcodes a short line-height on the inner
-   input/label — the wrapper's height alone won't stretch it, so override both.
-   Native focus outline is squared and ignores our border-radius (the box we
-   want on focus is the wrapper's own border-color change above), so drop it. */
-.sapMInputBaseContentWrapper input,
-.sapMSlt .sapMSltLabel {
-    height: 44px !important;
-    line-height: 44px !important;
-    font-size: 0.95rem !important;
-    padding: 0 0.9rem !important;
-    color: #0F172A !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* Recenter the dropdown chevron in the field's taller box. top/margin-top
-   assumed the theme had it position:absolute already — flex-stretching the
-   full height instead doesn't depend on that assumption.
-   (Verified against sap.m.SelectRenderer source: the select's own box is
-   .sapMSlt, the arrow is .sapMSltArrow — not .sapMSelect/.sapMSelectArrow.) */
-.sapMSlt .sapMSltArrow {
-    position: absolute !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    right: 0.75rem !important;
-    height: auto !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    color: #0F172A !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background: none !important;
-}
-
-/* The option list opens in its own popover, detached from the select box in
-   the DOM — needs its own rule, styling the box alone never reaches it.
-   (Verified against sap.m.Select source: the popover carries .sapMSelectPicker,
-   not .sapMSelectPopover; the selected item is .sapMSelectListItemBaseSelected.) */
-.sapMSelectPicker {
-    border-radius: 10px !important;
-    border: 1px solid #E2E8F0 !important;
-    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.12) !important;
-}
-
-.sapMSelectList {
-    background-color: #FFFFFF !important;
-    padding: 0.35rem !important;
-}
-
-.sapMSelectListItem {
-    border-radius: 8px !important;
-    color: #0F172A !important;
-    font-size: 0.9rem !important;
-    padding: 0 0.9rem !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-.sapMSelectListItem:hover {
-    background-color: #F8FAFC !important;
-}
-
-.sapMSelectListItemBaseSelected {
-    background-color: #EEF0FF !important;
-    color: #533BFF !important;
-    font-weight: 600 !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* Keep validation states visible — the rules above would otherwise flatten them */
-.sapMInputBaseContentWrapperError {
-    border-color: #dc2626 !important;
-}
-
-.sapMInputBaseContentWrapperWarning {
-    border-color: #eab308 !important;
-}
-
-.sapMInputBaseContentWrapperSuccess {
-    border-color: #16A34A !important;
-}
-
-/* ===== Global button design (all Emphasized/primary-action buttons app-wide) ===== */
-
-/* Verified against sap.m.ButtonRenderer source: the type class (sapMBtnEmphasized)
-   lands on the SAME element as .sapMBtnInner (the inner <span>), not the outer
-   <button> (.sapMBtn) — ".sapMBtnEmphasized .sapMBtnInner" was a dead descendant
-   selector, it never matched anything. The outer <button> needs its own rule
-   (via :has, since it carries no type-specific class of its own) so it doesn't
-   stay theme-default-height and clip the taller inner span. */
-.sapMBtn:has(.sapMBtnEmphasized) {
-    height: 46px !important;
-    box-sizing: border-box !important;
-    overflow: visible !important;
-}
-
-.sapMBtnEmphasized {
-    background: linear-gradient(135deg, #533BFF, #5A5FF4) !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 10px !important;
-    height: 46px !important;
-    line-height: 46px !important;
-    padding: 0 1rem !important;
-    box-sizing: border-box !important;
-}
-
-.sapMBtnEmphasized:hover {
-    filter: brightness(1.08);
-}
-
-.sapMBtnEmphasized .sapMBtnContent {
-    color: #FFFFFF !important;
-    font-weight: 600 !important;
-    width: 100% !important;
-    text-align: center !important;
-    line-height: 46px !important;
-    display: block !important;
-}
-
-.xyraLoginFooter {
-    margin-top: 1.75rem !important;
-}
-
-.xyraLoginFooter .sapMText {
-    color: #94A3B8 !important;
-    font-size: 0.75rem !important;
-}
-
 /* Remove default SAPUI5 grey border box on ObjectStatus badges */
 .sapMObjStatusInverted {
     border: none !important;
@@ -355,22 +137,71 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
     color: #ffffff !important;
 }
 
-/* Every earlier attempt at killing the field focus ring tied with the theme's
-   own rule on specificity and lost on load order (theme CSS loads after this
-   file). Repeating the class raises specificity for real — not a hack, that's
-   how the cascade actually works — and being last in this file wins any
-   remaining tie. This is the final word on it. */
-.sapMInputBaseContentWrapper.sapMInputBaseContentWrapper.sapMInputBaseContentWrapper,
-.sapMInputBase.sapMInputBase.sapMInputBase,
-.sapMSlt.sapMSlt.sapMSlt {
-    outline: none !important;
-    box-shadow: none !important;
-    border-color: #E2E8F0 !important;
+/* ==========================================================================
+   XYRA GLOBAL BRAND THEME - SIGNATURE ROYAL PURPLE & NEON MAGENTA GLOW
+   ========================================================================== */
+
+.sapMBtnEmphasized .sapMBtnInner,
+.sapMBtnAccept .sapMBtnInner,
+.btnPurpleAccent .sapMBtnInner,
+.btnRedAccent .sapMBtnInner,
+.xyraBtnPrimary .sapMBtnInner,
+.createUserBtn .sapMBtnInner,
+.nextStepBtn .sapMBtnInner {
+    background: linear-gradient(135deg, #3730a3 0%, #4f46e5 50%, #7c3aed 100%) !important;
+    background-image: linear-gradient(135deg, #3730a3 0%, #4f46e5 50%, #7c3aed 100%) !important;
+    color: #ffffff !important;
+    border: 2px solid #e056fd !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0 14px rgba(224, 86, 253, 0.65), 0 2px 8px rgba(55, 48, 163, 0.4) !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
-.sapMInputBaseContentWrapper.sapMInputBaseContentWrapper.sapMInputBaseContentWrapper *,
-.sapMInputBase.sapMInputBase.sapMInputBase *,
-.sapMSlt.sapMSlt.sapMSlt * {
-    outline: none !important;
-    box-shadow: none !important;
+.sapMBtnEmphasized .sapMBtnContent,
+.sapMBtnEmphasized .sapMBtnIcon,
+.sapMBtnAccept .sapMBtnContent,
+.sapMBtnAccept .sapMBtnIcon,
+.btnPurpleAccent .sapMBtnContent,
+.btnPurpleAccent .sapMBtnIcon,
+.btnRedAccent .sapMBtnContent,
+.btnRedAccent .sapMBtnIcon,
+.xyraBtnPrimary .sapMBtnContent,
+.xyraBtnPrimary .sapMBtnIcon,
+.createUserBtn .sapMBtnContent,
+.createUserBtn .sapMBtnIcon,
+.nextStepBtn .sapMBtnContent,
+.nextStepBtn .sapMBtnIcon {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Hover effect with expanded neon magenta glow matching screenshot */
+.sapMBtnEmphasized:hover .sapMBtnInner,
+.sapMBtnAccept:hover .sapMBtnInner,
+.btnPurpleAccent:hover .sapMBtnInner,
+.btnRedAccent:hover .sapMBtnInner,
+.xyraBtnPrimary:hover .sapMBtnInner,
+.createUserBtn:hover .sapMBtnInner,
+.nextStepBtn:hover .sapMBtnInner {
+    background: linear-gradient(135deg, #4338ca 0%, #5856d6 50%, #8b5cf6 100%) !important;
+    background-image: linear-gradient(135deg, #4338ca 0%, #5856d6 50%, #8b5cf6 100%) !important;
+    border-color: #f0abfc !important;
+    box-shadow: 0 0 22px rgba(224, 86, 253, 0.9), 0 4px 16px rgba(99, 102, 241, 0.5) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Active / Pressed state */
+.sapMBtnEmphasized:active .sapMBtnInner,
+.sapMBtnAccept:active .sapMBtnInner,
+.btnPurpleAccent:active .sapMBtnInner,
+.btnRedAccent:active .sapMBtnInner,
+.xyraBtnPrimary:active .sapMBtnInner,
+.createUserBtn:active .sapMBtnInner,
+.nextStepBtn:active .sapMBtnInner {
+    background: linear-gradient(135deg, #312e81 0%, #3730a3 100%) !important;
+    border-color: #c084fc !important;
+    box-shadow: 0 0 10px rgba(224, 86, 253, 0.6) !important;
+    transform: translateY(0) !important;
 }

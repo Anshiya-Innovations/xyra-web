@@ -209,7 +209,7 @@
                 <Avatar initials="R2" displaySize="S" backgroundColor="Accent3" class="sapUiTinyMarginEnd"/>
 
                 <VBox justifyContent="Center">
-                    <Title text="📜 XYRA – Reviewer 2 Dashboard" level="H4" class="sapUiNoMargin"/>
+                    <Title text="XYRA – Reviewer 2 Dashboard" level="H4" class="sapUiNoMargin"/>
                     <Text text="Manager Exception Reviewer – Second Level Review &amp; Approval" class="textMuted sapUiNoMargin"/>
                 </VBox>
 

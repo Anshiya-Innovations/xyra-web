@@ -165,7 +165,7 @@
                             class="sapUiTinyMarginBegin"/>
                         <Avatar initials="AM" displaySize="S" backgroundColor="Accent6" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
-                            <Title text="⚙️ XYRA – Automation Monitoring" level="H4" class="sapUiNoMargin"/>
+                            <Title text="XYRA – Automation Monitoring" level="H4" class="sapUiNoMargin"/>
                             <Text text="Track automated control execution schedules, deviation counts, and job logs." class="textMuted sapUiNoMargin"/>
                         </VBox>
                         <ToolbarSpacer/>

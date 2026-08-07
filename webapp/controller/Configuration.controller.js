@@ -3,91 +3,42 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "sap/ui/model/json/JSONModel",
-    "sap/ui/core/BusyIndicator",
-    "xyraweb/model/config",
-    "xyraweb/model/session"
-], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config, Session) {
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
+], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Configuration", {
 
         onInit: function () {
-            var oODataServices = new JSONModel({
-                services: [
-                    {
-                        serviceName: "API_BUSINESS_PARTNER",
-                        endpoint: "/sap/opu/odata/sap/API_BUSINESS_PARTNER",
-                        version: "V2",
-                        status: "Active",
-                        statusState: "Success"
-                    },
-                    {
-                        serviceName: "API_FINANCIAL_DOCUMENT",
-                        endpoint: "/sap/opu/odata4/sap/API_FINANCIAL_DOCUMENT/srvd/sap/0001",
-                        version: "V4",
-                        status: "Active",
-                        statusState: "Success"
-                    },
-                    {
-                        serviceName: "API_SOX_GOVERNANCE_SRV",
-                        endpoint: "/sap/opu/odata/sap/API_SOX_GOVERNANCE_SRV",
-                        version: "V2",
-                        status: "Active",
-                        statusState: "Success"
-                    },
-                    {
-                        serviceName: "API_RISK_COMPLIANCE_SRV",
-                        endpoint: "/sap/opu/odata4/sap/API_RISK_COMPLIANCE/srvd/sap/0001",
-                        version: "V4",
-                        status: "Active",
-                        statusState: "Success"
-                    }
+            var oData = {
+                systems: [
+                    { sysId: "MY8", client: "100", sysType: "Quality", hostName: "asmy800.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
+                    { sysId: "MQ8", client: "100", sysType: "Quality", hostName: "asmq801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned JAN 2024", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
+                    { sysId: "MY8", client: "000", sysType: "Quality", hostName: "asmy800.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
+                    { sysId: "MQ8", client: "000", sysType: "Quality", hostName: "asmq801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned JAN 2024", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
+                    { sysId: "MP8", client: "100", sysType: "Production", hostName: "asmp800.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
+                    { sysId: "MP8", client: "000", sysType: "Production", hostName: "asmp800.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
+                    { sysId: "MX8", client: "100", sysType: "Development", hostName: "asmx801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
+                    { sysId: "MD8", client: "100", sysType: "Development", hostName: "asmd801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
+                    { sysId: "MX8", client: "000", sysType: "Development", hostName: "asmx801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
+                    { sysId: "MD8", client: "000", sysType: "Development", hostName: "asmd801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
+                    { sysId: "MY2", client: "100", sysType: "Quality", hostName: "asmy203.jnj.com", sysDetails: "EHP7 FOR SAP ERP 6.0", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "740", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
+                    { sysId: "MQ2", client: "100", sysType: "Quality", hostName: "asmq200.jnj.com", sysDetails: "EHP7 FOR SAP ERP 6.0 - Decommissioned JAN 2024", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "740", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" }
                 ]
-            });
-            this.getView().setModel(oODataServices, "odataModel");
+            };
+            var oModel = new JSONModel(oData);
+            this.getView().setModel(oModel, "systemModel");
 
-            this._loadConnection();
-        },
-
-        _loadConnection: function () {
-            var oSession = Session.get();
-            if (!oSession) {
-                MessageBox.error("No active session. Please log in again.");
-                this.getOwnerComponent().getRouter().navTo("Login");
-                return;
-            }
-
-            BusyIndicator.show(0);
-
-            fetch(Config.AUTH_BASE_URL + "/api/system-config/getSystemConnection", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ subdomain: oSession.subdomain })
-            })
-                .then(function (oResponse) { return oResponse.json(); })
-                .then(function (oData) {
-                    BusyIndicator.hide();
-
-                    if (!oData.success) {
-                        MessageBox.error(oData.message || "Could not load connection settings.");
-                        return;
-                    }
-
-                    if (!oData.hasConnection) {
-                        return;
-                    }
-
-                    if (this.byId("sysName")) { this.byId("sysName").setValue(oData.systemName || ""); }
-                    if (this.byId("hostName")) { this.byId("hostName").setValue(oData.hostName || ""); }
-                    if (this.byId("sysId")) { this.byId("sysId").setValue(oData.systemId || ""); }
-                    if (this.byId("client")) { this.byId("client").setValue(oData.client || ""); }
-                    if (this.byId("instanceNum")) { this.byId("instanceNum").setValue(oData.instanceNo || ""); }
-                    if (this.byId("port")) { this.byId("port").setValue(oData.port || ""); }
-                }.bind(this))
-                .catch(function () {
-                    BusyIndicator.hide();
-                    MessageBox.error("Could not reach the server. Is xyra-core running?");
-                });
+            var oHistoryData = {
+                entries: [
+                    { timestamp: "07-Aug-2026 16:45 IST", action: "System Created", sysId: "MY8", user: "Admin", status: "Active", statusState: "Success" },
+                    { timestamp: "07-Aug-2026 15:30 IST", action: "System Modified", sysId: "MQ8", user: "Admin", status: "Decommissioned", statusState: "Warning" },
+                    { timestamp: "06-Aug-2026 11:20 IST", action: "System Verified", sysId: "MP8", user: "AuditLead", status: "Connected", statusState: "Success" }
+                ]
+            };
+            var oHistoryModel = new JSONModel(oHistoryData);
+            this.getView().setModel(oHistoryModel, "historyModel");
         },
 
         onSideNavToggle: function () {
@@ -109,237 +60,210 @@ sap.ui.define([
             }
         },
 
-        onAdmin: function () {
-            this.getOwnerComponent().getRouter().navTo("Admin");
+        onOpenAddSystemDialog: function () {
+            var oDialog = this.byId("addSystemDialog");
+            if (oDialog) {
+                if (this.byId("newSysId")) { this.byId("newSysId").setValue(""); }
+                if (this.byId("newClient")) { this.byId("newClient").setValue("100"); }
+                if (this.byId("newHostName")) { this.byId("newHostName").setValue(""); }
+                if (this.byId("newSysDetails")) { this.byId("newSysDetails").setValue(""); }
+                oDialog.open();
+            }
         },
 
-        onUserManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("UserManagement");
+        onCloseAddSystemDialog: function () {
+            var oDialog = this.byId("addSystemDialog");
+            if (oDialog) {
+                oDialog.close();
+            }
         },
 
+        onSaveNewSystem: function () {
+            var sSysId = this.byId("newSysId") ? this.byId("newSysId").getValue().trim() : "";
+            var sClient = this.byId("newClient") ? this.byId("newClient").getValue().trim() : "";
+            var sSysType = this.byId("newSysTypeSelect") ? this.byId("newSysTypeSelect").getSelectedKey() : "Quality";
+            var sHostName = this.byId("newHostName") ? this.byId("newHostName").getValue().trim() : "";
+            var sSysDetails = this.byId("newSysDetails") ? this.byId("newSysDetails").getValue().trim() : "";
+            var sSector = this.byId("newSector") ? this.byId("newSector").getValue().trim() : "MedTech";
+            var sPlatform = this.byId("newPlatform") ? this.byId("newPlatform").getValue().trim() : "USROTC";
+            var sRegion = this.byId("newRegion") ? this.byId("newRegion").getValue().trim() : "North America";
+            var sClientType = this.byId("newClientTypeSelect") ? this.byId("newClientTypeSelect").getSelectedKey() : "ABAP";
+            var sSysVersion = this.byId("newSysVersion") ? this.byId("newSysVersion").getValue().trim() : "750";
+            var sLogonGroup = this.byId("newLogonGroup") ? this.byId("newLogonGroup").getValue().trim() : "PUBLIC";
+            var sPortNumber = this.byId("newPortNumber") ? this.byId("newPortNumber").getValue().trim() : "3600";
+            var sInstanceNo = this.byId("newInstanceNo") ? this.byId("newInstanceNo").getValue().trim() : "00";
 
-        onControlManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("ControlManagement");
+            if (!sSysId || !sClient || !sHostName) {
+                MessageBox.error("Please fill in mandatory fields: System ID, Client, and Host Name.");
+                return;
+            }
+
+            var oModel = this.getView().getModel("systemModel");
+            var aSystems = oModel.getProperty("/systems") || [];
+
+            aSystems.unshift({
+                sysId: sSysId,
+                client: sClient,
+                sysType: sSysType,
+                hostName: sHostName,
+                sysDetails: sSysDetails || ("EHP4 FOR SAP CRM 7.0"),
+                sector: sSector,
+                platform: sPlatform,
+                region: sRegion,
+                clientType: sClientType,
+                sysVersion: sSysVersion,
+                logonGroup: sLogonGroup,
+                portNumber: sPortNumber,
+                instanceNo: sInstanceNo
+            });
+
+            oModel.setProperty("/systems", aSystems);
+            this.onCloseAddSystemDialog();
+
+            MessageToast.show("New SAP System '" + sSysId + "' created successfully!");
         },
 
-        onControlMonitoring: function () {
-            this.getOwnerComponent().getRouter().navTo("ControlMonitoring");
+        onEditSystem: function (oEvent) {
+            var oItem = oEvent.getSource().getBindingContext("systemModel").getObject();
+            this._editingSystemItem = oItem;
+
+            var oDialog = this.byId("editSystemDialog");
+            if (oDialog) {
+                if (this.byId("editSysId")) { this.byId("editSysId").setValue(oItem.sysId); }
+                if (this.byId("editClient")) { this.byId("editClient").setValue(oItem.client); }
+                if (this.byId("editSysTypeSelect")) { this.byId("editSysTypeSelect").setSelectedKey(oItem.sysType); }
+                if (this.byId("editHostName")) { this.byId("editHostName").setValue(oItem.hostName); }
+                if (this.byId("editSysDetails")) { this.byId("editSysDetails").setValue(oItem.sysDetails); }
+                if (this.byId("editSector")) { this.byId("editSector").setValue(oItem.sector); }
+                if (this.byId("editPlatform")) { this.byId("editPlatform").setValue(oItem.platform); }
+                if (this.byId("editRegion")) { this.byId("editRegion").setValue(oItem.region); }
+                if (this.byId("editClientTypeSelect")) { this.byId("editClientTypeSelect").setSelectedKey(oItem.clientType || "ABAP"); }
+                if (this.byId("editSysVersion")) { this.byId("editSysVersion").setValue(oItem.sysVersion); }
+                if (this.byId("editLogonGroup")) { this.byId("editLogonGroup").setValue(oItem.logonGroup); }
+                if (this.byId("editPortNumber")) { this.byId("editPortNumber").setValue(oItem.portNumber); }
+                if (this.byId("editInstanceNo")) { this.byId("editInstanceNo").setValue(oItem.instanceNo); }
+                oDialog.open();
+            }
         },
 
-        onAIInsights: function () {
-            this.getOwnerComponent().getRouter().navTo("AIInsights");
+        onCloseEditSystemDialog: function () {
+            var oDialog = this.byId("editSystemDialog");
+            if (oDialog) {
+                oDialog.close();
+            }
         },
 
-        onSOXCompliance: function () {
-            this.getOwnerComponent().getRouter().navTo("SOXCompliance");
+        onSaveEditedSystem: function () {
+            if (!this._editingSystemItem) {
+                return;
+            }
+
+            this._editingSystemItem.client = this.byId("editClient") ? this.byId("editClient").getValue().trim() : this._editingSystemItem.client;
+            this._editingSystemItem.sysType = this.byId("editSysTypeSelect") ? this.byId("editSysTypeSelect").getSelectedKey() : this._editingSystemItem.sysType;
+            this._editingSystemItem.hostName = this.byId("editHostName") ? this.byId("editHostName").getValue().trim() : this._editingSystemItem.hostName;
+            this._editingSystemItem.sysDetails = this.byId("editSysDetails") ? this.byId("editSysDetails").getValue().trim() : this._editingSystemItem.sysDetails;
+            this._editingSystemItem.sector = this.byId("editSector") ? this.byId("editSector").getValue().trim() : this._editingSystemItem.sector;
+            this._editingSystemItem.platform = this.byId("editPlatform") ? this.byId("editPlatform").getValue().trim() : this._editingSystemItem.platform;
+            this._editingSystemItem.region = this.byId("editRegion") ? this.byId("editRegion").getValue().trim() : this._editingSystemItem.region;
+            this._editingSystemItem.clientType = this.byId("editClientTypeSelect") ? this.byId("editClientTypeSelect").getSelectedKey() : this._editingSystemItem.clientType;
+            this._editingSystemItem.sysVersion = this.byId("editSysVersion") ? this.byId("editSysVersion").getValue().trim() : this._editingSystemItem.sysVersion;
+            this._editingSystemItem.logonGroup = this.byId("editLogonGroup") ? this.byId("editLogonGroup").getValue().trim() : this._editingSystemItem.logonGroup;
+            this._editingSystemItem.portNumber = this.byId("editPortNumber") ? this.byId("editPortNumber").getValue().trim() : this._editingSystemItem.portNumber;
+            this._editingSystemItem.instanceNo = this.byId("editInstanceNo") ? this.byId("editInstanceNo").getValue().trim() : this._editingSystemItem.instanceNo;
+
+            this.getView().getModel("systemModel").refresh(true);
+            this.onCloseEditSystemDialog();
+
+            MessageToast.show("SAP System '" + this._editingSystemItem.sysId + "' updated successfully!");
         },
 
-        onReports: function () {
-            this.getOwnerComponent().getRouter().navTo("Reports");
+        onDeleteSystem: function (oEvent) {
+            var oItem = oEvent.getSource().getBindingContext("systemModel").getObject();
+            var oModel = this.getView().getModel("systemModel");
+            var aSystems = oModel.getProperty("/systems") || [];
+
+            MessageBox.confirm("Are you sure you want to delete SAP System '" + oItem.sysId + "' (Client " + oItem.client + ")?", {
+                title: "Delete SAP System",
+                actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+                onClose: function (oAction) {
+                    if (oAction === MessageBox.Action.YES) {
+                        var iIndex = aSystems.indexOf(oItem);
+                        if (iIndex !== -1) {
+                            aSystems.splice(iIndex, 1);
+                            oModel.setProperty("/systems", aSystems);
+                            MessageToast.show("SAP System '" + oItem.sysId + "' deleted.");
+                        }
+                    }
+                }
+            });
         },
 
-        onAuditLogs: function () {
-            this.getOwnerComponent().getRouter().navTo("AuditLogs");
+        onOpenSystemHistory: function () {
+            var oDialog = this.byId("systemHistoryDialog");
+            if (oDialog) {
+                oDialog.open();
+            }
         },
 
-        onConfiguration: function () {
-            this.getOwnerComponent().getRouter().navTo("Configuration");
+        onCloseSystemHistoryDialog: function () {
+            var oDialog = this.byId("systemHistoryDialog");
+            if (oDialog) {
+                oDialog.close();
+            }
         },
 
-        onAccessManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("AccessManagement");
-        },
+        onSearchSystems: function (oEvent) {
+            var sQuery = "";
+            if (oEvent && typeof oEvent.getParameter === "function") {
+                var sParamQuery = oEvent.getParameter("query");
+                var sParamNewVal = oEvent.getParameter("newValue");
+                sQuery = (sParamQuery !== undefined && sParamQuery !== null && sParamQuery !== "") ? sParamQuery : ((sParamNewVal !== undefined && sParamNewVal !== null) ? sParamNewVal : "");
+            }
+            if ((!sQuery || sQuery === "") && this.byId("searchSystemId")) {
+                sQuery = this.byId("searchSystemId").getValue();
+            }
+            sQuery = sQuery ? sQuery.trim() : "";
 
-        onRiskAnalytics: function () {
-            this.getOwnerComponent().getRouter().navTo("RiskAnalytics");
-        },
+            var aFilters = [];
+            if (sQuery) {
+                var oFilterId = new Filter("sysId", FilterOperator.Contains, sQuery);
+                var oFilterHost = new Filter("hostName", FilterOperator.Contains, sQuery);
+                var oFilterType = new Filter("sysType", FilterOperator.Contains, sQuery);
+                var oFilterDetails = new Filter("sysDetails", FilterOperator.Contains, sQuery);
 
-        onEmergencyAccess: function () {
-            this.getOwnerComponent().getRouter().navTo("EmergencyAccess");
-        },
+                aFilters.push(new Filter({
+                    filters: [oFilterId, oFilterHost, oFilterType, oFilterDetails],
+                    and: false
+                }));
+            }
 
-        onSystemHealth: function () {
-            this.getOwnerComponent().getRouter().navTo("SystemHealth");
-        },
-
-        onProfile: function () {
-            this.getOwnerComponent().getRouter().navTo("Profile");
-        },
-
-        onNumberLiveChange: function (oEvent) {
-            var sVal = oEvent.getParameter("value");
-            if (sVal) {
-                var sCleanVal = sVal.replace(/[^0-9]/g, "");
-                if (sVal !== sCleanVal) {
-                    oEvent.getSource().setValue(sCleanVal);
+            var oTable = this.byId("systemsTable");
+            if (oTable) {
+                var oBinding = oTable.getBinding("items");
+                if (oBinding) {
+                    oBinding.filter(aFilters);
                 }
             }
         },
 
-        onTestConnection: function () {
-            var oSession = Session.get();
-            if (!oSession) {
-                MessageBox.error("No active session. Please log in again.");
-                return;
-            }
-
-            var sHostName = this.byId("hostName") ? this.byId("hostName").getValue().trim() : "";
-            var sPort = this.byId("port") ? this.byId("port").getValue().trim() : "";
-            var oStatus = this.byId("connectionStatusText");
-            var oLastValidation = this.byId("lastValidationText");
-
-            if (!sHostName || !sPort) {
-                MessageToast.show("Enter Host Name/IP and Port before testing.");
-                return;
-            }
-
-            BusyIndicator.show(0);
-
-            fetch(Config.AUTH_BASE_URL + "/api/system-config/testSystemConnection", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ subdomain: oSession.subdomain, hostName: sHostName, port: sPort })
-            })
-                .then(function (oResponse) { return oResponse.json(); })
-                .then(function (oData) {
-                    BusyIndicator.hide();
-
-                    if (oStatus) {
-                        oStatus.setText(oData.success ? "Connected" : "Unreachable");
-                        oStatus.setState(oData.success ? "Success" : "Error");
-                        oStatus.setIcon(oData.success ? "sap-icon://sys-enter-2" : "sap-icon://alert");
-                    }
-                    if (oLastValidation) {
-                        oLastValidation.setText(new Date().toLocaleString());
-                    }
-
-                    MessageToast.show(oData.message);
-                })
-                .catch(function () {
-                    BusyIndicator.hide();
-                    MessageToast.show("Could not reach the server. Is xyra-core running?");
-                });
+        onExportSystems: function () {
+            MessageToast.show("Exporting SAP System Landscape directory data...");
         },
 
-        onSaveConfiguration: function () {
-            var oSession = Session.get();
-            if (!oSession) {
-                MessageBox.error("No active session. Please log in again.");
-                return;
-            }
+        onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
+        onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
+        onAIInsights: function () { this.getOwnerComponent().getRouter().navTo("AIInsights"); },
+        onSOXCompliance: function () { this.getOwnerComponent().getRouter().navTo("SOXCompliance"); },
+        onReports: function () { this.getOwnerComponent().getRouter().navTo("Reports"); },
+        onAuditLogs: function () { this.getOwnerComponent().getRouter().navTo("AuditLogs"); },
+        onConfiguration: function () { this.getOwnerComponent().getRouter().navTo("Configuration"); },
+        onAccessManagement: function () { this.getOwnerComponent().getRouter().navTo("AccessManagement"); },
+        onRiskAnalytics: function () { this.getOwnerComponent().getRouter().navTo("RiskAnalytics"); },
+        onSystemHealth: function () { this.getOwnerComponent().getRouter().navTo("SystemHealth"); },
+        onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); },
 
-            var sSystemId = this.byId("sysId") ? this.byId("sysId").getValue().trim() : "";
-            var sClient = this.byId("client") ? this.byId("client").getValue().trim() : "";
-
-            if (!sSystemId || !sClient) {
-                MessageToast.show("System ID (SID) and Client are required.");
-                return;
-            }
-
-            BusyIndicator.show(0);
-
-            fetch(Config.AUTH_BASE_URL + "/api/system-config/saveSystemConnection", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    subdomain: oSession.subdomain,
-                    systemName: this.byId("sysName") ? this.byId("sysName").getValue() : "",
-                    hostName: this.byId("hostName") ? this.byId("hostName").getValue() : "",
-                    systemId: sSystemId,
-                    client: sClient,
-                    instanceNo: this.byId("instanceNum") ? this.byId("instanceNum").getValue() : "",
-                    port: this.byId("port") ? this.byId("port").getValue() : "",
-                    jwtToken: this.byId("jwtToken") ? this.byId("jwtToken").getValue() : ""
-                })
-            })
-                .then(function (oResponse) { return oResponse.json(); })
-                .then(function (oData) {
-                    BusyIndicator.hide();
-
-                    if (!oData.success) {
-                        MessageToast.show(oData.message || "Could not save configuration.");
-                        return;
-                    }
-
-                    MessageToast.show("Configuration Saved Successfully.");
-                })
-                .catch(function () {
-                    BusyIndicator.hide();
-                    MessageToast.show("Could not reach the server. Is xyra-core running?");
-                });
-        },
-
-        onResetConfiguration: function () {
-            if (this.byId("sysName")) { this.byId("sysName").setValue(""); }
-            if (this.byId("hostName")) { this.byId("hostName").setValue(""); }
-            if (this.byId("sysId")) { this.byId("sysId").setValue(""); }
-            if (this.byId("client")) { this.byId("client").setValue(""); }
-            if (this.byId("instanceNum")) { this.byId("instanceNum").setValue(""); }
-            if (this.byId("port")) { this.byId("port").setValue(""); }
-            if (this.byId("jwtToken")) { this.byId("jwtToken").setValue(""); }
-            MessageToast.show("Configuration fields reset successfully.");
-        },
-
-        onTestConnector: function () {
-            MessageToast.show("Cloud Connector Test Successful: Location ID US10_DC_EAST Online.");
-        },
-
-        onCreateDestination: function () {
-            MessageToast.show("Destination Service Instance Created Successfully.");
-        },
-
-        onTestDestination: function () {
-            MessageToast.show("Destination Endpoint Reachable: S4HANA_DEST_SERVICE Active.");
-        },
-
-        onTestService: function (oEvent) {
-            var oItem = oEvent.getSource().getBindingContext("odataModel").getObject();
-            MessageToast.show("Testing OData Service '" + oItem.serviceName + "'... Status: 200 OK");
-        },
-
-        onActivateService: function (oEvent) {
-            var oItem = oEvent.getSource().getBindingContext("odataModel").getObject();
-            MessageToast.show("OData Service '" + oItem.serviceName + "' Activated.");
-        },
-
-        onStartMonitoring: function () {
-            MessageToast.show("Automated Control Monitoring Started Successfully!");
-        },
-
-        onNextStep: function () {
-            var oWizard = this.byId("configWizard");
-            if (oWizard) {
-                oWizard.nextStep();
-            }
-        },
-
-        onAdminProfilePress: function (oEvent) {
-            var oButton = oEvent.getSource();
-            var oPopover = this.byId("configProfilePopover");
-            if (oPopover) {
-                oPopover.openBy(oButton);
-            }
-        },
-
-        onNotificationPress: function () {
-            MessageToast.show("System Notifications: All BTP & S/4HANA Connections Operational");
-        },
-
-        onSearchPress: function () {
-            MessageToast.show("Search initiated");
-        },
-
-        onHelpPress: function () {
-            MessageToast.show("SAP BTP Connectivity Documentation loaded");
-        },
-
-        onQuickAction: function (oEvent) {
-            var sText = oEvent.getSource().getText();
-            MessageToast.show("Action triggered: " + sText);
-        },
-
+        onNotificationPress: function () { MessageToast.show("No new notifications."); },
         onLogout: function () {
-            Session.clear();
             MessageToast.show("Logged Out Successfully");
             this.getOwnerComponent().getRouter().navTo("Login");
         }

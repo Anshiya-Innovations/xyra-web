@@ -335,7 +335,7 @@
                             class="sapUiTinyMarginBegin"/>
                         <Avatar initials="CM" displaySize="S" backgroundColor="Accent8" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
-                            <Title text="🛡️ Control Management" level="H4" class="sapUiNoMargin"/>
+                            <Title text="Control Management" level="H4" class="sapUiNoMargin"/>
                             <Text text="Configure Security Control Rules, Target Environments (DEV/QAS/PRD), and Execution Frequencies." class="textMuted sapUiNoMargin"/>
                         </VBox>
                         <ToolbarSpacer/>
