@@ -3,8 +3,6 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
-    xmlns:layout="sap.ui.layout"
-    xmlns:form="sap.ui.layout.form"
     xmlns:tnt="sap.tnt"
     height="100%">
 
@@ -77,60 +75,73 @@
                                     showIcon="true"
                                     class="sapUiSmallMarginBottom"/>
 
-                                <form:SimpleForm editable="true" layout="ColumnLayout">
-                                    <form:content>
-                                        <core:Title text="System Identification"/>
-
-                                        <Label text="System ID (SID)" required="true"/>
+                                <Title text="System Identification" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="System ID (SID)" required="true" class="xyraLoginLabel"/>
                                         <Input id="newSysId" placeholder="e.g. MY8, MQ8, MP8"/>
-
-                                        <Label text="Client" required="true"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Client" required="true" class="xyraLoginLabel"/>
                                         <Input id="newClient" placeholder="e.g. 100, 000"/>
-
-                                        <Label text="System Type" required="true"/>
-                                        <Select id="newSysTypeSelect" selectedKey="Quality">
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="System Type" required="true" class="xyraLoginLabel"/>
+                                        <Select id="newSysTypeSelect" width="100%" selectedKey="Quality">
                                             <core:Item key="Development" text="Development"/>
                                             <core:Item key="Quality" text="Quality"/>
                                             <core:Item key="Production" text="Production"/>
                                         </Select>
-
-                                        <Label text="Host Name" required="true"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Host Name" required="true" class="xyraLoginLabel"/>
                                         <Input id="newHostName" placeholder="e.g. asmy800.jnj.com"/>
-
-                                        <Label text="System Details"/>
+                                    </VBox>
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="System Details" class="xyraLoginLabel"/>
                                         <Input id="newSysDetails" placeholder="e.g. EHP4 FOR SAP CRM 7.0"/>
+                                    </VBox>
+                                </HBox>
 
-                                        <core:Title text="Environment &amp; Network"/>
-
-                                        <Label text="Sector"/>
+                                <Title text="Environment &amp; Network" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Sector" class="xyraLoginLabel"/>
                                         <Input id="newSector" value="MedTech" placeholder="e.g. MedTech"/>
-
-                                        <Label text="Platform"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Platform" class="xyraLoginLabel"/>
                                         <Input id="newPlatform" value="USROTC" placeholder="e.g. USROTC"/>
-
-                                        <Label text="Region"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Region" class="xyraLoginLabel"/>
                                         <Input id="newRegion" value="North America" placeholder="e.g. North America"/>
-
-                                        <Label text="Client Type"/>
-                                        <Select id="newClientTypeSelect" selectedKey="ABAP">
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Client Type" class="xyraLoginLabel"/>
+                                        <Select id="newClientTypeSelect" width="100%" selectedKey="ABAP">
                                             <core:Item key="ABAP" text="ABAP"/>
                                             <core:Item key="JAVA" text="JAVA"/>
                                             <core:Item key="S4/HANA" text="S4/HANA"/>
                                         </Select>
-
-                                        <Label text="System Version"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="System Version" class="xyraLoginLabel"/>
                                         <Input id="newSysVersion" value="750" placeholder="e.g. 750, 740"/>
-
-                                        <Label text="Logon Group"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Logon Group" class="xyraLoginLabel"/>
                                         <Input id="newLogonGroup" value="PUBLIC" placeholder="e.g. PUBLIC"/>
-
-                                        <Label text="Port Number"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Port Number" class="xyraLoginLabel"/>
                                         <Input id="newPortNumber" value="3600" placeholder="e.g. 3600"/>
-
-                                        <Label text="Instance Number"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Instance Number" class="xyraLoginLabel"/>
                                         <Input id="newInstanceNo" value="00" placeholder="e.g. 00"/>
-                                    </form:content>
-                                </form:SimpleForm>
+                                    </VBox>
+                                </HBox>
                             </VBox>
                         </content>
                         <beginButton>
@@ -154,60 +165,73 @@
                                     showIcon="true"
                                     class="sapUiSmallMarginBottom"/>
 
-                                <form:SimpleForm editable="true" layout="ColumnLayout">
-                                    <form:content>
-                                        <core:Title text="System Identification"/>
-
-                                        <Label text="System ID (SID)" required="true"/>
+                                <Title text="System Identification" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="System ID (SID)" required="true" class="xyraLoginLabel"/>
                                         <Input id="editSysId" editable="false"/>
-
-                                        <Label text="Client" required="true"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Client" required="true" class="xyraLoginLabel"/>
                                         <Input id="editClient"/>
-
-                                        <Label text="System Type" required="true"/>
-                                        <Select id="editSysTypeSelect" selectedKey="Quality">
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="System Type" required="true" class="xyraLoginLabel"/>
+                                        <Select id="editSysTypeSelect" width="100%" selectedKey="Quality">
                                             <core:Item key="Development" text="Development"/>
                                             <core:Item key="Quality" text="Quality"/>
                                             <core:Item key="Production" text="Production"/>
                                         </Select>
-
-                                        <Label text="Host Name" required="true"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Host Name" required="true" class="xyraLoginLabel"/>
                                         <Input id="editHostName"/>
-
-                                        <Label text="System Details"/>
+                                    </VBox>
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="System Details" class="xyraLoginLabel"/>
                                         <Input id="editSysDetails"/>
+                                    </VBox>
+                                </HBox>
 
-                                        <core:Title text="Environment &amp; Network"/>
-
-                                        <Label text="Sector"/>
+                                <Title text="Environment &amp; Network" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Sector" class="xyraLoginLabel"/>
                                         <Input id="editSector"/>
-
-                                        <Label text="Platform"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Platform" class="xyraLoginLabel"/>
                                         <Input id="editPlatform"/>
-
-                                        <Label text="Region"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Region" class="xyraLoginLabel"/>
                                         <Input id="editRegion"/>
-
-                                        <Label text="Client Type"/>
-                                        <Select id="editClientTypeSelect">
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Client Type" class="xyraLoginLabel"/>
+                                        <Select id="editClientTypeSelect" width="100%">
                                             <core:Item key="ABAP" text="ABAP"/>
                                             <core:Item key="JAVA" text="JAVA"/>
                                             <core:Item key="S4/HANA" text="S4/HANA"/>
                                         </Select>
-
-                                        <Label text="System Version"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="System Version" class="xyraLoginLabel"/>
                                         <Input id="editSysVersion"/>
-
-                                        <Label text="Logon Group"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Logon Group" class="xyraLoginLabel"/>
                                         <Input id="editLogonGroup"/>
-
-                                        <Label text="Port Number"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Port Number" class="xyraLoginLabel"/>
                                         <Input id="editPortNumber"/>
-
-                                        <Label text="Instance Number"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Instance Number" class="xyraLoginLabel"/>
                                         <Input id="editInstanceNo"/>
-                                    </form:content>
-                                </form:SimpleForm>
+                                    </VBox>
+                                </HBox>
                             </VBox>
                         </content>
                         <beginButton>
@@ -278,11 +302,10 @@
                     <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
 
                         <!-- TOP ACTION BUTTONS BAR -->
-                        <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
-                            <Button text="+ Add New System" icon="sap-icon://add" press="onOpenAddSystemDialog" class="btnPurpleAccent sapUiSmallMarginEnd"/>
-                            <Button text="System History" icon="sap-icon://history" press="onOpenSystemHistory" class="btnPurpleAccent"/>
-                            <ToolbarSpacer/>
-                            <SearchField id="searchSystemId" width="16rem" placeholder="Search System ID / Host..." search="onSearchSystems" liveChange="onSearchSystems"/>
+                        <HBox justifyContent="End" alignItems="Center" class="sapUiSmallMarginBottom">
+                            <SearchField id="searchSystemId" width="16rem" placeholder="Search System ID / Host..." search="onSearchSystems" liveChange="onSearchSystems" class="sapUiSmallMarginEnd"/>
+                            <Button text="System History" icon="sap-icon://history" press="onOpenSystemHistory" class="xyraBtnSecondary sapUiSmallMarginEnd"/>
+                            <Button text="Add New System" icon="sap-icon://add" type="Emphasized" press="onOpenAddSystemDialog"/>
                         </HBox>
 
                         <!-- SAP SYSTEMS MASTER LANDSCAPE TABLE -->
@@ -333,7 +356,7 @@
 
                         <!-- BOTTOM EXPORT ACTION BAR -->
                         <HBox justifyContent="Start" class="sapUiSmallMarginTop">
-                            <Button text="Export" icon="sap-icon://download" press="onExportSystems" class="btnPurpleAccent"/>
+                            <Button text="Export" icon="sap-icon://download" press="onExportSystems" class="xyraBtnSecondary"/>
                         </HBox>
 
                     </VBox>

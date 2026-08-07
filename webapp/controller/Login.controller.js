@@ -5,7 +5,8 @@ sap.ui.define([
     "sap/ui/core/BusyIndicator",
     "sap/ui/core/ValueState",
     "xyraweb/model/config",
-    "xyraweb/model/session"
+    "xyraweb/model/session",
+    "xyraweb/model/focusRing"
 ], function (
     Controller,
     UIComponent,
@@ -13,7 +14,8 @@ sap.ui.define([
     BusyIndicator,
     ValueState,
     Config,
-    Session
+    Session,
+    killFocusRing
 ) {
     "use strict";
 
@@ -51,30 +53,8 @@ sap.ui.define([
 
         },
 
-        // ponytail: CSS alone couldn't beat the theme's focus-ring rule after
-        // several rounds of raising specificity — inline style (especially
-        // !important) outranks every stylesheet rule regardless of selector
-        // specificity or load order, so force it from here instead. Capture
-        // phase + walking to the view root covers whichever element actually
-        // owns the ring, without needing to know which one that is. Guarded so
-        // the listener is only attached once even though onAfterRendering can
-        // fire more than once.
         onAfterRendering: function () {
-            var oDomRef = this.getView().getDomRef();
-            if (!oDomRef || oDomRef.dataset.focusRingKilled) { return; }
-            oDomRef.dataset.focusRingKilled = "true";
-            oDomRef.addEventListener("focusin", function (oEvent) {
-                var el = oEvent.target;
-                while (el && el !== oDomRef) {
-                    el.style.setProperty("outline", "none", "important");
-                    el.style.setProperty("box-shadow", "none", "important");
-                    // outline/box-shadow weren't it — what's actually visible tracks
-                    // the border-radius too cleanly to be either of those, it's a
-                    // plain border-color swap on focus that never got touched.
-                    el.style.setProperty("border-color", "#E2E8F0", "important");
-                    el = el.parentElement;
-                }
-            }, true);
+            killFocusRing(this.getView());
         },
 
         onRoleChange: function (oEvent) {

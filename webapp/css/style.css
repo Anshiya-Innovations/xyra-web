@@ -137,6 +137,73 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
     color: #ffffff !important;
 }
 
+/* ===== Add/Edit System dialog (Configuration page) — field spacing =====
+   SimpleForm/ColumnLayout's own cell sizing kept clipping the fields' custom
+   46px height (its cells assume the theme's default compact height) — swapped
+   the dialog's markup for a plain wrapping HBox of Label+Input VBox pairs,
+   which has no framework-owned cell to fight. This is just the gap between
+   those wrapped field groups. */
+.xyraFieldGroup {
+    margin-bottom: 1rem !important;
+}
+
+/* Verified against sap.m.DialogRenderer source: scrollable content area is
+   .sapMDialogScrollCont, footer button bar is .sapMDialogFooter. The last
+   field row was sitting flush against the footer with no breathing room, and
+   the footer bar itself was tight around the buttons. */
+.sapMDialogScrollCont {
+    padding-bottom: 1.5rem !important;
+}
+
+.sapMDialogFooter {
+    /* vertical padding must clear the 16px corner radius below, or a button
+       sitting flush in that corner gets its own corners clipped by it.
+       height:auto matters here — the theme's footer bar likely has a fixed
+       (not just minimum) height that doesn't grow for the added padding, so
+       the button was overflowing that fixed box and .sapMDialog's own
+       overflow:hidden was slicing off the part that stuck out. */
+    height: auto !important;
+    min-height: 3.5rem !important;
+    padding: 0.65rem 1.5rem !important;
+    box-sizing: border-box !important;
+    background-color: #FFFFFF !important;
+    border-radius: 0 0 16px 16px !important;
+}
+
+.sapMDialogFooter .sapMBar,
+.sapMDialogFooter .sapMIBar {
+    height: auto !important;
+    box-sizing: border-box !important;
+}
+
+/* Confirmed via DevTools inspection: the actual constrained element is the
+   Dialog's auto-generated footer Toolbar, div.sapMIBar.sapMTBInactive.sapMTB
+   — computed at a fixed 40px height / 0px vertical padding, beating the
+   broader rule above. Matching its exact class combo to out-specificity it. */
+.sapMDialogFooter .sapMIBar.sapMTBInactive.sapMTB {
+    height: auto !important;
+    min-height: 3.5rem !important;
+    padding: 0.65rem 1.5rem !important;
+    box-sizing: border-box !important;
+}
+
+/* overflow:hidden alone (clipping to whatever radius the dialog already had)
+   didn't close the gap — forcing the same explicit value on both the dialog
+   and the footer above instead, so they can't mismatch regardless of what
+   the theme's own radius actually is. */
+.sapMDialog {
+    border-radius: 16px !important;
+    overflow: hidden !important;
+}
+
+/* The global .sapMBar rule below (min-height 4.5rem) is meant for the main
+   page's OverflowToolbar header — it also unintentionally inflates the
+   dialog's own title bar (.sapMDialogHeader wraps a Bar too), eating into the
+   room available for content/footer. Scoped back down for dialogs only. */
+.sapMDialogHeader .sapMBar {
+    min-height: 3rem !important;
+}
+
 /* ===== Modern Login Page ===== */
 
 .xyraLoginBg {
@@ -306,6 +373,99 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
     box-shadow: none !important;
 }
 
+/* ===== SearchField — same field language as Input/Select above =====
+   Verified against sap.m.SearchFieldRenderer source: outer box is .sapMSF,
+   the text input is .sapMSFI, the search icon button is .sapMSFB.
+   The inner .sapMSFI already rendered as a single clean box on its own —
+   giving the outer .sapMSF a border too was what created the double-border
+   look. Chrome lives on the inner box only now; outer is just a transparent
+   sizing wrapper. */
+.sapMSF,
+.sapMSFF {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    padding: 0 !important;
+    height: 46px !important;
+    position: relative !important;
+}
+
+/* Deliberately not resetting margin here — the SearchField's own root is
+   .sapMSF, so margin:0 would cancel the sapUiSmallMarginEnd utility class the
+   view applies to space it from the next button (which it did, and made the
+   two sit flush with no gap). */
+
+/* Never ruled out the outer wrapper/form itself getting its own focus ring —
+   only the inner input was covered. If the theme hangs one on .sapMSF or
+   .sapMSFF (a div/form, not the actual focused element, but a focus-within
+   target), it'd sit slightly offset from the inner box's border — exactly a
+   second, misaligned ring around the first. */
+.sapMSF:focus-within,
+.sapMSFF:focus-within {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.sapMSFI {
+    width: 100% !important;
+    height: 46px !important;
+    line-height: 46px !important;
+    padding-left: 1rem !important;
+    padding-right: 2.75rem !important;
+    box-sizing: border-box !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 10px !important;
+    background-color: #F8FAFC !important;
+    color: #0F172A !important;
+    outline: none !important;
+    box-shadow: none !important;
+    /* it's a real <input type="search"> — appearance:textfield keeps the
+       browser rendering it as a native form control, including its OWN
+       native focus glow that plain outline:none can't touch (it's not a CSS
+       outline, it's browser-painted chrome). That's what came back as a
+       second border on focus. appearance:none strips native rendering
+       entirely instead; the resting-state double border was actually fixed
+       by .sapMSFF's own border:none above, not by this value. */
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+/* UI5 renders its own reset (X) icon via .sapMSFR — the browser's native
+   type="search" cancel button would double up with it otherwise. */
+.sapMSFI::-webkit-search-cancel-button,
+.sapMSFI::-webkit-search-decoration {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+.sapMSF:hover .sapMSFI,
+.sapMSF:focus-within .sapMSFI {
+    border-color: #533BFF !important;
+}
+
+.sapMSFB {
+    color: #64748B !important;
+    border: none !important;
+    background: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    /* the icon (.sapMSFS search / .sapMSFR reset) is a sibling of .sapMSFI, not
+       inside it — pin it on top of the input's own box (now positioned via
+       .sapMSFF above) instead of letting it fall wherever the theme's default
+       layout leaves it once the input stopped spanning the outer container.
+       Flex here (not just top:50%/transform) centers the actual glyph, same
+       fix as the icon-only button centering issue earlier. */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: absolute !important;
+    right: 0.75rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+
 /* ===== Global button design (all Emphasized/primary-action buttons app-wide) =====
    Verified against sap.m.ButtonRenderer source: the type class (sapMBtnEmphasized)
    lands on the inner <span class="sapMBtnInner">, not the outer <button>
@@ -317,6 +477,57 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
     height: 46px !important;
     box-sizing: border-box !important;
     overflow: visible !important;
+}
+
+/* Icon-only buttons (Edit/Delete row actions: no text, so ButtonRenderer never
+   emits a .sapMBtnContent span at all) were only getting the line-height trick
+   built for text buttons — icon-font glyphs don't sit centered on that the
+   way text does. Flexbox actually centers the rendered box instead of relying
+   on font metrics; scoped to "no .sapMBtnContent inside" so it can't touch
+   the text buttons' already-working centering. */
+.sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)) {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* The Emphasized/Reject icon rules further down still set line-height: 46px
+   on .sapMBtnIcon (needed for icon+text buttons like Save/Logout, where the
+   icon is a sibling of real text). On an icon-only button that inflates the
+   icon's own internal line box, so it renders low within it — flex is now
+   centering the box, but the glyph itself sits low inside that tall box.
+   Reset it back to normal for the icon-only case specifically. */
+.sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)) .sapMBtnIcon {
+    line-height: normal !important;
+    vertical-align: baseline !important;
+}
+
+/* Reject-type buttons (e.g. the Delete row action next to an Emphasized Edit
+   one) never got this sizing — theme default padding is smaller, which is
+   why Delete looked noticeably tighter than Edit right beside it. Matching
+   height/padding only, not touching Reject's own red/pink coloring. */
+.sapMBtn:has(.sapMBtnReject) {
+    height: 46px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+}
+
+.sapMBtnReject {
+    height: 46px !important;
+    padding: 0 1rem !important;
+    box-sizing: border-box !important;
+}
+
+/* Reject only got height/padding above — text buttons of this type (Logout:
+   icon + text, not icon-only so the flexbox rule above skips it) never got
+   the same content/icon centering Emphasized has. Same two rules, mirrored. */
+.sapMBtnReject .sapMBtnContent {
+    line-height: 46px !important;
+}
+
+.sapMBtnReject .sapMBtnIcon {
+    vertical-align: middle !important;
+    line-height: 46px !important;
 }
 
 .sapMBtnEmphasized {
@@ -341,4 +552,62 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
     text-align: center !important;
     line-height: 46px !important;
     display: block !important;
+}
+
+/* Icon is a sibling of .sapMBtnContent, not inside it — the line-height trick
+   above only centers the text. Same fix already proven in this file for
+   .nextStepBtn/.createUserBtn's icon-alignment bug, reused here. */
+.sapMBtnEmphasized .sapMBtnIcon {
+    vertical-align: middle !important;
+    line-height: 46px !important;
+}
+
+/* ===== Secondary button (Dialog Cancel + any page-level secondary action) =====
+   .sapMDialogEndButton: confirmed via DevTools, the Dialog puts this marker
+   class directly on the outer <button> for its Cancel/end button. It had no
+   type set, so it rendered as plain unstyled text next to Save's gradient.
+   .xyraBtnSecondary: the same look, opt-in via class for buttons outside a
+   dialog (e.g. Configuration's "System History") that want the same pairing
+   without being an actual Dialog end button. */
+.sapMDialogEndButton,
+.xyraBtnSecondary {
+    height: 46px !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 10px !important;
+    background-color: #FFFFFF !important;
+    padding: 0 1.25rem !important;
+    box-sizing: border-box !important;
+}
+
+/* Chrome (border/bg) lives on the outer button only — this inner span just
+   needs matching size, or it draws its own concentric border/bg underneath,
+   which is exactly the double-border this was. */
+.sapMDialogEndButton .sapMBtnInner,
+.xyraBtnSecondary .sapMBtnInner {
+    height: 46px !important;
+    line-height: 46px !important;
+    border: none !important;
+    background: none !important;
+    box-sizing: border-box !important;
+}
+
+.sapMDialogEndButton:hover,
+.xyraBtnSecondary:hover {
+    border-color: #533BFF !important;
+    background-color: #F8FAFC !important;
+}
+
+.sapMDialogEndButton .sapMBtnContent,
+.xyraBtnSecondary .sapMBtnContent {
+    color: #0F172A !important;
+    font-weight: 600 !important;
+    line-height: 46px !important;
+}
+
+/* Same icon-as-sibling issue as .sapMBtnEmphasized — the line-height trick on
+   .sapMBtnContent above doesn't reach it. */
+.xyraBtnSecondary .sapMBtnIcon {
+    vertical-align: middle !important;
+    line-height: 46px !important;
+    color: #0F172A !important;
 }

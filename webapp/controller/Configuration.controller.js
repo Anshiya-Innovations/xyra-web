@@ -4,32 +4,26 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
-], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator) {
+    "sap/ui/model/FilterOperator",
+    "sap/ui/core/BusyIndicator",
+    "xyraweb/model/config",
+    "xyraweb/model/session",
+    "xyraweb/model/focusRing"
+], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, BusyIndicator, Config, Session, killFocusRing) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Configuration", {
 
-        onInit: function () {
-            var oData = {
-                systems: [
-                    { sysId: "MY8", client: "100", sysType: "Quality", hostName: "asmy800.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
-                    { sysId: "MQ8", client: "100", sysType: "Quality", hostName: "asmq801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned JAN 2024", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
-                    { sysId: "MY8", client: "000", sysType: "Quality", hostName: "asmy800.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
-                    { sysId: "MQ8", client: "000", sysType: "Quality", hostName: "asmq801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned JAN 2024", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
-                    { sysId: "MP8", client: "100", sysType: "Production", hostName: "asmp800.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
-                    { sysId: "MP8", client: "000", sysType: "Production", hostName: "asmp800.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
-                    { sysId: "MX8", client: "100", sysType: "Development", hostName: "asmx801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
-                    { sysId: "MD8", client: "100", sysType: "Development", hostName: "asmd801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
-                    { sysId: "MX8", client: "000", sysType: "Development", hostName: "asmx801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
-                    { sysId: "MD8", client: "000", sysType: "Development", hostName: "asmd801.jnj.com", sysDetails: "EHP4 FOR SAP CRM 7.0 - Decommissioned", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "750", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
-                    { sysId: "MY2", client: "100", sysType: "Quality", hostName: "asmy203.jnj.com", sysDetails: "EHP7 FOR SAP ERP 6.0", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "740", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" },
-                    { sysId: "MQ2", client: "100", sysType: "Quality", hostName: "asmq200.jnj.com", sysDetails: "EHP7 FOR SAP ERP 6.0 - Decommissioned JAN 2024", sector: "MedTech", platform: "USROTC", region: "North America", clientType: "ABAP", sysVersion: "740", logonGroup: "PUBLIC", portNumber: "3600", instanceNo: "00" }
-                ]
-            };
-            var oModel = new JSONModel(oData);
-            this.getView().setModel(oModel, "systemModel");
+        onAfterRendering: function () {
+            killFocusRing(this.getView());
+        },
 
+        onInit: function () {
+            this.getView().setModel(new JSONModel({ systems: [] }), "systemModel");
+
+            // System History stays mock data — nothing in the schema tracks a
+            // change log for Systems yet (only Rules/Reviews have history
+            // tables), and the CRUD ask here didn't cover adding one.
             var oHistoryData = {
                 entries: [
                     { timestamp: "07-Aug-2026 16:45 IST", action: "System Created", sysId: "MY8", user: "Admin", status: "Active", statusState: "Success" },
@@ -37,8 +31,39 @@ sap.ui.define([
                     { timestamp: "06-Aug-2026 11:20 IST", action: "System Verified", sysId: "MP8", user: "AuditLead", status: "Connected", statusState: "Success" }
                 ]
             };
-            var oHistoryModel = new JSONModel(oHistoryData);
-            this.getView().setModel(oHistoryModel, "historyModel");
+            this.getView().setModel(new JSONModel(oHistoryData), "historyModel");
+
+            this._loadSystems();
+        },
+
+        _loadSystems: function () {
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                this.getOwnerComponent().getRouter().navTo("Login");
+                return;
+            }
+
+            BusyIndicator.show(0);
+
+            fetch(Config.AUTH_BASE_URL + "/api/system-config/listSystems", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: oSession.subdomain })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Could not load systems.");
+                        return;
+                    }
+                    this.getView().getModel("systemModel").setProperty("/systems", oData.systems || []);
+                }.bind(this))
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onSideNavToggle: function () {
@@ -79,48 +104,58 @@ sap.ui.define([
         },
 
         onSaveNewSystem: function () {
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                return;
+            }
+
             var sSysId = this.byId("newSysId") ? this.byId("newSysId").getValue().trim() : "";
             var sClient = this.byId("newClient") ? this.byId("newClient").getValue().trim() : "";
-            var sSysType = this.byId("newSysTypeSelect") ? this.byId("newSysTypeSelect").getSelectedKey() : "Quality";
             var sHostName = this.byId("newHostName") ? this.byId("newHostName").getValue().trim() : "";
-            var sSysDetails = this.byId("newSysDetails") ? this.byId("newSysDetails").getValue().trim() : "";
-            var sSector = this.byId("newSector") ? this.byId("newSector").getValue().trim() : "MedTech";
-            var sPlatform = this.byId("newPlatform") ? this.byId("newPlatform").getValue().trim() : "USROTC";
-            var sRegion = this.byId("newRegion") ? this.byId("newRegion").getValue().trim() : "North America";
-            var sClientType = this.byId("newClientTypeSelect") ? this.byId("newClientTypeSelect").getSelectedKey() : "ABAP";
-            var sSysVersion = this.byId("newSysVersion") ? this.byId("newSysVersion").getValue().trim() : "750";
-            var sLogonGroup = this.byId("newLogonGroup") ? this.byId("newLogonGroup").getValue().trim() : "PUBLIC";
-            var sPortNumber = this.byId("newPortNumber") ? this.byId("newPortNumber").getValue().trim() : "3600";
-            var sInstanceNo = this.byId("newInstanceNo") ? this.byId("newInstanceNo").getValue().trim() : "00";
 
             if (!sSysId || !sClient || !sHostName) {
                 MessageBox.error("Please fill in mandatory fields: System ID, Client, and Host Name.");
                 return;
             }
 
-            var oModel = this.getView().getModel("systemModel");
-            var aSystems = oModel.getProperty("/systems") || [];
+            BusyIndicator.show(0);
 
-            aSystems.unshift({
-                sysId: sSysId,
-                client: sClient,
-                sysType: sSysType,
-                hostName: sHostName,
-                sysDetails: sSysDetails || ("EHP4 FOR SAP CRM 7.0"),
-                sector: sSector,
-                platform: sPlatform,
-                region: sRegion,
-                clientType: sClientType,
-                sysVersion: sSysVersion,
-                logonGroup: sLogonGroup,
-                portNumber: sPortNumber,
-                instanceNo: sInstanceNo
-            });
-
-            oModel.setProperty("/systems", aSystems);
-            this.onCloseAddSystemDialog();
-
-            MessageToast.show("New SAP System '" + sSysId + "' created successfully!");
+            fetch(Config.AUTH_BASE_URL + "/api/system-config/createSystem", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    subdomain: oSession.subdomain,
+                    sysId: sSysId,
+                    client: sClient,
+                    sysType: this.byId("newSysTypeSelect") ? this.byId("newSysTypeSelect").getSelectedKey() : "Quality",
+                    hostName: sHostName,
+                    sysDetails: this.byId("newSysDetails") ? this.byId("newSysDetails").getValue().trim() : "",
+                    sector: this.byId("newSector") ? this.byId("newSector").getValue().trim() : "",
+                    platform: this.byId("newPlatform") ? this.byId("newPlatform").getValue().trim() : "",
+                    region: this.byId("newRegion") ? this.byId("newRegion").getValue().trim() : "",
+                    clientType: this.byId("newClientTypeSelect") ? this.byId("newClientTypeSelect").getSelectedKey() : "ABAP",
+                    sysVersion: this.byId("newSysVersion") ? this.byId("newSysVersion").getValue().trim() : "",
+                    logonGroup: this.byId("newLogonGroup") ? this.byId("newLogonGroup").getValue().trim() : "",
+                    portNumber: this.byId("newPortNumber") ? this.byId("newPortNumber").getValue().trim() : "",
+                    instanceNo: this.byId("newInstanceNo") ? this.byId("newInstanceNo").getValue().trim() : ""
+                })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Could not create system.");
+                        return;
+                    }
+                    this.onCloseAddSystemDialog();
+                    MessageToast.show("New SAP System '" + sSysId + "' created successfully!");
+                    this._loadSystems();
+                }.bind(this))
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onEditSystem: function (oEvent) {
@@ -158,43 +193,87 @@ sap.ui.define([
                 return;
             }
 
-            this._editingSystemItem.client = this.byId("editClient") ? this.byId("editClient").getValue().trim() : this._editingSystemItem.client;
-            this._editingSystemItem.sysType = this.byId("editSysTypeSelect") ? this.byId("editSysTypeSelect").getSelectedKey() : this._editingSystemItem.sysType;
-            this._editingSystemItem.hostName = this.byId("editHostName") ? this.byId("editHostName").getValue().trim() : this._editingSystemItem.hostName;
-            this._editingSystemItem.sysDetails = this.byId("editSysDetails") ? this.byId("editSysDetails").getValue().trim() : this._editingSystemItem.sysDetails;
-            this._editingSystemItem.sector = this.byId("editSector") ? this.byId("editSector").getValue().trim() : this._editingSystemItem.sector;
-            this._editingSystemItem.platform = this.byId("editPlatform") ? this.byId("editPlatform").getValue().trim() : this._editingSystemItem.platform;
-            this._editingSystemItem.region = this.byId("editRegion") ? this.byId("editRegion").getValue().trim() : this._editingSystemItem.region;
-            this._editingSystemItem.clientType = this.byId("editClientTypeSelect") ? this.byId("editClientTypeSelect").getSelectedKey() : this._editingSystemItem.clientType;
-            this._editingSystemItem.sysVersion = this.byId("editSysVersion") ? this.byId("editSysVersion").getValue().trim() : this._editingSystemItem.sysVersion;
-            this._editingSystemItem.logonGroup = this.byId("editLogonGroup") ? this.byId("editLogonGroup").getValue().trim() : this._editingSystemItem.logonGroup;
-            this._editingSystemItem.portNumber = this.byId("editPortNumber") ? this.byId("editPortNumber").getValue().trim() : this._editingSystemItem.portNumber;
-            this._editingSystemItem.instanceNo = this.byId("editInstanceNo") ? this.byId("editInstanceNo").getValue().trim() : this._editingSystemItem.instanceNo;
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                return;
+            }
 
-            this.getView().getModel("systemModel").refresh(true);
-            this.onCloseEditSystemDialog();
+            var sSysId = this._editingSystemItem.sysId;
+            BusyIndicator.show(0);
 
-            MessageToast.show("SAP System '" + this._editingSystemItem.sysId + "' updated successfully!");
+            fetch(Config.AUTH_BASE_URL + "/api/system-config/updateSystem", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    subdomain: oSession.subdomain,
+                    id: this._editingSystemItem.id,
+                    client: this.byId("editClient") ? this.byId("editClient").getValue().trim() : this._editingSystemItem.client,
+                    sysType: this.byId("editSysTypeSelect") ? this.byId("editSysTypeSelect").getSelectedKey() : this._editingSystemItem.sysType,
+                    hostName: this.byId("editHostName") ? this.byId("editHostName").getValue().trim() : this._editingSystemItem.hostName,
+                    sysDetails: this.byId("editSysDetails") ? this.byId("editSysDetails").getValue().trim() : this._editingSystemItem.sysDetails,
+                    sector: this.byId("editSector") ? this.byId("editSector").getValue().trim() : this._editingSystemItem.sector,
+                    platform: this.byId("editPlatform") ? this.byId("editPlatform").getValue().trim() : this._editingSystemItem.platform,
+                    region: this.byId("editRegion") ? this.byId("editRegion").getValue().trim() : this._editingSystemItem.region,
+                    clientType: this.byId("editClientTypeSelect") ? this.byId("editClientTypeSelect").getSelectedKey() : this._editingSystemItem.clientType,
+                    sysVersion: this.byId("editSysVersion") ? this.byId("editSysVersion").getValue().trim() : this._editingSystemItem.sysVersion,
+                    logonGroup: this.byId("editLogonGroup") ? this.byId("editLogonGroup").getValue().trim() : this._editingSystemItem.logonGroup,
+                    portNumber: this.byId("editPortNumber") ? this.byId("editPortNumber").getValue().trim() : this._editingSystemItem.portNumber,
+                    instanceNo: this.byId("editInstanceNo") ? this.byId("editInstanceNo").getValue().trim() : this._editingSystemItem.instanceNo
+                })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Could not update system.");
+                        return;
+                    }
+                    this.onCloseEditSystemDialog();
+                    MessageToast.show("SAP System '" + sSysId + "' updated successfully!");
+                    this._loadSystems();
+                }.bind(this))
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onDeleteSystem: function (oEvent) {
             var oItem = oEvent.getSource().getBindingContext("systemModel").getObject();
-            var oModel = this.getView().getModel("systemModel");
-            var aSystems = oModel.getProperty("/systems") || [];
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                return;
+            }
 
             MessageBox.confirm("Are you sure you want to delete SAP System '" + oItem.sysId + "' (Client " + oItem.client + ")?", {
                 title: "Delete SAP System",
                 actions: [MessageBox.Action.YES, MessageBox.Action.NO],
                 onClose: function (oAction) {
-                    if (oAction === MessageBox.Action.YES) {
-                        var iIndex = aSystems.indexOf(oItem);
-                        if (iIndex !== -1) {
-                            aSystems.splice(iIndex, 1);
-                            oModel.setProperty("/systems", aSystems);
+                    if (oAction !== MessageBox.Action.YES) { return; }
+
+                    BusyIndicator.show(0);
+                    fetch(Config.AUTH_BASE_URL + "/api/system-config/deleteSystem", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ subdomain: oSession.subdomain, id: oItem.id })
+                    })
+                        .then(function (oResponse) { return oResponse.json(); })
+                        .then(function (oData) {
+                            BusyIndicator.hide();
+                            if (!oData.success) {
+                                MessageBox.error(oData.message || "Could not delete system.");
+                                return;
+                            }
                             MessageToast.show("SAP System '" + oItem.sysId + "' deleted.");
-                        }
-                    }
-                }
+                            this._loadSystems();
+                        }.bind(this))
+                        .catch(function () {
+                            BusyIndicator.hide();
+                            MessageBox.error("Could not reach the server. Is xyra-core running?");
+                        });
+                }.bind(this)
             });
         },
 
@@ -264,6 +343,7 @@ sap.ui.define([
 
         onNotificationPress: function () { MessageToast.show("No new notifications."); },
         onLogout: function () {
+            Session.clear();
             MessageToast.show("Logged Out Successfully");
             this.getOwnerComponent().getRouter().navTo("Login");
         }
