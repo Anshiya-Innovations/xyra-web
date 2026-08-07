@@ -18,103 +18,99 @@
                 justifyContent="Center"
                 alignItems="Center"
                 direction="Column"
-                renderType="Div">
+                renderType="Div"
+                class="xyraLoginBg">
 
-                <Panel id="_IDGenPanel1"
+                <VBox id="_IDGenVBox"
                     width="400px"
-                    backgroundDesign="Solid">
+                    alignItems="Stretch"
+                    class="xyraLoginCard">
 
-                    <content>
+                    <Image src="img/logo.png" alt="Xyra" class="xyraLoginLogo"/>
 
-                        <VBox id="_IDGenVBox"
-                            width="auto"
-                            alignItems="Stretch"
-                            class="sapUiMediumMargin">
+                    <Title id="_IDGenTitle"
+                        text="Welcome back"
+                        level="H2"
+                        textAlign="Center"
+                        width="100%"
+                        class="xyraLoginTitle"/>
 
-                            <Title id="_IDGenTitle"
-                                text="XYRA"
-                                level="H2"
-                                textAlign="Center"
-                                width="100%"
-                                class="sapUiSmallMarginBottom"/>
+                    <Text id="_IDGenText"
+                        text="Sign in to continue to Xyra Control Monitoring"
+                        textAlign="Center"
+                        width="100%"
+                        wrapping="true"
+                        class="xyraLoginSubtitle"/>
 
-                            <Text id="_IDGenText"
-                                text="Future of Control Monitoring"
-                                textAlign="Center"
-                                width="100%"
-                                wrapping="true"
-                                class="sapUiMediumMarginBottom"/>
+                    <Label id="_IDGenLabel"
+                        text="Persona"
+                        required="true"
+                        class="xyraLoginLabel"/>
 
-                            <Label id="_IDGenLabel"
-                                text="Persona"
-                                required="true"/>
+                    <Select
+                        id="role"
+                        width="100%"
+                        change="onRoleChange"
+                        class="xyraLoginField">
 
-                            <Select
-                                id="role"
-                                width="100%"
-                                change="onRoleChange"
-                                class="sapUiSmallMarginBottom">
+                        <items>
+                            <core:Item id="_IDGenItem" key="" text="-- Select Persona --"/>
+                            <core:Item id="_IDGenItem1" key="ADMIN" text="Admin"/>
+                            <core:Item id="_IDGenItem2" key="ACM" text="Escalation Manager"/>
+                            <core:Item id="_IDGenItem3" key="REV1" text="Reviewer 1"/>
+                            <core:Item id="_IDGenItem4" key="REV2" text="Reviewer 2"/>
 
-                                <items>
-                                    <core:Item id="_IDGenItem" key="" text="-- Select Persona --"/>
-                                    <core:Item id="_IDGenItem1" key="ADMIN" text="Admin"/>
-                                    <core:Item id="_IDGenItem2" key="ACM" text="Escalation Manager"/>
-                                    <core:Item id="_IDGenItem3" key="REV1" text="Reviewer 1"/>
-                                    <core:Item id="_IDGenItem4" key="REV2" text="Reviewer 2"/>
-        
-                                    <core:Item id="_IDGenItem6" key="AUDITOR" text="Auditor"/>
-                                </items>
+                            <core:Item id="_IDGenItem6" key="AUDITOR" text="Auditor"/>
+                        </items>
 
-                            </Select>
+                    </Select>
 
-                            <Label id="_IDGenLabel1"
-                                text="Email"
-                                required="true"/>
+                    <Label id="_IDGenLabel1"
+                        text="Email"
+                        required="true"
+                        class="xyraLoginLabel"/>
 
-                            <Input
-                                id="username"
-                                width="100%"
-                                type="Email"
-                                placeholder="Enter Email"
-                                liveChange="onEmailLiveChange"
-                                class="sapUiSmallMarginBottom"/>
+                    <Input
+                        id="username"
+                        width="100%"
+                        type="Email"
+                        placeholder="Enter Email"
+                        liveChange="onEmailLiveChange"
+                        class="xyraLoginField"/>
 
-                            <Label id="_IDGenLabel2"
-                                text="Password"
-                                required="true"/>
+                    <Label id="_IDGenLabel2"
+                        text="Password"
+                        required="true"
+                        class="xyraLoginLabel"/>
 
-                            <Input
-                                id="password"
-                                type="Password"
-                                width="100%"
-                                placeholder="Enter Password"
-                                class="sapUiSmallMarginBottom"/>
+                    <Input
+                        id="password"
+                        type="Password"
+                        width="100%"
+                        placeholder="Enter Password"
+                        class="xyraLoginField"/>
 
-                            <CheckBox id="_IDGenCheckBox"
-                                text="Remember Me"
-                                class="sapUiMediumMarginBottom"/>
+                    <CheckBox id="_IDGenCheckBox"
+                        text="Remember Me"
+                        class="xyraLoginCheckbox"/>
 
-                            <Button id="_IDGenButton"
-                                text="LOGIN"
-                                type="Emphasized"
-                                width="100%"
-                                press="onLogin"/>
+                    <Button id="_IDGenButton"
+                        text="Sign In"
+                        type="Emphasized"
+                        width="100%"
+                        press="onLogin"/>
 
-                            <VBox id="_IDGenVBox1"
-                                width="100%"
-                                alignItems="Center"
-                                class="sapUiLargeMarginTop">
+                    <VBox id="_IDGenVBox1"
+                        width="100%"
+                        alignItems="Center"
+                        class="xyraLoginFooter">
 
-                                <Text id="_IDGenText1" text="Version 1.0.0"/>
-                                <Text id="_IDGenText2" text="© 2026 Forte Innovations"/>
+                        <Text id="_IDGenText1" text="Version 1.0.0"/>
+                        <Text id="_IDGenText2" text="© 2026 Forte Innovations"/>
 
-                            </VBox>
+                    </VBox>
 
-                        </VBox>
-
-                    </content>
-
-                </Panel>
+                </VBox>
 
             </FlexBox>
 
