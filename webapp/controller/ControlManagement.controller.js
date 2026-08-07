@@ -117,11 +117,11 @@ sap.ui.define([
             for (var i = 0; i < aRules.length; i++) {
                 var r = aRules[i];
                 var sParam = (r.parameter || "").trim();
-                var sOp = (r.operator || "").trim();
+                var sOp = (r.operator === "Custom" ? (r.customOperator || "") : (r.operator || "")).trim();
                 var sVal = (r.expectedValue || "").trim();
 
                 if (!sParam || sParam.indexOf("-- Select") === 0 || !sOp || sOp.indexOf("-- Select") === 0 || !sVal || sVal.indexOf("-- Select") === 0) {
-                    MessageBox.error("Must fill the rule: Please select Parameter, Operator, and Expected Value for " + (r.stepLabel || ("Rule " + (i + 1))) + ".");
+                    MessageBox.error("Must fill the rule: Please select Parameter, Validation, and Expected Value for " + (r.stepLabel || ("Rule " + (i + 1))) + ".");
                     return false;
                 }
             }
