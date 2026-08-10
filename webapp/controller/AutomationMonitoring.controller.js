@@ -58,26 +58,25 @@ sap.ui.define([
                         ]
                     },
                     {
-                        id: "XYRA-001",
+                        id: "XYRA-01",
                         description: "Segregation of Duties (SoD) Conflict Scan & Privilege Escalation",
                         sysType1: "DEV",
-                        sysType2: "PRD",
+                        sysType2: "QAS",
                         sysType3: "None",
-                        frequencyRun: "Realtime",
+                        frequencyRun: "Daily",
                         cronExpr: "",
-                        totalRun: "Continuous",
+                        totalRun: "365",
                         deviationLabel: "No Deviation",
                         deviationState: "None",
                         deviationClass: "badgeWhite",
                         deviationCount: 0,
                         rules: [
-                            { parameter: "Password Changed", operator: "Equals", expectedValue: "True", actualValue: "True", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" },
-                            { parameter: "User Type", operator: "Equals", expectedValue: "B", actualValue: "B", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" },
-                            { parameter: "Locked", operator: "Equals", expectedValue: "True", actualValue: "True", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" }
+                            { parameter: "User Type", operator: "Equals", expectedValue: "B (System User)", actualValue: "B (System User)", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" },
+                            { parameter: "Super Group", operator: "Equals", expectedValue: "True", actualValue: "True", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" }
                         ],
                         logs: [
-                            { timestamp: "06-Aug-2026 13:45 IST", level: "INFO", levelState: "Information", message: "Realtime event hook scanner active." },
-                            { timestamp: "06-Aug-2026 13:46 IST", level: "SUCCESS", levelState: "Success", message: "Scanned 1,850 user assignments against SoD conflict rules. Clean." }
+                            { timestamp: "06-Aug-2026 13:45 IST", level: "INFO", levelState: "Information", message: "Daily event hook scanner active." },
+                            { timestamp: "06-Aug-2026 13:46 IST", level: "SUCCESS", levelState: "Success", message: "Scanned 1,850 user assignments against rules. Clean." }
                         ]
                     },
                     {

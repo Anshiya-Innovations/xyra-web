@@ -172,35 +172,40 @@
                                                             <core:Item key="Roles Assigned" text="Roles Assigned"/>
                                                             <core:Item key="Security Policy" text="Security Policy"/>
                                                             <core:Item key="SDMI_* Exists" text="SDMI_* Exists"/>
+                                                            <core:Item key="Super Group" text="Super Group"/>
+                                                        </Select>
+
+                                                        <Select selectedKey="{ruleModel>operator}" width="100%">
+                                                            <core:Item key="" text="-- Select Validation --"/>
+                                                            <core:Item key="Equals" text="Equals"/>
+                                                            <core:Item key="Not Equals" text="Not Equals"/>
+                                                            <core:Item key="Greater Than" text="Greater Than"/>
+                                                            <core:Item key="Less Than" text="Less Than"/>
+                                                            <core:Item key="Contains" text="Contains"/>
                                                         </Select>
 
                                                         <VBox width="100%">
-                                                            <Select selectedKey="{ruleModel>operator}" width="100%">
-                                                                <core:Item key="" text="-- Select Validation --"/>
-                                                                <core:Item key="Equals" text="Equals"/>
-                                                                <core:Item key="Not Equals" text="Not Equals"/>
-                                                                <core:Item key="Greater Than" text="Greater Than"/>
-                                                                <core:Item key="Less Than" text="Less Than"/>
+                                                            <Select selectedKey="{ruleModel>expectedValue}" width="100%">
+                                                                <core:Item key="" text="-- Select Value --"/>
+                                                                <core:Item key="True" text="True"/>
+                                                                <core:Item key="False" text="False"/>
+                                                                <core:Item key="A (Dialog User)" text="A (Dialog User)"/>
+                                                                <core:Item key="B (System User)" text="B (System User)"/>
+                                                                <core:Item key="C (Communication)" text="C (Communication)"/>
+                                                                <core:Item key="L (Reference)" text="L (Reference)"/>
+                                                                <core:Item key="Enabled" text="Enabled"/>
+                                                                <core:Item key="Disabled" text="Disabled"/>
+                                                                <core:Item key="0" text="0"/>
+                                                                <core:Item key="1" text="1"/>
                                                                 <core:Item key="Custom" text="Custom"/>
                                                             </Select>
                                                             <Input
-                                                                value="{ruleModel>customOperator}"
-                                                                placeholder="Enter custom validation..."
-                                                                visible="{= ${ruleModel>operator} === 'Custom' }"
+                                                                value="{ruleModel>customExpectedValue}"
+                                                                placeholder="Enter custom expected value..."
+                                                                visible="{= ${ruleModel>expectedValue} === 'Custom' }"
                                                                 width="100%"
                                                                 class="sapUiTinyMarginTop"/>
                                                         </VBox>
-
-                                                        <ComboBox value="{ruleModel>expectedValue}" placeholder="Select or Enter Value..." width="100%">
-                                                            <core:Item key="True" text="True"/>
-                                                            <core:Item key="False" text="False"/>
-                                                            <core:Item key="B" text="B"/>
-                                                            <core:Item key="A" text="A"/>
-                                                            <core:Item key="Enabled" text="Enabled"/>
-                                                            <core:Item key="Disabled" text="Disabled"/>
-                                                            <core:Item key="0" text="0"/>
-                                                            <core:Item key="1" text="1"/>
-                                                        </ComboBox>
 
                                                         <Button icon="sap-icon://delete" type="Transparent" tooltip="Delete Rule" press="onDeleteCreateRule"/>
                                                     </cells>
@@ -227,24 +232,24 @@
                     <Dialog
                         id="editControlDialog"
                         title="Edit Security Control Master"
-                        contentWidth="620px">
+                        contentWidth="840px">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Label text="Control ID"/>
                                 <Input id="editControlIdInput" editable="false" class="sapUiSmallMarginBottom"/>
 
                                 <Label text="Control Description" required="true"/>
-                                <TextArea id="editControlDescInput" rows="3" width="100%" class="sapUiSmallMarginBottom"/>
+                                <Input id="editControlDescInput" placeholder="Enter detailed security control description..." class="sapUiSmallMarginBottom"/>
 
                                 <Label text="System Type" required="true"/>
-                                <Select id="editSysType1Select" width="100%" change="onSysTypeChange" class="sapUiSmallMarginBottom">
+                                <Select id="editSysType1Select" change="onSysTypeChange" width="100%" class="sapUiSmallMarginBottom">
                                     <core:Item key="DEV" text="DEV"/>
                                     <core:Item key="QAS" text="QAS"/>
                                     <core:Item key="PRD" text="PRD"/>
                                 </Select>
 
                                 <Label text="System Type"/>
-                                <Select id="editSysType2Select" width="100%" change="onSysTypeChange" class="sapUiSmallMarginBottom">
+                                <Select id="editSysType2Select" change="onSysTypeChange" width="100%" class="sapUiSmallMarginBottom">
                                     <core:Item key="None" text="-- None --"/>
                                     <core:Item key="DEV" text="DEV"/>
                                     <core:Item key="QAS" text="QAS"/>
@@ -252,7 +257,7 @@
                                 </Select>
 
                                 <Label text="System Type"/>
-                                <Select id="editSysType3Select" width="100%" change="onSysTypeChange" class="sapUiSmallMarginBottom">
+                                <Select id="editSysType3Select" change="onSysTypeChange" width="100%" class="sapUiSmallMarginBottom">
                                     <core:Item key="None" text="-- None --"/>
                                     <core:Item key="DEV" text="DEV"/>
                                     <core:Item key="QAS" text="QAS"/>
@@ -260,7 +265,7 @@
                                 </Select>
 
                                 <Label text="Frequency Run" required="true"/>
-                                <Select id="editFrequencySelect" width="100%" change="onEditFrequencyChange" class="sapUiSmallMarginBottom">
+                                <Select id="editFrequencySelect" change="onEditFrequencyChange" width="100%" class="sapUiSmallMarginBottom">
                                     <core:Item key="Monthly (Last day of month)" text="Monthly (Last day of month)"/>
                                     <core:Item key="Weekly (Every Monday)" text="Weekly (Every Monday)"/>
                                     <core:Item key="Daily" text="Daily"/>
@@ -280,7 +285,7 @@
                                 <Label text="Total Run (Read-Only)"/>
                                 <Input id="editTotalRunInput" editable="false" class="sapUiSmallMarginBottom"/>
 
-                                <!-- RULE BUILDER SECTION -->
+                                <!-- RULE CONFIGURATION SECTION (SAP Fiori Validation Rule Table) -->
                                 <Panel expandable="true" expanded="true" class="sapUiSmallMarginTop">
                                     <headerToolbar>
                                         <OverflowToolbar style="Clear">
@@ -290,62 +295,89 @@
                                         </OverflowToolbar>
                                     </headerToolbar>
                                     <content>
-                                        <VBox items="{ruleModel>/editRules}">
+                                        <Table id="editRulesTable" items="{ruleModel>/editRules}" mode="None" width="100%" class="sapUiNoMargin">
+                                            <columns>
+                                                <Column width="18%"><Text text="SAP Object"/></Column>
+                                                <Column width="14%"><Text text="Client"/></Column>
+                                                <Column width="22%"><Text text="Parameter"/></Column>
+                                                <Column width="18%"><Text text="Validation"/></Column>
+                                                <Column width="20%"><Text text="Expected Value"/></Column>
+                                                <Column width="8%" hAlign="Center"><Text text="Actions"/></Column>
+                                            </columns>
                                             <items>
-                                                <VBox class="sapUiSmallMarginBottom sapUiSmallPadding">
-                                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
-                                                        <Title text="{ruleModel>stepLabel}" level="H6"/>
-                                                        <Button icon="sap-icon://delete" type="Transparent" tooltip="Delete Rule" press="onDeleteEditRule"/>
-                                                    </HBox>
-                                                    <layout:Grid defaultSpan="L4 M4 S12" class="sapUiNoMargin">
-                                                        <VBox>
-                                                            <Label text="Parameter" required="true"/>
-                                                            <Select selectedKey="{ruleModel>parameter}" width="100%">
-                                                                <core:Item key="" text="-- Select Parameter --"/>
-                                                                <core:Item key="Password Changed" text="Password Changed"/>
-                                                                <core:Item key="User Type" text="User Type"/>
-                                                                <core:Item key="Locked" text="Locked"/>
-                                                                <core:Item key="Failed Logins" text="Failed Logins"/>
-                                                                <core:Item key="Roles Assigned" text="Roles Assigned"/>
-                                                                <core:Item key="Security Policy" text="Security Policy"/>
-                                                                <core:Item key="SDMI_* Exists" text="SDMI_* Exists"/>
-                                                            </Select>
-                                                        </VBox>
-                                                        <VBox>
-                                                            <Label text="Operator" required="true"/>
-                                                            <VBox width="100%">
-                                                                <Select selectedKey="{ruleModel>operator}" width="100%">
-                                                                    <core:Item key="" text="-- Select Validation --"/>
-                                                                    <core:Item key="Equals" text="Equals"/>
-                                                                    <core:Item key="Not Equals" text="Not Equals"/>
-                                                                    <core:Item key="Greater Than" text="Greater Than"/>
-                                                                    <core:Item key="Less Than" text="Less Than"/>
-                                                                    <core:Item key="Custom" text="Custom"/>
-                                                                </Select>
-                                                                <Input
-                                                                    value="{ruleModel>customOperator}"
-                                                                    placeholder="Enter custom validation..."
-                                                                    visible="{= ${ruleModel>operator} === 'Custom' }"
-                                                                    width="100%"
-                                                                    class="sapUiTinyMarginTop"/>
-                                                            </VBox>
-                                                        </VBox>
-                                                        <VBox>
-                                                            <Label text="Expected Value" required="true"/>
-                                                            <ComboBox value="{ruleModel>expectedValue}" placeholder="Select or Enter Expected Value..." width="100%">
-                                                                <core:Item key="" text="-- Select Expected Value --"/>
+                                                <ColumnListItem>
+                                                    <cells>
+                                                        <Select selectedKey="{ruleModel>sapObject}" width="100%">
+                                                            <core:Item key="" text="-- Select --"/>
+                                                            <core:Item key="SAP*" text="SAP*"/>
+                                                            <core:Item key="DDIC" text="DDIC"/>
+                                                            <core:Item key="EARLYWATCH" text="EARLYWATCH"/>
+                                                            <core:Item key="SAPCPIC" text="SAPCPIC"/>
+                                                            <core:Item key="WF-BATCH" text="WF-BATCH"/>
+                                                            <core:Item key="SAP_WFRT" text="SAP_WFRT"/>
+                                                            <core:Item key="TMSADM" text="TMSADM"/>
+                                                            <core:Item key="SDMI_*" text="SDMI_*"/>
+                                                        </Select>
+
+                                                        <Select selectedKey="{ruleModel>client}" width="100%">
+                                                            <core:Item key="" text="-- Client --"/>
+                                                            <core:Item key="100" text="100"/>
+                                                            <core:Item key="000" text="000"/>
+                                                            <core:Item key="200" text="200"/>
+                                                            <core:Item key="300" text="300"/>
+                                                            <core:Item key="All" text="All"/>
+                                                        </Select>
+
+                                                        <Select selectedKey="{ruleModel>parameter}" width="100%">
+                                                            <core:Item key="" text="-- Select Parameter --"/>
+                                                            <core:Item key="Password Changed" text="Password Changed"/>
+                                                            <core:Item key="User Type" text="User Type"/>
+                                                            <core:Item key="Locked" text="Locked"/>
+                                                            <core:Item key="Failed Logins" text="Failed Logins"/>
+                                                            <core:Item key="Roles Assigned" text="Roles Assigned"/>
+                                                            <core:Item key="Security Policy" text="Security Policy"/>
+                                                            <core:Item key="SDMI_* Exists" text="SDMI_* Exists"/>
+                                                            <core:Item key="Super Group" text="Super Group"/>
+                                                        </Select>
+
+                                                        <Select selectedKey="{ruleModel>operator}" width="100%">
+                                                            <core:Item key="" text="-- Select Validation --"/>
+                                                            <core:Item key="Equals" text="Equals"/>
+                                                            <core:Item key="Not Equals" text="Not Equals"/>
+                                                            <core:Item key="Greater Than" text="Greater Than"/>
+                                                            <core:Item key="Less Than" text="Less Than"/>
+                                                            <core:Item key="Contains" text="Contains"/>
+                                                        </Select>
+
+                                                        <VBox width="100%">
+                                                            <Select selectedKey="{ruleModel>expectedValue}" width="100%">
+                                                                <core:Item key="" text="-- Select Value --"/>
                                                                 <core:Item key="True" text="True"/>
                                                                 <core:Item key="False" text="False"/>
-                                                                <core:Item key="B" text="B"/>
-                                                                <core:Item key="A" text="A"/>
+                                                                <core:Item key="A (Dialog User)" text="A (Dialog User)"/>
+                                                                <core:Item key="B (System User)" text="B (System User)"/>
+                                                                <core:Item key="C (Communication)" text="C (Communication)"/>
+                                                                <core:Item key="L (Reference)" text="L (Reference)"/>
                                                                 <core:Item key="Enabled" text="Enabled"/>
                                                                 <core:Item key="Disabled" text="Disabled"/>
-                                                            </ComboBox>
+                                                                <core:Item key="0" text="0"/>
+                                                                <core:Item key="1" text="1"/>
+                                                                <core:Item key="Custom" text="Custom"/>
+                                                            </Select>
+                                                            <Input
+                                                                value="{ruleModel>customExpectedValue}"
+                                                                placeholder="Enter custom expected value..."
+                                                                visible="{= ${ruleModel>expectedValue} === 'Custom' }"
+                                                                width="100%"
+                                                                class="sapUiTinyMarginTop"/>
                                                         </VBox>
-                                                    </layout:Grid>
-                                                </VBox>
+
+                                                        <Button icon="sap-icon://delete" type="Transparent" tooltip="Delete Rule" press="onDeleteEditRule"/>
+                                                    </cells>
+                                                </ColumnListItem>
                                             </items>
-                                        </VBox>
+                                        </Table>
+
                                         <HBox justifyContent="Center" class="sapUiTinyMarginTop">
                                             <Button text="+ Add Rule" type="Ghost" icon="sap-icon://add" press="onAddEditRule"/>
                                         </HBox>

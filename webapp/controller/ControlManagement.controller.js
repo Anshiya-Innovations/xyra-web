@@ -42,19 +42,18 @@ sap.ui.define([
                         ]
                     },
                     {
-                        id: "XYRA-001",
+                        id: "XYRA-01",
                         description: "Segregation of Duties (SoD) Conflict Scan & Privilege Escalation",
                         sysType1: "DEV",
-                        sysType2: "PRD",
+                        sysType2: "QAS",
                         sysType3: "None",
-                        frequencyRun: "Realtime",
+                        frequencyRun: "Daily",
                         cronExpr: "",
-                        totalRun: "Continuous",
+                        totalRun: "365",
                         category: "Security",
                         rules: [
-                            { id: 1, stepLabel: "Rule 1", parameter: "Password Changed", operator: "Equals", expectedValue: "True" },
-                            { id: 2, stepLabel: "Then another rule: Rule 2", parameter: "User Type", operator: "Equals", expectedValue: "B" },
-                            { id: 3, stepLabel: "Then: Rule 3", parameter: "Locked", operator: "Equals", expectedValue: "True" }
+                            { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "000", parameter: "User Type", operator: "Equals", expectedValue: "B (System User)" },
+                            { id: 2, stepLabel: "Rule 2", sapObject: "SAP*", client: "000", parameter: "Super Group", operator: "Equals", expectedValue: "True" }
                         ]
                     },
                     {
@@ -117,8 +116,8 @@ sap.ui.define([
             for (var i = 0; i < aRules.length; i++) {
                 var r = aRules[i];
                 var sParam = (r.parameter || "").trim();
-                var sOp = (r.operator === "Custom" ? (r.customOperator || "") : (r.operator || "")).trim();
-                var sVal = (r.expectedValue || "").trim();
+                var sOp = (r.operator || "").trim();
+                var sVal = (r.expectedValue === "Custom" ? (r.customExpectedValue || "") : (r.expectedValue || "")).trim();
 
                 if (!sParam || sParam.indexOf("-- Select") === 0 || !sOp || sOp.indexOf("-- Select") === 0 || !sVal || sVal.indexOf("-- Select") === 0) {
                     MessageBox.error("Must fill the rule: Please select Parameter, Validation, and Expected Value for " + (r.stepLabel || ("Rule " + (i + 1))) + ".");
@@ -135,6 +134,8 @@ sap.ui.define([
             aRules.push({
                 id: Date.now(),
                 stepLabel: sLabel,
+                sapObject: "SAP*",
+                client: "000",
                 parameter: "",
                 operator: "",
                 expectedValue: ""
@@ -165,6 +166,8 @@ sap.ui.define([
             aRules.push({
                 id: Date.now(),
                 stepLabel: sLabel,
+                sapObject: "SAP*",
+                client: "000",
                 parameter: "",
                 operator: "",
                 expectedValue: ""
