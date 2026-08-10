@@ -14,6 +14,30 @@ sap.ui.define([
             var oData = {
                 controls: [
                     {
+                        id: "NLG01",
+                        description: "SAP System Security Baseline & Parameter Enforcement",
+                        sysType1: "DEV",
+                        sysType2: "QAS",
+                        sysType3: "PRD",
+                        frequencyRun: "Daily",
+                        cronExpr: "",
+                        totalRun: "365",
+                        category: "Security",
+                        createdBy: "ADMIN",
+                        createdDate: "2026-08-10",
+                        modifiedBy: "ADMIN",
+                        modifiedDate: "2026-08-10",
+                        rules: [
+                            { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "All", parameter: "Password Changed", operator: "Equals", expectedValue: "Yes" },
+                            { id: 2, stepLabel: "Rule 2", sapObject: "SAP*", client: "All", parameter: "Super User", operator: "Equals", expectedValue: "SUPER" },
+                            { id: 3, stepLabel: "Rule 3", sapObject: "SAP*", client: "All", parameter: "User Type", operator: "Equals", expectedValue: "B (System User)" },
+                            { id: 4, stepLabel: "Rule 4", sapObject: "SAP*", client: "All", parameter: "Locked", operator: "Equals", expectedValue: "Yes" },
+                            { id: 5, stepLabel: "Rule 5", sapObject: "SAP*", client: "All", parameter: "Roles Assigned", operator: "Equals", expectedValue: "None" },
+                            { id: 6, stepLabel: "Rule 6", sapObject: "SAP*", client: "All", parameter: "Security Policy", operator: "Equals", expectedValue: "Z_NOEXPIRY" },
+                            { id: 7, stepLabel: "Rule 7", sapObject: "SDMI_*", client: "All", parameter: "SDMI_* Exists", operator: "Equals", expectedValue: "No" }
+                        ]
+                    },
+                    {
                         id: "XYRA-08",
                         description: "SAP Java Audit Log Filters & Security Event Monitoring",
                         sysType1: "DEV",
@@ -24,7 +48,7 @@ sap.ui.define([
                         totalRun: "365",
                         category: "Security",
                         rules: [
-                            { id: 1, stepLabel: "Rule 1", parameter: "Password Changed", operator: "Equals", expectedValue: "True" }
+                            { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "000", parameter: "Password Changed", operator: "Equals", expectedValue: "Yes" }
                         ]
                     },
                     {
@@ -38,7 +62,7 @@ sap.ui.define([
                         totalRun: "52",
                         category: "ITGC",
                         rules: [
-                            { id: 1, stepLabel: "Rule 1", parameter: "Roles Assigned", operator: "Equals", expectedValue: "True" }
+                            { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "000", parameter: "Roles Assigned", operator: "Equals", expectedValue: "None" }
                         ]
                     },
                     {
@@ -53,7 +77,7 @@ sap.ui.define([
                         category: "Security",
                         rules: [
                             { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "000", parameter: "User Type", operator: "Equals", expectedValue: "B (System User)" },
-                            { id: 2, stepLabel: "Rule 2", sapObject: "SAP*", client: "000", parameter: "Super Group", operator: "Equals", expectedValue: "True" }
+                            { id: 2, stepLabel: "Rule 2", sapObject: "SAP*", client: "000", parameter: "Super User", operator: "Equals", expectedValue: "SUPER" }
                         ]
                     },
                     {
@@ -67,7 +91,7 @@ sap.ui.define([
                         totalRun: "12",
                         category: "Financial",
                         rules: [
-                            { id: 1, stepLabel: "Rule 1", parameter: "Security Policy", operator: "Equals", expectedValue: "True" }
+                            { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "000", parameter: "Security Policy", operator: "Equals", expectedValue: "Z_NOEXPIRY" }
                         ]
                     },
                     {
@@ -81,7 +105,7 @@ sap.ui.define([
                         totalRun: "12",
                         category: "SOX",
                         rules: [
-                            { id: 1, stepLabel: "Rule 1", parameter: "SDMI_* Exists", operator: "Equals", expectedValue: "True" }
+                            { id: 1, stepLabel: "Rule 1", sapObject: "SDMI_*", client: "All", parameter: "SDMI_* Exists", operator: "Equals", expectedValue: "No" }
                         ]
                     }
                 ]
@@ -93,7 +117,7 @@ sap.ui.define([
             // Initialize Rule Builder Model
             var oRuleData = {
                 createRules: [
-                    { id: 1, stepLabel: "Rule 1", parameter: "", operator: "", expectedValue: "" }
+                    { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "All", parameter: "", operator: "", expectedValue: "" }
                 ],
                 editRules: []
             };
@@ -115,12 +139,46 @@ sap.ui.define([
             }
             for (var i = 0; i < aRules.length; i++) {
                 var r = aRules[i];
-                var sParam = (r.parameter || "").trim();
+                var sObj = (r.sapObject || "").trim();
+                var sCli = (r.client === "Other Clients" ? (r.customClient || "") : (r.client || "")).trim();
+                var sParam = (r.parameter === "Custom" ? (r.customParameter || "") : (r.parameter || "")).trim();
                 var sOp = (r.operator || "").trim();
                 var sVal = (r.expectedValue === "Custom" ? (r.customExpectedValue || "") : (r.expectedValue || "")).trim();
+                var sRuleNum = r.stepLabel || ("Rule " + (i + 1));
 
-                if (!sParam || sParam.indexOf("-- Select") === 0 || !sOp || sOp.indexOf("-- Select") === 0 || !sVal || sVal.indexOf("-- Select") === 0) {
-                    MessageBox.error("Must fill the rule: Please select Parameter, Validation, and Expected Value for " + (r.stepLabel || ("Rule " + (i + 1))) + ".");
+                if (!sObj || sObj.indexOf("-- Select") === 0) {
+                    MessageBox.error("Rule Validation Failure: Please select SAP Object for " + sRuleNum + ".");
+                    return false;
+                }
+
+                if (!sCli || sCli.indexOf("-- Select") === 0) {
+                    MessageBox.error("Rule Validation Failure: Please select Client for " + sRuleNum + ".");
+                    return false;
+                }
+
+                if (!sParam || sParam.indexOf("-- Select") === 0) {
+                    MessageBox.error("Rule Validation Failure: Please select Parameter for " + sRuleNum + ".");
+                    return false;
+                }
+
+                if (!sOp || sOp.indexOf("-- Select") === 0) {
+                    MessageBox.error("Rule Validation Failure: Please select Validation operator for " + sRuleNum + ".");
+                    return false;
+                }
+
+                if (!sVal || sVal.indexOf("-- Select") === 0) {
+                    MessageBox.error("Rule Validation Failure: Please specify Expected Value for " + sRuleNum + ".");
+                    return false;
+                }
+
+                // Business Rule Parameter-Value Combination Checks
+                if (sParam === "Failed Logins" && isNaN(sVal)) {
+                    MessageBox.error("Business Rule Validation Error for " + sRuleNum + ": 'Failed Logins' expected value must be a valid numeric value.");
+                    return false;
+                }
+
+                if ((sParam === "Password Changed" || sParam === "Locked" || sParam === "SDMI_* Exists") && sVal !== "Yes" && sVal !== "No" && sVal !== "True" && sVal !== "False") {
+                    MessageBox.error("Business Rule Validation Error for " + sRuleNum + ": '" + sParam + "' expected value must be 'Yes' or 'No'.");
                     return false;
                 }
             }

@@ -146,63 +146,107 @@
                                                             <core:Item key="" text="-- Select --"/>
                                                             <core:Item key="SAP*" text="SAP*"/>
                                                             <core:Item key="DDIC" text="DDIC"/>
-                                                            <core:Item key="EARLYWATCH" text="EARLYWATCH"/>
                                                             <core:Item key="SAPCPIC" text="SAPCPIC"/>
+                                                            <core:Item key="TMSADM" text="TMSADM"/>
                                                             <core:Item key="WF-BATCH" text="WF-BATCH"/>
                                                             <core:Item key="SAP_WFRT" text="SAP_WFRT"/>
-                                                            <core:Item key="TMSADM" text="TMSADM"/>
+                                                            <core:Item key="EARLYWATCH" text="EARLYWATCH"/>
                                                             <core:Item key="SDMI_*" text="SDMI_*"/>
+                                                            <core:Item key="J2EE_ADMIN" text="J2EE_ADMIN"/>
+                                                            <core:Item key="J2EE_GUEST" text="J2EE_GUEST"/>
+                                                            <core:Item key="SAPJSF" text="SAPJSF"/>
+                                                            <core:Item key="ADSUSER" text="ADSUSER"/>
                                                         </Select>
 
-                                                        <Select selectedKey="{ruleModel>client}" width="100%">
-                                                            <core:Item key="" text="-- Client --"/>
-                                                            <core:Item key="100" text="100"/>
-                                                            <core:Item key="000" text="000"/>
-                                                            <core:Item key="200" text="200"/>
-                                                            <core:Item key="300" text="300"/>
-                                                            <core:Item key="All" text="All"/>
-                                                        </Select>
+                                                        <VBox width="100%">
+                                                            <Select selectedKey="{ruleModel>client}" width="100%">
+                                                                <core:Item key="" text="-- Client --"/>
+                                                                <core:Item key="All" text="All"/>
+                                                                <core:Item key="000" text="000"/>
+                                                                <core:Item key="001" text="001"/>
+                                                                <core:Item key="066" text="066"/>
+                                                                <core:Item key="100" text="100"/>
+                                                                <core:Item key="200" text="200"/>
+                                                                <core:Item key="300" text="300"/>
+                                                                <core:Item key="Other Clients" text="Other Clients"/>
+                                                            </Select>
+                                                            <Input
+                                                                value="{ruleModel>customClient}"
+                                                                placeholder="Enter client ID..."
+                                                                visible="{= ${ruleModel>client} === 'Other Clients' }"
+                                                                width="100%"
+                                                                class="sapUiTinyMarginTop"/>
+                                                        </VBox>
 
-                                                        <Select selectedKey="{ruleModel>parameter}" width="100%">
-                                                            <core:Item key="" text="-- Select Parameter --"/>
-                                                            <core:Item key="Password Changed" text="Password Changed"/>
-                                                            <core:Item key="User Type" text="User Type"/>
-                                                            <core:Item key="Locked" text="Locked"/>
-                                                            <core:Item key="Failed Logins" text="Failed Logins"/>
-                                                            <core:Item key="Roles Assigned" text="Roles Assigned"/>
-                                                            <core:Item key="Security Policy" text="Security Policy"/>
-                                                            <core:Item key="SDMI_* Exists" text="SDMI_* Exists"/>
-                                                            <core:Item key="Super Group" text="Super Group"/>
-                                                        </Select>
+                                                        <VBox width="100%">
+                                                            <Select selectedKey="{ruleModel>parameter}" width="100%">
+                                                                <core:Item key="" text="-- Select Parameter --"/>
+                                                                <core:Item key="Password Changed" text="Password Changed"/>
+                                                                <core:Item key="User Type" text="User Type"/>
+                                                                <core:Item key="Locked" text="Locked"/>
+                                                                <core:Item key="Failed Logins" text="Failed Logins"/>
+                                                                <core:Item key="Roles Assigned" text="Roles Assigned"/>
+                                                                <core:Item key="Security Policy" text="Security Policy"/>
+                                                                <core:Item key="SDMI_* Exists" text="SDMI_* Exists"/>
+                                                                <core:Item key="Super User" text="Super User"/>
+                                                                <core:Item key="SAP_ALL" text="SAP_ALL"/>
+                                                                <core:Item key="S_A.TMSADM" text="S_A.TMSADM"/>
+                                                                <core:Item key="Custom" text="Custom"/>
+                                                            </Select>
+                                                            <Input
+                                                                value="{ruleModel>customParameter}"
+                                                                placeholder="Enter parameter name..."
+                                                                visible="{= ${ruleModel>parameter} === 'Custom' }"
+                                                                width="100%"
+                                                                class="sapUiTinyMarginTop"/>
+                                                        </VBox>
 
                                                         <Select selectedKey="{ruleModel>operator}" width="100%">
                                                             <core:Item key="" text="-- Select Validation --"/>
                                                             <core:Item key="Equals" text="Equals"/>
                                                             <core:Item key="Not Equals" text="Not Equals"/>
+                                                            <core:Item key="Contains" text="Contains"/>
+                                                            <core:Item key="Not Contains" text="Not Contains"/>
+                                                            <core:Item key="Exists" text="Exists"/>
+                                                            <core:Item key="Not Exists" text="Not Exists"/>
                                                             <core:Item key="Greater Than" text="Greater Than"/>
                                                             <core:Item key="Less Than" text="Less Than"/>
-                                                            <core:Item key="Contains" text="Contains"/>
+                                                            <core:Item key="Greater Than or Equal" text="Greater Than or Equal"/>
+                                                            <core:Item key="Less Than or Equal" text="Less Than or Equal"/>
                                                         </Select>
 
                                                         <VBox width="100%">
-                                                            <Select selectedKey="{ruleModel>expectedValue}" width="100%">
+                                                            <Input
+                                                                value="{ruleModel>expectedValue}"
+                                                                type="Number"
+                                                                placeholder="Enter number e.g. 3"
+                                                                visible="{= ${ruleModel>parameter} === 'Failed Logins' }"
+                                                                width="100%"/>
+                                                            <Select
+                                                                selectedKey="{ruleModel>expectedValue}"
+                                                                visible="{= ${ruleModel>parameter} !== 'Failed Logins' }"
+                                                                width="100%">
                                                                 <core:Item key="" text="-- Select Value --"/>
-                                                                <core:Item key="True" text="True"/>
-                                                                <core:Item key="False" text="False"/>
+                                                                <core:Item key="Yes" text="Yes"/>
+                                                                <core:Item key="No" text="No"/>
                                                                 <core:Item key="A (Dialog User)" text="A (Dialog User)"/>
                                                                 <core:Item key="B (System User)" text="B (System User)"/>
-                                                                <core:Item key="C (Communication)" text="C (Communication)"/>
-                                                                <core:Item key="L (Reference)" text="L (Reference)"/>
-                                                                <core:Item key="Enabled" text="Enabled"/>
-                                                                <core:Item key="Disabled" text="Disabled"/>
+                                                                <core:Item key="C (Communication User)" text="C (Communication User)"/>
+                                                                <core:Item key="S (Service User)" text="S (Service User)"/>
+                                                                <core:Item key="L (Reference User)" text="L (Reference User)"/>
+                                                                <core:Item key="G (Guest User)" text="G (Guest User)"/>
                                                                 <core:Item key="0" text="0"/>
                                                                 <core:Item key="1" text="1"/>
+                                                                <core:Item key="Z_NOEXPIRY" text="Z_NOEXPIRY"/>
+                                                                <core:Item key="SUPER" text="SUPER"/>
+                                                                <core:Item key="None" text="None"/>
+                                                                <core:Item key="SAP delivered roles" text="SAP delivered roles"/>
                                                                 <core:Item key="Custom" text="Custom"/>
                                                             </Select>
                                                             <Input
                                                                 value="{ruleModel>customExpectedValue}"
                                                                 placeholder="Enter custom expected value..."
-                                                                visible="{= ${ruleModel>expectedValue} === 'Custom' }"
+                                                                visible="{= ${ruleModel>parameter} !== 'Failed Logins' &amp;&amp; ${ruleModel>expectedValue} === 'Custom' }"
                                                                 width="100%"
                                                                 class="sapUiTinyMarginTop"/>
                                                         </VBox>
@@ -311,63 +355,107 @@
                                                             <core:Item key="" text="-- Select --"/>
                                                             <core:Item key="SAP*" text="SAP*"/>
                                                             <core:Item key="DDIC" text="DDIC"/>
-                                                            <core:Item key="EARLYWATCH" text="EARLYWATCH"/>
                                                             <core:Item key="SAPCPIC" text="SAPCPIC"/>
+                                                            <core:Item key="TMSADM" text="TMSADM"/>
                                                             <core:Item key="WF-BATCH" text="WF-BATCH"/>
                                                             <core:Item key="SAP_WFRT" text="SAP_WFRT"/>
-                                                            <core:Item key="TMSADM" text="TMSADM"/>
+                                                            <core:Item key="EARLYWATCH" text="EARLYWATCH"/>
                                                             <core:Item key="SDMI_*" text="SDMI_*"/>
+                                                            <core:Item key="J2EE_ADMIN" text="J2EE_ADMIN"/>
+                                                            <core:Item key="J2EE_GUEST" text="J2EE_GUEST"/>
+                                                            <core:Item key="SAPJSF" text="SAPJSF"/>
+                                                            <core:Item key="ADSUSER" text="ADSUSER"/>
                                                         </Select>
 
-                                                        <Select selectedKey="{ruleModel>client}" width="100%">
-                                                            <core:Item key="" text="-- Client --"/>
-                                                            <core:Item key="100" text="100"/>
-                                                            <core:Item key="000" text="000"/>
-                                                            <core:Item key="200" text="200"/>
-                                                            <core:Item key="300" text="300"/>
-                                                            <core:Item key="All" text="All"/>
-                                                        </Select>
+                                                        <VBox width="100%">
+                                                            <Select selectedKey="{ruleModel>client}" width="100%">
+                                                                <core:Item key="" text="-- Client --"/>
+                                                                <core:Item key="All" text="All"/>
+                                                                <core:Item key="000" text="000"/>
+                                                                <core:Item key="001" text="001"/>
+                                                                <core:Item key="066" text="066"/>
+                                                                <core:Item key="100" text="100"/>
+                                                                <core:Item key="200" text="200"/>
+                                                                <core:Item key="300" text="300"/>
+                                                                <core:Item key="Other Clients" text="Other Clients"/>
+                                                            </Select>
+                                                            <Input
+                                                                value="{ruleModel>customClient}"
+                                                                placeholder="Enter client ID..."
+                                                                visible="{= ${ruleModel>client} === 'Other Clients' }"
+                                                                width="100%"
+                                                                class="sapUiTinyMarginTop"/>
+                                                        </VBox>
 
-                                                        <Select selectedKey="{ruleModel>parameter}" width="100%">
-                                                            <core:Item key="" text="-- Select Parameter --"/>
-                                                            <core:Item key="Password Changed" text="Password Changed"/>
-                                                            <core:Item key="User Type" text="User Type"/>
-                                                            <core:Item key="Locked" text="Locked"/>
-                                                            <core:Item key="Failed Logins" text="Failed Logins"/>
-                                                            <core:Item key="Roles Assigned" text="Roles Assigned"/>
-                                                            <core:Item key="Security Policy" text="Security Policy"/>
-                                                            <core:Item key="SDMI_* Exists" text="SDMI_* Exists"/>
-                                                            <core:Item key="Super Group" text="Super Group"/>
-                                                        </Select>
+                                                        <VBox width="100%">
+                                                            <Select selectedKey="{ruleModel>parameter}" width="100%">
+                                                                <core:Item key="" text="-- Select Parameter --"/>
+                                                                <core:Item key="Password Changed" text="Password Changed"/>
+                                                                <core:Item key="User Type" text="User Type"/>
+                                                                <core:Item key="Locked" text="Locked"/>
+                                                                <core:Item key="Failed Logins" text="Failed Logins"/>
+                                                                <core:Item key="Roles Assigned" text="Roles Assigned"/>
+                                                                <core:Item key="Security Policy" text="Security Policy"/>
+                                                                <core:Item key="SDMI_* Exists" text="SDMI_* Exists"/>
+                                                                <core:Item key="Super User" text="Super User"/>
+                                                                <core:Item key="SAP_ALL" text="SAP_ALL"/>
+                                                                <core:Item key="S_A.TMSADM" text="S_A.TMSADM"/>
+                                                                <core:Item key="Custom" text="Custom"/>
+                                                            </Select>
+                                                            <Input
+                                                                value="{ruleModel>customParameter}"
+                                                                placeholder="Enter parameter name..."
+                                                                visible="{= ${ruleModel>parameter} === 'Custom' }"
+                                                                width="100%"
+                                                                class="sapUiTinyMarginTop"/>
+                                                        </VBox>
 
                                                         <Select selectedKey="{ruleModel>operator}" width="100%">
                                                             <core:Item key="" text="-- Select Validation --"/>
                                                             <core:Item key="Equals" text="Equals"/>
                                                             <core:Item key="Not Equals" text="Not Equals"/>
+                                                            <core:Item key="Contains" text="Contains"/>
+                                                            <core:Item key="Not Contains" text="Not Contains"/>
+                                                            <core:Item key="Exists" text="Exists"/>
+                                                            <core:Item key="Not Exists" text="Not Exists"/>
                                                             <core:Item key="Greater Than" text="Greater Than"/>
                                                             <core:Item key="Less Than" text="Less Than"/>
-                                                            <core:Item key="Contains" text="Contains"/>
+                                                            <core:Item key="Greater Than or Equal" text="Greater Than or Equal"/>
+                                                            <core:Item key="Less Than or Equal" text="Less Than or Equal"/>
                                                         </Select>
 
                                                         <VBox width="100%">
-                                                            <Select selectedKey="{ruleModel>expectedValue}" width="100%">
+                                                            <Input
+                                                                value="{ruleModel>expectedValue}"
+                                                                type="Number"
+                                                                placeholder="Enter number e.g. 3"
+                                                                visible="{= ${ruleModel>parameter} === 'Failed Logins' }"
+                                                                width="100%"/>
+                                                            <Select
+                                                                selectedKey="{ruleModel>expectedValue}"
+                                                                visible="{= ${ruleModel>parameter} !== 'Failed Logins' }"
+                                                                width="100%">
                                                                 <core:Item key="" text="-- Select Value --"/>
-                                                                <core:Item key="True" text="True"/>
-                                                                <core:Item key="False" text="False"/>
+                                                                <core:Item key="Yes" text="Yes"/>
+                                                                <core:Item key="No" text="No"/>
                                                                 <core:Item key="A (Dialog User)" text="A (Dialog User)"/>
                                                                 <core:Item key="B (System User)" text="B (System User)"/>
-                                                                <core:Item key="C (Communication)" text="C (Communication)"/>
-                                                                <core:Item key="L (Reference)" text="L (Reference)"/>
-                                                                <core:Item key="Enabled" text="Enabled"/>
-                                                                <core:Item key="Disabled" text="Disabled"/>
+                                                                <core:Item key="C (Communication User)" text="C (Communication User)"/>
+                                                                <core:Item key="S (Service User)" text="S (Service User)"/>
+                                                                <core:Item key="L (Reference User)" text="L (Reference User)"/>
+                                                                <core:Item key="G (Guest User)" text="G (Guest User)"/>
                                                                 <core:Item key="0" text="0"/>
                                                                 <core:Item key="1" text="1"/>
+                                                                <core:Item key="Z_NOEXPIRY" text="Z_NOEXPIRY"/>
+                                                                <core:Item key="SUPER" text="SUPER"/>
+                                                                <core:Item key="None" text="None"/>
+                                                                <core:Item key="SAP delivered roles" text="SAP delivered roles"/>
                                                                 <core:Item key="Custom" text="Custom"/>
                                                             </Select>
                                                             <Input
                                                                 value="{ruleModel>customExpectedValue}"
                                                                 placeholder="Enter custom expected value..."
-                                                                visible="{= ${ruleModel>expectedValue} === 'Custom' }"
+                                                                visible="{= ${ruleModel>parameter} !== 'Failed Logins' &amp;&amp; ${ruleModel>expectedValue} === 'Custom' }"
                                                                 width="100%"
                                                                 class="sapUiTinyMarginTop"/>
                                                         </VBox>

@@ -72,7 +72,7 @@ sap.ui.define([
                         deviationCount: 0,
                         rules: [
                             { parameter: "User Type", operator: "Equals", expectedValue: "B (System User)", actualValue: "B (System User)", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" },
-                            { parameter: "Super Group", operator: "Equals", expectedValue: "True", actualValue: "True", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" }
+                            { parameter: "Super User", operator: "Equals", expectedValue: "SUPER", actualValue: "SUPER", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" }
                         ],
                         logs: [
                             { timestamp: "06-Aug-2026 13:45 IST", level: "INFO", levelState: "Information", message: "Daily event hook scanner active." },
