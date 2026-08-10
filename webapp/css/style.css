@@ -1,140 +1,145 @@
 /* Modern SAP Fiori Horizon Custom Styles & Full Viewport Responsiveness */
 
-html, body, #content, #container, #container-uiarea, .sapUiBody {
-    height: 100% !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: hidden !important;
-    background-color: #f5f7fa;
+html,
+body,
+#content,
+#container,
+#container-uiarea,
+.sapUiBody {
+  height: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background-color: #f5f7fa;
 }
 
 .sapTNTToolPage {
-    height: 100% !important;
-    width: 100% !important;
+  height: 100% !important;
+  width: 100% !important;
 }
 
 .sapUiContentPadding {
-    background-color: #f5f7fa;
+  background-color: #f5f7fa;
 }
 
 /* Header Non-clipping & Vertical Alignment Fix */
 .sapMBar {
-    min-height: 4.5rem !important;
-    background: #ffffff !important;
-    border-bottom: 1px solid #e2e8f0 !important;
+  min-height: 4.5rem !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0 !important;
 }
 
 .textMuted {
-    color: #64748b !important;
-    font-size: 0.85rem !important;
+  color: #64748b !important;
+  font-size: 0.85rem !important;
 }
 
 /* Table Horizontal Scroll Elimination & Panel Content Overflow */
 .noInternalScroll .sapMPanelContent,
 .noInternalScroll .sapMList,
 .noInternalScroll .sapMTable {
-    overflow-x: hidden !important;
+  overflow-x: hidden !important;
 }
 
 .sapMTable {
-    overflow-x: hidden !important;
+  overflow-x: hidden !important;
 }
 
 /* Create User Button Text Centering Fix */
 .createUserBtn {
-    min-width: 8.5rem !important;
-    text-align: center !important;
+  min-width: 8.5rem !important;
+  text-align: center !important;
 }
 
 .createUserBtn .sapMBtnInner {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-    padding: 0 1.25rem !important;
-    box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 0 1.25rem !important;
+  box-sizing: border-box !important;
 }
 
 .createUserBtn .sapMBtnContent {
-    width: 100% !important;
-    text-align: center !important;
-    font-weight: 600 !important;
-    line-height: normal !important;
-    display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  line-height: normal !important;
+  display: block !important;
 }
 
 /* Next Step Button Arrow & Vertical Flex Alignment Fix */
 .nextStepBtn .sapMBtnInner {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0 1rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 1rem !important;
 }
 
 .nextStepBtn .sapMBtnContent {
-    line-height: normal !important;
-    vertical-align: middle !important;
+  line-height: normal !important;
+  vertical-align: middle !important;
 }
 
 .nextStepBtn .sapMBtnIcon {
-    margin-left: 0.35rem !important;
-    margin-right: 0 !important;
-    vertical-align: middle !important;
-    line-height: 1 !important;
+  margin-left: 0.35rem !important;
+  margin-right: 0 !important;
+  vertical-align: middle !important;
+  line-height: 1 !important;
 }
 
 /* Deviation Status Badge Styles - Grey Border & Outline Removal */
 .badgeWhite.sapMObjStatusInverted,
 .badgeWhite.sapMObjStatus,
 .badgeWhite {
-    background-color: #ffffff !important;
-    color: #374151 !important;
-    border: 1px solid #cbd5e1 !important;
-    outline: none !important;
-    box-shadow: none !important;
-    font-weight: 600 !important;
+  background-color: #ffffff !important;
+  color: #374151 !important;
+  border: 1px solid #cbd5e1 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
 }
 
 .badgeYellow.sapMObjStatusInverted,
 .badgeYellow.sapMObjStatus,
 .badgeYellow {
-    background-color: #eab308 !important;
-    color: #ffffff !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    font-weight: 700 !important;
+  background-color: #eab308 !important;
+  color: #ffffff !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-weight: 700 !important;
 }
 
 .badgeRed.sapMObjStatusInverted,
 .badgeRed.sapMObjStatus,
 .badgeRed {
-    background-color: #dc2626 !important;
-    color: #ffffff !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    font-weight: 700 !important;
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-weight: 700 !important;
 }
 
 /* Remove default SAPUI5 grey border box on ObjectStatus badges */
 .sapMObjStatusInverted {
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .sapMObjStatusInverted.sapMObjStatusWarning {
-    border: none !important;
-    background-color: #eab308 !important;
-    color: #ffffff !important;
+  border: none !important;
+  background-color: #eab308 !important;
+  color: #ffffff !important;
 }
 
 .sapMObjStatusInverted.sapMObjStatusError {
-    border: none !important;
-    background-color: #dc2626 !important;
-    color: #ffffff !important;
+  border: none !important;
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
 }
 
 /* ===== Add/Edit System dialog (Configuration page) — field spacing =====
@@ -144,7 +149,7 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    which has no framework-owned cell to fight. This is just the gap between
    those wrapped field groups. */
 .xyraFieldGroup {
-    margin-bottom: 1rem !important;
+  margin-bottom: 1rem !important;
 }
 
 /* Verified against sap.m.DialogRenderer source: scrollable content area is
@@ -152,28 +157,28 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    field row was sitting flush against the footer with no breathing room, and
    the footer bar itself was tight around the buttons. */
 .sapMDialogScrollCont {
-    padding-bottom: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
 }
 
 .sapMDialogFooter {
-    /* vertical padding must clear the 16px corner radius below, or a button
+  /* vertical padding must clear the 16px corner radius below, or a button
        sitting flush in that corner gets its own corners clipped by it.
        height:auto matters here — the theme's footer bar likely has a fixed
        (not just minimum) height that doesn't grow for the added padding, so
        the button was overflowing that fixed box and .sapMDialog's own
        overflow:hidden was slicing off the part that stuck out. */
-    height: auto !important;
-    min-height: 3.5rem !important;
-    padding: 0.65rem 1.5rem !important;
-    box-sizing: border-box !important;
-    background-color: #FFFFFF !important;
-    border-radius: 0 0 16px 16px !important;
+  height: auto !important;
+  min-height: 3.5rem !important;
+  padding: 0.65rem 1.5rem !important;
+  box-sizing: border-box !important;
+  background-color: #ffffff !important;
+  border-radius: 0 0 16px 16px !important;
 }
 
 .sapMDialogFooter .sapMBar,
 .sapMDialogFooter .sapMIBar {
-    height: auto !important;
-    box-sizing: border-box !important;
+  height: auto !important;
+  box-sizing: border-box !important;
 }
 
 /* Confirmed via DevTools inspection: the actual constrained element is the
@@ -181,10 +186,10 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    — computed at a fixed 40px height / 0px vertical padding, beating the
    broader rule above. Matching its exact class combo to out-specificity it. */
 .sapMDialogFooter .sapMIBar.sapMTBInactive.sapMTB {
-    height: auto !important;
-    min-height: 3.5rem !important;
-    padding: 0.65rem 1.5rem !important;
-    box-sizing: border-box !important;
+  height: auto !important;
+  min-height: 3.5rem !important;
+  padding: 0.65rem 1.5rem !important;
+  box-sizing: border-box !important;
 }
 
 /* overflow:hidden alone (clipping to whatever radius the dialog already had)
@@ -192,8 +197,8 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    and the footer above instead, so they can't mismatch regardless of what
    the theme's own radius actually is. */
 .sapMDialog {
-    border-radius: 16px !important;
-    overflow: hidden !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
 }
 
 /* The global .sapMBar rule below (min-height 4.5rem) is meant for the main
@@ -201,66 +206,136 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    dialog's own title bar (.sapMDialogHeader wraps a Bar too), eating into the
    room available for content/footer. Scoped back down for dialogs only. */
 .sapMDialogHeader .sapMBar {
-    min-height: 3rem !important;
+  min-height: 3rem !important;
 }
 
 /* ===== Modern Login Page ===== */
 
-.xyraLoginBg {
-    height: 100% !important;
-    width: 100% !important;
-    background-color: #F8FAFC !important;
+.xyraLoginSplit {
+  height: 100% !important;
+  width: 100% !important;
+  overflow: hidden !important;
 }
 
+.xyraLoginPane {
+  /* fitContainer="true" on this FlexBox sets its own flex-grow, which fights
+     a plain width override and was splitting the two panes evenly regardless
+     of the percentage here — flex-basis via the shorthand wins over that. */
+  flex: 0 0 35% !important;
+  width: 35% !important;
+  padding: 3rem 4rem !important;
+  box-sizing: border-box !important;
+  /* both panes are near-white, so the split was invisible. box-shadow bled
+     across the flex boundary but a sibling element with no positioning of
+     its own can still end up painting over/clipping it depending on stacking
+     — border-right is part of this box's own edge, nothing else can hide it. */
+  border-right: 1px solid rgba(15, 23, 42, 0.1) !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* box-shadow kept not reading against whatever's in the photo at that exact
+   edge — painting the shadow explicitly as a pseudo-element strip instead of
+   trusting a blurred box-shadow to stay visible over a busy image. */
+.xyraLoginPane::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: -24px !important;
+  width: 24px !important;
+  height: 100% !important;
+  background: linear-gradient(to right, rgba(15, 23, 42, 0.14), transparent) !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+}
+
+.xyraLoginHeroPane {
+  flex: 0 0 65% !important;
+  width: 65% !important;
+  height: 100% !important;
+  /* explicitly below the left pane's z-index:1, so the shadow bleeding off
+     its right edge can never end up painted over by this pane/image */
+  position: relative !important;
+  z-index: 0 !important;
+}
+
+.xyraLoginHero {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  position: relative !important;
+  z-index: 0 !important;
+}
+
+/* Below tablet width there isn't room for both the form and the hero image —
+   drop the image and let the form take the full width. */
+@media (max-width: 900px) {
+  .xyraLoginPane {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    padding: 2.5rem !important;
+  }
+
+  .xyraLoginHeroPane {
+    display: none !important;
+  }
+}
+
+.xyraLoginBg {
+  height: 100% !important;
+  width: 100% !important;
+  background-color: #ffffff !important;
+}
+
+/* No longer a floating boxed card — the pane itself is the surface now
+   (left-aligned content, matching the reference), this just keeps the
+   column from stretching edge to edge on a wide pane. */
 .xyraLoginCard {
-    background-color: #FFFFFF !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 16px !important;
-    padding: 2.5rem 2rem !important;
-    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06) !important;
+  width: 100% !important;
 }
 
 .xyraLoginLogo {
-    display: block !important;
-    width: 150px !important;
-    height: auto !important;
-    margin: 0 auto 1.5rem !important;
+  display: block !important;
+  width: 120px !important;
+  height: auto !important;
+  margin: 0 0 2.5rem !important;
 }
 
 .xyraLoginTitle {
-    color: #0F172A !important;
-    font-weight: 700 !important;
-    margin-bottom: 0.35rem !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.35rem !important;
 }
 
 .xyraLoginSubtitle {
-    color: #64748B !important;
-    font-size: 0.875rem !important;
-    margin-bottom: 1.75rem !important;
+  color: #64748b !important;
+  font-size: 0.875rem !important;
+  margin-bottom: 1.75rem !important;
 }
 
 .xyraLoginLabel {
-    color: #64748B !important;
-    font-size: 0.8rem !important;
-    font-weight: 600 !important;
-    margin-bottom: 0.4rem !important;
+  color: #64748b !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.4rem !important;
 }
 
 .xyraLoginField {
-    margin-bottom: 1.4rem !important;
+  margin-bottom: 1.4rem !important;
 }
 
 .xyraLoginCheckbox {
-    margin-bottom: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
 }
 
 .xyraLoginFooter {
-    margin-top: 1.75rem !important;
+  margin-top: 1.75rem !important;
 }
 
 .xyraLoginFooter .sapMText {
-    color: #94A3B8 !important;
-    font-size: 0.75rem !important;
+  color: #94a3b8 !important;
+  font-size: 0.75rem !important;
 }
 
 /* ===== Global field design (all Input/Select boxes app-wide) =====
@@ -271,17 +346,17 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
 
 .sapMInputBaseContentWrapper,
 .sapMSlt {
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 10px !important;
-    background-color: #F8FAFC !important;
-    box-shadow: none !important;
-    height: 46px !important;
-    transition: border-color 0.15s ease;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background-color: #f8fafc !important;
+  box-shadow: none !important;
+  height: 46px !important;
+  transition: border-color 0.15s ease;
 }
 
 .sapMInputBaseContentWrapper:hover,
 .sapMSlt:hover {
-    border-color: #533BFF !important;
+  border-color: #533bff !important;
 }
 
 /* No distinct focus-state border by design — see Login.controller.js
@@ -291,86 +366,86 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    fallback for pages that don't wire that listener up yet. */
 .sapMInputBaseContentWrapper:focus-within,
 .sapMSlt:focus-within {
-    border-color: #E2E8F0 !important;
-    box-shadow: none !important;
-    outline: none !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .sapMInputBaseContentWrapper input,
 .sapMSlt .sapMSltLabel {
-    height: 44px !important;
-    line-height: 44px !important;
-    font-size: 0.95rem !important;
-    padding: 0 0.9rem !important;
-    color: #0F172A !important;
-    outline: none !important;
-    box-shadow: none !important;
+  height: 44px !important;
+  line-height: 44px !important;
+  font-size: 0.95rem !important;
+  padding: 0 0.9rem !important;
+  color: #0f172a !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .sapMSlt .sapMSltArrow {
-    position: absolute !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    right: 0.75rem !important;
-    height: auto !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    color: #0F172A !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background: none !important;
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  right: 0.75rem !important;
+  height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #0f172a !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: none !important;
 }
 
 /* Keep validation states visible — the rules above would otherwise flatten them */
 .sapMInputBaseContentWrapperError {
-    border-color: #dc2626 !important;
+  border-color: #dc2626 !important;
 }
 
 .sapMInputBaseContentWrapperWarning {
-    border-color: #eab308 !important;
+  border-color: #eab308 !important;
 }
 
 .sapMInputBaseContentWrapperSuccess {
-    border-color: #16A34A !important;
+  border-color: #16a34a !important;
 }
 
 /* The option list opens in its own popover, detached from the select box in
    the DOM. Verified against sap.m.Select source: the popover carries
    .sapMSelectPicker, the selected item is .sapMSelectListItemBaseSelected. */
 .sapMSelectPicker {
-    border-radius: 10px !important;
-    border: 1px solid #E2E8F0 !important;
-    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.12) !important;
+  border-radius: 10px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.12) !important;
 }
 
 .sapMSelectList {
-    background-color: #FFFFFF !important;
-    padding: 0.35rem !important;
+  background-color: #ffffff !important;
+  padding: 0.35rem !important;
 }
 
 .sapMSelectListItem {
-    border-radius: 8px !important;
-    color: #0F172A !important;
-    font-size: 0.9rem !important;
-    padding: 0 0.9rem !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
+  border-radius: 8px !important;
+  color: #0f172a !important;
+  font-size: 0.9rem !important;
+  padding: 0 0.9rem !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .sapMSelectListItem:hover {
-    background-color: #F8FAFC !important;
+  background-color: #f8fafc !important;
 }
 
 .sapMSelectListItemBaseSelected {
-    background-color: #EEF0FF !important;
-    color: #533BFF !important;
-    font-weight: 600 !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
+  background-color: #eef0ff !important;
+  color: #533bff !important;
+  font-weight: 600 !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* ===== SearchField — same field language as Input/Select above =====
@@ -382,13 +457,13 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    sizing wrapper. */
 .sapMSF,
 .sapMSFF {
-    border: none !important;
-    background: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    padding: 0 !important;
-    height: 46px !important;
-    position: relative !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  height: 46px !important;
+  position: relative !important;
 }
 
 /* Deliberately not resetting margin here — the SearchField's own root is
@@ -403,67 +478,67 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    second, misaligned ring around the first. */
 .sapMSF:focus-within,
 .sapMSFF:focus-within {
-    outline: none !important;
-    box-shadow: none !important;
-    border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 
 .sapMSFI {
-    width: 100% !important;
-    height: 46px !important;
-    line-height: 46px !important;
-    padding-left: 1rem !important;
-    padding-right: 2.75rem !important;
-    box-sizing: border-box !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 10px !important;
-    background-color: #F8FAFC !important;
-    color: #0F172A !important;
-    outline: none !important;
-    box-shadow: none !important;
-    /* it's a real <input type="search"> — appearance:textfield keeps the
+  width: 100% !important;
+  height: 46px !important;
+  line-height: 46px !important;
+  padding-left: 1rem !important;
+  padding-right: 2.75rem !important;
+  box-sizing: border-box !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  outline: none !important;
+  box-shadow: none !important;
+  /* it's a real <input type="search"> — appearance:textfield keeps the
        browser rendering it as a native form control, including its OWN
        native focus glow that plain outline:none can't touch (it's not a CSS
        outline, it's browser-painted chrome). That's what came back as a
        second border on focus. appearance:none strips native rendering
        entirely instead; the resting-state double border was actually fixed
        by .sapMSFF's own border:none above, not by this value. */
-    -webkit-appearance: none !important;
-    appearance: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
 }
 
 /* UI5 renders its own reset (X) icon via .sapMSFR — the browser's native
    type="search" cancel button would double up with it otherwise. */
 .sapMSFI::-webkit-search-cancel-button,
 .sapMSFI::-webkit-search-decoration {
-    -webkit-appearance: none !important;
-    appearance: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
 }
 
 .sapMSF:hover .sapMSFI,
 .sapMSF:focus-within .sapMSFI {
-    border-color: #533BFF !important;
+  border-color: #533bff !important;
 }
 
 .sapMSFB {
-    color: #64748B !important;
-    border: none !important;
-    background: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    /* the icon (.sapMSFS search / .sapMSFR reset) is a sibling of .sapMSFI, not
+  color: #64748b !important;
+  border: none !important;
+  background: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  /* the icon (.sapMSFS search / .sapMSFR reset) is a sibling of .sapMSFI, not
        inside it — pin it on top of the input's own box (now positioned via
        .sapMSFF above) instead of letting it fall wherever the theme's default
        layout leaves it once the input stopped spanning the outer container.
        Flex here (not just top:50%/transform) centers the actual glyph, same
        fix as the icon-only button centering issue earlier. */
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    position: absolute !important;
-    right: 0.75rem !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  right: 0.75rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
 }
 
 /* ===== Global button design (all Emphasized/primary-action buttons app-wide) =====
@@ -474,9 +549,9 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    and clip the taller inner span. */
 
 .sapMBtn:has(.sapMBtnEmphasized) {
-    height: 46px !important;
-    box-sizing: border-box !important;
-    overflow: visible !important;
+  height: 46px !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
 }
 
 /* Icon-only buttons (Edit/Delete row actions: no text, so ButtonRenderer never
@@ -486,9 +561,9 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    on font metrics; scoped to "no .sapMBtnContent inside" so it can't touch
    the text buttons' already-working centering. */
 .sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)) {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 /* The Emphasized/Reject icon rules further down still set line-height: 46px
@@ -498,8 +573,8 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    centering the box, but the glyph itself sits low inside that tall box.
    Reset it back to normal for the icon-only case specifically. */
 .sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)) .sapMBtnIcon {
-    line-height: normal !important;
-    vertical-align: baseline !important;
+  line-height: normal !important;
+  vertical-align: baseline !important;
 }
 
 /* Reject-type buttons (e.g. the Delete row action next to an Emphasized Edit
@@ -507,59 +582,59 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    why Delete looked noticeably tighter than Edit right beside it. Matching
    height/padding only, not touching Reject's own red/pink coloring. */
 .sapMBtn:has(.sapMBtnReject) {
-    height: 46px !important;
-    box-sizing: border-box !important;
-    overflow: visible !important;
+  height: 46px !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
 }
 
 .sapMBtnReject {
-    height: 46px !important;
-    padding: 0 1rem !important;
-    box-sizing: border-box !important;
+  height: 46px !important;
+  padding: 0 1rem !important;
+  box-sizing: border-box !important;
 }
 
 /* Reject only got height/padding above — text buttons of this type (Logout:
    icon + text, not icon-only so the flexbox rule above skips it) never got
    the same content/icon centering Emphasized has. Same two rules, mirrored. */
 .sapMBtnReject .sapMBtnContent {
-    line-height: 46px !important;
+  line-height: 46px !important;
 }
 
 .sapMBtnReject .sapMBtnIcon {
-    vertical-align: middle !important;
-    line-height: 46px !important;
+  vertical-align: middle !important;
+  line-height: 46px !important;
 }
 
 .sapMBtnEmphasized {
-    background: linear-gradient(135deg, #533BFF, #5A5FF4) !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 10px !important;
-    height: 46px !important;
-    line-height: 46px !important;
-    padding: 0 1rem !important;
-    box-sizing: border-box !important;
+  background: linear-gradient(135deg, #533bff, #5a5ff4) !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 10px !important;
+  height: 46px !important;
+  line-height: 46px !important;
+  padding: 0 1rem !important;
+  box-sizing: border-box !important;
 }
 
 .sapMBtnEmphasized:hover {
-    filter: brightness(1.08);
+  filter: brightness(1.08);
 }
 
 .sapMBtnEmphasized .sapMBtnContent {
-    color: #FFFFFF !important;
-    font-weight: 600 !important;
-    width: 100% !important;
-    text-align: center !important;
-    line-height: 46px !important;
-    display: block !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  width: 100% !important;
+  text-align: center !important;
+  line-height: 46px !important;
+  display: block !important;
 }
 
 /* Icon is a sibling of .sapMBtnContent, not inside it — the line-height trick
    above only centers the text. Same fix already proven in this file for
    .nextStepBtn/.createUserBtn's icon-alignment bug, reused here. */
 .sapMBtnEmphasized .sapMBtnIcon {
-    vertical-align: middle !important;
-    line-height: 46px !important;
+  vertical-align: middle !important;
+  line-height: 46px !important;
 }
 
 /* ===== Secondary button (Dialog Cancel + any page-level secondary action) =====
@@ -571,12 +646,12 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    without being an actual Dialog end button. */
 .sapMDialogEndButton,
 .xyraBtnSecondary {
-    height: 46px !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 10px !important;
-    background-color: #FFFFFF !important;
-    padding: 0 1.25rem !important;
-    box-sizing: border-box !important;
+  height: 46px !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background-color: #ffffff !important;
+  padding: 0 1.25rem !important;
+  box-sizing: border-box !important;
 }
 
 /* Chrome (border/bg) lives on the outer button only — this inner span just
@@ -584,30 +659,30 @@ html, body, #content, #container, #container-uiarea, .sapUiBody {
    which is exactly the double-border this was. */
 .sapMDialogEndButton .sapMBtnInner,
 .xyraBtnSecondary .sapMBtnInner {
-    height: 46px !important;
-    line-height: 46px !important;
-    border: none !important;
-    background: none !important;
-    box-sizing: border-box !important;
+  height: 46px !important;
+  line-height: 46px !important;
+  border: none !important;
+  background: none !important;
+  box-sizing: border-box !important;
 }
 
 .sapMDialogEndButton:hover,
 .xyraBtnSecondary:hover {
-    border-color: #533BFF !important;
-    background-color: #F8FAFC !important;
+  border-color: #533bff !important;
+  background-color: #f8fafc !important;
 }
 
 .sapMDialogEndButton .sapMBtnContent,
 .xyraBtnSecondary .sapMBtnContent {
-    color: #0F172A !important;
-    font-weight: 600 !important;
-    line-height: 46px !important;
+  color: #0f172a !important;
+  font-weight: 600 !important;
+  line-height: 46px !important;
 }
 
 /* Same icon-as-sibling issue as .sapMBtnEmphasized — the line-height trick on
    .sapMBtnContent above doesn't reach it. */
 .xyraBtnSecondary .sapMBtnIcon {
-    vertical-align: middle !important;
-    line-height: 46px !important;
-    color: #0F172A !important;
+  vertical-align: middle !important;
+  line-height: 46px !important;
+  color: #0f172a !important;
 }

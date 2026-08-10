@@ -12,6 +12,8 @@
 
         <content>
 
+            <HBox fitContainer="true" renderType="Div" class="xyraLoginSplit">
+
             <FlexBox
                 id="loginContainer"
                 fitContainer="true"
@@ -19,10 +21,10 @@
                 alignItems="Center"
                 direction="Column"
                 renderType="Div"
-                class="xyraLoginBg">
+                class="xyraLoginBg xyraLoginPane">
 
                 <VBox id="_IDGenVBox"
-                    width="400px"
+                    width="380px"
                     alignItems="Stretch"
                     class="xyraLoginCard">
 
@@ -31,13 +33,13 @@
                     <Title id="_IDGenTitle"
                         text="Welcome back"
                         level="H2"
-                        textAlign="Center"
+                        textAlign="Begin"
                         width="100%"
                         class="xyraLoginTitle"/>
 
                     <Text id="_IDGenText"
                         text="Sign in to continue to Xyra Control Monitoring"
-                        textAlign="Center"
+                        textAlign="Begin"
                         width="100%"
                         wrapping="true"
                         class="xyraLoginSubtitle"/>
@@ -113,6 +115,19 @@
                 </VBox>
 
             </FlexBox>
+
+            <FlexBox
+                fitContainer="true"
+                justifyContent="Center"
+                alignItems="Center"
+                renderType="Div"
+                class="xyraLoginHeroPane">
+
+                <Image src="img/login-hero.png" alt="Xyra — AI-enabled control monitoring dashboard" class="xyraLoginHero"/>
+
+            </FlexBox>
+
+            </HBox>
 
         </content>
 
