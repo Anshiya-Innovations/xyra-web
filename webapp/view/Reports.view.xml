@@ -15,16 +15,12 @@
         <tnt:sideContent>
                         <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="Reports" itemSelect="onSideNavItemSelect">
                 <tnt:NavigationList>
-                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://shield" key="Admin" select="onAdmin"/>
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
 
 
-                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement">
-                        <tnt:tag>
-                            <ObjectStatus text="156 Controls" state="Indication18" inverted="true"/>
-                        </tnt:tag>
-                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement"/>
 
-                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://machine" key="AIInsights" select="onAIInsights">
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights" select="onAIInsights">
                         <tnt:tag>
                             <ObjectStatus text="New" state="Indication15" inverted="true"/>
                         </tnt:tag>
@@ -36,7 +32,7 @@
                         </tnt:tag>
                     </tnt:NavigationListItem>
 
-                    <tnt:NavigationListItem text="Reports" icon="sap-icon://business-objects-experience" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
                     <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
                     <tnt:NavigationListItem text="Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
                     <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>

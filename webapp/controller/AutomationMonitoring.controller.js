@@ -4,11 +4,19 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
-], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator) {
+    "sap/ui/model/FilterOperator",
+    "xyraweb/model/sidebarState"
+], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, SidebarState) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.AutomationMonitoring", {
+
+        onAfterRendering: function () {
+            var oToolPage = this.byId("automationMonitoringToolPage");
+            if (oToolPage) {
+                oToolPage.setSideExpanded(SidebarState.get());
+            }
+        },
 
         onInit: function () {
             var oData = {
@@ -131,7 +139,9 @@ sap.ui.define([
         onSideNavToggle: function () {
             var oToolPage = this.byId("automationMonitoringToolPage");
             if (oToolPage) {
-                oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
+                var bExpanded = !oToolPage.getSideExpanded();
+                oToolPage.setSideExpanded(bExpanded);
+                SidebarState.save(bExpanded);
             }
         },
 

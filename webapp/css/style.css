@@ -39,6 +39,13 @@ body,
      so every unselected item showed as a white card instead of blending into
      the dark sidebar */
   background-color: transparent !important;
+  height: 46px !important;
+  /* the .sapTntNLISelected class is applied on first render of the new page
+     (selectedKey is static per-view), but the browser sometimes doesn't
+     repaint a background swap triggered by a class toggle until something
+     else forces a layout pass — a second click was doing that by accident.
+     Declaring a transition nudges the browser to actually repaint it. */
+  transition: background-color 0.15s ease !important;
 }
 
 .sapTntNLI .sapTntNLIText,
@@ -52,6 +59,7 @@ body,
 
 .sapTntNLISelected {
   background: linear-gradient(135deg, #533BFF, #5A5FF4) !important;
+  transition: background 0.15s ease !important;
 }
 
 .sapTntNLISelected .sapTntNLIText,
@@ -82,6 +90,29 @@ body,
 
 .sapTntSideNavigationFlexible {
   margin-top: 5.5rem !important;
+}
+
+/* Collapsed sidebar: the full wordmark doesn't fit the narrow rail — swap to
+   the icon-only asset, centered. Verified against ToolPageRenderer: when
+   sideExpanded=false it adds .sapTntToolPageAsideCollapsed to the content
+   wrapper (an ancestor of the aside/SideNavigation), not to the aside itself. */
+.sapTntToolPageAsideCollapsed .sapTntSideNavigation {
+  background-image: url('../img/logo-icon-dark-bg.png') !important;
+  background-position: center 1.25rem !important;
+  background-size: 32px auto !important;
+}
+
+.sapTntToolPageAsideCollapsed .sapTntSideNavigationFlexible {
+  margin-top: 4rem !important;
+}
+
+/* Collapsed items stretch to the rail's full width while height stays fixed
+   at 46px — a rectangle instead of a square icon box. Match width to height
+   and center it instead of letting it fill the rail edge to edge. */
+.sapTntToolPageAsideCollapsed .sapTntNLI {
+  width: 46px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .sapUiContentPadding {

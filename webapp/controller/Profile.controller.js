@@ -4,8 +4,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/core/BusyIndicator",
     "xyraweb/model/config",
-    "xyraweb/model/session"
-], function (Controller, MessageToast, MessageBox, BusyIndicator, Config, Session) {
+    "xyraweb/model/session",
+    "xyraweb/model/sidebarState"
+], function (Controller, MessageToast, MessageBox, BusyIndicator, Config, Session, SidebarState) {
     "use strict";
 
     var ROLE_LABELS = {
@@ -19,6 +20,13 @@ sap.ui.define([
 
         onInit: function () {
             this._loadProfile();
+        },
+
+        onAfterRendering: function () {
+            var oToolPage = this.byId("profileToolPage");
+            if (oToolPage) {
+                oToolPage.setSideExpanded(SidebarState.get());
+            }
         },
 
         _loadProfile: function () {
@@ -63,7 +71,9 @@ sap.ui.define([
         onSideNavToggle: function () {
             var oToolPage = this.byId("profileToolPage");
             if (oToolPage) {
-                oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
+                var bExpanded = !oToolPage.getSideExpanded();
+                oToolPage.setSideExpanded(bExpanded);
+                SidebarState.save(bExpanded);
             }
         },
 

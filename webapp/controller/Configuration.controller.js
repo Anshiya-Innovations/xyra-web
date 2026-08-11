@@ -8,14 +8,19 @@ sap.ui.define([
     "sap/ui/core/BusyIndicator",
     "xyraweb/model/config",
     "xyraweb/model/session",
-    "xyraweb/model/focusRing"
-], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, BusyIndicator, Config, Session, killFocusRing) {
+    "xyraweb/model/focusRing",
+    "xyraweb/model/sidebarState"
+], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, BusyIndicator, Config, Session, killFocusRing, SidebarState) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Configuration", {
 
         onAfterRendering: function () {
             killFocusRing(this.getView());
+            var oToolPage = this.byId("configToolPage");
+            if (oToolPage) {
+                oToolPage.setSideExpanded(SidebarState.get());
+            }
         },
 
         onInit: function () {
@@ -69,7 +74,9 @@ sap.ui.define([
         onSideNavToggle: function () {
             var oToolPage = this.byId("configToolPage");
             if (oToolPage) {
-                oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
+                var bExpanded = !oToolPage.getSideExpanded();
+                oToolPage.setSideExpanded(bExpanded);
+                SidebarState.save(bExpanded);
             }
         },
 

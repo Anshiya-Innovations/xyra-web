@@ -3,13 +3,15 @@ sap.ui.define([
     "sap/ui/core/UIComponent",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
-    "sap/m/MessageBox"
+    "sap/m/MessageBox",
+    "xyraweb/model/sidebarState"
 ], function (
     Controller,
     UIComponent,
     JSONModel,
     MessageToast,
-    MessageBox
+    MessageBox,
+    SidebarState
 ) {
     "use strict";
 
@@ -17,6 +19,13 @@ sap.ui.define([
 
         onInit: function () {
             this._loadAuditLogsData();
+        },
+
+        onAfterRendering: function () {
+            var oToolPage = this.byId("auditLogsToolPage");
+            if (oToolPage) {
+                oToolPage.setSideExpanded(SidebarState.get());
+            }
         },
 
         _loadAuditLogsData: function () {
@@ -146,7 +155,9 @@ sap.ui.define([
         onSideNavToggle: function () {
             var oToolPage = this.byId("auditLogsToolPage");
             if (oToolPage) {
-                oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
+                var bExpanded = !oToolPage.getSideExpanded();
+                oToolPage.setSideExpanded(bExpanded);
+                SidebarState.save(bExpanded);
             }
         },
 

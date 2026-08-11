@@ -4,8 +4,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/BusyIndicator",
-    "xyraweb/model/config"
-], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config) {
+    "xyraweb/model/config",
+    "xyraweb/model/sidebarState"
+], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config, SidebarState) {
     "use strict";
 
     var PERSONA_TO_ROLE = {
@@ -29,10 +30,19 @@ sap.ui.define([
             this._loadUsers();
         },
 
+        onAfterRendering: function () {
+            var oToolPage = this.byId("accessToolPage");
+            if (oToolPage) {
+                oToolPage.setSideExpanded(SidebarState.get());
+            }
+        },
+
         onSideNavToggle: function () {
             var oToolPage = this.byId("accessToolPage");
             if (oToolPage) {
-                oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
+                var bExpanded = !oToolPage.getSideExpanded();
+                oToolPage.setSideExpanded(bExpanded);
+                SidebarState.save(bExpanded);
             }
         },
 

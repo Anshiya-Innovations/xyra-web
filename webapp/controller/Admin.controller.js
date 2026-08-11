@@ -1,14 +1,22 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
-    "sap/ui/core/UIComponent"
-], function (Controller, MessageToast, UIComponent) {
+    "sap/ui/core/UIComponent",
+    "xyraweb/model/sidebarState"
+], function (Controller, MessageToast, UIComponent, SidebarState) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Admin", {
 
         onInit: function () {
 
+        },
+
+        onAfterRendering: function () {
+            var oToolPage = this.byId("adminToolPage");
+            if (oToolPage) {
+                oToolPage.setSideExpanded(SidebarState.get());
+            }
         },
 
         navToRoute: function (sRouteName) {
@@ -23,7 +31,9 @@ sap.ui.define([
         onSideNavToggle: function () {
             var oToolPage = this.byId("adminToolPage");
             if (oToolPage) {
-                oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
+                var bExpanded = !oToolPage.getSideExpanded();
+                oToolPage.setSideExpanded(bExpanded);
+                SidebarState.save(bExpanded);
             }
         },
 

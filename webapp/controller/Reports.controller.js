@@ -2,11 +2,19 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
-    "sap/m/MessageBox"
-], function (Controller, JSONModel, MessageToast, MessageBox) {
+    "sap/m/MessageBox",
+    "xyraweb/model/sidebarState"
+], function (Controller, JSONModel, MessageToast, MessageBox, SidebarState) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Reports", {
+
+        onAfterRendering: function () {
+            var oToolPage = this.byId("reportsToolPage");
+            if (oToolPage) {
+                oToolPage.setSideExpanded(SidebarState.get());
+            }
+        },
 
         onInit: function () {
             var oData = {
@@ -191,7 +199,9 @@ sap.ui.define([
         onSideNavToggle: function () {
             var oToolPage = this.byId("reportsToolPage");
             if (oToolPage) {
-                oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
+                var bExpanded = !oToolPage.getSideExpanded();
+                oToolPage.setSideExpanded(bExpanded);
+                SidebarState.save(bExpanded);
             }
         },
 
