@@ -19,6 +19,71 @@ body,
   width: 100% !important;
 }
 
+/* ===== Dark sidebar =====
+   Verified against sap.tnt renderer sources (ToolPageRenderer,
+   SideNavigationRenderer, NavigationListItemRenderer): side panel wrapper is
+   .sapTntToolPageAside, nav root .sapTntSideNavigation, each item .sapTntNLI
+   (icon .sapTntNLIIcon, text .sapTntNLIText), selected state
+   .sapTntNLISelected, badge/tag wrapper .sapTntNLITagContainer. */
+.sapTntToolPageAside,
+.sapTntSideNavigation {
+  background-color: #0F172A !important;
+  border-right: none !important;
+}
+
+.sapTntNLI {
+  margin: 2px 0.6rem !important;
+  border-radius: 10px !important;
+  box-sizing: border-box !important;
+  /* theme's own default is a white/light item background — never overridden,
+     so every unselected item showed as a white card instead of blending into
+     the dark sidebar */
+  background-color: transparent !important;
+}
+
+.sapTntNLI .sapTntNLIText,
+.sapTntNLI .sapTntNLIIcon {
+  color: #94A3B8 !important;
+}
+
+.sapTntNLI:not(.sapTntNLISelected):hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.sapTntNLISelected {
+  background: linear-gradient(135deg, #533BFF, #5A5FF4) !important;
+}
+
+.sapTntNLISelected .sapTntNLIText,
+.sapTntNLISelected .sapTntNLIIcon {
+  color: #FFFFFF !important;
+}
+
+.sapTntSideNavigationSeparator {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Logo above the nav list. ToolPage.sideContent is strictly typed to
+   sap.tnt.SideNavigation (verified: {type: "sap.tnt.SideNavigation",
+   multiple: false}) — wrapping it in a VBox to add an Image control isn't a
+   cardinality problem, it fails TYPE validation and throws at view
+   construction (confirmed live: "Element sap.m.VBox is not valid for
+   aggregation sideContent", which silently broke navigation to every page
+   using it). SideNavigation also has no header slot of its own (only
+   item/fixedItem/footer, all NavigationLists) — no aggregation-based way to
+   place a control above the nav list. Painting the logo as a background-image
+   on the SideNavigation itself sidesteps the whole aggregation model. */
+.sapTntSideNavigation {
+  background-image: url('../img/logo-dark-bg.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: 1.25rem 1.5rem !important;
+  background-size: 100px auto !important;
+}
+
+.sapTntSideNavigationFlexible {
+  margin-top: 5.5rem !important;
+}
+
 .sapUiContentPadding {
   background-color: #f5f7fa;
 }
