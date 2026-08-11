@@ -140,6 +140,15 @@ sap.ui.define([
         },
 
         onOpenCreateUserDialog: function () {
+            var oNameInput = this.byId("createNameInput");
+            var oEmailInput = this.byId("createEmailInput");
+            var oPasswordInput = this.byId("createPasswordInput");
+            var oPersonaSelect = this.byId("createPersonaSelect");
+            if (oNameInput) { oNameInput.setValue(""); }
+            if (oEmailInput) { oEmailInput.setValue(""); }
+            if (oPasswordInput) { oPasswordInput.setValue(""); }
+            if (oPersonaSelect) { oPersonaSelect.setSelectedKey(""); }
+
             var oDialog = this.byId("createUserDialog");
             if (oDialog) {
                 oDialog.open();

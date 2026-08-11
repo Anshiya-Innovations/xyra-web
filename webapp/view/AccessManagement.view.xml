@@ -73,23 +73,31 @@
                         contentWidth="450px">
                         <content>
                             <VBox class="sapUiMediumMargin">
-                                <Label text="User Name" required="true"/>
-                                <Input id="createNameInput" placeholder="e.g. Jane Doe" class="sapUiSmallMarginBottom"/>
+                                <VBox width="100%" class="xyraFieldGroup">
+                                    <Label text="User Name" required="true" class="xyraLoginLabel"/>
+                                    <Input id="createNameInput" placeholder="e.g. Jane Doe"/>
+                                </VBox>
 
-                                <Label text="User Email" required="true"/>
-                                <Input id="createEmailInput" type="Email" placeholder="e.g. user@xyra.ai" class="sapUiSmallMarginBottom"/>
+                                <VBox width="100%" class="xyraFieldGroup">
+                                    <Label text="User Email" required="true" class="xyraLoginLabel"/>
+                                    <Input id="createEmailInput" type="Email" placeholder="e.g. user@xyra.ai"/>
+                                </VBox>
 
-                                <Label text="Password" required="true"/>
-                                <Input id="createPasswordInput" type="Password" placeholder="Enter temporary password" class="sapUiSmallMarginBottom"/>
+                                <VBox width="100%" class="xyraFieldGroup">
+                                    <Label text="Password" required="true" class="xyraLoginLabel"/>
+                                    <Input id="createPasswordInput" type="Password" placeholder="Enter temporary password"/>
+                                </VBox>
 
-                                <Label text="Persona / Role" required="true"/>
-                                <Select id="createPersonaSelect" forceSelection="false" width="100%">
-                                    <core:Item key="" text="-- Select Persona --"/>
-                                    <core:Item key="Escalation Manager" text="Escalation Manager"/>
-                                    <core:Item key="Reviewer 1" text="Reviewer 1"/>
-                                    <core:Item key="Reviewer 2" text="Reviewer 2"/>
-                                    <core:Item key="Auditor" text="Auditor"/>
-                                </Select>
+                                <VBox width="100%" class="xyraFieldGroup">
+                                    <Label text="Persona / Role" required="true" class="xyraLoginLabel"/>
+                                    <Select id="createPersonaSelect" selectedKey="" width="100%">
+                                        <core:Item key="" text="-- Select Persona --"/>
+                                        <core:Item key="Escalation Manager" text="Escalation Manager"/>
+                                        <core:Item key="Reviewer 1" text="Reviewer 1"/>
+                                        <core:Item key="Reviewer 2" text="Reviewer 2"/>
+                                        <core:Item key="Auditor" text="Auditor"/>
+                                    </Select>
+                                </VBox>
                             </VBox>
                         </content>
                         <beginButton>
@@ -107,14 +115,20 @@
                         contentWidth="400px">
                         <content>
                             <VBox class="sapUiMediumMargin">
-                                <Label text="User Email" design="Bold"/>
-                                <Text id="resetUserEmailText" text="selected.user@xyra.ai" class="sapUiSmallMarginBottom"/>
+                                <VBox width="100%" class="xyraFieldGroup">
+                                    <Label text="User Email" design="Bold" class="xyraLoginLabel"/>
+                                    <Text id="resetUserEmailText" text="selected.user@xyra.ai" class="fontWeightBold"/>
+                                </VBox>
 
-                                <Label text="New Password" required="true" class="sapUiTinyMarginTop"/>
-                                <Input id="newPasswordInput" type="Password" placeholder="Enter new password"/>
+                                <VBox width="100%" class="xyraFieldGroup">
+                                    <Label text="New Password" required="true" class="xyraLoginLabel"/>
+                                    <Input id="newPasswordInput" type="Password" placeholder="Enter new password"/>
+                                </VBox>
 
-                                <Label text="Confirm New Password" required="true" class="sapUiTinyMarginTop"/>
-                                <Input id="confirmPasswordInput" type="Password" placeholder="Enter new password"/>
+                                <VBox width="100%" class="xyraFieldGroup">
+                                    <Label text="Confirm New Password" required="true" class="xyraLoginLabel"/>
+                                    <Input id="confirmPasswordInput" type="Password" placeholder="Confirm new password"/>
+                                </VBox>
                             </VBox>
                         </content>
                         <beginButton>
