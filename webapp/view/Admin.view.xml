@@ -4,8 +4,10 @@
     xmlns="sap.m"
     xmlns:f="sap.f"
     xmlns:core="sap.ui.core"
-    xmlns:layout="sap.ui.layout"
     xmlns:tnt="sap.tnt"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:vizData="sap.viz.ui5.data"
+    xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds"
     height="100%">
 
     <tnt:ToolPage id="adminToolPage" sideExpanded="true">
@@ -103,92 +105,162 @@
                             type="Transparent"
                             press="onSideNavToggle"/>
 
-                        <HBox alignItems="Center" class="sapUiTinyMarginBegin">
-                            <Avatar src="sap-icon://shield" displaySize="S" type="Icon" class="sapUiTinyMarginEnd"/>
-                            <VBox justifyContent="Center">
-                                <Title text="XYRA - Admin Dashboard" level="H4" class="sapUiNoMargin"/>
-                                <Text text="AI Powered Security, Risk &amp; Compliance Platform" class="textMuted sapUiNoMargin"/>
-                            </VBox>
-                        </HBox>
-                        <ToolbarSpacer/>
-                        <HBox alignItems="Center" justifyContent="Center">
-                            <ObjectStatus text="July 30, 2026" icon="sap-icon://appointment-2" state="Information" class="sapUiTinyMarginEnd"/>
-                            <ObjectStatus text="Production Environment" state="Success"/>
-                        </HBox>
+                        <VBox justifyContent="Center" class="sapUiTinyMarginBegin">
+                            <Title text="Admin Dashboard" level="H4" class="sapUiNoMargin"/>
+                        </VBox>
                         <ToolbarSpacer/>
                         <Button id="_IDGenButton2" icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
                         <Button icon="sap-icon://search" tooltip="Search" type="Transparent" press="onSearchPress"/>
                         <Button icon="sap-icon://action-settings" tooltip="Settings" type="Transparent" press="onConfiguration"/>
                         <Button icon="sap-icon://sys-help" tooltip="Help" type="Transparent" press="onHelpPress"/>
                         <Button id="_IDGenButton3" icon="sap-icon://employee" text="Admin" type="Transparent" press="onAdminProfilePress"/>
-                        <Button id="_IDGenButton4" icon="sap-icon://log" text="Logout" type="Reject" press="onLogout"/>
                     </OverflowToolbar>
                 </customHeader>
 
                 <content>
                     <VBox id="_IDGenVBox2" width="100%" class="sapUiSmallMargin">
 
-                        <!-- TOP KPI SECTION (6 Cards) -->
-                        <Title text="Key Performance Indicators" level="H3" class="sapUiSmallMarginBottom"/>
-                        
-                        <layout:Grid containerQuery="true" defaultSpan="XL2 L4 M6 S12" class="sapUiSmallMarginBottom">
-                            
-                            <!-- KPI 1: Users -->
-                            <GenericTile header="Users" subheader="Active Enterprise Users" class="sapUiTinyMargin">
-                                <TileContent footer="12% vs last month">
-                                    <NumericContent value="1,420" valueColor="Good" indicator="Up" icon="sap-icon://group"/>
-                                </TileContent>
-                            </GenericTile>
+                        <!-- PRIMARY KPI CARDS -->
+                        <Title text="Compliance Posture" level="H3" class="sapUiSmallMarginBottom"/>
 
-                            <!-- KPI 2: Roles -->
-                            <GenericTile header="Roles" subheader="Configured SAP Roles" class="sapUiTinyMargin">
-                                <TileContent footer="Active role matrix">
-                                    <NumericContent value="380" valueColor="Neutral" icon="sap-icon://role"/>
-                                </TileContent>
-                            </GenericTile>
+                        <HBox wrap="Wrap" class="xyraKpiRow sapUiSmallMarginBottom">
+                            <VBox class="xyraKpiCard">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                                    <Text text="Total Controls" class="xyraKpiLabel"/>
+                                    <VBox class="xyraKpiIcon xyraKpiIconPurple" alignItems="Center" justifyContent="Center">
+                                        <core:Icon src="sap-icon://shield"/>
+                                    </VBox>
+                                </HBox>
+                                <Text text="156" class="xyraKpiValue"/>
+                                <Text text="↑ 12 this week" class="xyraKpiTrendUp sapUiTinyMarginTop"/>
+                            </VBox>
 
-                            <!-- KPI 3: Controls -->
-                            <GenericTile header="Controls" subheader="Active Governance Controls" class="sapUiTinyMargin" press="onControlManagement">
-                                <TileContent footer="95% Compliant">
-                                    <NumericContent value="156" valueColor="Good" indicator="Up" icon="sap-icon://shield"/>
-                                </TileContent>
-                            </GenericTile>
+                            <VBox class="xyraKpiCard">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                                    <Text text="Compliant" class="xyraKpiLabel"/>
+                                    <VBox class="xyraKpiIcon xyraKpiIconGreen" alignItems="Center" justifyContent="Center">
+                                        <core:Icon src="sap-icon://sys-enter-2"/>
+                                    </VBox>
+                                </HBox>
+                                <Text text="143" class="xyraKpiValue"/>
+                                <Text text="↑ 91.7% of total" class="xyraKpiTrendUp sapUiTinyMarginTop"/>
+                            </VBox>
 
-                            <!-- KPI 4: Open Reviews -->
-                            <GenericTile header="Open Reviews" subheader="Pending Approvals" class="sapUiTinyMargin">
-                                <TileContent footer="8 High Priority">
-                                    <NumericContent value="24" valueColor="Critical" indicator="Down" icon="sap-icon://edit"/>
-                                </TileContent>
-                            </GenericTile>
+                            <VBox class="xyraKpiCard">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                                    <Text text="At Risk" class="xyraKpiLabel"/>
+                                    <VBox class="xyraKpiIcon xyraKpiIconAmber" alignItems="Center" justifyContent="Center">
+                                        <core:Icon src="sap-icon://alert"/>
+                                    </VBox>
+                                </HBox>
+                                <Text text="8" class="xyraKpiValue"/>
+                                <Text text="5.1% of total" class="xyraKpiLabel sapUiTinyMarginTop"/>
+                            </VBox>
 
-                            <!-- KPI 5: Critical Risks -->
-                            <GenericTile header="Critical Risks" subheader="SOD &amp; Privilege Alerts" class="sapUiTinyMargin">
-                                <TileContent footer="-2 resolved today">
-                                    <NumericContent value="3" valueColor="Error" indicator="Down" icon="sap-icon://alert"/>
-                                </TileContent>
-                            </GenericTile>
+                            <VBox class="xyraKpiCard">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                                    <Text text="Failed" class="xyraKpiLabel"/>
+                                    <VBox class="xyraKpiIcon xyraKpiIconRed" alignItems="Center" justifyContent="Center">
+                                        <core:Icon src="sap-icon://decline"/>
+                                    </VBox>
+                                </HBox>
+                                <Text text="5" class="xyraKpiValue"/>
+                                <Text text="↓ 3.2% of total" class="xyraKpiTrendDown sapUiTinyMarginTop"/>
+                            </VBox>
+                        </HBox>
 
-                            <!-- KPI 6: Compliance Score -->
-                            <GenericTile header="Compliance Score" subheader="SOX &amp; GRC Rating" class="sapUiTinyMargin">
-                                <TileContent footer="Target 95%">
-                                    <NumericContent value="98.4%" valueColor="Good" indicator="Up" icon="sap-icon://accept"/>
-                                </TileContent>
-                            </GenericTile>
+                        <!-- SECONDARY OPERATIONAL STATS -->
+                        <HBox wrap="Wrap" class="xyraKpiRow sapUiSmallMarginBottom">
+                            <VBox class="xyraStatChip">
+                                <Text text="Active Users" class="xyraKpiLabel"/>
+                                <Text text="1,420" class="xyraKpiValue"/>
+                            </VBox>
+                            <VBox class="xyraStatChip">
+                                <Text text="Configured Roles" class="xyraKpiLabel"/>
+                                <Text text="380" class="xyraKpiValue"/>
+                            </VBox>
+                            <VBox class="xyraStatChip">
+                                <Text text="Open Reviews" class="xyraKpiLabel"/>
+                                <Text text="24" class="xyraKpiValue"/>
+                            </VBox>
+                            <VBox class="xyraStatChip">
+                                <Text text="SOX Compliance Score" class="xyraKpiLabel"/>
+                                <Text text="98.4%" class="xyraKpiValue"/>
+                            </VBox>
+                        </HBox>
 
-                        </layout:Grid>
+                        <!-- POSTURE DONUT + TREND CHART -->
+                        <HBox wrap="Wrap" alignItems="Stretch" class="xyraKpiRow sapUiSmallMarginBottom">
 
-                        <!-- QUICK ACTIONS SECTION -->
-                        <Panel headerText="Quick Actions" expandable="false" class="sapUiSmallMarginBottom">
-                            <OverflowToolbar>
-                                <Button text="Create User" icon="sap-icon://add-user" type="Emphasized" press="onAccessManagement"/>
-                                <Button text="Create Role" icon="sap-icon://add-process" type="Ghost" press="onQuickAction"/>
-                                <Button text="Create Control" icon="sap-icon://add-filter" type="Ghost" press="onControlManagement"/>
-                                <Button text="Generate Report" icon="sap-icon://excel-attachment" press="onReports"/>
-                                <Button text="Run AI Scan" icon="sap-icon://machine" type="Attention" press="onAIInsights"/>
-                                <Button text="Risk Dashboard" icon="sap-icon://line-chart" press="onRiskAnalytics"/>
-                                <Button text="Emergency Access" icon="sap-icon://warning" type="Negative" press="onEmergencyAccess"/>
-                                <Button text="Audit Center" icon="sap-icon://activity-items" press="onAuditLogs"/>
-                            </OverflowToolbar>
+                            <VBox width="30%" class="xyraDashboardCard">
+                                <Title text="Posture Overview" level="H4" class="sapUiSmallMarginBottom"/>
+
+                                <viz:VizFrame id="postureChart" vizType="donut" width="100%" height="260px" legendVisible="true">
+                                    <viz:dataset>
+                                        <vizData:FlattenedDataset data="{postureModel>/data}">
+                                            <vizData:dimensions>
+                                                <vizData:DimensionDefinition name="Status" value="{postureModel>status}"/>
+                                            </vizData:dimensions>
+                                            <vizData:measures>
+                                                <vizData:MeasureDefinition name="Count" value="{postureModel>count}"/>
+                                            </vizData:measures>
+                                        </vizData:FlattenedDataset>
+                                    </viz:dataset>
+                                    <viz:feeds>
+                                        <vizFeeds:FeedItem uid="size" type="Measure" values="Count"/>
+                                        <vizFeeds:FeedItem uid="color" type="Dimension" values="Status"/>
+                                    </viz:feeds>
+                                </viz:VizFrame>
+                            </VBox>
+
+                            <VBox width="68%" class="xyraDashboardCard">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <Title text="Trend Overview — Effective Controls" level="H4"/>
+                                    <Text text="Last 30 Days" class="textMuted"/>
+                                </HBox>
+
+                                <viz:VizFrame id="trendChart" vizType="line" width="100%" height="260px" legendVisible="false">
+                                    <viz:dataset>
+                                        <vizData:FlattenedDataset data="{trendModel>/data}">
+                                            <vizData:dimensions>
+                                                <vizData:DimensionDefinition name="Week" value="{trendModel>week}"/>
+                                            </vizData:dimensions>
+                                            <vizData:measures>
+                                                <vizData:MeasureDefinition name="Compliance Score" value="{trendModel>score}"/>
+                                            </vizData:measures>
+                                        </vizData:FlattenedDataset>
+                                    </viz:dataset>
+                                    <viz:feeds>
+                                        <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Compliance Score"/>
+                                        <vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Week"/>
+                                    </viz:feeds>
+                                </viz:VizFrame>
+                            </VBox>
+
+                        </HBox>
+
+                        <!-- RECENT FINDINGS -->
+                        <Panel headerText="Recent Findings" expandable="false" class="sapUiSmallMarginBottom">
+                            <Table id="recentFindingsTable" items="{findingsModel>/findings}" mode="None">
+                                <columns>
+                                    <Column width="34%"><Text text="Finding"/></Column>
+                                    <Column width="14%"><Text text="Control"/></Column>
+                                    <Column width="16%"><Text text="Status"/></Column>
+                                    <Column width="12%"><Text text="Severity"/></Column>
+                                    <Column width="24%"><Text text="Detected"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{findingsModel>finding}"/>
+                                            <Text text="{findingsModel>control}" class="fontWeightBold"/>
+                                            <ObjectStatus text="{findingsModel>status}" state="{findingsModel>statusState}"/>
+                                            <ObjectStatus text="{findingsModel>severity}" state="{findingsModel>severityState}"/>
+                                            <Text text="{findingsModel>detected}" class="textMuted"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
                         </Panel>
 
                     </VBox>
@@ -198,8 +270,7 @@
                     <OverflowToolbar id="_IDGenToolbar">
                         <Text id="_IDGenText3" text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer id="_IDGenToolbarSpacer"/>
-                        <Text text="Version 1.0 | Status: Operational"/>
-                        <ToolbarSpacer id="_IDGenToolbarSpacer1"/>
+                        <ObjectStatus text="July 30, 2026" icon="sap-icon://appointment-2" state="Information"/>
                     </OverflowToolbar>
                 </footer>
 

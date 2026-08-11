@@ -36,7 +36,8 @@
         "sap.ui.core": {},
         "sap.ui.layout": {},
         "sap.tnt": {},
-        "sap.f": {}
+        "sap.f": {},
+        "sap.viz": {}
       }
     },
 

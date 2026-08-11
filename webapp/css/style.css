@@ -782,3 +782,139 @@ body,
   line-height: 46px !important;
   color: #0f172a !important;
 }
+
+/* ===== Admin Dashboard — modern KPI cards + charts =====
+   All charts here are pure CSS (conic-gradient donut) or inline SVG (via
+   core:HTML) instead of a charting library — sap.suite.ui.microchart would
+   need a new manifest dependency, and this session already spent a long
+   debugging cycle recovering from one library integration gone wrong
+   (Font Awesome / IconPool). Data is static/mock, same as the rest of this
+   dashboard's KPI tiles already were — no live wiring was asked for here. */
+
+.xyraKpiRow {
+  gap: 1rem;
+}
+
+.xyraKpiCard {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  padding: 1.25rem 1.5rem !important;
+  box-sizing: border-box !important;
+  flex: 1 1 220px;
+}
+
+.xyraKpiIcon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.xyraKpiIcon .sapMText {
+  font-size: 1.1rem !important;
+}
+
+.xyraKpiIconPurple {
+  background-color: #eef0ff !important;
+}
+
+.xyraKpiIconPurple .sapUiIcon {
+  color: #533bff !important;
+}
+
+.xyraKpiIconGreen {
+  background-color: #dcfce7 !important;
+}
+
+.xyraKpiIconGreen .sapUiIcon {
+  color: #16a34a !important;
+}
+
+.xyraKpiIconAmber {
+  background-color: #fef3c7 !important;
+}
+
+.xyraKpiIconAmber .sapUiIcon {
+  color: #eab308 !important;
+}
+
+.xyraKpiIconRed {
+  background-color: #fee2e2 !important;
+}
+
+.xyraKpiIconRed .sapUiIcon {
+  color: #dc2626 !important;
+}
+
+.xyraKpiValue {
+  color: #0f172a !important;
+  font-size: 1.9rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+}
+
+.xyraKpiLabel {
+  color: #64748b !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+}
+
+.xyraKpiTrendUp {
+  color: #16a34a !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+}
+
+.xyraKpiTrendDown {
+  color: #dc2626 !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+}
+
+.xyraStatChip {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 0.6rem 1rem !important;
+  flex: 1 1 160px;
+}
+
+.xyraStatChip .xyraKpiValue {
+  font-size: 1.2rem !important;
+}
+
+.xyraDashboardCard {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  padding: 1.5rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Posture and Trend are now both sap.viz.ui5.controls.VizFrame (donut/line),
+   per explicit request — the CSS conic-gradient donut and the CSS/microchart
+   fallbacks used while recovering from the earlier white-screen crash are
+   gone now that a real chart library is wired up correctly. */
+
+/* VizFrame's plot-area background rect ships with a visible border — SVG
+   uses stroke, not the CSS border property. Class names confirmed directly
+   from the user's own DevTools inspection, not guessed: the element carries
+   all three (v-background-body, viz-plot-background, v-morphable-background)
+   at once. Single-class rule tied on specificity with whatever VizFrame's own
+   injected stylesheet uses and lost — chaining all three the way the earlier
+   focus-ring fix did guarantees higher specificity regardless of cascade
+   order. Also covering the chart's own outer container border in case that's
+   a second, separate source. */
+.v-background-body.viz-plot-background.v-morphable-background {
+  stroke: none !important;
+  stroke-width: 0 !important;
+}
+
+#postureChart,
+#trendChart {
+  border: none !important;
+  outline: none !important;
+}
