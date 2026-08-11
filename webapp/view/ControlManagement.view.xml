@@ -191,6 +191,7 @@
                                                                 <core:Item key="Super User" text="Super User"/>
                                                                 <core:Item key="SAP_ALL" text="SAP_ALL"/>
                                                                 <core:Item key="S_A.TMSADM" text="S_A.TMSADM"/>
+                                                                <core:Item key="Update Tool" text="Update Tool"/>
                                                                 <core:Item key="Custom" text="Custom"/>
                                                             </Select>
                                                             <Input
@@ -239,6 +240,11 @@
                                                                 <core:Item key="1" text="1"/>
                                                                 <core:Item key="Z_NOEXPIRY" text="Z_NOEXPIRY"/>
                                                                 <core:Item key="SUPER" text="SUPER"/>
+                                                                <core:Item key="SWPM (Software Provisioning Manager)" text="SWPM (Software Provisioning Manager)"/>
+                                                                <core:Item key="SAPup (System Upgrade)" text="SAPup (System Upgrade)"/>
+                                                                <core:Item key="SAPehpi (Enhancement Package Installer)" text="SAPehpi (Enhancement Package Installer)"/>
+                                                                <core:Item key="STARTUP (Software Update Manager)" text="STARTUP (Software Update Manager)"/>
+                                                                <core:Item key="SUM (SAP Upgrade Manager)" text="SUM (SAP Upgrade Manager)"/>
                                                                 <core:Item key="None" text="None"/>
                                                                 <core:Item key="SAP delivered roles" text="SAP delivered roles"/>
                                                                 <core:Item key="Custom" text="Custom"/>
@@ -400,6 +406,7 @@
                                                                 <core:Item key="Super User" text="Super User"/>
                                                                 <core:Item key="SAP_ALL" text="SAP_ALL"/>
                                                                 <core:Item key="S_A.TMSADM" text="S_A.TMSADM"/>
+                                                                <core:Item key="Update Tool" text="Update Tool"/>
                                                                 <core:Item key="Custom" text="Custom"/>
                                                             </Select>
                                                             <Input
@@ -448,6 +455,11 @@
                                                                 <core:Item key="1" text="1"/>
                                                                 <core:Item key="Z_NOEXPIRY" text="Z_NOEXPIRY"/>
                                                                 <core:Item key="SUPER" text="SUPER"/>
+                                                                <core:Item key="SWPM (Software Provisioning Manager)" text="SWPM (Software Provisioning Manager)"/>
+                                                                <core:Item key="SAPup (System Upgrade)" text="SAPup (System Upgrade)"/>
+                                                                <core:Item key="SAPehpi (Enhancement Package Installer)" text="SAPehpi (Enhancement Package Installer)"/>
+                                                                <core:Item key="STARTUP (Software Update Manager)" text="STARTUP (Software Update Manager)"/>
+                                                                <core:Item key="SUM (SAP Upgrade Manager)" text="SUM (SAP Upgrade Manager)"/>
                                                                 <core:Item key="None" text="None"/>
                                                                 <core:Item key="SAP delivered roles" text="SAP delivered roles"/>
                                                                 <core:Item key="Custom" text="Custom"/>

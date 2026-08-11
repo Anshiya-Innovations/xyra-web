@@ -95,7 +95,7 @@
                                     </VBox>
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="Host Name" required="true" class="xyraLoginLabel"/>
-                                        <Input id="newHostName" placeholder="e.g. asmy800.jnj.com"/>
+                                        <Input id="newHostName" placeholder="e.g. asmy800.xyra.com"/>
                                     </VBox>
                                     <VBox width="100%" class="xyraFieldGroup">
                                         <Label text="System Details" class="xyraLoginLabel"/>
@@ -354,10 +354,6 @@
                             </Table>
                         </Panel>
 
-                        <!-- BOTTOM EXPORT ACTION BAR -->
-                        <HBox justifyContent="Start" class="sapUiSmallMarginTop">
-                            <Button text="Export" icon="sap-icon://download" press="onExportSystems" class="xyraBtnSecondary"/>
-                        </HBox>
 
                     </VBox>
                 </content>
