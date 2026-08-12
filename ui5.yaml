@@ -41,3 +41,4 @@ builder:
     excludes:
       - /test/**
       - /localService/**
+      - /server.js

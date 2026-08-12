@@ -1,0 +1,181 @@
+<mvc:View
+    controllerName="xyraweb.controller.AlertItem"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="alertItemToolPage" sideExpanded="true">
+
+        <!-- SIDE NAVIGATION -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="DeviationReport" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin"/>
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement"/>
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights">
+                        <tnt:tag><ObjectStatus text="New" state="Indication15" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance">
+                        <tnt:tag><ObjectStatus text="98.4%" state="Indication16" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="Configuration" icon="sap-icon://action-settings" key="Configuration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement"/>
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics"/>
+                    <tnt:NavigationListItem text="System Health" icon="sap-icon://sys-monitor" key="SystemHealth"/>
+                </tnt:NavigationList>
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page id="alertItemPage" showHeader="true" enableScrolling="true" class="sapUiContentPadding">
+
+                <dependents>
+                    <!-- AUTOMATION EXECUTION LOGS DIALOG -->
+                    <Dialog
+                        id="itemLogsDialog"
+                        title="Automation Execution Logs"
+                        contentWidth="700px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <VBox>
+                                        <Title id="logItemIdTitle" text="Control ID: NLG08" level="H3"/>
+                                        <Text id="logItemDescText" text="Basis Kernel Audit Logging &amp; Parameter Validation" class="textMuted"/>
+                                    </VBox>
+                                    <ObjectStatus id="logItemStatus" text="FAILED" state="Error" icon="sap-icon://status-negative"/>
+                                </HBox>
+
+                                <Table id="itemLogEntriesTable" items="{logsModel>/logEntries}" mode="None" class="sapUiTinyMarginTop">
+                                    <columns>
+                                        <Column width="30%"><Text text="Timestamp" class="fontWeightBold"/></Column>
+                                        <Column width="20%"><Text text="Log Level" class="fontWeightBold"/></Column>
+                                        <Column width="50%"><Text text="Message / Event Trace" class="fontWeightBold"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{logsModel>timestamp}"/>
+                                                <ObjectStatus text="{logsModel>level}" state="{logsModel>levelState}"/>
+                                                <Text text="{logsModel>message}"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Download Log" icon="sap-icon://download" type="Ghost" press="onDownloadLogs"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Close" press="onCloseLogsDialog"/>
+                        </endButton>
+                    </Dialog>
+                </dependents>
+
+                <!-- PAGE HEADER -->
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button icon="sap-icon://nav-back" text="Back" type="Emphasized" press="onNavBack" class="sapUiTinyMarginBegin sapUiTinyMarginEnd"/>
+                        <Avatar src="sap-icon://detail-view" displaySize="S" type="Icon" class="sapUiTinyMarginEnd"/>
+                        <VBox justifyContent="Center">
+                            <Title text="XYRA – Alert Item Details" level="H4" class="sapUiNoMargin"/>
+                            <Text text="{= 'Control ' + ${alertModel>/header/controlId} + ' Line Item Analysis' }" class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+                        <Button icon="sap-icon://refresh" tooltip="Refresh Items" type="Transparent" press="onRefresh" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiSmallMarginTop">
+
+                        <!-- ALERT CONTEXT SUMMARY CARD -->
+                        <Panel headerText="Alert Context Summary" expandable="false" class="sapUiSmallMarginBottom noInternalScroll">
+                            <content>
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center">
+                                    <VBox width="23%" class="xyraFieldGroup">
+                                        <Label text="Control ID &amp; Name" class="textMuted"/>
+                                        <Title text="{alertModel>/header/controlId}" level="H4"/>
+                                        <Text text="{alertModel>/header/controlName}" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+
+                                    <VBox width="23%" class="xyraFieldGroup">
+                                        <Label text="System &amp; Client" class="textMuted"/>
+                                        <Text text="{= ${alertModel>/header/system} + ' (Client ' + ${alertModel>/header/client} + ')' }" class="fontWeightBold"/>
+                                        <Text text="{= 'Sector: ' + ${alertModel>/header/sector} + ' | Platform: ' + ${alertModel>/header/platform} }"/>
+                                    </VBox>
+
+                                    <VBox width="23%" class="xyraFieldGroup">
+                                        <Label text="Status &amp; Severity" class="textMuted"/>
+                                        <HBox alignItems="Center">
+                                            <ObjectStatus text="{alertModel>/header/status}" state="{= ${alertModel>/header/status} === 'Resolved' ? 'Success' : 'Error' }" class="sapUiTinyMarginEnd"/>
+                                            <ObjectStatus text="{alertModel>/header/severity}" state="{= ${alertModel>/header/severity} === 'Critical' ? 'Error' : 'Warning' }"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox width="23%" class="xyraFieldGroup">
+                                        <Label text="Alert Date &amp; Deviations" class="textMuted"/>
+                                        <Text text="{alertModel>/header/alertDate}" class="fontWeightBold"/>
+                                        <ObjectNumber number="{alertModel>/header/deviationCount}" unit="line deviations"/>
+                                    </VBox>
+                                </HBox>
+
+                                <VBox width="100%" class="sapUiSmallMarginTop">
+                                    <Label text="Incident Description" class="textMuted"/>
+                                    <Text text="{alertModel>/header/description}" class="fontWeightBold"/>
+                                </VBox>
+                            </content>
+                        </Panel>
+
+                        <!-- ALERT ITEM TABLE -->
+                        <Panel headerText="Detailed Deviation Line Items (1 : N)" expandable="false" class="sapUiSmallMarginBottom noInternalScroll">
+                            <content>
+                                <Table id="alertItemTable" items="{alertModel>/items}" noDataText="No detailed deviation line items found.">
+                                    <columns>
+                                        <Column width="9%"><Text text="Item ID" class="fontWeightBold"/></Column>
+                                        <Column width="13%"><Text text="SAP Object" class="fontWeightBold"/></Column>
+                                        <Column width="14%"><Text text="Parameter" class="fontWeightBold"/></Column>
+                                        <Column width="10%"><Text text="Operator" class="fontWeightBold"/></Column>
+                                        <Column width="15%"><Text text="Expected Value" class="fontWeightBold"/></Column>
+                                        <Column width="15%"><Text text="Actual Detected Value" class="fontWeightBold"/></Column>
+                                        <Column width="8%"><Text text="Status" class="fontWeightBold"/></Column>
+                                        <Column width="11%"><Text text="Timestamp" class="fontWeightBold"/></Column>
+                                        <Column width="5%"><Text text="Logs" class="fontWeightBold"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{alertModel>itemId}" class="fontWeightBold"/>
+                                                <Text text="{alertModel>sapObject}"/>
+                                                <Text text="{alertModel>parameter}"/>
+                                                <Text text="{alertModel>operator}"/>
+                                                <Text text="{alertModel>expectedValue}"/>
+                                                <Text text="{alertModel>actualValue}" class="fontWeightBold"/>
+                                                <ObjectStatus text="{alertModel>status}" state="{= ${alertModel>status} === 'Critical' ? 'Error' : (${alertModel>status} === 'High' ? 'Warning' : 'Information') }"/>
+                                                <Text text="{alertModel>timestamp}"/>
+                                                <Button text="Logs" type="Emphasized" press="onOpenItemLogs"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </content>
+                        </Panel>
+
+                    </VBox>
+                </content>
+            </Page>
+        </tnt:mainContents>
+    </tnt:ToolPage>
+
+</mvc:View>

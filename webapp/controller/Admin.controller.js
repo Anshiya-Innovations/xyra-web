@@ -158,6 +158,10 @@ sap.ui.define([
             this.navToRoute("Reports");
         },
 
+        onDeviationReport: function () {
+            this.navToRoute("DeviationReport");
+        },
+
         onAuditLogs: function () {
             this.navToRoute("AuditLogs");
         },

@@ -3,7 +3,7 @@ sap.ui.define([
     "sap/ui/core/UIComponent",
     "sap/m/MessageBox",
     "sap/ui/core/BusyIndicator",
-    "sap/ui/core/ValueState",
+    "sap/ui/core/library",
     "xyraweb/model/config",
     "xyraweb/model/session",
     "xyraweb/model/focusRing"
@@ -12,12 +12,14 @@ sap.ui.define([
     UIComponent,
     MessageBox,
     BusyIndicator,
-    ValueState,
+    coreLibrary,
     Config,
     Session,
     killFocusRing
 ) {
     "use strict";
+
+    var ValueState = coreLibrary.ValueState;
 
     // Maps each dropdown selection to what a successful login response must look
     // like for that selection to be accepted. Role alone tells ADMIN / ACM /

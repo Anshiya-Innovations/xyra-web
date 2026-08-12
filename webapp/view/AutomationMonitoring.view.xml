@@ -178,7 +178,7 @@
                         <!-- TAB NAVIGATION BUTTONS -->
                         <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
                             <Button text="Control Management" icon="sap-icon://shield" type="Transparent" press="onNavControlManagement" class="sapUiTinyMarginEnd"/>
-                            <Button text="Automation Monitoring" icon="sap-icon://sys-monitor" type="Emphasized"/>
+                            <Button text="Basis Deviation Report" icon="sap-icon://alert" type="Transparent" press="onNavDeviationReport"/>
                         </HBox>
 
                         <!-- AUTOMATION MONITORING TABLE -->

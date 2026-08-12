@@ -63,7 +63,7 @@
                     <Dialog
                         id="createControlDialog"
                         title="Create Security Control Master"
-                        contentWidth="840px">
+                        contentWidth="960px">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Label text="Control ID" required="true"/>
@@ -128,12 +128,12 @@
                                     <content>
                                         <Table id="createRulesTable" items="{ruleModel>/createRules}" mode="None" width="100%" class="sapUiNoMargin">
                                             <columns>
-                                                <Column width="18%"><Text text="SAP Object"/></Column>
+                                                <Column width="16%"><Text text="SAP Object"/></Column>
                                                 <Column width="14%"><Text text="Client"/></Column>
-                                                <Column width="22%"><Text text="Parameter"/></Column>
+                                                <Column width="24%"><Text text="Parameter"/></Column>
                                                 <Column width="18%"><Text text="Validation"/></Column>
-                                                <Column width="20%"><Text text="Expected Value"/></Column>
-                                                <Column width="8%" hAlign="Center"><Text text="Actions"/></Column>
+                                                <Column width="18%"><Text text="Expected Value"/></Column>
+                                                <Column width="10%" hAlign="Center"><Text text="Actions"/></Column>
                                             </columns>
                                             <items>
                                                 <ColumnListItem>
@@ -259,8 +259,8 @@
                                             </items>
                                         </Table>
 
-                                        <HBox justifyContent="Center" class="sapUiTinyMarginTop">
-                                            <Button text="+ Add Rule" type="Ghost" icon="sap-icon://add" press="onAddCreateRule"/>
+                                        <HBox justifyContent="Center" class="sapUiTinyMarginTop sapUiSmallMarginBottom">
+                                            <Button text="Add Rule" type="Emphasized" icon="sap-icon://add" press="onAddCreateRule"/>
                                         </HBox>
                                     </content>
                                 </Panel>
@@ -278,7 +278,7 @@
                     <Dialog
                         id="editControlDialog"
                         title="Edit Security Control Master"
-                        contentWidth="840px">
+                        contentWidth="960px">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Label text="Control ID"/>
@@ -341,15 +341,15 @@
                                         </OverflowToolbar>
                                     </headerToolbar>
                                     <content>
-                                        <Table id="editRulesTable" items="{ruleModel>/editRules}" mode="None" width="100%" class="sapUiNoMargin">
-                                            <columns>
-                                                <Column width="18%"><Text text="SAP Object"/></Column>
-                                                <Column width="14%"><Text text="Client"/></Column>
-                                                <Column width="22%"><Text text="Parameter"/></Column>
-                                                <Column width="18%"><Text text="Validation"/></Column>
-                                                <Column width="20%"><Text text="Expected Value"/></Column>
-                                                <Column width="8%" hAlign="Center"><Text text="Actions"/></Column>
-                                            </columns>
+                                         <Table id="editRulesTable" items="{ruleModel>/editRules}" mode="None" width="100%" class="sapUiNoMargin">
+                                             <columns>
+                                                 <Column width="16%"><Text text="SAP Object"/></Column>
+                                                 <Column width="14%"><Text text="Client"/></Column>
+                                                 <Column width="24%"><Text text="Parameter"/></Column>
+                                                 <Column width="18%"><Text text="Validation"/></Column>
+                                                 <Column width="18%"><Text text="Expected Value"/></Column>
+                                                 <Column width="10%" hAlign="Center"><Text text="Actions"/></Column>
+                                             </columns>
                                             <items>
                                                 <ColumnListItem>
                                                     <cells>
@@ -474,8 +474,8 @@
                                             </items>
                                         </Table>
 
-                                        <HBox justifyContent="Center" class="sapUiTinyMarginTop">
-                                            <Button text="+ Add Rule" type="Ghost" icon="sap-icon://add" press="onAddEditRule"/>
+                                        <HBox justifyContent="Center" class="sapUiTinyMarginTop sapUiSmallMarginBottom">
+                                            <Button text="Add Rule" type="Emphasized" icon="sap-icon://add" press="onAddEditRule"/>
                                         </HBox>
                                     </content>
                                 </Panel>
@@ -518,7 +518,7 @@
                         <!-- TAB NAVIGATION BUTTONS -->
                         <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
                             <Button text="Control Management" icon="sap-icon://shield" type="Emphasized" class="sapUiTinyMarginEnd"/>
-                            <Button text="Automation Monitoring" icon="sap-icon://sys-monitor" type="Transparent" press="onNavAutomationMonitoring"/>
+                            <Button text="Basis Deviation Report" icon="sap-icon://alert" type="Transparent" press="onNavDeviationReport"/>
                         </HBox>
 
                         <!-- SECURITY CONTROL MASTER TABLE -->

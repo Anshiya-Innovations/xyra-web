@@ -83,6 +83,10 @@ sap.ui.define([
             this.getOwnerComponent().getRouter().navTo("Reports");
         },
 
+        onDeviationReport: function () {
+            this.getOwnerComponent().getRouter().navTo("DeviationReport");
+        },
+
         onAuditLogs: function () {
             this.getOwnerComponent().getRouter().navTo("AuditLogs");
         },

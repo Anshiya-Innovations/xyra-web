@@ -278,12 +278,15 @@ sap.ui.define([
             }
         },
 
+        onNavControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
+        onNavDeviationReport: function () { this.getOwnerComponent().getRouter().navTo("DeviationReport"); },
         onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
         onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
         onControlMonitoring: function () { this.getOwnerComponent().getRouter().navTo("ControlMonitoring"); },
         onAIInsights: function () { this.getOwnerComponent().getRouter().navTo("AIInsights"); },
         onSOXCompliance: function () { this.getOwnerComponent().getRouter().navTo("SOXCompliance"); },
         onReports: function () { this.getOwnerComponent().getRouter().navTo("Reports"); },
+        onDeviationReport: function () { this.getOwnerComponent().getRouter().navTo("DeviationReport"); },
         onAuditLogs: function () { this.getOwnerComponent().getRouter().navTo("AuditLogs"); },
         onConfiguration: function () { this.getOwnerComponent().getRouter().navTo("Configuration"); },
         onAccessManagement: function () { this.getOwnerComponent().getRouter().navTo("AccessManagement"); },

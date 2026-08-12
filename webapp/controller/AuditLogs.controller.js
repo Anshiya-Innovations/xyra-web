@@ -315,6 +315,7 @@ sap.ui.define([
         onAIInsights: function () { MessageToast.show("Navigating to AI Insights..."); },
         onSOXCompliance: function () { MessageToast.show("Navigating to SOX Compliance..."); },
         onReports: function () { this.getOwnerComponent().getRouter().navTo("Reports"); },
+        onDeviationReport: function () { this.getOwnerComponent().getRouter().navTo("DeviationReport"); },
         onAuditLogs: function () { this.getOwnerComponent().getRouter().navTo("AuditLogs"); },
         onConfiguration: function () { this.getOwnerComponent().getRouter().navTo("Configuration"); },
         onAccessManagement: function () { this.getOwnerComponent().getRouter().navTo("AccessManagement"); },

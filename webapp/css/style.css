@@ -252,9 +252,169 @@ body,
    .sapMDialogScrollCont, footer button bar is .sapMDialogFooter. The last
    field row was sitting flush against the footer with no breathing room, and
    the footer bar itself was tight around the buttons. */
-.sapMDialogScrollCont {
-  padding-bottom: 1.5rem !important;
+/* ===== MessageBox & Dialog Text Styling ===== */
+.sapMMessageBox,
+.sapMDialog,
+.sapMMessageDialog {
+  background-color: #ffffff !important;
 }
+
+.sapMDialogScrollCont,
+.sapMDialogSection,
+.sapMDialogContent {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Force dark text color and clean line height on MessageBox text */
+.sapMMessageBox,
+.sapMMessageDialog,
+.sapMMessageBox .sapMDialogSection,
+.sapMMessageBox .sapMDialogScrollCont,
+.sapMMessageBox .sapMMessageBoxText,
+.sapMMessageBox .sapMText,
+#sap-ui-static .sapMMessageBox,
+#sap-ui-static .sapMMessageDialog,
+#sap-ui-static .sapMMessageBox .sapMDialogSection,
+#sap-ui-static .sapMMessageBox .sapMDialogScrollCont,
+#sap-ui-static .sapMMessageBox .sapMMessageBoxText,
+#sap-ui-static .sapMMessageBox .sapMText,
+#sap-ui-static .sapMMessageBoxText span,
+#sap-ui-static .sapMMessageBoxText div {
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.sapMMessageBox .sapMDialogScrollCont {
+  padding: 1.5rem 1.75rem !important;
+  min-height: 4rem !important;
+  height: auto !important;
+  display: block !important;
+  overflow: visible !important;
+}
+
+.sapMMessageBoxText {
+  display: block !important;
+  width: 100% !important;
+  color: #0f172a !important;
+  font-size: 1.05rem !important;
+  font-weight: 500 !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+  padding: 0.5rem 0 !important;
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+.sapMMessageBoxText .sapMText,
+.sapMMessageBoxText span {
+  color: #0f172a !important;
+  font-size: 1.05rem !important;
+  font-weight: 500 !important;
+  line-height: 1.6 !important;
+  display: inline-block !important;
+  width: 100% !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+
+/* Hide SAPUI5 accessibility screen-reader elements cleanly */
+.sapVH,
+.sapUiHidden,
+[aria-hidden="true"].sapVH {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+
+
+#sap-ui-static .sapMMessageBoxIcon,
+.sapMMessageBoxIcon {
+  font-size: 1.5rem !important;
+  margin-right: 0.75rem !important;
+  vertical-align: middle !important;
+}
+
+#sap-ui-static .sapMDialogHeader .sapMTitle,
+#sap-ui-static .sapMDialog .sapMTitle,
+#sap-ui-static .sapMMessageBoxTitle,
+.sapMDialogHeader .sapMTitle,
+.sapMDialog .sapMTitle,
+.sapMMessageBoxTitle {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+}
+
+/* ===== ABSOLUTE REMOVAL OF THREE-DOT OVERFLOW BUTTON (...) EVERYWHERE ===== */
+[id*="overflowButton"],
+[id*="overflowButton"] *,
+[id*="overflowButtonClone"],
+[id*="overflowButtonClone"] *,
+.sapMTBOverflowButton,
+.sapMTBOverflowButton *,
+.sapMTBOverflowButton.sapMBtnBase,
+#sap-ui-static [id*="overflowButton"],
+#sap-ui-static [id*="overflowButton"] *,
+.sapMDialogFooter .sapMTBOverflowButton,
+.sapMDialogFooter .sapMTBOverflowButton * {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  max-width: 0 !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+}
+
+/* Ensure MessageBox & Dialog footers have adequate width so SAPUI5 toolbar never overflows */
+.sapMMessageBox,
+.sapMDialog,
+.sapMMessageDialog {
+  min-width: 480px !important;
+  max-width: 95vw !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+.sapMDialogHeader {
+  border-bottom: 1px solid #e2e8f0 !important;
+  background-color: #ffffff !important;
+}
+
+.sapMDialogHeader .sapMTitle,
+.sapMDialog .sapMTitle {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+}
+
+.sapMDialogContent > .sapUiMediumMargin,
+.sapMDialogScrollCont > .sapUiMediumMargin {
+  margin: 0.5rem 0 !important;
+}
+
+.sapMDialogFooter,
+.sapMDialogFooter .sapMBar,
+.sapMDialogFooter .sapMIBar {
+  min-width: 100% !important;
+  width: 100% !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+
 
 .sapMDialogFooter {
   /* vertical padding must clear the 16px corner radius below, or a button
@@ -467,8 +627,31 @@ body,
   outline: none !important;
 }
 
-.sapMInputBaseContentWrapper input,
-.sapMSlt .sapMSltLabel {
+.sapMInputBase,
+.sapMInput,
+.sapMTextArea {
+  margin-bottom: 0.75rem !important;
+}
+
+.sapMLabel {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.35rem !important;
+  display: block !important;
+  line-height: normal !important;
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+.sapMPanelContent {
+  overflow: visible !important;
+  padding-bottom: 1.5rem !important;
+}
+
+.sapMDialogScrollCont {
+  padding-bottom: 2.5rem !important;
+}
+
+.sapMInputBaseContentWrapper input {
   height: 44px !important;
   line-height: 44px !important;
   font-size: 0.95rem !important;
@@ -476,6 +659,20 @@ body,
   color: #0f172a !important;
   outline: none !important;
   box-shadow: none !important;
+}
+
+.sapMSlt .sapMSltLabel {
+  height: 44px !important;
+  line-height: 44px !important;
+  font-size: 0.95rem !important;
+  padding-left: 0.9rem !important;
+  padding-right: 2.4rem !important;
+  color: #0f172a !important;
+  outline: none !important;
+  box-shadow: none !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
 }
 
 .sapMSlt .sapMSltArrow {
@@ -719,10 +916,9 @@ body,
 .sapMBtnEmphasized .sapMBtnContent {
   color: #ffffff !important;
   font-weight: 600 !important;
-  width: 100% !important;
   text-align: center !important;
   line-height: 46px !important;
-  display: block !important;
+  display: inline-block !important;
 }
 
 /* Icon is a sibling of .sapMBtnContent, not inside it — the line-height trick

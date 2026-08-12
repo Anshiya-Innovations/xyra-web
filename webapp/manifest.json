@@ -148,6 +148,16 @@
           "name": "AuditLogs",
           "pattern": "AuditLogs",
           "target": "AuditLogs"
+        },
+        {
+          "name": "DeviationReport",
+          "pattern": "DeviationReport",
+          "target": "DeviationReport"
+        },
+        {
+          "name": "AlertItem",
+          "pattern": "AlertItem/:alertId:/:controlId:",
+          "target": "AlertItem"
         }
       ],
 
@@ -194,6 +204,12 @@
         },
         "AuditLogs": {
           "viewName": "AuditLogs"
+        },
+        "DeviationReport": {
+          "viewName": "DeviationReport"
+        },
+        "AlertItem": {
+          "viewName": "AlertItem"
         }
       }
     }
