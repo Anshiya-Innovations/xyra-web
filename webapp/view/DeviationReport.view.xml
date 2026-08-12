@@ -376,7 +376,7 @@
                                                 <ObjectStatus text="{reportModel>status}" state="{= ${reportModel>status} === 'Resolved' ? 'Success' : (${reportModel>status} === 'Open' ? 'Error' : 'Warning') }"/>
                                                 <ObjectNumber number="{reportModel>deviationCount}" unit="deviations"/>
                                                 <Text text="{reportModel>alertDate}"/>
-                                                <Button text="View Items" icon="sap-icon://navigation-right-arrow" type="Transparent" press="onControlLinkPress"/>
+                                                <Button text="View Details" icon="sap-icon://navigation-right-arrow" type="Transparent" press="onControlLinkPress"/>
                                             </cells>
                                         </ColumnListItem>
                                     </items>
