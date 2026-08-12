@@ -4,8 +4,6 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:layout="sap.ui.layout"
-    xmlns:f="sap.f"
-    xmlns:card="sap.f.cards"
     xmlns:tnt="sap.tnt"
     height="100%">
 
@@ -13,36 +11,29 @@
 
         <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
         <tnt:sideContent>
-                        <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="AuditLogs" itemSelect="onSideNavItemSelect">
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="AuditLogs" itemSelect="onSideNavItemSelect">
                 <tnt:NavigationList>
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
-
-
                     <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement"/>
-
                     <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights" select="onAIInsights">
                         <tnt:tag>
                             <ObjectStatus text="New" state="Indication15" inverted="true"/>
                         </tnt:tag>
                     </tnt:NavigationListItem>
-
                     <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
                         <tnt:tag>
                             <ObjectStatus text="98.4%" state="Indication16" inverted="true"/>
                         </tnt:tag>
                     </tnt:NavigationListItem>
-
                     <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
                     <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
                     <tnt:NavigationListItem text="Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
                     <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
-
                     <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
                         <tnt:tag>
                             <ObjectStatus text="3 Risks" state="Indication18" inverted="true"/>
                         </tnt:tag>
                     </tnt:NavigationListItem>
-
                     <tnt:NavigationListItem text="System Health" icon="sap-icon://sys-monitor" key="SystemHealth" select="onSystemHealth"/>
                 </tnt:NavigationList>
 
@@ -61,6 +52,69 @@
                 enableScrolling="true"
                 class="sapUiContentPadding">
 
+                <dependents>
+                    <!-- READ-ONLY AUDIT LOG DETAILS DIALOG -->
+                    <Dialog
+                        id="auditDetailsDialog"
+                        title="Audit Log Details"
+                        contentWidth="680px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <VBox>
+                                        <Title text="{auditLogsModel>/selectedLog/logId}" level="H3"/>
+                                        <Text text="Administrative Action Evidence Record" class="textMuted"/>
+                                    </VBox>
+                                    <ObjectStatus
+                                        text="{auditLogsModel>/selectedLog/result}"
+                                        state="{auditLogsModel>/selectedLog/resultState}"
+                                        inverted="true"
+                                        class="badgeWhite"/>
+                                </HBox>
+
+                                <layout:Grid defaultSpan="L6 M6 S12" class="sapUiSmallMarginBottom">
+                                    <VBox>
+                                        <Label text="Log ID" class="fontWeightBold"/>
+                                        <Input value="{auditLogsModel>/selectedLog/logId}" editable="false"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Timestamp" class="fontWeightBold"/>
+                                        <Input value="{auditLogsModel>/selectedLog/timestamp}" editable="false"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Admin User" class="fontWeightBold"/>
+                                        <Input value="{auditLogsModel>/selectedLog/adminUser}" editable="false"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Action" class="fontWeightBold"/>
+                                        <Input value="{auditLogsModel>/selectedLog/action}" editable="false"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Module" class="fontWeightBold"/>
+                                        <Input value="{auditLogsModel>/selectedLog/module}" editable="false"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Object ID" class="fontWeightBold"/>
+                                        <Input value="{auditLogsModel>/selectedLog/objectId}" editable="false"/>
+                                    </VBox>
+                                </layout:Grid>
+
+                                <Label text="Description" class="fontWeightBold sapUiTinyMarginTop"/>
+                                <TextArea value="{auditLogsModel>/selectedLog/description}" editable="false" rows="2" width="100%" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Previous Value" class="fontWeightBold"/>
+                                <TextArea value="{auditLogsModel>/selectedLog/previousValue}" editable="false" rows="3" width="100%" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="New Value" class="fontWeightBold"/>
+                                <TextArea value="{auditLogsModel>/selectedLog/newValue}" editable="false" rows="3" width="100%" class="sapUiSmallMarginBottom"/>
+                            </VBox>
+                        </content>
+                        <endButton>
+                            <Button text="Close" type="Emphasized" press="onCloseAuditDetailsDialog"/>
+                        </endButton>
+                    </Dialog>
+                </dependents>
+
                 <!-- PAGE HEADER WITH TITLE & SUBTITLE -->
                 <customHeader>
                     <OverflowToolbar height="4.5rem">
@@ -72,8 +126,8 @@
                             class="sapUiTinyMarginBegin"/>
                         <Avatar initials="AL" displaySize="S" backgroundColor="Accent6" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
-                            <Title text="XYRA – Audit Logs" level="H4" class="sapUiNoMargin"/>
-                            <Text text="SAP Security Audit Configuration Validation Dashboard" class="textMuted sapUiNoMargin"/>
+                            <Title text="Audit Logs" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Admin Activity History" class="textMuted sapUiNoMargin"/>
                         </VBox>
                         <ToolbarSpacer/>
 
@@ -86,116 +140,153 @@
                 <content>
                     <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
 
-                        <!-- AUTOMATION PROCESS BANNER -->
+                        <!-- ACCESS DENIED MESSAGE FOR NON-ADMIN USERS -->
                         <MessageStrip
-                            text="Automation Process Active: 1. Extract Audit Logging Configuration. 2. Compare against Security Control Standards (SCS). 3. Detect configuration deviations. 4. If deviation exists: Generate report &amp; escalate to Reviewer 1. 5. If no deviation exists: Store validation history."
-                            type="Information"
+                            visible="{= ${auditLogsModel>/isAdmin} === false }"
+                            text="Access Denied: You do not have Administrative privileges to view XYRA Audit Logs. This module is restricted to Admin users only."
+                            type="Error"
                             showIcon="true"
                             showCloseButton="false"
                             class="sapUiSmallMarginBottom"/>
 
-                        <!-- TAB NAVIGATION BUTTONS (SLIDE BUTTONS) -->
-                        <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
-                            <Button id="btnTabValidationResults" text="Configuration Validation Results" icon="sap-icon://table-view" type="Emphasized" press="onSelectTabResults" class="sapUiTinyMarginEnd"/>
-                            <Button id="btnTabValidationHistory" text="Validation History" icon="sap-icon://history" type="Transparent" press="onSelectTabHistory"/>
-                        </HBox>
+                        <!-- MAIN AUDIT LOGS CONTAINER (VISIBLE FOR ADMIN) -->
+                        <VBox visible="{auditLogsModel>/isAdmin}" width="100%">
 
-                        <!-- SLIDE 1: CONFIGURATION VALIDATION RESULTS -->
-                        <VBox id="vboxValidationResults" visible="true" width="100%">
-                            <!-- QUICK ACTIONS TOOLBAR -->
+                            <!-- FILTER & SEARCH PANEL -->
                             <Panel expandable="false" class="sapUiSmallMarginBottom">
                                 <headerToolbar>
-                                    <OverflowToolbar>
-                                        <Title text="Quick Actions" level="H4"/>
+                                    <OverflowToolbar height="3.5rem">
+                                        <Title text="Admin Activity Filters" level="H4"/>
                                         <ToolbarSpacer/>
-                                        <Button text="Validate Configuration" icon="sap-icon://accept" type="Emphasized" press="onValidateConfiguration" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Export PDF" icon="sap-icon://pdf-attachment" type="Default" press="onExportPDF" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Export Excel" icon="sap-icon://excel-attachment" type="Default" press="onExportExcel"/>
+                                        <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onApplyFilters" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Refresh" type="Transparent" icon="sap-icon://refresh" press="onRefreshLogs" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Export" type="Default" icon="sap-icon://excel-attachment" press="onExportCSV"/>
                                     </OverflowToolbar>
                                 </headerToolbar>
+
+                                <content>
+                                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                        <!-- Search Field -->
+                                        <VBox width="23%" class="xyraFieldGroup">
+                                            <Label text="Search" class="xyraLoginLabel"/>
+                                            <SearchField
+                                                id="searchAuditLog"
+                                                value="{auditLogsModel>/filters/searchQuery}"
+                                                placeholder="Search Log ID, Admin, Action..."
+                                                search="onApplyFilters"
+                                                liveChange="onApplyFilters"/>
+                                        </VBox>
+
+                                        <!-- Action Filter -->
+                                        <VBox width="18%" class="xyraFieldGroup">
+                                            <Label text="Action" class="xyraLoginLabel"/>
+                                            <Select
+                                                id="filterAction"
+                                                selectedKey="{auditLogsModel>/filters/action}"
+                                                change="onApplyFilters"
+                                                width="100%">
+                                                <core:Item key="All" text="All Actions"/>
+                                                <core:Item key="Create" text="Create"/>
+                                                <core:Item key="Update" text="Update"/>
+                                                <core:Item key="Delete" text="Delete"/>
+                                                <core:Item key="Configuration Change" text="Configuration Change"/>
+                                                <core:Item key="Access Grant" text="Access Grant"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <!-- Module Filter -->
+                                        <VBox width="18%" class="xyraFieldGroup">
+                                            <Label text="Module" class="xyraLoginLabel"/>
+                                            <Select
+                                                id="filterModule"
+                                                selectedKey="{auditLogsModel>/filters/module}"
+                                                change="onApplyFilters"
+                                                width="100%">
+                                                <core:Item key="All" text="All Modules"/>
+                                                <core:Item key="Control Management" text="Control Management"/>
+                                                <core:Item key="System Configuration" text="System Configuration"/>
+                                                <core:Item key="Access Management" text="Access Management"/>
+                                                <core:Item key="SOX Compliance" text="SOX Compliance"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <!-- Admin User Filter -->
+                                        <VBox width="18%" class="xyraFieldGroup">
+                                            <Label text="Admin User" class="xyraLoginLabel"/>
+                                            <Select
+                                                id="filterAdmin"
+                                                selectedKey="{auditLogsModel>/filters/adminUser}"
+                                                change="onApplyFilters"
+                                                width="100%">
+                                                <core:Item key="All" text="All Admins"/>
+                                                <core:Item key="admin@xyra.com (System Admin)" text="admin@xyra.com"/>
+                                                <core:Item key="sysadmin@xyra.com (Security Manager)" text="sysadmin@xyra.com"/>
+                                                <core:Item key="secops@xyra.com (Security Lead)" text="secops@xyra.com"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <!-- Date Range Filters -->
+                                        <VBox width="10%" class="xyraFieldGroup">
+                                            <Label text="Start Date" class="xyraLoginLabel"/>
+                                            <DatePicker
+                                                id="filterStartDate"
+                                                placeholder="Start Date"
+                                                change="onApplyFilters"
+                                                width="100%"/>
+                                        </VBox>
+
+                                        <VBox width="10%" class="xyraFieldGroup">
+                                            <Label text="End Date" class="xyraLoginLabel"/>
+                                            <DatePicker
+                                                id="filterEndDate"
+                                                placeholder="End Date"
+                                                change="onApplyFilters"
+                                                width="100%"/>
+                                        </VBox>
+                                    </HBox>
+                                </content>
                             </Panel>
 
-                            <!-- CONFIGURATION VALIDATION RESULTS TABLE -->
+                            <!-- READ-ONLY AUDIT TRAIL TABLE -->
                             <Panel expandable="false" class="sapUiSmallMarginBottom">
-                                <Table id="validationResultsTable" items="{auditLogsModel>/validationResults}" mode="MultiSelect" width="100%">
+                                <Table
+                                    id="auditLogsTable"
+                                    items="{auditLogsModel>/logs}"
+                                    mode="None"
+                                    width="100%"
+                                    noDataText="No audit logs match the selected filter criteria.">
                                     <headerToolbar>
                                         <OverflowToolbar>
-                                            <Title text="Configuration Validation Results" level="H3"/>
+                                            <Title text="Admin Activity Audit Trail" level="H3"/>
                                             <ToolbarSpacer/>
-                                            <SearchField width="16rem" placeholder="Search validation results..." search="onSearchValidationResults"/>
-                                            <Select id="selectControlFilter" selectedKey="All" change="onFilterControlId">
-                                                <core:Item key="All" text="All Control IDs"/>
-                                                <core:Item key="LOG08" text="LOG08 (SAP Java Audit Log)"/>
-                                                <core:Item key="LOG28" text="LOG28 (SAP HANA Audit Log)"/>
-                                            </Select>
-                                            <Select id="selectResultFilter" selectedKey="All" change="onFilterValidationResult">
-                                                <core:Item key="All" text="All Results"/>
-                                                <core:Item key="Validated" text="Validated"/>
-                                                <core:Item key="Deviation" text="Deviation"/>
-                                                <core:Item key="Needs Review" text="Needs Review"/>
-                                            </Select>
+                                            <Text text="Read-Only Evidence Records" class="textMuted"/>
                                         </OverflowToolbar>
                                     </headerToolbar>
 
                                     <columns>
-                                        <Column width="10%"><Text text="Control ID"/></Column>
-                                        <Column width="16%"><Text text="SAP System"/></Column>
-                                        <Column width="12%"><Text text="Environment"/></Column>
-                                        <Column width="22%"><Text text="Parameter"/></Column>
-                                        <Column width="13%"><Text text="Standard Value"/></Column>
-                                        <Column width="13%"><Text text="Current Value"/></Column>
-                                        <Column width="14%"><Text text="Validation Result"/></Column>
-                                        <Column width="16%"><Text text="Reviewer Status"/></Column>
+                                        <Column width="14%"><Text text="Timestamp" class="fontWeightBold"/></Column>
+                                        <Column width="16%"><Text text="Admin User" class="fontWeightBold"/></Column>
+                                        <Column width="12%"><Text text="Action" class="fontWeightBold"/></Column>
+                                        <Column width="16%"><Text text="Module" class="fontWeightBold"/></Column>
+                                        <Column width="11%"><Text text="Object ID" class="fontWeightBold"/></Column>
+                                        <Column width="20%"><Text text="Description" class="fontWeightBold"/></Column>
+                                        <Column width="11%"><Text text="Result" class="fontWeightBold"/></Column>
+                                        <Column width="8%" hAlign="Center"><Text text="Details" class="fontWeightBold"/></Column>
                                     </columns>
 
                                     <items>
-                                        <ColumnListItem>
+                                        <ColumnListItem type="Active" press="onSelectAuditRecord">
                                             <cells>
-                                                <ObjectStatus text="{auditLogsModel>controlId}" state="Information"/>
-                                                <ObjectIdentifier title="{auditLogsModel>system}"/>
-                                                <Text text="{auditLogsModel>environment}"/>
-                                                <Text text="{auditLogsModel>parameter}"/>
-                                                <Text text="{auditLogsModel>standardValue}"/>
-                                                <Text text="{auditLogsModel>currentValue}"/>
-                                                <ObjectStatus text="{auditLogsModel>validationResult}" state="{auditLogsModel>resultState}"/>
-                                                <ObjectStatus text="{auditLogsModel>reviewerStatus}" state="{auditLogsModel>reviewerState}"/>
-                                            </cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                            </Panel>
-                        </VBox>
-
-                        <!-- SLIDE 2: VALIDATION HISTORY -->
-                        <VBox id="vboxValidationHistory" visible="false" width="100%">
-                            <Panel expandable="false" class="sapUiSmallMarginBottom">
-                                <Table id="validationHistoryTable" items="{auditLogsModel>/validationHistory}" mode="None" width="100%">
-                                    <headerToolbar>
-                                        <OverflowToolbar>
-                                            <Title text="Validation History" level="H3"/>
-                                            <ToolbarSpacer/>
-                                            <SearchField width="16rem" placeholder="Search history..." search="onSearchHistory"/>
-                                        </OverflowToolbar>
-                                    </headerToolbar>
-
-                                    <columns>
-                                        <Column width="18%"><Text text="Execution Time"/></Column>
-                                        <Column width="25%"><Text text="Control ID &amp; Scope"/></Column>
-                                        <Column width="22%"><Text text="Validated By"/></Column>
-                                        <Column width="13%"><Text text="Status"/></Column>
-                                        <Column width="12%"><Text text="Deviation Count"/></Column>
-                                        <Column width="10%" hAlign="Center"><Text text="Action"/></Column>
-                                    </columns>
-
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells>
-                                                <Text text="{auditLogsModel>executionTime}"/>
-                                                <ObjectIdentifier title="{auditLogsModel>scope}"/>
-                                                <Text text="{auditLogsModel>validatedBy}"/>
-                                                <ObjectStatus text="{auditLogsModel>status}" state="{auditLogsModel>statusState}"/>
-                                                <ObjectStatus text="{auditLogsModel>deviationCount}" state="{auditLogsModel>deviationState}"/>
-                                                <Button text="Report" icon="sap-icon://pdf-attachment" type="Transparent" press="onViewReportDetails"/>
+                                                <Text text="{auditLogsModel>timestamp}"/>
+                                                <ObjectIdentifier title="{auditLogsModel>adminUser}"/>
+                                                <ObjectStatus
+                                                    text="{auditLogsModel>action}"
+                                                    state="{= ${auditLogsModel>action} === 'Delete' ? 'Error' : (${auditLogsModel>action} === 'Create' ? 'Success' : (${auditLogsModel>action} === 'Update' ? 'Information' : 'Warning')) }"/>
+                                                <Text text="{auditLogsModel>module}"/>
+                                                <ObjectStatus text="{auditLogsModel>objectId}" state="Information"/>
+                                                <Text text="{auditLogsModel>description}" wrapping="true"/>
+                                                <ObjectStatus text="{auditLogsModel>result}" state="{auditLogsModel>resultState}"/>
+                                                <Button icon="sap-icon://hint" type="Transparent" tooltip="View Log Details" press="onOpenAuditDetailsDialog"/>
                                             </cells>
                                         </ColumnListItem>
                                     </items>
@@ -210,7 +301,7 @@
                     <OverflowToolbar>
                         <Text text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer/>
-                        <Text text="XYRA SAP Internal Controls Platform | Version 1.0 | Status: Active"/>
+                        <Text text="XYRA Admin Audit Logs v1.0 | Access Level: Administrative Only"/>
                     </OverflowToolbar>
                 </footer>
 

@@ -266,7 +266,7 @@ body,
   color: #0f172a !important;
 }
 
-/* Force dark text color and clean line height on MessageBox text */
+/* ===== PERFECT FLEXBOX LAYOUT FOR MessageBox (Error, Warning, Confirm, Info, Success) ===== */
 .sapMMessageBox,
 .sapMMessageDialog,
 .sapMMessageBox .sapMDialogSection,
@@ -287,37 +287,63 @@ body,
   opacity: 1 !important;
 }
 
-.sapMMessageBox .sapMDialogScrollCont {
-  padding: 1.5rem 1.75rem !important;
-  min-height: 4rem !important;
+.sapMMessageBox .sapMDialogScrollCont,
+#sap-ui-static .sapMMessageBox .sapMDialogScrollCont {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 0.75rem !important;
+  padding: 1.25rem 1.5rem !important;
+  min-height: 4.5rem !important;
   height: auto !important;
-  display: block !important;
   overflow: visible !important;
+  box-sizing: border-box !important;
 }
 
-.sapMMessageBoxText {
-  display: block !important;
-  width: 100% !important;
-  color: #0f172a !important;
-  font-size: 1.05rem !important;
-  font-weight: 500 !important;
-  line-height: 1.6 !important;
+.sapMMessageBoxIcon,
+#sap-ui-static .sapMMessageBoxIcon {
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+  font-size: 1.75rem !important;
+  line-height: 1.4 !important;
+  vertical-align: top !important;
   margin: 0 !important;
-  padding: 0.5rem 0 !important;
+  padding: 0 !important;
+}
+
+.sapMMessageBoxText,
+#sap-ui-static .sapMMessageBoxText {
+  display: block !important;
+  flex: 1 1 auto !important;
+  width: auto !important;
+  max-width: 100% !important;
+  color: #0f172a !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  margin: 0 !important;
+  padding: 0 !important;
   word-break: break-word !important;
   white-space: normal !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .sapMMessageBoxText .sapMText,
-.sapMMessageBoxText span {
+.sapMMessageBoxText span,
+#sap-ui-static .sapMMessageBoxText .sapMText,
+#sap-ui-static .sapMMessageBoxText span {
   color: #0f172a !important;
-  font-size: 1.05rem !important;
+  font-size: 0.95rem !important;
   font-weight: 500 !important;
-  line-height: 1.6 !important;
+  line-height: 1.5 !important;
   display: inline-block !important;
-  width: 100% !important;
+  width: auto !important;
   white-space: normal !important;
   word-break: break-word !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Hide SAPUI5 accessibility screen-reader elements cleanly */
@@ -378,19 +404,24 @@ body,
   top: -9999px !important;
 }
 
-/* Ensure MessageBox & Dialog footers have adequate width so SAPUI5 toolbar never overflows */
+/* Ensure MessageBox & Dialog footers and content have adequate padding and corner clearance */
 .sapMMessageBox,
 .sapMDialog,
 .sapMMessageDialog {
-  min-width: 480px !important;
+  min-width: 520px !important;
   max-width: 95vw !important;
   border-radius: 16px !important;
   overflow: hidden !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
 }
 
-.sapMDialogHeader {
+.sapMDialogHeader,
+.sapMDialogHeader .sapMBar,
+.sapMDialogHeader .sapMIBar {
+  padding: 0.75rem 1.75rem !important;
   border-bottom: 1px solid #e2e8f0 !important;
   background-color: #ffffff !important;
+  box-sizing: border-box !important;
 }
 
 .sapMDialogHeader .sapMTitle,
@@ -402,7 +433,7 @@ body,
 
 .sapMDialogContent > .sapUiMediumMargin,
 .sapMDialogScrollCont > .sapUiMediumMargin {
-  margin: 0.5rem 0 !important;
+  margin: 0.5rem 0.25rem !important;
 }
 
 .sapMDialogFooter,
@@ -414,20 +445,13 @@ body,
   box-sizing: border-box !important;
 }
 
-
-
 .sapMDialogFooter {
-  /* vertical padding must clear the 16px corner radius below, or a button
-       sitting flush in that corner gets its own corners clipped by it.
-       height:auto matters here — the theme's footer bar likely has a fixed
-       (not just minimum) height that doesn't grow for the added padding, so
-       the button was overflowing that fixed box and .sapMDialog's own
-       overflow:hidden was slicing off the part that stuck out. */
   height: auto !important;
-  min-height: 3.5rem !important;
-  padding: 0.65rem 1.5rem !important;
+  min-height: 3.75rem !important;
+  padding: 0.75rem 1.75rem 1rem 1.75rem !important;
   box-sizing: border-box !important;
   background-color: #ffffff !important;
+  border-top: 1px solid #f1f5f9 !important;
   border-radius: 0 0 16px 16px !important;
 }
 
@@ -437,21 +461,13 @@ body,
   box-sizing: border-box !important;
 }
 
-/* Confirmed via DevTools inspection: the actual constrained element is the
-   Dialog's auto-generated footer Toolbar, div.sapMIBar.sapMTBInactive.sapMTB
-   — computed at a fixed 40px height / 0px vertical padding, beating the
-   broader rule above. Matching its exact class combo to out-specificity it. */
 .sapMDialogFooter .sapMIBar.sapMTBInactive.sapMTB {
   height: auto !important;
-  min-height: 3.5rem !important;
-  padding: 0.65rem 1.5rem !important;
+  min-height: 3.75rem !important;
+  padding: 0.75rem 1.75rem 1rem 1.75rem !important;
   box-sizing: border-box !important;
 }
 
-/* overflow:hidden alone (clipping to whatever radius the dialog already had)
-   didn't close the gap — forcing the same explicit value on both the dialog
-   and the footer above instead, so they can't mismatch regardless of what
-   the theme's own radius actually is. */
 .sapMDialog {
   border-radius: 16px !important;
   overflow: hidden !important;
@@ -647,8 +663,11 @@ body,
   padding-bottom: 1.5rem !important;
 }
 
-.sapMDialogScrollCont {
-  padding-bottom: 2.5rem !important;
+.sapMDialogScrollCont,
+.sapMDialogSection,
+.sapMDialogContent {
+  padding: 1.25rem 1.75rem 2.5rem 1.75rem !important;
+  box-sizing: border-box !important;
 }
 
 .sapMInputBaseContentWrapper input {

@@ -5,8 +5,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "xyraweb/model/sidebarState"
-], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, SidebarState) {
+    "xyraweb/model/sidebarState",
+    "xyraweb/model/auditLogService"
+], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, SidebarState, AuditLogService) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.ControlManagement", {
@@ -525,6 +526,17 @@ sap.ui.define([
             oModel.setProperty("/controls", aControls);
             MessageToast.show("Security Control '" + sId + "' Created Successfully!");
 
+            // Automatically Record Admin Audit Log
+            AuditLogService.addLog({
+                action: "Create",
+                module: "Control Management",
+                objectId: sId,
+                description: "Created new Security Control Master rule '" + sId + "': " + sDesc,
+                previousValue: "None (New Record)",
+                newValue: "Desc: " + sDesc + " | Freq: " + sFreq + " | Envs: " + sSys1 + "/" + sSys2 + "/" + sSys3,
+                result: "Success"
+            });
+
             // Reset inputs & rules
             if (this.byId("createControlIdInput")) { this.byId("createControlIdInput").setValue(""); }
             if (this.byId("createControlDescInput")) { this.byId("createControlDescInput").setValue(""); }
@@ -612,6 +624,8 @@ sap.ui.define([
             var sTotalRun = this._calculateTotalRun(sFreq, sCron);
             var oModel = this.getView().getModel("controlsModel");
 
+            var oOldItem = oModel.getProperty(this._sEditingPath) || {};
+
             oModel.setProperty(this._sEditingPath + "/description", sDesc);
             oModel.setProperty(this._sEditingPath + "/sysType1", sSys1);
             oModel.setProperty(this._sEditingPath + "/sysType2", sSys2);
@@ -620,6 +634,17 @@ sap.ui.define([
             oModel.setProperty(this._sEditingPath + "/cronExpr", sCron);
             oModel.setProperty(this._sEditingPath + "/totalRun", sTotalRun);
             oModel.setProperty(this._sEditingPath + "/rules", JSON.parse(JSON.stringify(aEditRules)));
+
+            // Automatically Record Admin Audit Log
+            AuditLogService.addLog({
+                action: "Update",
+                module: "Control Management",
+                objectId: oOldItem.id || "Security Control",
+                description: "Updated Security Control Master rule '" + (oOldItem.id || "") + "'.",
+                previousValue: "Desc: " + (oOldItem.description || "") + " | Freq: " + (oOldItem.frequencyRun || ""),
+                newValue: "Desc: " + sDesc + " | Freq: " + sFreq + " | Envs: " + sSys1 + "/" + sSys2 + "/" + sSys3,
+                result: "Success"
+            });
 
             MessageToast.show("Security Control Updated Successfully!");
             this.onCloseEditControlDialog();
@@ -639,6 +664,17 @@ sap.ui.define([
                             aControls.splice(iIndex, 1);
                             oModel.setProperty("/controls", aControls);
                             MessageToast.show("Security Control '" + oItem.id + "' deleted.");
+
+                            // Automatically Record Admin Audit Log
+                            AuditLogService.addLog({
+                                action: "Delete",
+                                module: "Control Management",
+                                objectId: oItem.id,
+                                description: "Deleted Security Control Master rule '" + oItem.id + "': " + oItem.description,
+                                previousValue: "Control ID: " + oItem.id + " | Desc: " + oItem.description + " | Freq: " + oItem.frequencyRun,
+                                newValue: "Record Deleted",
+                                result: "Success"
+                            });
                         }
                     }
                 }

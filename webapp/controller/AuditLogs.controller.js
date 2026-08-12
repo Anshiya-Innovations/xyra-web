@@ -1,24 +1,34 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/UIComponent",
-    "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
-    "xyraweb/model/sidebarState"
+    "xyraweb/model/sidebarState",
+    "xyraweb/model/auditLogService",
+    "xyraweb/model/session"
 ], function (
     Controller,
     UIComponent,
-    JSONModel,
     MessageToast,
     MessageBox,
-    SidebarState
+    SidebarState,
+    AuditLogService,
+    Session
 ) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.AuditLogs", {
 
         onInit: function () {
-            this._loadAuditLogsData();
+            var oAuditModel = AuditLogService.getModel();
+            this.getView().setModel(oAuditModel, "auditLogsModel");
+
+            this._checkAdminAuthorization();
+
+            var oRouter = UIComponent.getRouterFor(this) || (this.getOwnerComponent() && this.getOwnerComponent().getRouter());
+            if (oRouter && oRouter.getRoute("AuditLogs")) {
+                oRouter.getRoute("AuditLogs").attachPatternMatched(this._checkAdminAuthorization, this);
+            }
         },
 
         onAfterRendering: function () {
@@ -28,128 +38,21 @@ sap.ui.define([
             }
         },
 
-        _loadAuditLogsData: function () {
-            var oData = {
-                validationResults: [
-                    {
-                        controlId: "LOG08",
-                        system: "PRD-100 (Java)",
-                        environment: "Production",
-                        parameter: "Authorization Failure Logging",
-                        standardValue: "Enabled",
-                        currentValue: "Disabled",
-                        validationResult: "Deviation",
-                        resultState: "Error",
-                        reviewerStatus: "Report Sent to Reviewer 1",
-                        reviewerState: "Error"
-                    },
-                    {
-                        controlId: "LOG08",
-                        system: "PRD-100 (Java)",
-                        environment: "Production",
-                        parameter: "Failed Login Logging",
-                        standardValue: "Enabled",
-                        currentValue: "Enabled",
-                        validationResult: "Validated",
-                        resultState: "Success",
-                        reviewerStatus: "Validated",
-                        reviewerState: "Success"
-                    },
-                    {
-                        controlId: "LOG08",
-                        system: "PRD-100 (Java)",
-                        environment: "Production",
-                        parameter: "User Administration Logging",
-                        standardValue: "Enabled",
-                        currentValue: "Enabled",
-                        validationResult: "Validated",
-                        resultState: "Success",
-                        reviewerStatus: "Validated",
-                        reviewerState: "Success"
-                    },
-                    {
-                        controlId: "LOG28",
-                        system: "HDB-10 (HANA)",
-                        environment: "Production",
-                        parameter: "Audit Logging Enabled",
-                        standardValue: "Enabled",
-                        currentValue: "Enabled",
-                        validationResult: "Validated",
-                        resultState: "Success",
-                        reviewerStatus: "Validated",
-                        reviewerState: "Success"
-                    },
-                    {
-                        controlId: "LOG28",
-                        system: "HDB-20 (HANA)",
-                        environment: "Quality",
-                        parameter: "Privileged User Logging",
-                        standardValue: "Enabled",
-                        currentValue: "Partial (DBADMIN)",
-                        validationResult: "Needs Review",
-                        resultState: "Warning",
-                        reviewerStatus: "Pending Review",
-                        reviewerState: "Warning"
-                    },
-                    {
-                        controlId: "LOG28",
-                        system: "HDB-10 (HANA)",
-                        environment: "Production",
-                        parameter: "Audit Retention Period",
-                        standardValue: ">= 90 Days",
-                        currentValue: "30 Days",
-                        validationResult: "Deviation",
-                        resultState: "Error",
-                        reviewerStatus: "Report Sent to Reviewer 1",
-                        reviewerState: "Error"
-                    },
-                    {
-                        controlId: "LOG08",
-                        system: "QAS-200 (Java)",
-                        environment: "Quality",
-                        parameter: "Role Change Logging",
-                        standardValue: "Enabled",
-                        currentValue: "Enabled",
-                        validationResult: "Validated",
-                        resultState: "Success",
-                        reviewerStatus: "Validated",
-                        reviewerState: "Success"
-                    }
-                ],
+        _checkAdminAuthorization: function () {
+            var oSession = Session ? Session.get() : null;
+            var sUserRole = (oSession && oSession.role) ? oSession.role : (localStorage.getItem("userRole") || "ADMIN");
+            var sUpperRole = String(sUserRole).toUpperCase();
 
-                validationHistory: [
-                    {
-                        executionTime: "03-Aug-2026 15:30 IST",
-                        scope: "LOG08 & LOG28 Full Audit Scan",
-                        validatedBy: "Automated Audit Engine",
-                        status: "Deviations Found",
-                        statusState: "Error",
-                        deviationCount: "2 Deviations",
-                        deviationState: "Error"
-                    },
-                    {
-                        executionTime: "02-Aug-2026 09:00 IST",
-                        scope: "LOG28 SAP HANA Security Audit",
-                        validatedBy: "Sarah Jenkins (GRC Officer)",
-                        status: "Completed",
-                        statusState: "Success",
-                        deviationCount: "0 Deviations",
-                        deviationState: "Success"
-                    },
-                    {
-                        executionTime: "01-Aug-2026 18:00 IST",
-                        scope: "LOG08 SAP Java Audit Logging",
-                        validatedBy: "Automated Audit Engine",
-                        status: "Warning",
-                        statusState: "Warning",
-                        deviationCount: "1 Deviation",
-                        deviationState: "Warning"
-                    }
-                ]
-            };
+            // Default to true for Admin UI unless an explicitly non-admin role is logged in
+            var bIsAdmin = true;
+            if (sUpperRole === "REVIEWER" || sUpperRole === "REV1" || sUpperRole === "REV2" || sUpperRole === "AUDITOR" || sUpperRole === "ESCALATION_MANAGER" || sUpperRole === "USER") {
+                bIsAdmin = false;
+            }
 
-            var oModel = new JSONModel(oData);
-            this.getView().setModel(oModel, "auditLogsModel");
+            var oModel = this.getView().getModel("auditLogsModel");
+            if (oModel) {
+                oModel.setProperty("/isAdmin", bIsAdmin);
+            }
         },
 
         onSideNavToggle: function () {
@@ -173,140 +76,167 @@ sap.ui.define([
             }
         },
 
-        onValidateConfiguration: function () {
-            var oTable = this.byId("validationResultsTable");
-            var aSelectedItems = oTable ? oTable.getSelectedItems() : [];
-            var sScopeText = "LOG08 & LOG28 Full Audit Scan";
-
-            if (aSelectedItems.length > 0) {
-                var aControlIds = [];
-                aSelectedItems.forEach(function (oItem) {
-                    var oContext = oItem.getBindingContext("auditLogsModel");
-                    if (oContext) {
-                        var sId = oContext.getProperty("controlId");
-                        if (sId && aControlIds.indexOf(sId) === -1) {
-                            aControlIds.push(sId);
-                        }
-                    }
-                });
-                sScopeText = aControlIds.join(" & ") + " Selected Controls Validation (" + aSelectedItems.length + " Items)";
-            }
-
+        onApplyFilters: function () {
             var oModel = this.getView().getModel("auditLogsModel");
-            var aHistory = oModel.getProperty("/validationHistory") || [];
+            var aAllLogs = oModel.getProperty("/allLogs") || [];
 
-            var dNow = new Date();
-            var sFormattedTime = dNow.toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' }) +
-                " " + dNow.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' }) + " IST";
+            var sQuery = (oModel.getProperty("/filters/searchQuery") || "").toLowerCase().trim();
+            var sAction = oModel.getProperty("/filters/action");
+            var sModule = oModel.getProperty("/filters/module");
+            var sAdmin = oModel.getProperty("/filters/adminUser");
 
-            aHistory.unshift({
-                executionTime: sFormattedTime,
-                scope: sScopeText,
-                validatedBy: "Automated Audit Engine",
-                status: "Deviations Found",
-                statusState: "Error",
-                deviationCount: aSelectedItems.length > 0 ? (aSelectedItems.length + " Items Verified") : "2 Deviations",
-                deviationState: "Error"
-            });
+            var oStartDatePicker = this.byId("filterStartDate");
+            var oEndDatePicker = this.byId("filterEndDate");
+            var dStart = oStartDatePicker ? oStartDatePicker.getDateValue() : null;
+            var dEnd = oEndDatePicker ? oEndDatePicker.getDateValue() : null;
 
-            oModel.setProperty("/validationHistory", aHistory);
-
-            var that = this;
-            MessageBox.warning(
-                "Automated Audit Configuration Extraction & Validation Complete:\n\n" +
-                "• Scope: " + sScopeText + "\n" +
-                "• Controls Audited: LOG08 & LOG28 Security Control Standards\n" +
-                "• Validation record successfully stored in Validation History.",
-                {
-                    title: "Automated SCS Validation Results",
-                    onClose: function () {
-                        that.onSelectTabHistory();
+            var aFiltered = aAllLogs.filter(function (oLog) {
+                // Search query matching
+                if (sQuery) {
+                    var sHaystack = (oLog.logId + " " + oLog.adminUser + " " + oLog.action + " " + oLog.module + " " + oLog.objectId + " " + oLog.description).toLowerCase();
+                    if (sHaystack.indexOf(sQuery) === -1) {
+                        return false;
                     }
                 }
-            );
+
+                // Action matching
+                if (sAction && sAction !== "All" && oLog.action !== sAction) {
+                    return false;
+                }
+
+                // Module matching
+                if (sModule && sModule !== "All" && oLog.module !== sModule) {
+                    return false;
+                }
+
+                // Admin user matching
+                if (sAdmin && sAdmin !== "All" && oLog.adminUser.indexOf(sAdmin) === -1 && sAdmin.indexOf(oLog.adminUser) === -1) {
+                    return false;
+                }
+
+                // Date range matching
+                if (dStart || dEnd) {
+                    var dLogDate = new Date(oLog.timestamp);
+                    if (isNaN(dLogDate.getTime())) {
+                        dLogDate = new Date();
+                    }
+                    if (dStart && dLogDate < dStart) {
+                        return false;
+                    }
+                    if (dEnd) {
+                        var dEndDay = new Date(dEnd.getTime());
+                        dEndDay.setHours(23, 59, 59, 999);
+                        if (dLogDate > dEndDay) {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            });
+
+            oModel.setProperty("/logs", aFiltered);
         },
 
-        onRefreshAuditLogs: function () {
-            if (this.byId("selectControlFilter")) { this.byId("selectControlFilter").setSelectedKey("All"); }
-            if (this.byId("selectResultFilter")) { this.byId("selectResultFilter").setSelectedKey("All"); }
-            this._loadAuditLogsData();
-            MessageToast.show("Audit Logs & Validation Results Refreshed.");
+        onResetFilters: function () {
+            var oModel = this.getView().getModel("auditLogsModel");
+            oModel.setProperty("/filters/searchQuery", "");
+            oModel.setProperty("/filters/action", "All");
+            oModel.setProperty("/filters/module", "All");
+            oModel.setProperty("/filters/adminUser", "All");
+
+            var oStartDatePicker = this.byId("filterStartDate");
+            var oEndDatePicker = this.byId("filterEndDate");
+            if (oStartDatePicker) { oStartDatePicker.setValue(""); }
+            if (oEndDatePicker) { oEndDatePicker.setValue(""); }
+
+            var aAllLogs = oModel.getProperty("/allLogs") || [];
+            oModel.setProperty("/logs", aAllLogs.slice());
+
+            MessageToast.show("Audit log filters reset.");
         },
 
-        onExportPDF: function () {
-            MessageToast.show("Generating PDF Audit Validation Report...");
+        onRefreshLogs: function () {
+            this.onResetFilters();
+            MessageToast.show("Admin Audit Logs refreshed.");
         },
 
-        onExportExcel: function () {
-            MessageToast.show("Exporting Validation Results to Excel Spreadsheet...");
-        },
+        onSelectAuditRecord: function (oEvent) {
+            var oItem = oEvent.getSource();
+            var oContext = oItem.getBindingContext("auditLogsModel");
+            if (oContext) {
+                var oLogData = oContext.getObject();
+                var oModel = this.getView().getModel("auditLogsModel");
+                oModel.setProperty("/selectedLog", oLogData);
 
-        onSelectTabResults: function () {
-            var oVBoxResults = this.byId("vboxValidationResults");
-            var oVBoxHistory = this.byId("vboxValidationHistory");
-            var oBtnResults = this.byId("btnTabValidationResults");
-            var oBtnHistory = this.byId("btnTabValidationHistory");
-
-            if (oVBoxResults && oVBoxHistory) {
-                oVBoxResults.setVisible(true);
-                oVBoxHistory.setVisible(false);
+                var oDialog = this.byId("auditDetailsDialog");
+                if (oDialog) {
+                    oDialog.open();
+                }
             }
-            if (oBtnResults && oBtnHistory) {
-                oBtnResults.setType("Emphasized");
-                oBtnHistory.setType("Transparent");
+        },
+
+        onOpenAuditDetailsDialog: function (oEvent) {
+            var oButton = oEvent.getSource();
+            var oContext = oButton.getBindingContext("auditLogsModel");
+            if (oContext) {
+                var oLogData = oContext.getObject();
+                var oModel = this.getView().getModel("auditLogsModel");
+                oModel.setProperty("/selectedLog", oLogData);
+
+                var oDialog = this.byId("auditDetailsDialog");
+                if (oDialog) {
+                    oDialog.open();
+                }
             }
         },
 
-        onSelectTabHistory: function () {
-            var oVBoxResults = this.byId("vboxValidationResults");
-            var oVBoxHistory = this.byId("vboxValidationHistory");
-            var oBtnResults = this.byId("btnTabValidationResults");
-            var oBtnHistory = this.byId("btnTabValidationHistory");
-
-            if (oVBoxResults && oVBoxHistory) {
-                oVBoxResults.setVisible(false);
-                oVBoxHistory.setVisible(true);
-            }
-            if (oBtnResults && oBtnHistory) {
-                oBtnResults.setType("Transparent");
-                oBtnHistory.setType("Emphasized");
+        onCloseAuditDetailsDialog: function () {
+            var oDialog = this.byId("auditDetailsDialog");
+            if (oDialog) {
+                oDialog.close();
             }
         },
 
-        onViewAuditHistory: function () {
-            this.onSelectTabHistory();
-            MessageToast.show("Displaying Validation History Logs.");
-        },
+        onExportCSV: function () {
+            var oModel = this.getView().getModel("auditLogsModel");
+            var aLogs = oModel.getProperty("/logs") || [];
 
-        onViewReportDetails: function (oEvent) {
-            var oItem = oEvent.getSource().getBindingContext("auditLogsModel").getObject();
-            MessageBox.information(
-                "Validation Report Summary:\n\n" +
-                "• Scope: " + oItem.scope + "\n" +
-                "• Execution Time: " + oItem.executionTime + "\n" +
-                "• Validated By: " + oItem.validatedBy + "\n" +
-                "• Status: " + oItem.status + " (" + oItem.deviationCount + ")"
-            );
-        },
+            if (aLogs.length === 0) {
+                MessageBox.information("No audit log records available to export.");
+                return;
+            }
 
-        onSearchValidationResults: function (oEvent) {
-            var sQuery = oEvent.getParameter("query");
-            MessageToast.show("Searching validation results: " + sQuery);
-        },
+            var aCsvRows = [];
+            aCsvRows.push(["Log ID", "Timestamp", "Admin User", "Action", "Module", "Object ID", "Description", "Previous Value", "New Value", "Result"].join(","));
 
-        onFilterControlId: function (oEvent) {
-            var sKey = oEvent.getParameter("selectedItem").getKey();
-            MessageToast.show("Filtered by Control ID: " + sKey);
-        },
+            aLogs.forEach(function (oLog) {
+                var row = [
+                    '"' + (oLog.logId || "") + '"',
+                    '"' + (oLog.timestamp || "") + '"',
+                    '"' + (oLog.adminUser || "") + '"',
+                    '"' + (oLog.action || "") + '"',
+                    '"' + (oLog.module || "") + '"',
+                    '"' + (oLog.objectId || "") + '"',
+                    '"' + (oLog.description || "").replace(/"/g, '""') + '"',
+                    '"' + (oLog.previousValue || "").replace(/"/g, '""') + '"',
+                    '"' + (oLog.newValue || "").replace(/"/g, '""') + '"',
+                    '"' + (oLog.result || "") + '"'
+                ];
+                aCsvRows.push(row.join(","));
+            });
 
-        onFilterValidationResult: function (oEvent) {
-            var sKey = oEvent.getParameter("selectedItem").getKey();
-            MessageToast.show("Filtered by Validation Result: " + sKey);
-        },
+            var sCsvContent = aCsvRows.join("\n");
+            var blob = new Blob([sCsvContent], { type: "text/csv;charset=utf-8;" });
+            var link = document.createElement("a");
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "XYRA_Admin_Audit_Logs_" + new Date().toISOString().slice(0, 10) + ".csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
-        onSearchHistory: function (oEvent) {
-            var sQuery = oEvent.getParameter("query");
-            MessageToast.show("Searching history logs: " + sQuery);
+            MessageToast.show("Audit logs exported to CSV successfully.");
         },
 
         // Navigation Handlers
@@ -315,14 +245,13 @@ sap.ui.define([
         onAIInsights: function () { MessageToast.show("Navigating to AI Insights..."); },
         onSOXCompliance: function () { MessageToast.show("Navigating to SOX Compliance..."); },
         onReports: function () { this.getOwnerComponent().getRouter().navTo("Reports"); },
-        onDeviationReport: function () { this.getOwnerComponent().getRouter().navTo("DeviationReport"); },
         onAuditLogs: function () { this.getOwnerComponent().getRouter().navTo("AuditLogs"); },
         onConfiguration: function () { this.getOwnerComponent().getRouter().navTo("Configuration"); },
         onAccessManagement: function () { this.getOwnerComponent().getRouter().navTo("AccessManagement"); },
         onRiskAnalytics: function () { MessageToast.show("Navigating to Risk Analytics..."); },
         onSystemHealth: function () { MessageToast.show("Navigating to System Health..."); },
         onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); },
-        onNotificationPress: function () { MessageToast.show("No new audit alerts."); },
+        onNotificationPress: function () { MessageToast.show("No new audit log alerts."); },
         onLogout: function () { this.getOwnerComponent().getRouter().navTo("Login"); }
 
     });
