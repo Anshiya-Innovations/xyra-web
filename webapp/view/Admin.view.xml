@@ -192,28 +192,41 @@
                         <!-- POSTURE DONUT + TREND CHART -->
                         <HBox wrap="Wrap" alignItems="Stretch" class="xyraKpiRow sapUiSmallMarginBottom">
 
-                            <VBox width="30%" class="xyraDashboardCard">
+                            <VBox width="34%" class="xyraDashboardCard">
                                 <Title text="Posture Overview" level="H4" class="sapUiSmallMarginBottom"/>
 
-                                <viz:VizFrame id="postureChart" vizType="donut" width="100%" height="260px" legendVisible="true">
-                                    <viz:dataset>
-                                        <vizData:FlattenedDataset data="{postureModel>/data}">
-                                            <vizData:dimensions>
-                                                <vizData:DimensionDefinition name="Status" value="{postureModel>status}"/>
-                                            </vizData:dimensions>
-                                            <vizData:measures>
-                                                <vizData:MeasureDefinition name="Count" value="{postureModel>count}"/>
-                                            </vizData:measures>
-                                        </vizData:FlattenedDataset>
-                                    </viz:dataset>
-                                    <viz:feeds>
-                                        <vizFeeds:FeedItem uid="size" type="Measure" values="Count"/>
-                                        <vizFeeds:FeedItem uid="color" type="Dimension" values="Status"/>
-                                    </viz:feeds>
-                                </viz:VizFrame>
+                                <HBox width="100%" justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginTop">
+                                    <!-- Interactive SVG Donut Chart with Hover Center Count Value -->
+                                    <core:HTML content="{adminModel>/postureSvgHtml}"/>
+
+                                    <!-- Legend with Swatches & Count -->
+                                    <VBox justifyContent="Center" class="sapUiSmallMarginBegin">
+                                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                            <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#3b82f6" class="sapUiTinyMarginEnd"/>
+                                            <VBox>
+                                                <Text text="Compliant: 143" class="boldText"/>
+                                                <Text text="Healthy Controls" class="textMuted"/>
+                                            </VBox>
+                                        </HBox>
+                                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                            <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#d97706" class="sapUiTinyMarginEnd"/>
+                                            <VBox>
+                                                <Text text="At Risk: 8" class="boldText"/>
+                                                <Text text="Requires Review" class="textMuted"/>
+                                            </VBox>
+                                        </HBox>
+                                        <HBox alignItems="Center">
+                                            <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#65a30d" class="sapUiTinyMarginEnd"/>
+                                            <VBox>
+                                                <Text text="Failed: 5" class="boldText"/>
+                                                <Text text="Action Needed" class="textMuted"/>
+                                            </VBox>
+                                        </HBox>
+                                    </VBox>
+                                </HBox>
                             </VBox>
 
-                            <VBox width="68%" class="xyraDashboardCard">
+                            <VBox width="64%" class="xyraDashboardCard">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
                                     <Title text="Trend Overview — Effective Controls" level="H4"/>
                                     <Text text="Last 30 Days" class="textMuted"/>

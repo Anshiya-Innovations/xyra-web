@@ -71,14 +71,86 @@ sap.ui.define([
                 ]
             }), "postureModel");
 
-            // vizProperties is object-typed — setting it here via a real JS
-            // object instead of an XML attribute, since a hand-written
-            // object/array literal in an XML attribute is exactly what broke
-            // the FeedItem "values" binding earlier (single quotes aren't
-            // valid JSON there). This is unambiguous.
+            var sSvg = this._generateAdminPosturePieChartSvg(143, 8, 5);
+            this.getView().setModel(new JSONModel({
+                postureSvgHtml: sSvg
+            }), "adminModel");
+
             var oNoTitle = { title: { visible: false } };
-            if (this.byId("postureChart")) { this.byId("postureChart").setVizProperties(oNoTitle); }
             if (this.byId("trendChart")) { this.byId("trendChart").setVizProperties(oNoTitle); }
+        },
+
+        _generateAdminPosturePieChartSvg: function (iCompliant, iAtRisk, iFailed) {
+            var iTotal = iCompliant + iAtRisk + iFailed;
+            if (iTotal === 0) {
+                return '<svg width="170" height="170" viewBox="0 0 170 170"><circle cx="85" cy="85" r="56" fill="none" stroke="#e2e8f0" stroke-width="18"/><text x="85" y="90" text-anchor="middle" fill="#94a3b8" font-size="14">0 Items</text></svg>';
+            }
+
+            var pComp = iCompliant / iTotal;
+            var pRisk = iAtRisk / iTotal;
+            var pFail = iFailed / iTotal;
+
+            var pctCompText = (pComp * 100).toFixed(1) + "%";
+            var pctRiskText = (pRisk * 100).toFixed(1) + "%";
+            var pctFailText = (pFail * 100).toFixed(1) + "%";
+
+            var a1 = pComp * 360;
+            var a2 = a1 + (pRisk * 360);
+
+            function getCoords(angle) {
+                var rad = (angle - 90) * Math.PI / 180;
+                return {
+                    x: 85 + 56 * Math.cos(rad),
+                    y: 85 + 56 * Math.sin(rad)
+                };
+            }
+
+            var pt1 = getCoords(a1);
+            var pt2 = getCoords(a2);
+
+            var dComp = "M 85 29 A 56 56 0 " + (a1 > 180 ? 1 : 0) + " 1 " + pt1.x + " " + pt1.y;
+            var dRisk = "M " + pt1.x + " " + pt1.y + " A 56 56 0 " + ((a2 - a1) > 180 ? 1 : 0) + " 1 " + pt2.x + " " + pt2.y;
+            var dFail = "M " + pt2.x + " " + pt2.y + " A 56 56 0 " + ((360 - a2) > 180 ? 1 : 0) + " 1 85 29";
+
+            var sUid = "adm_pie_" + Math.floor(Math.random() * 100000);
+
+            var html = '<div class="donut-chart-wrapper" style="position:relative; width:170px; height:170px; display:inline-block;">';
+            html += '<svg width="170" height="170" viewBox="0 0 170 170" style="overflow:visible;">';
+            html += '<style>' +
+                '.adm-donut-path { transition: all 0.25s ease-in-out; cursor: pointer; transform-origin: 85px 85px; }' +
+                '.adm-donut-path:hover { stroke-width: 25px !important; filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.35)); opacity: 1 !important; }' +
+                '</style>';
+
+            html += '<circle cx="85" cy="85" r="56" fill="none" stroke="#f1f5f9" stroke-width="18"/>';
+
+            // Compliant (Blue #3b82f6)
+            if (iCompliant > 0) {
+                html += '<path d="' + dComp + '" fill="none" stroke="#3b82f6" stroke-width="18" class="adm-donut-path"' +
+                    ' onmouseenter="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iCompliant + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#3b82f6\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Compliant\';"' +
+                    ' onmouseleave="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iTotal + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#0f172a\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Total\';">' +
+                    '<title>Status: Compliant\nCount: ' + iCompliant + ' (' + pctCompText + ')</title></path>';
+            }
+            // At Risk (Amber #d97706)
+            if (iAtRisk > 0) {
+                html += '<path d="' + dRisk + '" fill="none" stroke="#d97706" stroke-width="18" class="adm-donut-path"' +
+                    ' onmouseenter="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iAtRisk + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#d97706\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'At Risk\';"' +
+                    ' onmouseleave="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iTotal + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#0f172a\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Total\';">' +
+                    '<title>Status: At Risk\nCount: ' + iAtRisk + ' (' + pctRiskText + ')</title></path>';
+            }
+            // Failed (Lime/Green #65a30d)
+            if (iFailed > 0) {
+                html += '<path d="' + dFail + '" fill="none" stroke="#65a30d" stroke-width="18" class="adm-donut-path"' +
+                    ' onmouseenter="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iFailed + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#65a30d\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Failed\';"' +
+                    ' onmouseleave="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iTotal + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#0f172a\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Total\';">' +
+                    '<title>Status: Failed\nCount: ' + iFailed + ' (' + pctFailText + ')</title></path>';
+            }
+
+            html += '<text id="' + sUid + '_val" x="85" y="81" text-anchor="middle" fill="#0f172a" font-size="22" font-weight="bold" style="transition: all 0.2s ease;">' + iTotal + '</text>';
+            html += '<text id="' + sUid + '_lbl" x="85" y="97" text-anchor="middle" fill="#64748b" font-size="11" font-weight="600" style="transition: all 0.2s ease;">Total</text>';
+            html += '</svg>';
+            html += '</div>';
+
+            return html;
         },
 
         onAfterRendering: function () {
