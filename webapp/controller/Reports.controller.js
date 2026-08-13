@@ -14,6 +14,10 @@ sap.ui.define([
             if (oToolPage) {
                 oToolPage.setSideExpanded(SidebarState.get());
             }
+            var oNav = this.byId("sideNavigation");
+            if (oNav) {
+                oNav.setSelectedKey("Reports");
+            }
         },
 
         onInit: function () {

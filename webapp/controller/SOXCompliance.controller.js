@@ -16,12 +16,31 @@ sap.ui.define([
         onInit: function () {
             var oModel = SOXComplianceService.getModel();
             this.getView().setModel(oModel, "soxModel");
+
+            var oRouter = UIComponent.getRouterFor(this) || (this.getOwnerComponent() && this.getOwnerComponent().getRouter());
+            if (oRouter) {
+                var oRoute = oRouter.getRoute("SOXCompliance");
+                if (oRoute) {
+                    oRoute.attachPatternMatched(this._onRouteMatched, this);
+                }
+            }
+        },
+
+        _onRouteMatched: function () {
+            var oNav = this.byId("sideNavigation");
+            if (oNav) {
+                oNav.setSelectedKey("SOXCompliance");
+            }
         },
 
         onAfterRendering: function () {
             var oToolPage = this.byId("soxToolPage");
             if (oToolPage) {
                 oToolPage.setSideExpanded(SidebarState.get());
+            }
+            var oNav = this.byId("sideNavigation");
+            if (oNav) {
+                oNav.setSelectedKey("SOXCompliance");
             }
             killFocusRing(this.getView());
         },

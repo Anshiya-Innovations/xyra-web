@@ -48,13 +48,19 @@ body,
   transition: background-color 0.15s ease !important;
 }
 
-.sapTntNLI .sapTntNLIText,
-.sapTntNLI .sapTntNLIIcon {
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]) {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]) .sapTntNLIText,
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]) .sapTntNLIIcon {
   color: #94A3B8 !important;
 }
 
 .sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):hover {
   background-color: rgba(255, 255, 255, 0.06) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
 }
 
 /* Sidebar Selected Highlight */
@@ -62,6 +68,7 @@ body,
 .sapTntNLI[aria-selected="true"],
 .sapTntNLI.sapTntNLISelected {
   background: linear-gradient(135deg, #533BFF, #5A5FF4) !important;
+  background-color: #533BFF !important;
   transition: background 0.15s ease !important;
 }
 

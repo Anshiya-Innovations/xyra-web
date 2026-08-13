@@ -86,6 +86,10 @@ sap.ui.define([
             if (oToolPage) {
                 oToolPage.setSideExpanded(SidebarState.get());
             }
+            var oNav = this.byId("sideNavigation");
+            if (oNav) {
+                oNav.setSelectedKey("Admin");
+            }
             killFocusRing(this.getView());
         },
 
