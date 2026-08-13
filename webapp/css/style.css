@@ -1204,3 +1204,63 @@ body,
   border: none !important;
   outline: none !important;
 }
+
+/* ===== Custom Pill Chip Badges & Action Cards for Admin Dashboard ===== */
+.xyraPillChip {
+  display: inline-block !important;
+  padding: 4px 16px !important;
+  border-radius: 9999px !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  min-width: 75px !important;
+}
+
+.xyraPillRed {
+  background-color: #fee2e2 !important;
+  color: #ef4444 !important;
+  border: 1px solid #fca5a5 !important;
+}
+
+.xyraPillAmber {
+  background-color: #ffedd5 !important;
+  color: #ea580c !important;
+  border: 1px solid #fed7aa !important;
+}
+
+.xyraPillGreen {
+  background-color: #dcfce7 !important;
+  color: #10b981 !important;
+  border: 1px solid #86efac !important;
+}
+
+/* Action Cards */
+.xyraActionCard {
+  border-radius: 14px !important;
+  padding: 1.1rem 1.2rem !important;
+  margin-bottom: 0.9rem !important;
+  cursor: pointer !important;
+  transition: all 0.22s ease-in-out !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03) !important;
+}
+
+.xyraActionCard:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08) !important;
+}
+
+.xyraActionCardPurple {
+  background-color: #f5f3ff !important;
+  border: 1px solid #ede9fe !important;
+}
+
+.xyraActionCardBlue {
+  background-color: #eff6ff !important;
+  border: 1px solid #dbeafe !important;
+}
+
+.xyraActionCardGreen {
+  background-color: #f0fdf4 !important;
+  border: 1px solid #dcfce7 !important;
+}

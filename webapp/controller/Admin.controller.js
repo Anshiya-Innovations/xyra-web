@@ -17,31 +17,31 @@ sap.ui.define([
             var oFindings = {
                 findings: [
                     {
-                        finding: "Segregation of Duties conflict — SOD_ADMIN role",
-                        control: "XYRA-01",
-                        status: "Open",
-                        statusState: "Error",
+                        finding: "User access not reviewed",
+                        control: "ITGC-01",
                         severity: "High",
                         severityState: "Error",
-                        detected: "Aug 10, 2026"
+                        status: "Open",
+                        statusClass: "xyraPillChip xyraPillRed",
+                        detected: "May 12, 2024"
                     },
                     {
-                        finding: "Excessive access granted — Finance module",
-                        control: "XYRA-002",
-                        status: "In Progress",
-                        statusState: "Warning",
+                        finding: "Segregation of duties conflict",
+                        control: "FIN-03",
                         severity: "Medium",
                         severityState: "Warning",
-                        detected: "Aug 09, 2026"
+                        status: "In Progress",
+                        statusClass: "xyraPillChip xyraPillAmber",
+                        detected: "May 11, 2024"
                     },
                     {
-                        finding: "Missing approval workflow evidence",
-                        control: "XYRA-08",
-                        status: "Resolved",
-                        statusState: "Success",
+                        finding: "Missing control evidence",
+                        control: "APP-07",
                         severity: "Low",
                         severityState: "Success",
-                        detected: "Aug 05, 2026"
+                        status: "Open",
+                        statusClass: "xyraPillChip xyraPillRed",
+                        detected: "May 10, 2024"
                     }
                 ]
             };
@@ -71,13 +71,122 @@ sap.ui.define([
                 ]
             }), "postureModel");
 
-            var sSvg = this._generateAdminPosturePieChartSvg(143, 8, 5);
-            this.getView().setModel(new JSONModel({
-                postureSvgHtml: sSvg
-            }), "adminModel");
+            var aTrendData = [
+                { week: "Apr 14", score: 82 },
+                { week: "Apr 21", score: 84 },
+                { week: "Apr 28", score: 83 },
+                { week: "May 5", score: 86 },
+                { week: "May 12", score: 85 },
+                { week: "May 19", score: 88 },
+                { week: "May 26", score: 87 },
+                { week: "Jun 2", score: 90 },
+                { week: "Jun 9", score: 91.7 }
+            ];
 
-            var oNoTitle = { title: { visible: false } };
-            if (this.byId("trendChart")) { this.byId("trendChart").setVizProperties(oNoTitle); }
+            var sPieSvg = this._generateAdminPosturePieChartSvg(143, 8, 5);
+            var sTrendSvg = this._generateAdminTrendLineChartSvg(aTrendData);
+
+            this.getView().setModel(new JSONModel({
+                postureSvgHtml: sPieSvg,
+                trendSvgHtml: sTrendSvg
+            }), "adminModel");
+        },
+
+        _generateAdminTrendLineChartSvg: function (aTrendData) {
+            var aData = aTrendData || [];
+            var width = 960;
+            var height = 230;
+            var padL = 45;
+            var padR = 25;
+            var padT = 30;
+            var padB = 40;
+
+            var chartW = width - padL - padR;
+            var chartH = height - padT - padB;
+
+            var minY = 75;
+            var maxY = 100;
+
+            function getX(i) {
+                return padL + (i * (chartW / (aData.length - 1)));
+            }
+            function getY(val) {
+                return padT + chartH * (1 - (val - minY) / (maxY - minY));
+            }
+
+            var aPoints = aData.map(function (d, i) {
+                return { x: getX(i), y: getY(d.score), week: d.week, score: d.score };
+            });
+
+            // Build smooth cubic Bezier path
+            var dLine = "M " + aPoints[0].x.toFixed(1) + " " + aPoints[0].y.toFixed(1);
+            for (var i = 0; i < aPoints.length - 1; i++) {
+                var p0 = aPoints[i];
+                var p1 = aPoints[i + 1];
+                var cx1 = (p0.x + (p1.x - p0.x) / 2).toFixed(1);
+                var cy1 = p0.y.toFixed(1);
+                var cx2 = (p0.x + (p1.x - p0.x) / 2).toFixed(1);
+                var cy2 = p1.y.toFixed(1);
+                dLine += " C " + cx1 + " " + cy1 + ", " + cx2 + " " + cy2 + ", " + p1.x.toFixed(1) + " " + p1.y.toFixed(1);
+            }
+
+            var dArea = dLine + " L " + aPoints[aPoints.length - 1].x.toFixed(1) + " " + (padT + chartH) + " L " + aPoints[0].x.toFixed(1) + " " + (padT + chartH) + " Z";
+
+            var sUid = "trend_svg_" + Math.floor(Math.random() * 100000);
+
+            var html = '<div class="trend-chart-wrapper" style="position:relative; width:100%; max-width:100%; display:block;">';
+            html += '<svg width="100%" height="230" viewBox="0 0 960 230" preserveAspectRatio="none" style="overflow:visible; width:100%;">';
+            html += '<defs>' +
+                '<linearGradient id="' + sUid + '_grad" x1="0%" y1="0%" x2="0%" y2="100%">' +
+                    '<stop offset="0%" stop-color="#3b82f6" stop-opacity="0.38"/>' +
+                    '<stop offset="80%" stop-color="#3b82f6" stop-opacity="0.03"/>' +
+                    '<stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"/>' +
+                '</linearGradient>' +
+                '<filter id="' + sUid + '_glow" x="-20%" y="-20%" width="140%" height="140%">' +
+                    '<feGaussianBlur stdDeviation="2.5" result="blur"/>' +
+                    '<feComposite in="SourceGraphic" in2="blur" operator="over"/>' +
+                '</filter>' +
+                '</defs>';
+
+            html += '<style>' +
+                '.trend-path { stroke-dasharray: 1000; stroke-dashoffset: 0; transition: all 0.3s ease; }' +
+                '.trend-dot { transition: all 0.25s ease; cursor: pointer; }' +
+                '.trend-dot:hover { r: 7.5px !important; stroke-width: 3.5px !important; fill: #2563eb !important; filter: drop-shadow(0 0 8px rgba(59,130,246,0.7)); }' +
+                '</style>';
+
+            // Horizontal Grid Lines
+            var aGridVals = [100, 90, 80];
+            aGridVals.forEach(function (v) {
+                var gy = getY(v);
+                html += '<line x1="' + padL + '" y1="' + gy + '" x2="' + (padL + chartW) + '" y2="' + gy + '" stroke="#f1f5f9" stroke-width="1.5"/>';
+                html += '<text x="' + (padL - 10) + '" y="' + (gy + 4) + '" text-anchor="end" fill="#94a3b8" font-size="11" font-weight="500">' + v + '%</text>';
+            });
+
+            // Baseline (Y=75%)
+            var baseY = padT + chartH;
+            html += '<line x1="' + padL + '" y1="' + baseY + '" x2="' + (padL + chartW) + '" y2="' + baseY + '" stroke="#cbd5e1" stroke-width="1.5"/>';
+
+            // Area Fill
+            html += '<path d="' + dArea + '" fill="url(#' + sUid + '_grad)"/>';
+
+            // Smooth Line
+            html += '<path d="' + dLine + '" fill="none" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="trend-path" filter="url(#' + sUid + '_glow)"/>';
+
+            // Data Nodes & X-Axis Labels
+            aPoints.forEach(function (pt) {
+                // X-axis label
+                html += '<text x="' + pt.x.toFixed(1) + '" y="' + (baseY + 20) + '" text-anchor="middle" fill="#64748b" font-size="11" font-weight="600">' + pt.week + '</text>';
+
+                // Data point circle node
+                html += '<circle cx="' + pt.x.toFixed(1) + '" cy="' + pt.y.toFixed(1) + '" r="4.5" fill="#ffffff" stroke="#3b82f6" stroke-width="2.5" class="trend-dot">' +
+                    '<title>Week: ' + pt.week + '\nCompliance Score: ' + pt.score + '%</title>' +
+                    '</circle>';
+            });
+
+            html += '</svg>';
+            html += '</div>';
+
+            return html;
         },
 
         _generateAdminPosturePieChartSvg: function (iCompliant, iAtRisk, iFailed) {
@@ -137,10 +246,10 @@ sap.ui.define([
                     ' onmouseleave="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iTotal + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#0f172a\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Total\';">' +
                     '<title>Status: At Risk\nCount: ' + iAtRisk + ' (' + pctRiskText + ')</title></path>';
             }
-            // Failed (Lime/Green #65a30d)
+            // Failed (Red #ef4444)
             if (iFailed > 0) {
-                html += '<path d="' + dFail + '" fill="none" stroke="#65a30d" stroke-width="18" class="adm-donut-path"' +
-                    ' onmouseenter="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iFailed + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#65a30d\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Failed\';"' +
+                html += '<path d="' + dFail + '" fill="none" stroke="#ef4444" stroke-width="18" class="adm-donut-path"' +
+                    ' onmouseenter="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iFailed + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#ef4444\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Failed\';"' +
                     ' onmouseleave="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iTotal + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#0f172a\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Total\';">' +
                     '<title>Status: Failed\nCount: ' + iFailed + ' (' + pctFailText + ')</title></path>';
             }
@@ -195,6 +304,18 @@ sap.ui.define([
 
         onAdmin: function () {
             this.navToRoute("Admin");
+        },
+
+        onNavToAiInsights: function () {
+            this.navToRoute("AIInsights");
+        },
+
+        onNavToControlMgmt: function () {
+            this.navToRoute("ControlManagement");
+        },
+
+        onNavToSox: function () {
+            this.navToRoute("SOXCompliance");
         },
 
         onUserManagement: function () {

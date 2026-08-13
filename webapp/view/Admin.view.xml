@@ -216,7 +216,7 @@
                                             </VBox>
                                         </HBox>
                                         <HBox alignItems="Center">
-                                            <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#65a30d" class="sapUiTinyMarginEnd"/>
+                                            <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#ef4444" class="sapUiTinyMarginEnd"/>
                                             <VBox>
                                                 <Text text="Failed: 5" class="boldText"/>
                                                 <Text text="Action Needed" class="textMuted"/>
@@ -228,53 +228,50 @@
 
                             <VBox width="64%" class="xyraDashboardCard">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
-                                    <Title text="Trend Overview — Effective Controls" level="H4"/>
-                                    <Text text="Last 30 Days" class="textMuted"/>
+                                    <VBox>
+                                        <Title text="Trend Overview — Effective Controls" level="H4"/>
+                                        <Text text="Continuous compliance performance trajectory over time" class="textMuted"/>
+                                    </VBox>
+                                    <HBox alignItems="Center">
+                                        <core:Icon src="sap-icon://trending-up" size="1.2rem" color="#10b981" class="sapUiTinyMarginEnd"/>
+                                        <ObjectStatus text="+9.7% Growth" state="Success" class="boldText"/>
+                                        <Text text="  (Last 30 Days)" class="textMuted sapUiTinyMarginBegin"/>
+                                    </HBox>
                                 </HBox>
 
-                                <viz:VizFrame id="trendChart" vizType="line" width="100%" height="260px" legendVisible="false">
-                                    <viz:dataset>
-                                        <vizData:FlattenedDataset data="{trendModel>/data}">
-                                            <vizData:dimensions>
-                                                <vizData:DimensionDefinition name="Week" value="{trendModel>week}"/>
-                                            </vizData:dimensions>
-                                            <vizData:measures>
-                                                <vizData:MeasureDefinition name="Compliance Score" value="{trendModel>score}"/>
-                                            </vizData:measures>
-                                        </vizData:FlattenedDataset>
-                                    </viz:dataset>
-                                    <viz:feeds>
-                                        <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Compliance Score"/>
-                                        <vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Week"/>
-                                    </viz:feeds>
-                                </viz:VizFrame>
+                                <!-- Interactive SVG Gradient Area Trend Line Chart -->
+                                <core:HTML content="{adminModel>/trendSvgHtml}"/>
                             </VBox>
-
                         </HBox>
 
-                        <!-- RECENT FINDINGS -->
-                        <Panel headerText="Recent Findings" expandable="false" class="sapUiSmallMarginBottom">
+                        <!-- RECENT FINDINGS TABLE CARD (FULL WIDTH) -->
+                        <VBox width="100%" class="xyraDashboardCard sapUiSmallMarginBottom">
+                            <Title text="Recent Findings" level="H4" class="sapUiSmallMarginBottom"/>
+
                             <Table id="recentFindingsTable" items="{findingsModel>/findings}" mode="None">
                                 <columns>
                                     <Column width="34%"><Text text="Finding"/></Column>
-                                    <Column width="14%"><Text text="Control"/></Column>
+                                    <Column width="16%"><Text text="Control"/></Column>
+                                    <Column width="16%"><Text text="Severity"/></Column>
                                     <Column width="16%"><Text text="Status"/></Column>
-                                    <Column width="12%"><Text text="Severity"/></Column>
-                                    <Column width="24%"><Text text="Detected"/></Column>
+                                    <Column width="18%"><Text text="Detected"/></Column>
                                 </columns>
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <Text text="{findingsModel>finding}"/>
-                                            <Text text="{findingsModel>control}" class="fontWeightBold"/>
-                                            <ObjectStatus text="{findingsModel>status}" state="{findingsModel>statusState}"/>
-                                            <ObjectStatus text="{findingsModel>severity}" state="{findingsModel>severityState}"/>
+                                            <Text text="{findingsModel>finding}" class="boldText"/>
+                                            <Text text="{findingsModel>control}" class="boldText"/>
+                                            <ObjectStatus
+                                                text="{findingsModel>severity}"
+                                                state="{findingsModel>severityState}"
+                                                icon="{= ${findingsModel>severityState} === 'Error' ? 'sap-icon://color-fill' : (${findingsModel>severityState} === 'Warning' ? 'sap-icon://color-fill' : 'sap-icon://color-fill') }"/>
+                                            <Text text="{findingsModel>status}" class="{findingsModel>statusClass}"/>
                                             <Text text="{findingsModel>detected}" class="textMuted"/>
                                         </cells>
                                     </ColumnListItem>
                                 </items>
                             </Table>
-                        </Panel>
+                        </VBox>
 
                     </VBox>
                 </content>
