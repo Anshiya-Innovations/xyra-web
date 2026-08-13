@@ -273,11 +273,16 @@ sap.ui.define([
         _generatePieChartSvg: function (iOpen, iResolved, iPending) {
             var iTotal = iOpen + iResolved + iPending;
             if (iTotal === 0) {
-                return '<svg width="150" height="150" viewBox="0 0 150 150"><circle cx="75" cy="75" r="55" fill="none" stroke="#e2e8f0" stroke-width="22"/><text x="75" y="80" text-anchor="middle" fill="#94a3b8" font-size="14">0 Incidents</text></svg>';
+                return '<svg width="170" height="170" viewBox="0 0 170 170"><circle cx="85" cy="85" r="56" fill="none" stroke="#e2e8f0" stroke-width="18"/><text x="85" y="90" text-anchor="middle" fill="#94a3b8" font-size="14">0 Incidents</text></svg>';
             }
 
             var fOpenPct = (iOpen / iTotal);
             var fResolvedPct = (iResolved / iTotal);
+            var fPendingPct = (iPending / iTotal);
+
+            var pctOpenText = (fOpenPct * 100).toFixed(1) + "%";
+            var pctResolvedText = (fResolvedPct * 100).toFixed(1) + "%";
+            var pctPendingText = (fPendingPct * 100).toFixed(1) + "%";
 
             // Angles
             var a1 = fOpenPct * 360;
@@ -286,34 +291,52 @@ sap.ui.define([
             function getCoordinatesForAngle(angle) {
                 var rad = (angle - 90) * Math.PI / 180;
                 return {
-                    x: 75 + 55 * Math.cos(rad),
-                    y: 75 + 55 * Math.sin(rad)
+                    x: 85 + 56 * Math.cos(rad),
+                    y: 85 + 56 * Math.sin(rad)
                 };
             }
 
             var p1 = getCoordinatesForAngle(a1);
             var p2 = getCoordinatesForAngle(a2);
 
-            var d1 = "M 75 20 A 55 55 0 " + (a1 > 180 ? 1 : 0) + " 1 " + p1.x + " " + p1.y;
-            var d2 = "M " + p1.x + " " + p1.y + " A 55 55 0 " + ((a2 - a1) > 180 ? 1 : 0) + " 1 " + p2.x + " " + p2.y;
-            var d3 = "M " + p2.x + " " + p2.y + " A 55 55 0 " + ((360 - a2) > 180 ? 1 : 0) + " 1 75 20";
+            var d1 = "M 85 29 A 56 56 0 " + (a1 > 180 ? 1 : 0) + " 1 " + p1.x + " " + p1.y;
+            var d2 = "M " + p1.x + " " + p1.y + " A 56 56 0 " + ((a2 - a1) > 180 ? 1 : 0) + " 1 " + p2.x + " " + p2.y;
+            var d3 = "M " + p2.x + " " + p2.y + " A 56 56 0 " + ((360 - a2) > 180 ? 1 : 0) + " 1 85 29";
 
-            var html = '<svg width="160" height="160" viewBox="0 0 150 150">';
-            html += '<circle cx="75" cy="75" r="55" fill="none" stroke="#f8fafc" stroke-width="22"/>';
+            var sUid = "dev_pie_" + Math.floor(Math.random() * 100000);
+
+            var html = '<div class="donut-chart-wrapper" style="position:relative; width:170px; height:170px; display:inline-block;">';
+            html += '<svg width="170" height="170" viewBox="0 0 170 170" style="overflow:visible;">';
+            html += '<style>' +
+                '.dev-donut-path { transition: all 0.25s ease-in-out; cursor: pointer; transform-origin: 85px 85px; }' +
+                '.dev-donut-path:hover { stroke-width: 25px !important; filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.35)); opacity: 1 !important; }' +
+                '</style>';
+
+            html += '<circle cx="85" cy="85" r="56" fill="none" stroke="#f8fafc" stroke-width="18"/>';
 
             if (iOpen > 0) {
-                html += '<path d="' + d1 + '" fill="none" stroke="#ef4444" stroke-width="22"/>';
+                html += '<path d="' + d1 + '" fill="none" stroke="#ef4444" stroke-width="18" class="dev-donut-path"' +
+                    ' onmouseenter="document.getElementById(\'' + sUid + '_val\').textContent=\'' + pctOpenText + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#ef4444\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Open\';"' +
+                    ' onmouseleave="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iTotal + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#0f172a\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Total\';">' +
+                    '<title>Open: ' + iOpen + ' (' + pctOpenText + ')</title></path>';
             }
             if (iResolved > 0) {
-                html += '<path d="' + d2 + '" fill="none" stroke="#10b981" stroke-width="22"/>';
+                html += '<path d="' + d2 + '" fill="none" stroke="#10b981" stroke-width="18" class="dev-donut-path"' +
+                    ' onmouseenter="document.getElementById(\'' + sUid + '_val\').textContent=\'' + pctResolvedText + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#10b981\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Resolved\';"' +
+                    ' onmouseleave="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iTotal + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#0f172a\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Total\';">' +
+                    '<title>Resolved: ' + iResolved + ' (' + pctResolvedText + ')</title></path>';
             }
             if (iPending > 0) {
-                html += '<path d="' + d3 + '" fill="none" stroke="#f59e0b" stroke-width="22"/>';
+                html += '<path d="' + d3 + '" fill="none" stroke="#f59e0b" stroke-width="18" class="dev-donut-path"' +
+                    ' onmouseenter="document.getElementById(\'' + sUid + '_val\').textContent=\'' + pctPendingText + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#f59e0b\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Pending\';"' +
+                    ' onmouseleave="document.getElementById(\'' + sUid + '_val\').textContent=\'' + iTotal + '\'; document.getElementById(\'' + sUid + '_val\').setAttribute(\'fill\', \'#0f172a\'); document.getElementById(\'' + sUid + '_lbl\').textContent=\'Total\';">' +
+                    '<title>Pending: ' + iPending + ' (' + pctPendingText + ')</title></path>';
             }
 
-            html += '<text x="75" y="72" text-anchor="middle" fill="#0f172a" font-size="18" font-weight="bold">' + iTotal + '</text>';
-            html += '<text x="75" y="88" text-anchor="middle" fill="#64748b" font-size="11">Total</text>';
+            html += '<text id="' + sUid + '_val" x="85" y="81" text-anchor="middle" fill="#0f172a" font-size="20" font-weight="bold" style="transition: all 0.2s ease;">' + iTotal + '</text>';
+            html += '<text id="' + sUid + '_lbl" x="85" y="97" text-anchor="middle" fill="#64748b" font-size="11" font-weight="600" style="transition: all 0.2s ease;">Total</text>';
             html += '</svg>';
+            html += '</div>';
 
             return html;
         },

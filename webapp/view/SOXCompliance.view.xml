@@ -117,18 +117,10 @@
                             </VBox>
                         </content>
 
-                        <beginButton>
-                            <Button
-                                visible="{= ${soxDetailModel>/deviationCount} > 0 }"
-                                text="View Exception Workflow"
-                                icon="sap-icon://employee-approvals"
-                                type="Emphasized"
-                                press="onViewExceptionWorkflow"/>
-                        </beginButton>
                         <endButton>
                             <Button
                                 text="Close"
-                                type="Transparent"
+                                type="Emphasized"
                                 press="onCloseSoxDetailsDialog"/>
                         </endButton>
                     </Dialog>
@@ -268,30 +260,35 @@
                                 </f:header>
                                 <f:content>
                                     <VBox class="sapUiMediumMargin">
-                                        <HBox justifyContent="SpaceAround" alignItems="Center">
-                                            <VBox alignItems="Center">
-                                                <Text text="20" class="kpiValueText"/>
-                                                <ObjectStatus text="Compliant" state="Success" icon="sap-icon://sys-enter-2"/>
-                                            </VBox>
-                                            <VBox alignItems="Center">
-                                                <Text text="3" class="kpiValueText"/>
-                                                <ObjectStatus text="Non-Compliant" state="Error" icon="sap-icon://error"/>
-                                            </VBox>
-                                            <VBox alignItems="Center">
-                                                <Text text="1" class="kpiValueText"/>
-                                                <ObjectStatus text="Pending Review" state="Warning" icon="sap-icon://warning"/>
+                                        <HBox width="100%" justifyContent="SpaceAround" alignItems="Center">
+                                            <!-- SVG Donut Chart with Hover Effects & Tooltips -->
+                                            <core:HTML content="{soxModel>/statusSvgHtml}"/>
+
+                                            <!-- Legend with Counts -->
+                                            <VBox justifyContent="Center" class="sapUiSmallMarginBegin">
+                                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                                    <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#10b981" class="sapUiTinyMarginEnd"/>
+                                                    <VBox>
+                                                        <Text text="Compliant: 20" class="boldText"/>
+                                                        <Text text="Active Continuous Verification" class="textMuted"/>
+                                                    </VBox>
+                                                </HBox>
+                                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                                    <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#ef4444" class="sapUiTinyMarginEnd"/>
+                                                    <VBox>
+                                                        <Text text="Non-Compliant: 3" class="boldText"/>
+                                                        <Text text="SOD &amp; Access Violations" class="textMuted"/>
+                                                    </VBox>
+                                                </HBox>
+                                                <HBox alignItems="Center">
+                                                    <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#f59e0b" class="sapUiTinyMarginEnd"/>
+                                                    <VBox>
+                                                        <Text text="Pending Review: 1" class="boldText"/>
+                                                        <Text text="Awaiting Manager Sign-off" class="textMuted"/>
+                                                    </VBox>
+                                                </HBox>
                                             </VBox>
                                         </HBox>
-
-                                        <!-- STATUS BAR VISUALIZATION -->
-                                        <VBox class="sapUiMediumMarginTop">
-                                            <HBox width="100%" height="24px" class="sapUiTinyMarginBottom">
-                                                <VBox width="83.3%" height="100%" class="soxBarCompliant" tooltip="83.3% Compliant"/>
-                                                <VBox width="12.5%" height="100%" class="soxBarNonCompliant" tooltip="12.5% Non-Compliant"/>
-                                                <VBox width="4.2%" height="100%" class="soxBarPending" tooltip="4.2% Pending Review"/>
-                                            </HBox>
-                                            <Text text="83.3% Compliant | 12.5% Non-Compliant | 4.2% Pending Review" class="textMuted textCenter"/>
-                                        </VBox>
                                     </VBox>
                                 </f:content>
                             </f:Card>

@@ -286,19 +286,28 @@
                                                 <!-- SVG Pie Chart -->
                                                 <core:HTML content="{reportModel>/statusSvgHtml}"/>
 
-                                                <!-- Legend -->
+                                                <!-- Legend with Counts -->
                                                 <VBox justifyContent="Center" class="sapUiSmallMarginBegin">
-                                                    <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                                        <core:Icon src="sap-icon://color-fill" size="1rem" color="#ef4444" class="sapUiTinyMarginEnd"/>
-                                                        <Text text="{= 'Open: ' + ${reportModel>/kpi/openItems} }" class="fontWeightBold"/>
+                                                    <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                                        <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#ef4444" class="sapUiTinyMarginEnd"/>
+                                                        <VBox>
+                                                            <Text text="{= 'Open: ' + ${reportModel>/kpi/openItems} }" class="boldText"/>
+                                                            <Text text="Action Required" class="textMuted"/>
+                                                        </VBox>
                                                     </HBox>
-                                                    <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                                        <core:Icon src="sap-icon://color-fill" size="1rem" color="#10b981" class="sapUiTinyMarginEnd"/>
-                                                        <Text text="{= 'Resolved: ' + ${reportModel>/kpi/resolvedItems} }" class="fontWeightBold"/>
+                                                    <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                                        <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#10b981" class="sapUiTinyMarginEnd"/>
+                                                        <VBox>
+                                                            <Text text="{= 'Resolved: ' + ${reportModel>/kpi/resolvedItems} }" class="boldText"/>
+                                                            <Text text="Verified &amp; Closed" class="textMuted"/>
+                                                        </VBox>
                                                     </HBox>
                                                     <HBox alignItems="Center">
-                                                        <core:Icon src="sap-icon://color-fill" size="1rem" color="#f59e0b" class="sapUiTinyMarginEnd"/>
-                                                        <Text text="{= 'Pending: ' + ${reportModel>/statusSummary/pending} }" class="fontWeightBold"/>
+                                                        <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#f59e0b" class="sapUiTinyMarginEnd"/>
+                                                        <VBox>
+                                                            <Text text="{= 'Pending: ' + ${reportModel>/statusSummary/pending} }" class="boldText"/>
+                                                            <Text text="Under Review" class="textMuted"/>
+                                                        </VBox>
                                                     </HBox>
                                                 </VBox>
                                             </HBox>
