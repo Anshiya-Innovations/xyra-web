@@ -54,8 +54,8 @@ sap.ui.define([
         // Navigation Handlers
         onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
         onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
-        onAIInsights: function () { MessageToast.show("Navigating to AI Insights..."); },
-        onSOXCompliance: function () { MessageToast.show("Navigating to SOX Compliance..."); },
+        onAIInsights: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
+        onSOXCompliance: function () { this.getOwnerComponent().getRouter().navTo("SOXCompliance"); },
         onReports: function () { this.getOwnerComponent().getRouter().navTo("Reports"); },
         onAuditLogs: function () { this.getOwnerComponent().getRouter().navTo("AuditLogs"); },
         onConfiguration: function () { this.getOwnerComponent().getRouter().navTo("Configuration"); },

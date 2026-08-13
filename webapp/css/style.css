@@ -53,18 +53,42 @@ body,
   color: #94A3B8 !important;
 }
 
-.sapTntNLI:not(.sapTntNLISelected):hover {
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):hover {
   background-color: rgba(255, 255, 255, 0.06) !important;
 }
 
-.sapTntNLISelected {
+/* Sidebar Selected Highlight */
+.sapTntNLISelected,
+.sapTntNLI[aria-selected="true"],
+.sapTntNLI.sapTntNLISelected {
   background: linear-gradient(135deg, #533BFF, #5A5FF4) !important;
   transition: background 0.15s ease !important;
 }
 
 .sapTntNLISelected .sapTntNLIText,
-.sapTntNLISelected .sapTntNLIIcon {
+.sapTntNLISelected .sapTntNLIIcon,
+.sapTntNLI[aria-selected="true"] .sapTntNLIText,
+.sapTntNLI[aria-selected="true"] .sapTntNLIIcon {
   color: #FFFFFF !important;
+}
+
+/* Unselected sidebar item tag badges must be subtle chips, NOT solid bright purple */
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]) .sapTntNLITagContainer .sapMObjStatusInverted,
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]) .sapTntNLITagContainer .sapMObjStatus {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #cbd5e1 !important;
+  border-radius: 6px !important;
+  border: none !important;
+}
+
+/* Selected sidebar item tag badge styling */
+.sapTntNLISelected .sapTntNLITagContainer .sapMObjStatusInverted,
+.sapTntNLI[aria-selected="true"] .sapTntNLITagContainer .sapMObjStatusInverted {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
 }
 
 .sapTntSideNavigationSeparator {
@@ -404,7 +428,7 @@ body,
   top: -9999px !important;
 }
 
-/* Ensure MessageBox & Dialog footers and content have adequate padding and corner clearance */
+/* ===== COMPACT & SINGLE-LINE DIALOG HEADER (NO SECOND LINE, NO GAPS) ===== */
 .sapMMessageBox,
 .sapMDialog,
 .sapMMessageDialog {
@@ -412,28 +436,71 @@ body,
   max-width: 95vw !important;
   border-radius: 16px !important;
   overflow: hidden !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.2) !important;
+  background-color: #ffffff !important;
 }
 
-.sapMDialogHeader,
-.sapMDialogHeader .sapMBar,
-.sapMDialogHeader .sapMIBar {
-  padding: 0.75rem 1.75rem !important;
+/* Single Header Container */
+.sapMDialogHeader {
+  padding: 0.65rem 1.25rem !important;
+  height: auto !important;
+  min-height: 3rem !important;
   border-bottom: 1px solid #e2e8f0 !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
   background-color: #ffffff !important;
   box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Inner Toolbar Bar (No Duplicate Border or Height) */
+.sapMDialogHeader .sapMBar,
+.sapMDialogHeader .sapMIBar {
+  padding: 0 !important;
+  margin: 0 !important;
+  height: auto !important;
+  min-height: 2rem !important;
+  max-height: 2.5rem !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Completely Hide Any Empty SubHeader Bar */
+.sapMDialogSubHeader,
+.sapMDialogSubHeader * {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
 }
 
 .sapMDialogHeader .sapMTitle,
 .sapMDialog .sapMTitle {
   color: #0f172a !important;
   font-weight: 700 !important;
-  font-size: 1.1rem !important;
+  font-size: 1.05rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: normal !important;
 }
 
+/* Eliminate excessive stacked margins on inner dialog VBox */
 .sapMDialogContent > .sapUiMediumMargin,
-.sapMDialogScrollCont > .sapUiMediumMargin {
-  margin: 0.5rem 0.25rem !important;
+.sapMDialogScrollCont > .sapUiMediumMargin,
+.sapMDialogSection > .sapUiMediumMargin,
+.sapMDialogContent > div:first-child,
+.sapMDialogScrollCont > div:first-child {
+  margin: 0 !important;
+  padding-top: 0 !important;
 }
 
 .sapMDialogFooter,
@@ -441,44 +508,25 @@ body,
 .sapMDialogFooter .sapMIBar {
   min-width: 100% !important;
   width: 100% !important;
-  overflow: visible !important;
-  box-sizing: border-box !important;
-}
-
-.sapMDialogFooter {
-  height: auto !important;
-  min-height: 3.75rem !important;
-  padding: 0.75rem 1.75rem 1rem 1.75rem !important;
+  height: 3.5rem !important;
+  min-height: 3.5rem !important;
+  padding: 0.5rem 1.25rem !important;
   box-sizing: border-box !important;
   background-color: #ffffff !important;
-  border-top: 1px solid #f1f5f9 !important;
+  border-top: 1px solid #e2e8f0 !important;
   border-radius: 0 0 16px 16px !important;
 }
 
-.sapMDialogFooter .sapMBar,
-.sapMDialogFooter .sapMIBar {
-  height: auto !important;
-  box-sizing: border-box !important;
-}
-
 .sapMDialogFooter .sapMIBar.sapMTBInactive.sapMTB {
-  height: auto !important;
-  min-height: 3.75rem !important;
-  padding: 0.75rem 1.75rem 1rem 1.75rem !important;
+  height: 3.5rem !important;
+  min-height: 3.5rem !important;
+  padding: 0.5rem 1.25rem !important;
   box-sizing: border-box !important;
 }
 
 .sapMDialog {
   border-radius: 16px !important;
   overflow: hidden !important;
-}
-
-/* The global .sapMBar rule below (min-height 4.5rem) is meant for the main
-   page's OverflowToolbar header — it also unintentionally inflates the
-   dialog's own title bar (.sapMDialogHeader wraps a Bar too), eating into the
-   room available for content/footer. Scoped back down for dialogs only. */
-.sapMDialogHeader .sapMBar {
-  min-height: 3rem !important;
 }
 
 /* ===== Modern Login Page ===== */
@@ -666,7 +714,8 @@ body,
 .sapMDialogScrollCont,
 .sapMDialogSection,
 .sapMDialogContent {
-  padding: 1.25rem 1.75rem 2.5rem 1.75rem !important;
+  padding: 0.75rem 1.25rem 1.25rem 1.25rem !important;
+  margin: 0 !important;
   box-sizing: border-box !important;
 }
 
@@ -1107,6 +1156,21 @@ body,
   border-radius: 14px !important;
   padding: 1.5rem !important;
   box-sizing: border-box !important;
+}
+
+/* ===== SOX COMPLIANCE BAR STYLES ===== */
+.soxBarCompliant {
+  background-color: #10b981 !important;
+  border-radius: 6px 0 0 6px !important;
+}
+
+.soxBarNonCompliant {
+  background-color: #ef4444 !important;
+}
+
+.soxBarPending {
+  background-color: #f59e0b !important;
+  border-radius: 0 6px 6px 0 !important;
 }
 
 /* Posture and Trend are now both sap.viz.ui5.controls.VizFrame (donut/line),

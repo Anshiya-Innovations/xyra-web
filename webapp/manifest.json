@@ -150,6 +150,11 @@
           "target": "AuditLogs"
         },
         {
+          "name": "SOXCompliance",
+          "pattern": "SOXCompliance",
+          "target": "SOXCompliance"
+        },
+        {
           "name": "DeviationReport",
           "pattern": "DeviationReport",
           "target": "DeviationReport"
@@ -204,6 +209,9 @@
         },
         "AuditLogs": {
           "viewName": "AuditLogs"
+        },
+        "SOXCompliance": {
+          "viewName": "SOXCompliance"
         },
         "DeviationReport": {
           "viewName": "DeviationReport"

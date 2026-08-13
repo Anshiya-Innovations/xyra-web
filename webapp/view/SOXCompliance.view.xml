@@ -1,0 +1,415 @@
+<mvc:View
+    controllerName="xyraweb.controller.SOXCompliance"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
+    xmlns:f="sap.f"
+    xmlns:mc="sap.suite.ui.microchart"
+    height="100%">
+
+    <tnt:ToolPage id="soxToolPage" sideExpanded="true">
+
+        <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="SOXCompliance" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement"/>
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights" select="onAIInsights">
+                        <tnt:tag>
+                            <ObjectStatus text="New" state="Indication15" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag>
+                            <ObjectStatus text="98.4%" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
+                        <tnt:tag>
+                            <ObjectStatus text="3 Risks" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="System Health" icon="sap-icon://sys-monitor" key="SystemHealth" select="onSystemHealth"/>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="soxPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <dependents>
+                    <!-- READ-ONLY SOX CONTROL DETAILS DIALOG / SLIDE MODAL -->
+                    <Dialog
+                        id="soxControlDetailsDialog"
+                        title="SOX Control Details"
+                        contentWidth="780px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <VBox>
+                                        <Title text="{soxDetailModel>/controlId} – {soxDetailModel>/description}" level="H4"/>
+                                        <Text text="Category: {soxDetailModel>/category} | Owner: {soxDetailModel>/owner}" class="textMuted"/>
+                                    </VBox>
+                                    <ObjectStatus
+                                        text="{soxDetailModel>/status}"
+                                        state="{soxDetailModel>/statusState}"
+                                        icon="{= ${soxDetailModel>/statusState} === 'Success' ? 'sap-icon://sys-enter-2' : (${soxDetailModel>/statusState} === 'Error' ? 'sap-icon://error' : 'sap-icon://warning') }"/>
+                                </HBox>
+
+                                <Panel headerText="Control Overview &amp; SOX Framework Scope" class="sapUiSmallMarginBottom">
+                                    <layout:Grid defaultSpan="XL4 L4 M6 S12">
+                                        <VBox><Label text="Target System:"/><Text text="{soxDetailModel>/system} (Client {soxDetailModel>/client})"/></VBox>
+                                        <VBox><Label text="Execution Frequency:"/><Text text="{soxDetailModel>/frequency}"/></VBox>
+                                        <VBox><Label text="Automation Mode:"/><Text text="{= ${soxDetailModel>/automated} ? 'Automated Continuous Validation' : 'Manual Review' }"/></VBox>
+                                        <VBox><Label text="Risk Severity:"/><ObjectStatus text="{soxDetailModel>/risk}" state="{soxDetailModel>/riskState}"/></VBox>
+                                        <VBox><Label text="Active Deviations:"/><ObjectNumber number="{soxDetailModel>/deviationCount}" state="{= ${soxDetailModel>/deviationCount} > 0 ? 'Error' : 'None' }"/></VBox>
+                                        <VBox><Label text="Last Execution Time:"/><Text text="{soxDetailModel>/lastRun}"/></VBox>
+                                    </layout:Grid>
+                                    <VBox class="sapUiSmallMarginTop">
+                                        <Label text="SOX Governance Scope:"/>
+                                        <Text text="{soxDetailModel>/soxScope}"/>
+                                    </VBox>
+                                </Panel>
+
+                                <Panel headerText="Rule Validation Traces &amp; Parameters" class="sapUiSmallMarginBottom">
+                                    <Table items="{soxDetailModel>/rules}" mode="None">
+                                        <columns>
+                                            <Column width="20%"><Text text="SAP Object"/></Column>
+                                            <Column width="15%"><Text text="Client"/></Column>
+                                            <Column width="35%"><Text text="Parameter / Authorization"/></Column>
+                                            <Column width="15%"><Text text="Operator"/></Column>
+                                            <Column width="15%"><Text text="Expected Value"/></Column>
+                                        </columns>
+                                        <items>
+                                            <ColumnListItem>
+                                                <cells>
+                                                    <Text text="{soxDetailModel>sapObject}"/>
+                                                    <Text text="{soxDetailModel>client}"/>
+                                                    <Text text="{soxDetailModel>parameter}"/>
+                                                    <Text text="{soxDetailModel>operator}"/>
+                                                    <Text text="{soxDetailModel>expectedValue}"/>
+                                                </cells>
+                                            </ColumnListItem>
+                                        </items>
+                                    </Table>
+                                </Panel>
+
+                                <Panel headerText="Audit Log &amp; Execution Findings">
+                                    <Text text="{soxDetailModel>/notes}"/>
+                                </Panel>
+                            </VBox>
+                        </content>
+
+                        <beginButton>
+                            <Button
+                                visible="{= ${soxDetailModel>/deviationCount} > 0 }"
+                                text="View Exception Workflow"
+                                icon="sap-icon://employee-approvals"
+                                type="Emphasized"
+                                press="onViewExceptionWorkflow"/>
+                        </beginButton>
+                        <endButton>
+                            <Button
+                                text="Close"
+                                type="Transparent"
+                                press="onCloseSoxDetailsDialog"/>
+                        </endButton>
+                    </Dialog>
+                </dependents>
+
+                <!-- TOP ENTERPRISE HEADER BAR -->
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+                        <Avatar initials="SX" displaySize="S" backgroundColor="Accent3" class="sapUiTinyMarginEnd"/>
+                        <VBox justifyContent="Center">
+                            <Title text="XYRA – SOX Compliance" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Sarbanes-Oxley Control &amp; Compliance Governance" class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+
+                        <Button icon="sap-icon://home" tooltip="Admin Dashboard" type="Transparent" press="onAdmin" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://refresh" tooltip="Refresh Data" type="Transparent" press="onRefresh" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+
+                        <!-- SOX KPI CARDS SECTION -->
+                        <layout:Grid defaultSpan="XL2 L4 M6 S12" class="sapUiSmallMarginBottom">
+                            
+                            <!-- KPI 1: TOTAL SOX CONTROLS -->
+                            <f:Card class="kpiCard">
+                                <f:header>
+                                    <card:Header
+                                        xmlns:card="sap.f.cards"
+                                        title="Total SOX Controls"
+                                        subtitle="Active Framework Controls"
+                                        iconSrc="sap-icon://shield"
+                                        statusText="Active"/>
+                                </f:header>
+                                <f:content>
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="{soxModel>/kpis/totalControls}" class="kpiValueText"/>
+                                        <ObjectStatus text="100% Monitored" state="None" icon="sap-icon://accept" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                </f:content>
+                            </f:Card>
+
+                            <!-- KPI 2: AUTOMATED CONTROLS -->
+                            <f:Card class="kpiCard">
+                                <f:header>
+                                    <card:Header
+                                        xmlns:card="sap.f.cards"
+                                        title="Automated Controls"
+                                        subtitle="Continuous Validation"
+                                        iconSrc="sap-icon://process"
+                                        statusText="Automated"/>
+                                </f:header>
+                                <f:content>
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="{soxModel>/kpis/automatedControls}" class="kpiValueText"/>
+                                        <ObjectStatus text="75% Automation Rate" state="Success" icon="sap-icon://sys-enter-2" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                </f:content>
+                            </f:Card>
+
+                            <!-- KPI 3: OPEN DEVIATIONS -->
+                            <f:Card class="kpiCard">
+                                <f:header>
+                                    <card:Header
+                                        xmlns:card="sap.f.cards"
+                                        title="Open Deviations"
+                                        subtitle="Exception Workflow"
+                                        iconSrc="sap-icon://alert"
+                                        statusText="Attention"/>
+                                </f:header>
+                                <f:content>
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="{soxModel>/kpis/openDeviations}" class="kpiValueText"/>
+                                        <ObjectStatus text="3 Under Review" state="Warning" icon="sap-icon://warning" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                </f:content>
+                            </f:Card>
+
+                            <!-- KPI 4: COMPLIANCE SCORE -->
+                            <f:Card class="kpiCard">
+                                <f:header>
+                                    <card:Header
+                                        xmlns:card="sap.f.cards"
+                                        title="Compliance Score"
+                                        subtitle="Overall Health Index"
+                                        iconSrc="sap-icon://accept"
+                                        statusText="Compliant"/>
+                                </f:header>
+                                <f:content>
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="{soxModel>/kpis/complianceScore}" class="kpiValueText"/>
+                                        <ObjectStatus text="Target: >= 95%" state="Success" icon="sap-icon://sys-enter-2" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                </f:content>
+                            </f:Card>
+
+                            <!-- KPI 5: CRITICAL ISSUES -->
+                            <f:Card class="kpiCard">
+                                <f:header>
+                                    <card:Header
+                                        xmlns:card="sap.f.cards"
+                                        title="Critical Issues"
+                                        subtitle="Immediate Action Req."
+                                        iconSrc="sap-icon://message-error"
+                                        statusText="Critical"/>
+                                </f:header>
+                                <f:content>
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="{soxModel>/kpis/criticalIssues}" class="kpiValueText"/>
+                                        <ObjectStatus text="1 High Priority SOD" state="Error" icon="sap-icon://error" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                </f:content>
+                            </f:Card>
+                        </layout:Grid>
+
+                        <!-- SOX COMPLIANCE VISUALIZATION & ALERT SUMMARY ROW -->
+                        <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                            
+                            <!-- COMPLIANCE STATUS PIE CHART CARD -->
+                            <f:Card>
+                                <f:header>
+                                    <card:Header
+                                        xmlns:card="sap.f.cards"
+                                        title="SOX Compliance Status Distribution"
+                                        subtitle="Real-time Control Breakdown"
+                                        iconSrc="sap-icon://pie-chart"/>
+                                </f:header>
+                                <f:content>
+                                    <VBox class="sapUiMediumMargin">
+                                        <HBox justifyContent="SpaceAround" alignItems="Center">
+                                            <VBox alignItems="Center">
+                                                <Text text="20" class="kpiValueText"/>
+                                                <ObjectStatus text="Compliant" state="Success" icon="sap-icon://sys-enter-2"/>
+                                            </VBox>
+                                            <VBox alignItems="Center">
+                                                <Text text="3" class="kpiValueText"/>
+                                                <ObjectStatus text="Non-Compliant" state="Error" icon="sap-icon://error"/>
+                                            </VBox>
+                                            <VBox alignItems="Center">
+                                                <Text text="1" class="kpiValueText"/>
+                                                <ObjectStatus text="Pending Review" state="Warning" icon="sap-icon://warning"/>
+                                            </VBox>
+                                        </HBox>
+
+                                        <!-- STATUS BAR VISUALIZATION -->
+                                        <VBox class="sapUiMediumMarginTop">
+                                            <HBox width="100%" height="24px" class="sapUiTinyMarginBottom">
+                                                <VBox width="83.3%" height="100%" class="soxBarCompliant" tooltip="83.3% Compliant"/>
+                                                <VBox width="12.5%" height="100%" class="soxBarNonCompliant" tooltip="12.5% Non-Compliant"/>
+                                                <VBox width="4.2%" height="100%" class="soxBarPending" tooltip="4.2% Pending Review"/>
+                                            </HBox>
+                                            <Text text="83.3% Compliant | 12.5% Non-Compliant | 4.2% Pending Review" class="textMuted textCenter"/>
+                                        </VBox>
+                                    </VBox>
+                                </f:content>
+                            </f:Card>
+
+                            <!-- SOX ALERT SUMMARY CARD -->
+                            <f:Card>
+                                <f:header>
+                                    <card:Header
+                                        xmlns:card="sap.f.cards"
+                                        title="SOX Risk &amp; Alert Summary"
+                                        subtitle="Control Exceptions &amp; Notifications"
+                                        iconSrc="sap-icon://bell"/>
+                                </f:header>
+                                <f:content>
+                                    <VBox class="sapUiMediumMargin">
+                                        <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                                            <VBox width="48%" class="sapUiTinyMarginBottom">
+                                                <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                                    <Label text="Critical Risk Alerts:"/>
+                                                    <ObjectStatus text="{soxModel>/alertSummary/critical}" state="Error" icon="sap-icon://error"/>
+                                                </HBox>
+                                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                                    <Label text="High Severity Alerts:"/>
+                                                    <ObjectStatus text="{soxModel>/alertSummary/high}" state="Warning" icon="sap-icon://warning"/>
+                                                </HBox>
+                                            </VBox>
+
+                                            <VBox width="48%" class="sapUiTinyMarginBottom">
+                                                <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                                    <Label text="Medium Severity Alerts:"/>
+                                                    <ObjectStatus text="{soxModel>/alertSummary/medium}" state="Information" icon="sap-icon://information"/>
+                                                </HBox>
+                                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                                    <Label text="Low Severity Alerts:"/>
+                                                    <ObjectStatus text="{soxModel>/alertSummary/low}" state="Success" icon="sap-icon://sys-enter-2"/>
+                                                </HBox>
+                                            </VBox>
+                                        </HBox>
+
+                                        <MessageStrip
+                                            text="Action Required: 1 Critical Segregation of Duties (SOD) alert requires Reviewer 1 sign-off."
+                                            type="Warning"
+                                            showIcon="true"
+                                            class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                </f:content>
+                            </f:Card>
+                        </layout:Grid>
+
+                        <!-- SOX CONTROL MONITORING TABLE -->
+                        <Panel expandable="false" class="sapUiSmallMarginBottom">
+                            <headerToolbar>
+                                <OverflowToolbar height="3.5rem">
+                                    <Title text="SOX Control Monitoring" level="H4"/>
+                                    <ToolbarSpacer/>
+                                    
+                                    <SearchField
+                                        width="240px"
+                                        placeholder="Search Control ID or Description..."
+                                        liveChange="onSearchControls"
+                                        class="sapUiTinyMarginEnd"/>
+
+                                    <Select selectedKey="All" change="onStatusFilterChange" class="sapUiTinyMarginEnd">
+                                        <core:Item key="All" text="Status: All"/>
+                                        <core:Item key="Compliant" text="Compliant"/>
+                                        <core:Item key="Non-Compliant" text="Non-Compliant"/>
+                                        <core:Item key="Pending Review" text="Pending Review"/>
+                                    </Select>
+
+                                    <Select selectedKey="All" change="onSystemFilterChange" class="sapUiTinyMarginEnd">
+                                        <core:Item key="All" text="System: All"/>
+                                        <core:Item key="PRD" text="PRD"/>
+                                        <core:Item key="QAS" text="QAS"/>
+                                        <core:Item key="DEV" text="DEV"/>
+                                    </Select>
+
+                                    <Button text="Export CSV" icon="sap-icon://excel-attachment" type="Default" press="onExportCSV"/>
+                                </OverflowToolbar>
+                            </headerToolbar>
+
+                            <content>
+                                <Table id="soxControlTable" items="{soxModel>/controls}" mode="None" width="100%">
+                                    <columns>
+                                        <Column width="10%"><Text text="Control ID"/></Column>
+                                        <Column width="22%"><Text text="Control Description"/></Column>
+                                        <Column width="7%"><Text text="System"/></Column>
+                                        <Column width="6%"><Text text="Client"/></Column>
+                                        <Column width="13%"><Text text="Execution Frequency"/></Column>
+                                        <Column width="12%"><Text text="Compliance Status"/></Column>
+                                        <Column width="7%" hAlign="Center"><Text text="Deviations"/></Column>
+                                        <Column width="7%"><Text text="Risk"/></Column>
+                                        <Column width="12%"><Text text="Last Run"/></Column>
+                                        <Column width="14%" hAlign="Center"><Text text="Actions"/></Column>
+                                    </columns>
+
+                                    <items>
+                                        <ColumnListItem type="Active">
+                                            <cells>
+                                                <Link text="{soxModel>controlId}" press="onViewDetailsPress" class="boldText"/>
+                                                <Text text="{soxModel>description}"/>
+                                                <ObjectStatus text="{soxModel>system}" state="Information"/>
+                                                <Text text="{soxModel>client}"/>
+                                                <Text text="{soxModel>frequency}"/>
+                                                <ObjectStatus text="{soxModel>status}" state="{soxModel>statusState}" icon="{= ${soxModel>statusState} === 'Success' ? 'sap-icon://sys-enter-2' : (${soxModel>statusState} === 'Error' ? 'sap-icon://error' : 'sap-icon://warning') }"/>
+                                                <ObjectNumber number="{soxModel>deviationCount}" state="{= ${soxModel>deviationCount} > 0 ? 'Error' : 'None' }"/>
+                                                <ObjectStatus text="{soxModel>risk}" state="{soxModel>riskState}"/>
+                                                <Text text="{soxModel>lastRun}"/>
+                                                <Button text="View Details" icon="sap-icon://navigation-right-arrow" iconFirst="false" type="Emphasized" press="onViewDetailsPress"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </content>
+                        </Panel>
+
+                    </VBox>
+                </content>
+            </Page>
+        </tnt:mainContents>
+    </tnt:ToolPage>
+</mvc:View>
