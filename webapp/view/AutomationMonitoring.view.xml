@@ -39,8 +39,6 @@
                             <ObjectStatus text="3 Risks" state="Indication18" inverted="true"/>
                         </tnt:tag>
                     </tnt:NavigationListItem>
-
-                    <tnt:NavigationListItem text="System Health" icon="sap-icon://sys-monitor" key="SystemHealth" select="onSystemHealth"/>
                 </tnt:NavigationList>
 
                 <tnt:fixedItem>

@@ -27,7 +27,6 @@
                     <tnt:NavigationListItem text="Configuration" icon="sap-icon://action-settings" key="Configuration"/>
                     <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement"/>
                     <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics"/>
-                    <tnt:NavigationListItem text="System Health" icon="sap-icon://sys-monitor" key="SystemHealth"/>
                 </tnt:NavigationList>
                 <tnt:fixedItem>
                     <tnt:NavigationList>
