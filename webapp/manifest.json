@@ -124,6 +124,26 @@
           "target": "Reviewer2"
         },
         {
+          "name": "Reviewer2Queue",
+          "pattern": "Reviewer2/Queue",
+          "target": "Reviewer2"
+        },
+        {
+          "name": "Reviewer2DetailedReview",
+          "pattern": "Reviewer2/DetailedReview",
+          "target": "Reviewer2"
+        },
+        {
+          "name": "Reviewer2History",
+          "pattern": "Reviewer2/History",
+          "target": "Reviewer2"
+        },
+        {
+          "name": "Reviewer2Profile",
+          "pattern": "Reviewer2/Profile",
+          "target": "Reviewer2Profile"
+        },
+        {
           "name": "Auditor",
           "pattern": "Auditor",
           "target": "Auditor"
@@ -214,6 +234,9 @@
         },
         "Reviewer2": {
           "viewName": "Reviewer2"
+        },
+        "Reviewer2Profile": {
+          "viewName": "Reviewer2Profile"
         },
         "Auditor": {
           "viewName": "Auditor"

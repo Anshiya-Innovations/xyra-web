@@ -360,8 +360,8 @@
                             <!-- FILTER BAR -->
                             <Panel headerText="Filter Reviewer 1 Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
                                 <layout:Grid defaultSpan="XL3 L3 M6 S12">
-                                    <SearchField id="searchReviewer1" placeholder="Search reports..." search="onSearchReports"/>
-                                    <Input id="inputReportIdFilter" placeholder="Report ID (e.g. REP-101)"/>
+                                    <SearchField id="searchReviewer1" placeholder="Search reports..." search="onSearchReports" liveChange="onSearchReports"/>
+                                    <Input id="inputReportIdFilter" placeholder="Report ID (e.g. REP-101)" liveChange="onSearchReports" change="onSearchReports"/>
                                     <Select id="selectSystemFilter" width="100%" change="onFilterSystem">
                                         <core:Item key="All" text="All Systems"/>
                                         <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
@@ -611,21 +611,21 @@
                             <!-- FILTER BAR -->
                             <Panel headerText="Filter Reviewer History" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
                                 <layout:Grid defaultSpan="XL3 L3 M6 S12">
-                                    <SearchField id="searchHistory" placeholder="Search Ticket / Report ID..." search="onSearchHistory"/>
-                                    <Input id="inputHistoryControlId" placeholder="Control ID (e.g. LOG08)"/>
-                                    <Select id="selectHistorySystem" width="100%">
+                                    <SearchField id="searchHistory" placeholder="Search Report ID / Name..." search="onSearchHistory" liveChange="onSearchHistory"/>
+                                    <Input id="inputHistoryControlId" placeholder="Control ID (e.g. LOG08)" liveChange="onSearchHistory" change="onSearchHistory"/>
+                                    <Select id="selectHistorySystem" width="100%" change="onSearchHistory">
                                         <core:Item key="All" text="All Systems"/>
                                         <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
                                         <core:Item key="HDB-10 (HANA)" text="HDB-10 (HANA)"/>
                                         <core:Item key="QAS-200 (Java)" text="QAS-200 (Java)"/>
                                         <core:Item key="HDB-20 (HANA)" text="HDB-20 (HANA)"/>
                                     </Select>
-                                    <Select id="selectHistoryDecision" width="100%">
+                                    <Select id="selectHistoryDecision" width="100%" change="onSearchHistory">
                                         <core:Item key="All" text="All Decisions"/>
                                         <core:Item key="Approved" text="Approved"/>
                                         <core:Item key="Rejected" text="Rejected"/>
                                     </Select>
-                                    <Select id="selectHistoryStatus" width="100%">
+                                    <Select id="selectHistoryStatus" width="100%" change="onSearchHistory">
                                         <core:Item key="All" text="All Ticket Statuses"/>
                                         <core:Item key="Pending Review" text="Pending Review"/>
                                         <core:Item key="In Review" text="In Review"/>
@@ -635,7 +635,7 @@
                                         <core:Item key="Remediation Required" text="Remediation Required"/>
                                         <core:Item key="Closed" text="Closed"/>
                                     </Select>
-                                    <DatePicker id="dpHistoryDate" placeholder="Reviewed Date"/>
+                                    <DatePicker id="dpHistoryDate" placeholder="Reviewed Date" change="onSearchHistory"/>
                                 </layout:Grid>
                                 <OverflowToolbar class="sapUiTinyMarginTop">
                                     <ToolbarSpacer/>

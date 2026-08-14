@@ -2,12 +2,16 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/UIComponent",
     "sap/ui/model/json/JSONModel",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
     "sap/m/MessageBox"
 ], function (
     Controller,
     UIComponent,
     JSONModel,
+    Filter,
+    FilterOperator,
     MessageToast,
     MessageBox
 ) {
@@ -650,9 +654,52 @@ sap.ui.define([
         },
 
         // HISTORY SEARCH & DIALOG HANDLERS
-        onSearchHistory: function (oEvent) {
-            var sQuery = oEvent ? oEvent.getParameter("query") || (this.byId("searchHistory") ? this.byId("searchHistory").getValue() : "") : "";
-            MessageToast.show("Filtering history for query: " + sQuery);
+        onSearchHistory: function () {
+            var sSearchText = this.byId("searchHistory") ? this.byId("searchHistory").getValue() : "";
+            var sControlId = this.byId("inputHistoryControlId") ? this.byId("inputHistoryControlId").getValue() : "";
+            var sSystem = this.byId("selectHistorySystem") ? this.byId("selectHistorySystem").getSelectedKey() : "All";
+            var sDecision = this.byId("selectHistoryDecision") ? this.byId("selectHistoryDecision").getSelectedKey() : "All";
+            var sStatus = this.byId("selectHistoryStatus") ? this.byId("selectHistoryStatus").getSelectedKey() : "All";
+            var sDate = this.byId("dpHistoryDate") ? this.byId("dpHistoryDate").getValue() : "";
+
+            var aFilters = [];
+
+            if (sSearchText && sSearchText.trim() !== "") {
+                var aSubFilters = [
+                    new Filter("reportId", FilterOperator.Contains, sSearchText.trim()),
+                    new Filter("reportName", FilterOperator.Contains, sSearchText.trim()),
+                    new Filter("ticketId", FilterOperator.Contains, sSearchText.trim())
+                ];
+                aFilters.push(new Filter({ filters: aSubFilters, and: false }));
+            }
+
+            if (sControlId && sControlId.trim() !== "") {
+                aFilters.push(new Filter("controlId", FilterOperator.Contains, sControlId.trim()));
+            }
+
+            if (sSystem && sSystem !== "All") {
+                aFilters.push(new Filter("system", FilterOperator.Contains, sSystem));
+            }
+
+            if (sDecision && sDecision !== "All") {
+                aFilters.push(new Filter("decision", FilterOperator.Contains, sDecision));
+            }
+
+            if (sStatus && sStatus !== "All") {
+                aFilters.push(new Filter("ticketStatus", FilterOperator.Contains, sStatus));
+            }
+
+            if (sDate && sDate.trim() !== "") {
+                aFilters.push(new Filter("reviewedDate", FilterOperator.Contains, sDate.trim()));
+            }
+
+            var oTable = this.byId("reviewerHistoryTable");
+            if (oTable) {
+                var oBinding = oTable.getBinding("items");
+                if (oBinding) {
+                    oBinding.filter(aFilters);
+                }
+            }
         },
 
         onResetHistoryFilters: function () {
@@ -662,6 +709,7 @@ sap.ui.define([
             if (this.byId("selectHistoryDecision")) { this.byId("selectHistoryDecision").setSelectedKey("All"); }
             if (this.byId("selectHistoryStatus")) { this.byId("selectHistoryStatus").setSelectedKey("All"); }
             if (this.byId("dpHistoryDate")) { this.byId("dpHistoryDate").setValue(""); }
+            this.onSearchHistory();
             MessageToast.show("Reviewer History Filters Reset.");
         },
 
@@ -684,10 +732,45 @@ sap.ui.define([
             }
         },
 
-        // SEARCH & FILTER HANDLERS
-        onSearchReports: function (oEvent) {
-            var sQuery = oEvent.getParameter("query") || (this.byId("searchReviewer1") ? this.byId("searchReviewer1").getValue() : "");
-            MessageToast.show("Searching reports: " + sQuery);
+        // SEARCH & FILTER HANDLERS (REVIEW QUEUE LIVE FILTER)
+        onSearchReports: function () {
+            var sSearchText = this.byId("searchReviewer1") ? this.byId("searchReviewer1").getValue() : "";
+            var sReportId = this.byId("inputReportIdFilter") ? this.byId("inputReportIdFilter").getValue() : "";
+            var sSystem = this.byId("selectSystemFilter") ? this.byId("selectSystemFilter").getSelectedKey() : "All";
+            var sStatus = this.byId("selectStatusFilter") ? this.byId("selectStatusFilter").getSelectedKey() : "All";
+
+            var aFilters = [];
+
+            if (sSearchText && sSearchText.trim() !== "") {
+                var aSubFilters = [
+                    new Filter("reportId", FilterOperator.Contains, sSearchText.trim()),
+                    new Filter("reportName", FilterOperator.Contains, sSearchText.trim()),
+                    new Filter("controlId", FilterOperator.Contains, sSearchText.trim()),
+                    new Filter("controlName", FilterOperator.Contains, sSearchText.trim()),
+                    new Filter("businessProcess", FilterOperator.Contains, sSearchText.trim())
+                ];
+                aFilters.push(new Filter({ filters: aSubFilters, and: false }));
+            }
+
+            if (sReportId && sReportId.trim() !== "") {
+                aFilters.push(new Filter("reportId", FilterOperator.Contains, sReportId.trim()));
+            }
+
+            if (sSystem && sSystem !== "All") {
+                aFilters.push(new Filter("system", FilterOperator.Contains, sSystem));
+            }
+
+            if (sStatus && sStatus !== "All") {
+                aFilters.push(new Filter("reviewerStatus", FilterOperator.Contains, sStatus));
+            }
+
+            var oTable = this.byId("reviewer1Table");
+            if (oTable) {
+                var oBinding = oTable.getBinding("items");
+                if (oBinding) {
+                    oBinding.filter(aFilters);
+                }
+            }
         },
 
         onResetFilters: function () {
@@ -695,18 +778,16 @@ sap.ui.define([
             if (this.byId("inputReportIdFilter")) { this.byId("inputReportIdFilter").setValue(""); }
             if (this.byId("selectSystemFilter")) { this.byId("selectSystemFilter").setSelectedKey("All"); }
             if (this.byId("selectStatusFilter")) { this.byId("selectStatusFilter").setSelectedKey("All"); }
-            this._loadReviewer1Data();
+            this.onSearchReports();
             MessageToast.show("Reviewer 1 Filters Reset.");
         },
 
-        onFilterSystem: function (oEvent) {
-            var sKey = oEvent.getParameter("selectedItem").getKey();
-            MessageToast.show("Filtered by System: " + sKey);
+        onFilterSystem: function () {
+            this.onSearchReports();
         },
 
-        onFilterStatus: function (oEvent) {
-            var sKey = oEvent.getParameter("selectedItem").getKey();
-            MessageToast.show("Filtered by Status: " + sKey);
+        onFilterStatus: function () {
+            this.onSearchReports();
         },
 
         onProfileNav: function () {

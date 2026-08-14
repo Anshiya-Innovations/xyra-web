@@ -1,0 +1,168 @@
+<mvc:View
+    controllerName="xyraweb.controller.Reviewer2Profile"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="reviewer2ProfileToolPage" sideExpanded="true">
+
+        <!-- PERSISTENT REVIEWER 2 LEFT NAVIGATION SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="Profile" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Review Queue" icon="sap-icon://table-view" key="Queue" select="onQueue"/>
+                    <tnt:NavigationListItem text="Detailed Review Analysis" icon="sap-icon://inspect" key="Analysis" select="onAnalysis"/>
+                    <tnt:NavigationListItem text="Reviewer History" icon="sap-icon://history" key="History" select="onHistory"/>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="reviewer2ProfilePage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <!-- PAGE HEADER WITH TITLE & SUBTITLE -->
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+                        <Avatar initials="R2" displaySize="S" backgroundColor="Accent3" class="sapUiTinyMarginEnd"/>
+                        <VBox justifyContent="Center">
+                            <Title text="XYRA – Reviewer 2 Profile &amp; Account Settings" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Manage your user details, security credentials, and reviewer account information." class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+
+                        <Button icon="sap-icon://home" tooltip="Back to Queue" type="Transparent" press="onBackToDashboard" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+
+                        <!-- USER PROFILE HEADER CARD -->
+                        <Panel expandable="false" class="sapUiSmallMarginBottom">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMargin">
+                                <HBox alignItems="Center">
+                                    <Avatar displaySize="L" initials="R2" backgroundColor="Accent3" class="sapUiMediumMarginEnd"/>
+                                    <VBox>
+                                        <Title text="{profileModel>/fullName}" level="H2"/>
+                                        <Text text="Assigned Persona: {profileModel>/persona} • {profileModel>/department}" class="textMuted sapUiTinyMarginBottom"/>
+                                        <HBox alignItems="Center">
+                                            <ObjectStatus text="Online" state="Success" icon="sap-icon://sys-enter-2" class="sapUiSmallMarginEnd"/>
+                                            <ObjectStatus text="Reviewer ID: {profileModel>/reviewerId}" state="Information" class="sapUiSmallMarginEnd"/>
+                                            <ObjectStatus text="Account Status: {profileModel>/accountStatus}" state="Success"/>
+                                        </HBox>
+                                    </VBox>
+                                </HBox>
+
+                                <VBox alignItems="End">
+                                    <Button text="Edit Profile Picture" icon="sap-icon://edit" type="Transparent" press="onQuickAction"/>
+                                    <Text text="Last Login: {profileModel>/lastLogin}" class="textMuted sapUiTinyMarginTop"/>
+                                </VBox>
+                            </HBox>
+                        </Panel>
+
+                        <!-- SECTION 1 – PERSONAL & ACCOUNT DETAILS -->
+                        <Panel headerText="Personal &amp; Account Details" expandable="false" class="sapUiSmallMarginBottom">
+                            <form:SimpleForm editable="true" layout="ColumnLayout">
+                                <form:content>
+                                    <core:Title text="Personal Details"/>
+
+                                    <Label text="Full Name"/>
+                                    <Input id="profFullName2" value="{profileModel>/fullName}"/>
+
+                                    <Label text="Email Address"/>
+                                    <Input id="profEmail2" type="Email" value="{profileModel>/email}"/>
+
+                                    <Label text="Phone Number"/>
+                                    <Input id="profPhone2" type="Tel" value="{profileModel>/phone}"/>
+
+                                    <Label text="Department"/>
+                                    <Input id="profDepartment2" value="{profileModel>/department}"/>
+
+                                    <Label text="Organization"/>
+                                    <Input id="profOrg2" value="{profileModel>/organization}"/>
+
+                                    <core:Title text="Account &amp; System Details"/>
+
+                                    <Label text="Reviewer ID"/>
+                                    <Input id="profReviewerId2" value="{profileModel>/reviewerId}" editable="false"/>
+
+                                    <Label text="Assigned Persona"/>
+                                    <Input id="profPersona2" value="{profileModel>/persona}" editable="false"/>
+
+                                    <Label text="Enterprise Subdomain"/>
+                                    <Input id="profSubdomain2" value="{profileModel>/subdomain}" editable="false"/>
+
+                                    <Label text="Account Status"/>
+                                    <ObjectStatus text="{profileModel>/accountStatus}" state="Success" icon="sap-icon://sys-enter-2"/>
+                                </form:content>
+                            </form:SimpleForm>
+                        </Panel>
+
+                        <!-- SECTION 2 – SECURITY & CREDENTIALS -->
+                        <Panel headerText="Security &amp; Password Settings" expandable="false" class="sapUiSmallMarginBottom">
+                            <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="4" labelSpanS="12" emptySpanXL="5" emptySpanL="5" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1">
+                                <form:content>
+                                    <core:Title text="Password Management"/>
+
+                                    <Label text="Current Password"/>
+                                    <Input id="profCurrentPass2" type="Password" placeholder="Enter current password"/>
+
+                                    <Label text="New Password"/>
+                                    <Input id="profNewPass2" type="Password" placeholder="Enter new password"/>
+
+                                    <Label text="Confirm New Password"/>
+                                    <Input id="profConfirmPass2" type="Password" placeholder="Re-enter new password"/>
+
+                                    <Label text=""/>
+                                    <HBox class="sapUiTinyMarginTop">
+                                        <Button text="Save Password" type="Emphasized" icon="sap-icon://save" press="onSavePassword"/>
+                                    </HBox>
+                                </form:content>
+                            </form:SimpleForm>
+                        </Panel>
+
+                        <!-- BOTTOM ACTION BAR -->
+                        <HBox justifyContent="End" class="sapUiMediumMarginTop sapUiSmallMarginBottom">
+                            <Button text="Save Profile Changes" type="Emphasized" icon="sap-icon://save" press="onSaveProfile" class="sapUiTinyMarginEnd"/>
+                            <Button text="Reset" type="Transparent" icon="sap-icon://reset" press="onResetProfile" class="sapUiTinyMarginEnd"/>
+                            <Button text="Back to Dashboard" type="Ghost" icon="sap-icon://home" press="onBackToDashboard"/>
+                        </HBox>
+
+                    </VBox>
+                </content>
+
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations"/>
+                        <ToolbarSpacer/>
+                        <Text text="XYRA Internal Control Platform | Reviewer 2 Profile v1.0"/>
+                    </OverflowToolbar>
+                </footer>
+
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>
