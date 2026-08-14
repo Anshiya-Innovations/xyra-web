@@ -6,273 +6,497 @@
     xmlns:card="sap.f.cards"
     xmlns:core="sap.ui.core"
     xmlns:layout="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
     height="100%">
 
-    <Page
-        id="exManagerPage"
-        showHeader="true"
-        enableScrolling="true"
-        class="sapUiContentPadding">
+    <tnt:ToolPage id="escManagerToolPage" sideExpanded="true">
 
-        <dependents>
-            <!-- Escalation Manager Profile Popover -->
-            <ResponsivePopover
-                id="escProfilePopover"
-                title="Escalation Manager Profile"
-                placement="Bottom"
-                contentWidth="340px">
-                <content>
-                    <VBox class="sapUiMediumMargin">
-                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
-                            <Avatar displaySize="M" initials="EM" backgroundColor="Accent4" class="sapUiSmallMarginEnd"/>
-                            <VBox>
-                                <Title text="Security Team Lead" level="H3"/>
-                                <Text text="Escalation Manager - Final Sign-off"/>
-                                <ObjectStatus text="Active Manager" state="Success"/>
+        <!-- PERSISTENT ESCALATION MANAGER LEFT NAVIGATION SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="escSideNavigation" expanded="true" selectedKey="Queue" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Escalation Queue" icon="sap-icon://table-view" key="Queue" select="onSelectTabQueue"/>
+                    <tnt:NavigationListItem text="Reviewer History" icon="sap-icon://history" key="History" select="onSelectTabHistory"/>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfileNav"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="exManagerPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <dependents>
+                    <!-- Escalation Manager Profile Popover -->
+                    <ResponsivePopover
+                        id="escProfilePopover"
+                        title="Escalation Manager Profile"
+                        placement="Bottom"
+                        contentWidth="340px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <Avatar displaySize="M" initials="EM" backgroundColor="Accent6" class="sapUiSmallMarginEnd"/>
+                                    <VBox>
+                                        <Title text="Security Team Lead" level="H3"/>
+                                        <Text text="Escalation Manager - Final Sign-off"/>
+                                        <ObjectStatus text="Active Manager" state="Success"/>
+                                    </VBox>
+                                </HBox>
+                                <VBox class="sapUiSmallMarginBottom">
+                                    <Label text="Role" design="Bold"/>
+                                    <Text text="Security Team Lead / Manager"/>
+                                    <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="Enterprise Security &amp; Audit Governance"/>
+                                    <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="security.lead@xyra.ai"/>
+                                    <Label text="Responsibilities" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="Final report review, verify evidence &amp; remediation, resolve discrepancies, approve/reject, close audit workflow."/>
+                                </VBox>
+                                <HBox justifyContent="End" class="sapUiSmallMarginTop">
+                                    <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
+                                </HBox>
                             </VBox>
-                        </HBox>
-                        <VBox class="sapUiSmallMarginBottom">
-                            <Label text="Role" design="Bold"/>
-                            <Text text="Security Team Lead / Manager"/>
-                            <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="Enterprise Security &amp; Audit Governance"/>
-                            <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="security.lead@xyra.ai"/>
-                            <Label text="Responsibilities" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="Final report review, verify evidence &amp; remediation, resolve discrepancies, approve/reject, close audit workflow."/>
+                        </content>
+                    </ResponsivePopover>
+
+                    <!-- VIEW REPORT DIALOG -->
+                    <Dialog id="viewReportDialog" title="Final Audit Report Inspection" contentWidth="600px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Title text="{escManagerModel>/selectedReport/reportName}" level="H3" class="sapUiTinyMarginBottom"/>
+                                <ObjectStatus text="{escManagerModel>/selectedReport/reportId}" state="Information" class="sapUiSmallMarginBottom"/>
+
+                                <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                                    <VBox>
+                                        <Label text="Control ID" design="Bold"/>
+                                        <Text text="{escManagerModel>/selectedReport/controlId}"/>
+                                        <Label text="System" design="Bold" class="sapUiTinyMarginTop"/>
+                                        <Text text="{escManagerModel>/selectedReport/system}"/>
+                                        <Label text="Compliance Status" design="Bold" class="sapUiTinyMarginTop"/>
+                                        <ObjectStatus text="{escManagerModel>/selectedReport/complianceStatus}" state="{escManagerModel>/selectedReport/complianceState}"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Remediation Status" design="Bold"/>
+                                        <ObjectStatus text="{escManagerModel>/selectedReport/remediationStatus}" state="{escManagerModel>/selectedReport/remediationState}"/>
+                                        <Label text="Evidence Status" design="Bold" class="sapUiTinyMarginTop"/>
+                                        <ObjectStatus text="{escManagerModel>/selectedReport/evidence}" state="Success"/>
+                                        <Label text="Final Workflow Status" design="Bold" class="sapUiTinyMarginTop"/>
+                                        <ObjectStatus text="{escManagerModel>/selectedReport/workflowStatus}" state="{escManagerModel>/selectedReport/workflowState}"/>
+                                    </VBox>
+                                </layout:Grid>
+
+                                <Panel headerText="Reviewer Verification History" expandable="false" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiTinyMargin">
+                                        <Label text="Reviewer 1 Comments (Basis Team):" design="Bold"/>
+                                        <Text text="{escManagerModel>/selectedReport/reviewer1Comments}" class="sapUiSmallMarginBottom"/>
+                                        
+                                        <Label text="Reviewer 2 Comments (Basis Manager):" design="Bold"/>
+                                        <Text text="{escManagerModel>/selectedReport/reviewer2Comments}"/>
+                                    </VBox>
+                                </Panel>
+
+                                <Label text="Security Manager Resolution Notes" design="Bold"/>
+                                <Text text="{escManagerModel>/selectedReport/managerNotes}"/>
+                            </VBox>
+                        </content>
+                        <endButton>
+                            <Button text="Close" press="onCloseViewReportDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- REQUEST CORRECTION DIALOG -->
+                    <Dialog id="requestCorrectionDialog" title="Request Correction / Revision" contentWidth="480px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <MessageStrip text="Send correction request back to Reviewer 1 or Reviewer 2." type="Warning" showIcon="true" class="sapUiSmallMarginBottom"/>
+                                <Label text="Target Reviewer" required="true"/>
+                                <Select id="selectTargetReviewer" width="100%" class="sapUiSmallMarginBottom">
+                                    <core:Item key="REV1" text="Reviewer 1 (Basis Team)"/>
+                                    <core:Item key="REV2" text="Reviewer 2 (Basis Manager)"/>
+                                </Select>
+                                <Label text="Correction Instructions" required="true"/>
+                                <TextArea id="inputCorrectionNotesArea" rows="4" width="100%" placeholder="Specify required corrections, evidence re-validation, or log checks..." class="sapUiSmallMarginBottom"/>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Dispatch Request" type="Emphasized" icon="sap-icon://paper-plane" press="onSubmitRequestCorrection"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseRequestCorrectionDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- REJECT DIALOG -->
+                    <Dialog id="rejectDialog" title="Reject Final Audit Report" contentWidth="480px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Label text="Reason for Rejection" required="true"/>
+                                <TextArea id="inputRejectReasonArea" rows="4" width="100%" placeholder="Enter manager rejection justification..." class="sapUiSmallMarginBottom"/>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Reject Report" type="Reject" press="onSubmitReject"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseRejectDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- CLOSE AUDIT DIALOG -->
+                    <Dialog id="closeAuditDialog" title="Close Audit Workflow" contentWidth="500px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <MessageStrip text="Closing this audit workflow will generate a final compliance certificate and archive all evidence files." type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
+                                <CheckBox text="Final Evidence Package Verified &amp; Signed" selected="true"/>
+                                <CheckBox text="Remediation Confirmed &amp; Validated" selected="true"/>
+                                <CheckBox text="Audit Trail Hash Checksum Sealed" selected="true"/>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Confirm &amp; Close Audit" type="Emphasized" icon="sap-icon://locked" press="onSubmitCloseAudit"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseCloseAuditDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- HISTORICAL DETAILS & REMOVED/REMEDIATED ITEM DIALOG FOR ESCALATION MANAGER HISTORY -->
+                    <Dialog id="viewHistoryDetailsDialogEsc" title="Historical Decision &amp; Audit Traceability Details" contentWidth="600px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Title text="{escManagerModel>/selectedHistoryItem/reportName}" level="H3" class="sapUiTinyMarginBottom"/>
+                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <ObjectStatus text="Ticket ID: {escManagerModel>/selectedHistoryItem/ticketId}" state="Information" class="sapUiTinyMarginEnd fontWeightBold"/>
+                                    <ObjectStatus text="Report: {escManagerModel>/selectedHistoryItem/reportId}" state="None" class="sapUiTinyMarginEnd"/>
+                                    <ObjectStatus text="Control: {escManagerModel>/selectedHistoryItem/controlId}" state="None"/>
+                                </HBox>
+
+                                <Panel headerText="1. Final Decision Summary" expandable="false" class="sapUiSmallMarginBottom">
+                                    <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiTinyMargin">
+                                        <VBox>
+                                            <Label text="Escalation Manager Decision" design="Bold"/>
+                                            <ObjectStatus text="{escManagerModel>/selectedHistoryItem/decision}" state="{= ${escManagerModel>/selectedHistoryItem/decision} === 'Approved' ? 'Success' : (${escManagerModel>/selectedHistoryItem/decision} === 'Rejected' ? 'Error' : 'Warning') }" class="sapUiTinyMarginBottom"/>
+
+                                            <Label text="Current Ticket Status" design="Bold"/>
+                                            <ObjectStatus text="{escManagerModel>/selectedHistoryItem/ticketStatus}" state="{escManagerModel>/selectedHistoryItem/ticketStatusState}" class="sapUiTinyMarginBottom"/>
+
+                                            <Label text="SAP System" design="Bold"/>
+                                            <Text text="{escManagerModel>/selectedHistoryItem/system}"/>
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="Reviewed Date" design="Bold"/>
+                                            <Text text="{escManagerModel>/selectedHistoryItem/reviewedDate}" class="sapUiSmallMarginBottom"/>
+
+                                            <Label text="Compliance &amp; Remediation" design="Bold"/>
+                                            <HBox class="sapUiSmallMarginBottom">
+                                                <ObjectStatus text="{escManagerModel>/selectedHistoryItem/complianceStatus}" state="{escManagerModel>/selectedHistoryItem/complianceState}" class="sapUiTinyMarginEnd"/>
+                                                <ObjectStatus text="{escManagerModel>/selectedHistoryItem/remediationStatus}" state="{escManagerModel>/selectedHistoryItem/remediationState}"/>
+                                            </HBox>
+
+                                            <Label text="Escalation Manager" design="Bold"/>
+                                            <Text text="{escManagerModel>/selectedHistoryItem/reviewerName} ({escManagerModel>/selectedHistoryItem/employeeId})"/>
+                                        </VBox>
+                                    </layout:Grid>
+                                </Panel>
+
+                                <Panel headerText="2. Removed / Remediated Details &amp; Root Cause" expandable="false" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiTinyMargin">
+                                        <Label text="Removed / Remediated Item" design="Bold"/>
+                                        <Text text="{escManagerModel>/selectedHistoryItem/removedRemediatedItem}" class="sapUiTinyMarginBottom fontWeightBold"/>
+
+                                        <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiTinyMarginBottom">
+                                            <VBox>
+                                                <Label text="Previous Value" design="Bold"/>
+                                                <Text text="{escManagerModel>/selectedHistoryItem/previousValue}" class="textDanger"/>
+                                            </VBox>
+                                            <VBox>
+                                                <Label text="Updated / Verified Value" design="Bold"/>
+                                                <Text text="{escManagerModel>/selectedHistoryItem/updatedValue}" class="textSuccess"/>
+                                            </VBox>
+                                        </layout:Grid>
+
+                                        <Label text="Reason / Root Cause" design="Bold" class="sapUiTinyMarginTop"/>
+                                        <Text text="{escManagerModel>/selectedHistoryItem/reason}" class="sapUiSmallMarginBottom textMuted"/>
+
+                                        <Label text="Manager Resolution Note" design="Bold"/>
+                                        <MessageStrip text="{escManagerModel>/selectedHistoryItem/reviewComment}" type="Information" showIcon="true"/>
+                                    </VBox>
+                                </Panel>
+                            </VBox>
+                        </content>
+                        <endButton>
+                            <Button text="Close" press="onCloseHistoryDetailsDialog"/>
+                        </endButton>
+                    </Dialog>
+                </dependents>
+
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+
+                        <Avatar initials="EM" displaySize="S" backgroundColor="Accent6" class="sapUiTinyMarginEnd"/>
+
+                        <VBox justifyContent="Center">
+                            <Title text="XYRA – Escalation Manager Dashboard" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Security Team Lead – Final Audit Review, Discrepancy Resolution &amp; Sign-off" class="textMuted sapUiNoMargin"/>
                         </VBox>
-                        <HBox justifyContent="End" class="sapUiSmallMarginTop">
-                            <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
-                        </HBox>
-                    </VBox>
-                </content>
-            </ResponsivePopover>
 
-            <!-- VIEW REPORT DIALOG -->
-            <Dialog id="viewReportDialog" title="Final Audit Report Inspection" contentWidth="600px">
-                <content>
-                    <VBox class="sapUiMediumMargin">
-                        <Title text="{escManagerModel>/selectedReport/reportName}" level="H3" class="sapUiTinyMarginBottom"/>
-                        <ObjectStatus text="{escManagerModel>/selectedReport/reportId}" state="Information" class="sapUiSmallMarginBottom"/>
-
-                        <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
-                            <VBox>
-                                <Label text="Control ID" design="Bold"/>
-                                <Text text="{escManagerModel>/selectedReport/controlId}"/>
-                                <Label text="System" design="Bold" class="sapUiTinyMarginTop"/>
-                                <Text text="{escManagerModel>/selectedReport/system}"/>
-                                <Label text="Compliance Status" design="Bold" class="sapUiTinyMarginTop"/>
-                                <ObjectStatus text="{escManagerModel>/selectedReport/complianceStatus}" state="{escManagerModel>/selectedReport/complianceState}"/>
-                            </VBox>
-                            <VBox>
-                                <Label text="Remediation Status" design="Bold"/>
-                                <ObjectStatus text="{escManagerModel>/selectedReport/remediationStatus}" state="{escManagerModel>/selectedReport/remediationState}"/>
-                                <Label text="Evidence Status" design="Bold" class="sapUiTinyMarginTop"/>
-                                <ObjectStatus text="{escManagerModel>/selectedReport/evidence}" state="Success"/>
-                                <Label text="Final Workflow Status" design="Bold" class="sapUiTinyMarginTop"/>
-                                <ObjectStatus text="{escManagerModel>/selectedReport/workflowStatus}" state="{escManagerModel>/selectedReport/workflowState}"/>
-                            </VBox>
-                        </layout:Grid>
-
-                        <Panel headerText="Reviewer Verification History" expandable="false" class="sapUiSmallMarginBottom">
-                            <VBox class="sapUiTinyMargin">
-                                <Label text="Reviewer 1 Comments (Basis Team):" design="Bold"/>
-                                <Text text="{escManagerModel>/selectedReport/reviewer1Comments}" class="sapUiSmallMarginBottom"/>
-                                
-                                <Label text="Reviewer 2 Comments (Basis Manager):" design="Bold"/>
-                                <Text text="{escManagerModel>/selectedReport/reviewer2Comments}"/>
-                            </VBox>
-                        </Panel>
-
-                        <Label text="Security Manager Resolution Notes" design="Bold"/>
-                        <Text text="{escManagerModel>/selectedReport/managerNotes}"/>
-                    </VBox>
-                </content>
-                <endButton>
-                    <Button text="Close" press="onCloseViewReportDialog"/>
-                </endButton>
-            </Dialog>
-
-            <!-- REQUEST CORRECTION DIALOG -->
-            <Dialog id="requestCorrectionDialog" title="Request Correction / Revision" contentWidth="480px">
-                <content>
-                    <VBox class="sapUiMediumMargin">
-                        <MessageStrip text="Send correction request back to Reviewer 1 or Reviewer 2." type="Warning" showIcon="true" class="sapUiSmallMarginBottom"/>
-                        <Label text="Target Reviewer" required="true"/>
-                        <Select id="selectTargetReviewer" width="100%" class="sapUiSmallMarginBottom">
-                            <core:Item key="REV1" text="Reviewer 1 (Basis Team)"/>
-                            <core:Item key="REV2" text="Reviewer 2 (Basis Manager)"/>
-                        </Select>
-                        <Label text="Correction Instructions" required="true"/>
-                        <TextArea id="inputCorrectionNotesArea" rows="4" width="100%" placeholder="Specify required corrections, evidence re-validation, or log checks..." class="sapUiSmallMarginBottom"/>
-                    </VBox>
-                </content>
-                <beginButton>
-                    <Button text="Dispatch Request" type="Emphasized" icon="sap-icon://paper-plane" press="onSubmitRequestCorrection"/>
-                </beginButton>
-                <endButton>
-                    <Button text="Cancel" press="onCloseRequestCorrectionDialog"/>
-                </endButton>
-            </Dialog>
-
-            <!-- REJECT DIALOG -->
-            <Dialog id="rejectDialog" title="Reject Final Audit Report" contentWidth="480px">
-                <content>
-                    <VBox class="sapUiMediumMargin">
-                        <Label text="Reason for Rejection" required="true"/>
-                        <TextArea id="inputRejectReasonArea" rows="4" width="100%" placeholder="Enter manager rejection justification..." class="sapUiSmallMarginBottom"/>
-                    </VBox>
-                </content>
-                <beginButton>
-                    <Button text="Reject Report" type="Reject" press="onSubmitReject"/>
-                </beginButton>
-                <endButton>
-                    <Button text="Cancel" press="onCloseRejectDialog"/>
-                </endButton>
-            </Dialog>
-
-            <!-- CLOSE AUDIT DIALOG -->
-            <Dialog id="closeAuditDialog" title="Close Audit Workflow" contentWidth="500px">
-                <content>
-                    <VBox class="sapUiMediumMargin">
-                        <MessageStrip text="Closing this audit workflow will generate a final compliance certificate and archive all evidence files." type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
-                        <CheckBox text="Final Evidence Package Verified &amp; Signed" selected="true"/>
-                        <CheckBox text="Remediation Confirmed &amp; Validated" selected="true"/>
-                        <CheckBox text="Audit Trail Hash Checksum Sealed" selected="true"/>
-                    </VBox>
-                </content>
-                <beginButton>
-                    <Button text="Confirm &amp; Close Audit" type="Emphasized" icon="sap-icon://locked" press="onSubmitCloseAudit"/>
-                </beginButton>
-                <endButton>
-                    <Button text="Cancel" press="onCloseCloseAuditDialog"/>
-                </endButton>
-            </Dialog>
-        </dependents>
-
-        <customHeader>
-            <OverflowToolbar height="4.5rem">
-                <!-- Left Side Profile Button -->
-                <Button
-                    text="Escalation Manager"
-                    icon="sap-icon://manager"
-                    type="Transparent"
-                    press="onProfilePress"
-                    class="sapUiTinyMarginBegin"/>
-
-                <Avatar initials="EM" displaySize="S" backgroundColor="Accent4" class="sapUiTinyMarginEnd"/>
-
-                <VBox justifyContent="Center">
-                    <Title text="XYRA – Escalation Manager Dashboard" level="H4" class="sapUiNoMargin"/>
-                    <Text text="Security Team Lead – Final Audit Review, Discrepancy Resolution &amp; Sign-off" class="textMuted sapUiNoMargin"/>
-                </VBox>
-
-                <ToolbarSpacer/>
-
-                <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
-                <Button text="Logout" type="Reject" icon="sap-icon://log" press="onLogout" class="sapUiTinyMarginEnd"/>
-            </OverflowToolbar>
-        </customHeader>
-
-        <content>
-            <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
-
-                <!-- BUSINESS ROLE & RESPONSIBILITIES BANNER -->
-                <MessageStrip
-                    text="Business Role: Security Team Lead / Manager | Purpose: Perform final review and approval of reports after Reviewer 2 completes technical review. | Responsibilities: Review final report, verify evidence, verify remediation, resolve discrepancies, approve or reject, and close audit workflow."
-                    type="Information"
-                    showIcon="true"
-                    showCloseButton="false"
-                    class="sapUiSmallMarginBottom"/>
-
-                <!-- FILTER BAR -->
-                <Panel headerText="Filter Escalation Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
-                    <layout:Grid defaultSpan="XL3 L3 M6 S12">
-                        <SearchField id="searchEscalation" placeholder="Search final reports..." search="onSearchReports"/>
-                        <Input id="inputReportIdFilterEsc" placeholder="Report ID (e.g. REP-101)"/>
-                        <Select id="selectSystemFilterEsc" width="100%" change="onFilterSystem">
-                            <core:Item key="All" text="All Systems"/>
-                            <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
-                            <core:Item key="HDB-10 (HANA)" text="HDB-10 (HANA)"/>
-                            <core:Item key="QAS-200 (Java)" text="QAS-200 (Java)"/>
-                        </Select>
-                        <Select id="selectStatusFilterEsc" width="100%" change="onFilterStatus">
-                            <core:Item key="All" text="All Workflow Statuses"/>
-                            <core:Item key="Pending Final Approval" text="Pending Final Approval"/>
-                            <core:Item key="Approved &amp; Closed" text="Approved &amp; Closed"/>
-                            <core:Item key="Correction Requested" text="Correction Requested"/>
-                            <core:Item key="Rejected" text="Rejected"/>
-                        </Select>
-                    </layout:Grid>
-                    <OverflowToolbar class="sapUiTinyMarginTop">
                         <ToolbarSpacer/>
-                        <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchReports"/>
-                        <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetFilters"/>
+
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                        <Button text="Logout" type="Reject" icon="sap-icon://log" press="onLogout" class="sapUiTinyMarginEnd"/>
                     </OverflowToolbar>
-                </Panel>
+                </customHeader>
 
-                <!-- QUICK ACTIONS TOOLBAR (EXACTLY MATCHING SPECIFIED 6 BUTTONS) -->
-                <Panel expandable="false" class="sapUiSmallMarginBottom">
-                    <headerToolbar>
-                        <OverflowToolbar>
-                            <Title text="Escalation Manager Quick Actions" level="H4"/>
-                            <ToolbarSpacer/>
-                            <Button text="View Report" icon="sap-icon://show" press="onViewReport" class="sapUiTinyMarginEnd"/>
-                            <Button text="Approve" type="Accept" icon="sap-icon://accept" press="onApprove" class="sapUiTinyMarginEnd"/>
-                            <Button text="Reject" type="Reject" icon="sap-icon://decline" press="onReject" class="sapUiTinyMarginEnd"/>
-                            <Button text="Request Correction" icon="sap-icon://undo" press="onRequestCorrection" class="sapUiTinyMarginEnd"/>
-                            <Button text="Export Final Report" icon="sap-icon://excel-attachment" press="onExportFinalReport" class="sapUiTinyMarginEnd"/>
-                            <Button text="Close Audit" type="Emphasized" icon="sap-icon://locked" press="onCloseAudit"/>
-                        </OverflowToolbar>
-                    </headerToolbar>
-                </Panel>
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
 
-                <!-- MAIN RESPONSIVE SAPUI5 TABLE (No Horizontal Scrolling, Responsive across Desktop/Tablet/Mobile) -->
-                <Panel headerText="Final Audit Approval Queue" expandable="false" class="sapUiSmallMarginBottom">
-                    <Table
-                        id="escalationTable"
-                        items="{escManagerModel>/reports}"
-                        mode="MultiSelect"
-                        width="100%"
-                        selectionChange="onSelectionChange">
-                        <columns>
-                            <Column width="10%"><Text text="Report ID"/></Column>
-                            <Column width="18%"><Text text="Report Name"/></Column>
-                            <Column width="12%" minScreenWidth="Desktop" demandPopin="true"><Text text="System"/></Column>
-                            <Column width="15%" minScreenWidth="Desktop" demandPopin="true"><Text text="Reviewer 1 Comments"/></Column>
-                            <Column width="15%" minScreenWidth="Desktop" demandPopin="true"><Text text="Reviewer 2 Comments"/></Column>
-                            <Column width="10%" minScreenWidth="Tablet" demandPopin="true"><Text text="Evidence"/></Column>
-                            <Column width="10%"><Text text="Compliance Status"/></Column>
-                            <Column width="10%"><Text text="Remediation Status"/></Column>
-                        </columns>
+                        <!-- BUSINESS ROLE & RESPONSIBILITIES BANNER -->
+                        <MessageStrip
+                            text="Business Role: Security Team Lead / Manager | Purpose: Perform final review and approval of reports after Reviewer 2 completes technical review. | Responsibilities: Review final report, verify evidence, verify remediation, resolve discrepancies, approve or reject, and close audit workflow."
+                            type="Information"
+                            showIcon="true"
+                            showCloseButton="false"
+                            class="sapUiSmallMarginBottom"/>
 
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <ObjectStatus text="{escManagerModel>reportId}" state="Information"/>
-                                    <ObjectIdentifier title="{escManagerModel>reportName}" subtitle="{escManagerModel>controlId}"/>
-                                    <Text text="{escManagerModel>system}"/>
-                                    <Text text="{escManagerModel>reviewer1Comments}" maxLines="2"/>
-                                    <Text text="{escManagerModel>reviewer2Comments}" maxLines="2"/>
-                                    <ObjectStatus text="{escManagerModel>evidence}" state="Success" icon="sap-icon://sys-enter-2"/>
-                                    <ObjectStatus text="{escManagerModel>complianceStatus}" state="{escManagerModel>complianceState}"/>
-                                    <ObjectStatus text="{escManagerModel>remediationStatus}" state="{escManagerModel>remediationState}"/>
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
-                </Panel>
+                        <!-- SLIDE 1: ESCALATION QUEUE -->
+                        <VBox id="vboxEscalationQueue" visible="true" width="100%">
 
-            </VBox>
-        </content>
+                            <!-- FILTER BAR (WITH REAL-TIME AUTOMATIC LIVE FILTERING) -->
+                            <Panel headerText="Filter Escalation Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                                <layout:Grid defaultSpan="XL3 L3 M6 S12">
+                                    <SearchField id="searchEscalation" placeholder="Search final reports..." search="onSearchReports" liveChange="onSearchReports"/>
+                                    <Input id="inputReportIdFilterEsc" placeholder="Report ID (e.g. REP-101)" liveChange="onSearchReports" change="onSearchReports"/>
+                                    <Select id="selectSystemFilterEsc" width="100%" change="onFilterSystem">
+                                        <core:Item key="All" text="All Systems"/>
+                                        <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
+                                        <core:Item key="HDB-10 (HANA)" text="HDB-10 (HANA)"/>
+                                        <core:Item key="QAS-200 (Java)" text="QAS-200 (Java)"/>
+                                    </Select>
+                                    <Select id="selectStatusFilterEsc" width="100%" change="onFilterStatus">
+                                        <core:Item key="All" text="All Workflow Statuses"/>
+                                        <core:Item key="Pending Final Approval" text="Pending Final Approval"/>
+                                        <core:Item key="Approved &amp; Closed" text="Approved &amp; Closed"/>
+                                        <core:Item key="Correction Requested" text="Correction Requested"/>
+                                        <core:Item key="Rejected" text="Rejected"/>
+                                    </Select>
+                                </layout:Grid>
+                                <OverflowToolbar class="sapUiTinyMarginTop">
+                                    <ToolbarSpacer/>
+                                    <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchReports"/>
+                                    <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetFilters"/>
+                                </OverflowToolbar>
+                            </Panel>
 
-        <footer>
-            <OverflowToolbar>
-                <Text text="© 2026 Forte Innovations"/>
-                <ToolbarSpacer/>
-                <Text text="XYRA Internal Control Platform | Escalation Manager (Security Lead) Portal v1.0"/>
-            </OverflowToolbar>
-        </footer>
+                            <!-- QUICK ACTIONS TOOLBAR (EXACTLY MATCHING SPECIFIED 6 BUTTONS) -->
+                            <Panel expandable="false" class="sapUiSmallMarginBottom">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Escalation Manager Quick Actions" level="H4"/>
+                                        <ToolbarSpacer/>
+                                        <Button text="View Report" icon="sap-icon://show" press="onViewReport" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Approve" type="Accept" icon="sap-icon://accept" press="onApprove" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Reject" type="Reject" icon="sap-icon://decline" press="onReject" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Request Correction" icon="sap-icon://undo" press="onRequestCorrection" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Export Final Report" icon="sap-icon://excel-attachment" press="onExportFinalReport" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Close Audit" type="Emphasized" icon="sap-icon://locked" press="onCloseAudit"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                            </Panel>
 
-    </Page>
+                            <!-- MAIN RESPONSIVE SAPUI5 TABLE -->
+                            <Panel headerText="Final Audit Approval Queue" expandable="false" class="sapUiSmallMarginBottom">
+                                <Table
+                                    id="escalationTable"
+                                    items="{escManagerModel>/reports}"
+                                    mode="MultiSelect"
+                                    width="100%"
+                                    selectionChange="onSelectionChange">
+                                    <columns>
+                                        <Column width="10%"><Text text="Report ID"/></Column>
+                                        <Column width="18%"><Text text="Report Name"/></Column>
+                                        <Column width="12%" minScreenWidth="Desktop" demandPopin="true"><Text text="System"/></Column>
+                                        <Column width="15%" minScreenWidth="Desktop" demandPopin="true"><Text text="Reviewer 1 Comments"/></Column>
+                                        <Column width="15%" minScreenWidth="Desktop" demandPopin="true"><Text text="Reviewer 2 Comments"/></Column>
+                                        <Column width="10%" minScreenWidth="Tablet" demandPopin="true"><Text text="Evidence"/></Column>
+                                        <Column width="10%"><Text text="Compliance Status"/></Column>
+                                        <Column width="10%"><Text text="Remediation Status"/></Column>
+                                    </columns>
+
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <ObjectStatus text="{escManagerModel>reportId}" state="Information"/>
+                                                <ObjectIdentifier title="{escManagerModel>reportName}" subtitle="{escManagerModel>controlId}"/>
+                                                <Text text="{escManagerModel>system}"/>
+                                                <Text text="{escManagerModel>reviewer1Comments}" maxLines="2"/>
+                                                <Text text="{escManagerModel>reviewer2Comments}" maxLines="2"/>
+                                                <ObjectStatus text="{escManagerModel>evidence}" state="Success" icon="sap-icon://sys-enter-2"/>
+                                                <ObjectStatus text="{escManagerModel>complianceStatus}" state="{escManagerModel>complianceState}"/>
+                                                <ObjectStatus text="{escManagerModel>remediationStatus}" state="{escManagerModel>remediationState}"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </Panel>
+
+                        </VBox>
+
+                        <!-- SLIDE 2: REVIEWER HISTORY (NEW PAGE FOR ESCALATION MANAGER) -->
+                        <VBox id="vboxEscalationHistory" visible="false" width="100%">
+
+                            <OverflowToolbar class="sapUiSmallMarginBottom">
+                                <Title text="Escalation Manager Reviewer History &amp; Audit Traceability" level="H4"/>
+                                <ToolbarSpacer/>
+                                <Text text="Immutable final sign-off audit logs &amp; remediation verification history" class="textMuted"/>
+                            </OverflowToolbar>
+
+                            <!-- COMPACT SUMMARY CARDS -->
+                            <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                                <!-- APPROVED CARD -->
+                                <VBox width="31%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #10b981; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox>
+                                            <Text text="Approved &amp; Closed Audits" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Title text="{escManagerModel>/historyKpis/approved}" level="H2" class="sapUiTinyMarginTop textSuccess fontWeightBold"/>
+                                        </VBox>
+                                        <Avatar src="sap-icon://sys-enter-2" backgroundColor="Accent8" displaySize="M"/>
+                                    </HBox>
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                        <ObjectStatus text="🟢 Final Sign-off" state="Success"/>
+                                        <Text text="Sealed &amp; Archived" class="fontSizeSmall textMuted"/>
+                                    </HBox>
+                                </VBox>
+
+                                <!-- REJECTED CARD -->
+                                <VBox width="31%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #ef4444; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox>
+                                            <Text text="Rejected / Returned" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Title text="{escManagerModel>/historyKpis/rejected}" level="H2" class="sapUiTinyMarginTop textDanger fontWeightBold"/>
+                                        </VBox>
+                                        <Avatar src="sap-icon://sys-cancel-2" backgroundColor="Accent1" displaySize="M"/>
+                                    </HBox>
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                        <ObjectStatus text="🔴 Correction Requested" state="Error"/>
+                                        <Text text="Dispatched to Reviewers" class="fontSizeSmall textDanger fontWeightBold"/>
+                                    </HBox>
+                                </VBox>
+
+                                <!-- PENDING SIGN-OFF CARD -->
+                                <VBox width="31%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #3b82f6; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox>
+                                            <Text text="Pending Final Sign-off" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Title text="{escManagerModel>/historyKpis/pending}" level="H2" class="sapUiTinyMarginTop textPrimary fontWeightBold"/>
+                                        </VBox>
+                                        <Avatar src="sap-icon://history" backgroundColor="Accent6" displaySize="M"/>
+                                    </HBox>
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                        <ObjectStatus text="⚙ In Final Review" state="Information"/>
+                                        <Text text="Awaiting Security Lead" class="fontSizeSmall textMuted"/>
+                                    </HBox>
+                                </VBox>
+                            </HBox>
+
+                            <!-- FILTER BAR (WITH LIVE AUTOMATIC FILTERING) -->
+                            <Panel headerText="Filter Reviewer History" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                                <layout:Grid defaultSpan="XL3 L3 M6 S12">
+                                    <SearchField id="searchHistoryEsc" placeholder="Search Report ID / Name / Ticket..." search="onSearchHistory" liveChange="onSearchHistory"/>
+                                    <Input id="inputHistoryControlIdEsc" placeholder="Control ID (e.g. LOG08)" liveChange="onSearchHistory" change="onSearchHistory"/>
+                                    <Select id="selectHistorySystemEsc" width="100%" change="onSearchHistory">
+                                        <core:Item key="All" text="All Systems"/>
+                                        <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
+                                        <core:Item key="HDB-10 (HANA)" text="HDB-10 (HANA)"/>
+                                        <core:Item key="QAS-200 (Java)" text="QAS-200 (Java)"/>
+                                    </Select>
+                                    <Select id="selectHistoryDecisionEsc" width="100%" change="onSearchHistory">
+                                        <core:Item key="All" text="All Decisions"/>
+                                        <core:Item key="Approved" text="Approved"/>
+                                        <core:Item key="Rejected" text="Rejected"/>
+                                        <core:Item key="Correction Requested" text="Correction Requested"/>
+                                    </Select>
+                                    <Select id="selectHistoryStatusEsc" width="100%" change="onSearchHistory">
+                                        <core:Item key="All" text="All Ticket Statuses"/>
+                                        <core:Item key="Closed" text="Closed"/>
+                                        <core:Item key="In Review" text="In Review"/>
+                                        <core:Item key="Pending Signoff" text="Pending Signoff"/>
+                                        <core:Item key="Action Required" text="Action Required"/>
+                                    </Select>
+                                    <DatePicker id="dpHistoryDateEsc" placeholder="Reviewed Date" change="onSearchHistory"/>
+                                </layout:Grid>
+                                <OverflowToolbar class="sapUiTinyMarginTop">
+                                    <ToolbarSpacer/>
+                                    <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchHistory"/>
+                                    <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetHistoryFilters"/>
+                                </OverflowToolbar>
+                            </Panel>
+
+                            <!-- ESCALATION MANAGER HISTORY TABLE (TICKET ID AS 1ST COLUMN MATCHING REVIEWER 1 & 2) -->
+                            <Panel headerText="Escalation Manager Historical Decisions (Read-Only Audit Trail)" expandable="false" class="sapUiSmallMarginBottom">
+                                <Table id="reviewerHistoryTableEsc" items="{escManagerModel>/history}" mode="None" width="100%">
+                                    <columns>
+                                        <Column width="11%"><Text text="Ticket ID" class="fontWeightBold"/></Column>
+                                        <Column width="10%"><Text text="Report ID"/></Column>
+                                        <Column width="9%"><Text text="Control ID"/></Column>
+                                        <Column width="16%"><Text text="Report Name"/></Column>
+                                        <Column width="10%"><Text text="System"/></Column>
+                                        <Column width="10%"><Text text="Decision"/></Column>
+                                        <Column width="9%"><Text text="Reviewed Date"/></Column>
+                                        <Column width="9%"><Text text="Compliance"/></Column>
+                                        <Column width="9%"><Text text="Remediation"/></Column>
+                                        <Column width="9%"><Text text="Ticket Status"/></Column>
+                                        <Column width="11%" hAlign="Center"><Text text="Action"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <ObjectStatus text="{escManagerModel>ticketId}" state="Information" class="fontWeightBold"/>
+                                                <Text text="{escManagerModel>reportId}"/>
+                                                <Text text="{escManagerModel>controlId}"/>
+                                                <ObjectIdentifier title="{escManagerModel>reportName}"/>
+                                                <Text text="{escManagerModel>system}"/>
+                                                <ObjectStatus text="{escManagerModel>decision}" state="{= ${escManagerModel>decision} === 'Approved' ? 'Success' : 'Error' }"/>
+                                                <Text text="{escManagerModel>reviewedDate}"/>
+                                                <ObjectStatus text="{escManagerModel>complianceStatus}" state="{escManagerModel>complianceState}"/>
+                                                <ObjectStatus text="{escManagerModel>remediationStatus}" state="{escManagerModel>remediationState}"/>
+                                                <ObjectStatus text="{escManagerModel>ticketStatus}" state="{escManagerModel>ticketStatusState}"/>
+                                                <Button text="View Details" icon="sap-icon://show" type="Emphasized" press="onViewHistoryDetails"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </Panel>
+
+                        </VBox>
+
+                    </VBox>
+                </content>
+
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations"/>
+                        <ToolbarSpacer/>
+                        <Text text="XYRA Internal Control Platform | Escalation Manager (Security Lead) Portal v1.0"/>
+                    </OverflowToolbar>
+                </footer>
+
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
 </mvc:View>

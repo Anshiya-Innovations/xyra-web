@@ -94,6 +94,21 @@
           "target": "EscalationManager"
         },
         {
+          "name": "EscalationManagerQueue",
+          "pattern": "EscalationManager/Queue",
+          "target": "EscalationManager"
+        },
+        {
+          "name": "EscalationManagerHistory",
+          "pattern": "EscalationManager/History",
+          "target": "EscalationManager"
+        },
+        {
+          "name": "EscalationManagerProfile",
+          "pattern": "EscalationManager/Profile",
+          "target": "EscalationManagerProfile"
+        },
+        {
           "name": "Reviewer1",
           "pattern": "Reviewer1",
           "target": "Reviewer1"
@@ -225,6 +240,9 @@
         },
         "EscalationManager": {
           "viewName": "EscalationManager"
+        },
+        "EscalationManagerProfile": {
+          "viewName": "EscalationManagerProfile"
         },
         "Reviewer1": {
           "viewName": "Reviewer1"
