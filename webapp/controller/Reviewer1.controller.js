@@ -27,6 +27,11 @@ sap.ui.define([
                     rejectedToday: 3,
                     slaDue: 5
                 },
+                historyKpis: {
+                    approved: 142,
+                    rejected: 3,
+                    inProgress: 18
+                },
                 reports: [
                     {
                         reportId: "REP-101",
@@ -194,37 +199,160 @@ sap.ui.define([
                         ]
                     }
                 ],
-                selectedReport: null
+                history: [
+                    {
+                        ticketId: "TCK-8801",
+                        reportId: "REP-102",
+                        controlId: "LOG28",
+                        reportName: "HANA Audit Logging Parameter Check",
+                        system: "HDB-10 (HANA)",
+                        decision: "Approved",
+                        reviewedDate: "03-Aug-2026",
+                        ticketStatus: "Forwarded to Reviewer 2",
+                        ticketStatusState: "Success",
+                        remediatedItem: "global.ini -> AUDIT_LOG_STATUS",
+                        previousValue: "OFF (Disabled)",
+                        updatedValue: "ON (Enabled)",
+                        rcaText: "Parameter enabled during scheduled maintenance window. Policy verified compliant.",
+                        changedBy: "John Basis",
+                        employeeId: "EMP-88492",
+                        sigStatus: "Verified (SHA-256)",
+                        reviewerComment: "Verified audit policies active across SYSTEMDB and tenant databases."
+                    },
+                    {
+                        ticketId: "TCK-8794",
+                        reportId: "REP-098",
+                        controlId: "LOG08",
+                        reportName: "Java NWA Security Logging Audit",
+                        system: "PRD-100 (Java)",
+                        decision: "Approved",
+                        reviewedDate: "02-Aug-2026",
+                        ticketStatus: "Closed",
+                        ticketStatusState: "Success",
+                        remediatedItem: "sec_audit.log -> Filter 002 (UME Auth)",
+                        previousValue: "Logging Level: WARNING",
+                        updatedValue: "Logging Level: ALL",
+                        rcaText: "Audit log filter 002 updated to capture all security events as required by SCS LOG08 standard.",
+                        changedBy: "John Basis",
+                        employeeId: "EMP-88492",
+                        sigStatus: "Verified (SHA-256)",
+                        reviewerComment: "Remediation confirmed on target Java instance."
+                    },
+                    {
+                        ticketId: "TCK-8780",
+                        reportId: "REP-095",
+                        controlId: "SEC14",
+                        reportName: "SAP Superuser Privilege Audit",
+                        system: "HDB-20 (HANA)",
+                        decision: "Rejected",
+                        reviewedDate: "01-Aug-2026",
+                        ticketStatus: "Remediation Required",
+                        ticketStatusState: "Error",
+                        remediatedItem: "SYSTEMDB -> Granting DATA ADMIN",
+                        previousValue: "Unassigned Privilege",
+                        updatedValue: "Assigned without CR",
+                        rcaText: "Unauthorized DATA ADMIN privilege granted to non-basis user without Change Request approval.",
+                        changedBy: "John Basis",
+                        employeeId: "EMP-88492",
+                        sigStatus: "Verified (SHA-256)",
+                        reviewerComment: "Privilege must be revoked immediately prior to approval."
+                    },
+                    {
+                        ticketId: "TCK-8765",
+                        reportId: "REP-091",
+                        controlId: "LOG28",
+                        reportName: "HANA DB Audit Trail Verification",
+                        system: "QAS-200 (Java)",
+                        decision: "Approved",
+                        reviewedDate: "30-Jul-2026",
+                        ticketStatus: "Closed",
+                        ticketStatusState: "Success",
+                        remediatedItem: "ume.log -> Log File Retention",
+                        previousValue: "Retention = 14 Days",
+                        updatedValue: "Retention = 90 Days",
+                        rcaText: "Adjusted retention policy parameter in NetWeaver Administrator to align with 90-day requirement.",
+                        changedBy: "John Basis",
+                        employeeId: "EMP-88492",
+                        sigStatus: "Verified (SHA-256)",
+                        reviewerComment: "Verified compliance with SCS retention guidelines."
+                    }
+                ],
+                selectedReport: null,
+                selectedHistoryItem: null
             };
 
             oData.selectedReport = oData.reports[0];
+            oData.selectedHistoryItem = oData.history[0];
             var oModel = new JSONModel(oData);
             this.getView().setModel(oModel, "reviewer1Model");
+        },
+
+        onSideNavToggle: function () {
+            var oToolPage = this.byId("reviewer1ToolPage");
+            if (oToolPage) {
+                oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
+            }
         },
 
         // SLIDE NAVIGATION HANDLERS
         onSelectTabQueue: function () {
             var oVboxQueue = this.byId("vboxReviewQueue");
             var oVboxAnalysis = this.byId("vboxDetailedAnalysis");
+            var oVboxHistory = this.byId("vboxReviewerHistory");
             var oBtnQueue = this.byId("btnTabReviewQueue");
             var oBtnAnalysis = this.byId("btnTabDetailedAnalysis");
+            var oBtnHistory = this.byId("btnTabReviewerHistory");
+            var oSideNav = this.byId("reviewer1SideNavigation");
 
             if (oVboxQueue) { oVboxQueue.setVisible(true); }
             if (oVboxAnalysis) { oVboxAnalysis.setVisible(false); }
+            if (oVboxHistory) { oVboxHistory.setVisible(false); }
+
             if (oBtnQueue) { oBtnQueue.setType("Emphasized"); }
             if (oBtnAnalysis) { oBtnAnalysis.setType("Transparent"); }
+            if (oBtnHistory) { oBtnHistory.setType("Transparent"); }
+
+            if (oSideNav) { oSideNav.setSelectedKey("Queue"); }
         },
 
         onSelectTabAnalysis: function () {
             var oVboxQueue = this.byId("vboxReviewQueue");
             var oVboxAnalysis = this.byId("vboxDetailedAnalysis");
+            var oVboxHistory = this.byId("vboxReviewerHistory");
             var oBtnQueue = this.byId("btnTabReviewQueue");
             var oBtnAnalysis = this.byId("btnTabDetailedAnalysis");
+            var oBtnHistory = this.byId("btnTabReviewerHistory");
+            var oSideNav = this.byId("reviewer1SideNavigation");
 
             if (oVboxQueue) { oVboxQueue.setVisible(false); }
             if (oVboxAnalysis) { oVboxAnalysis.setVisible(true); }
+            if (oVboxHistory) { oVboxHistory.setVisible(false); }
+
             if (oBtnQueue) { oBtnQueue.setType("Transparent"); }
             if (oBtnAnalysis) { oBtnAnalysis.setType("Emphasized"); }
+            if (oBtnHistory) { oBtnHistory.setType("Transparent"); }
+
+            if (oSideNav) { oSideNav.setSelectedKey("Analysis"); }
+        },
+
+        onSelectTabHistory: function () {
+            var oVboxQueue = this.byId("vboxReviewQueue");
+            var oVboxAnalysis = this.byId("vboxDetailedAnalysis");
+            var oVboxHistory = this.byId("vboxReviewerHistory");
+            var oBtnQueue = this.byId("btnTabReviewQueue");
+            var oBtnAnalysis = this.byId("btnTabDetailedAnalysis");
+            var oBtnHistory = this.byId("btnTabReviewerHistory");
+            var oSideNav = this.byId("reviewer1SideNavigation");
+
+            if (oVboxQueue) { oVboxQueue.setVisible(false); }
+            if (oVboxAnalysis) { oVboxAnalysis.setVisible(false); }
+            if (oVboxHistory) { oVboxHistory.setVisible(true); }
+
+            if (oBtnQueue) { oBtnQueue.setType("Transparent"); }
+            if (oBtnAnalysis) { oBtnAnalysis.setType("Transparent"); }
+            if (oBtnHistory) { oBtnHistory.setType("Emphasized"); }
+
+            if (oSideNav) { oSideNav.setSelectedKey("History"); }
         },
 
         _getSelectedReport: function () {
@@ -260,11 +388,14 @@ sap.ui.define([
             MessageToast.show(aItems.length + " report(s) selected");
         },
 
-        // 1. View Report Button
+        // QUICK ACTIONS DIALOG HANDLERS
         onViewReport: function () {
             var oReport = this._getSelectedReport();
             this.getView().getModel("reviewer1Model").setProperty("/selectedReport", oReport);
-            this.onSelectTabAnalysis();
+            var oDialog = this.byId("viewReportDialog");
+            if (oDialog) {
+                oDialog.open();
+            }
         },
 
         onCloseViewReportDialog: function () {
@@ -274,7 +405,6 @@ sap.ui.define([
             }
         },
 
-        // 2. View Evidence Button & Email Actions
         onViewEvidence: function () {
             var oReport = this._getSelectedReport();
             this.getView().getModel("reviewer1Model").setProperty("/selectedReport", oReport);
@@ -284,16 +414,6 @@ sap.ui.define([
             }
         },
 
-        onSendThroughEmail: function (oEvent) {
-            var oContext = oEvent.getSource().getBindingContext("reviewer1Model");
-            var sTitle = oContext ? (oContext.getObject().title || oContext.getObject().fileName || oContext.getObject().logMessage || "Evidence File") : "Evidence File";
-            MessageToast.show("'" + sTitle + "' sent through email successfully.");
-        },
-
-        onSendAllThroughEmail: function () {
-            MessageToast.show("All Evidence files, logs & attachments sent through email successfully.");
-        },
-
         onCloseViewEvidenceDialog: function () {
             var oDialog = this.byId("viewEvidenceDialog");
             if (oDialog) {
@@ -301,7 +421,6 @@ sap.ui.define([
             }
         },
 
-        // 3. Add Comments Button
         onAddComments: function () {
             var oDialog = this.byId("addCommentsDialog");
             if (oDialog) {
@@ -310,17 +429,15 @@ sap.ui.define([
         },
 
         onSubmitComments: function () {
-            var sComment = this.byId("inputCommentArea").getValue();
-            if (!sComment) {
-                MessageToast.show("Please enter review comments before saving.");
+            var sComment = this.byId("inputCommentArea") ? this.byId("inputCommentArea").getValue() : "";
+            if (!sComment || sComment.trim() === "") {
+                MessageBox.error("Please enter a review comment before saving.");
                 return;
             }
-
             var oReport = this._getSelectedReport();
             oReport.comments = sComment;
             this.getView().getModel("reviewer1Model").refresh(true);
-
-            MessageToast.show("Review comments saved successfully for " + oReport.reportId);
+            MessageToast.show("Reviewer comments saved successfully for " + oReport.reportId);
             this.onCloseAddCommentsDialog();
         },
 
@@ -331,7 +448,6 @@ sap.ui.define([
             }
         },
 
-        // 4. Request Information Button
         onRequestInfo: function () {
             var oDialog = this.byId("requestInfoDialog");
             if (oDialog) {
@@ -340,18 +456,16 @@ sap.ui.define([
         },
 
         onSubmitRequestInfo: function () {
-            var sInfoReq = this.byId("inputRequestInfoArea").getValue();
-            if (!sInfoReq) {
-                MessageToast.show("Please describe the evidence or information required.");
+            var sInfo = this.byId("inputRequestInfoArea") ? this.byId("inputRequestInfoArea").getValue() : "";
+            if (!sInfo || sInfo.trim() === "") {
+                MessageBox.error("Please specify the information or evidence needed.");
                 return;
             }
-
             var oReport = this._getSelectedReport();
-            oReport.reviewerStatus = "Info Requested";
-            oReport.reviewerState = "Warning";
+            oReport.reviewerStatus = "Information Requested";
+            oReport.reviewerState = "Information";
             this.getView().getModel("reviewer1Model").refresh(true);
-
-            MessageToast.show("Information request dispatched to system owner for " + oReport.reportId);
+            MessageToast.show("Information request sent for " + oReport.reportId);
             this.onCloseRequestInfoDialog();
         },
 
@@ -362,7 +476,6 @@ sap.ui.define([
             }
         },
 
-        // 5. Confirm Remediation Button
         onConfirmRemediation: function () {
             var oDialog = this.byId("confirmRemediationDialog");
             if (oDialog) {
@@ -372,13 +485,10 @@ sap.ui.define([
 
         onSubmitConfirmRemediation: function () {
             var oReport = this._getSelectedReport();
-            oReport.remediationStatus = "Remediated";
+            oReport.remediationStatus = "Remediated & Verified";
             oReport.remediationState = "Success";
-            oReport.deviations = "0 Deviations";
-            oReport.deviationState = "Success";
             this.getView().getModel("reviewer1Model").refresh(true);
-
-            MessageToast.show("Basis Remediation confirmed & verified for " + oReport.reportId);
+            MessageToast.show("Technical remediation confirmed for " + oReport.reportId);
             this.onCloseConfirmRemediationDialog();
         },
 
@@ -389,23 +499,20 @@ sap.ui.define([
             }
         },
 
-        // VALIDATION & SECTION 6: APPROVE BUTTON HANDLER
+        // APPROVAL WORKFLOW
         onApproveForward: function () {
             var oReport = this._getSelectedReport();
 
-            // Rule 1: Root Cause Analysis is mandatory
             if (!oReport.rcaText || oReport.rcaText.trim() === "") {
                 MessageBox.error("Root Cause Analysis (Mandatory) is required before approving.");
                 return;
             }
 
-            // Rule 2: Electronic Signature confirmation is required
             if (!oReport.elecSigConfirmed) {
                 MessageBox.error("Please check the Electronic Signature confirmation box: 'I confirm that I have personally reviewed this deviation.' before approving.");
                 return;
             }
 
-            // Open Approve Dialog for final sign-off
             var oDialog = this.byId("approveDialog");
             if (oDialog) {
                 oDialog.open();
@@ -417,7 +524,6 @@ sap.ui.define([
             oReport.reviewerStatus = "Forwarded to Reviewer 2";
             oReport.reviewerState = "Success";
 
-            // Append to Review History
             if (!oReport.reviewHistory) { oReport.reviewHistory = []; }
             oReport.reviewHistory.unshift({
                 action: "Level 1 Approval",
@@ -426,10 +532,35 @@ sap.ui.define([
                 status: "Approved"
             });
 
-            // Update KPI counts
             var oModel = this.getView().getModel("reviewer1Model");
             var iApproved = oModel.getProperty("/kpi/approvedToday") || 0;
             oModel.setProperty("/kpi/approvedToday", iApproved + 1);
+
+            // Add record to Reviewer History table
+            var aHistory = oModel.getProperty("/history") || [];
+            aHistory.unshift({
+                ticketId: "TCK-" + Math.floor(1000 + Math.random() * 9000),
+                reportId: oReport.reportId,
+                controlId: oReport.controlId,
+                reportName: oReport.reportName,
+                system: oReport.system,
+                decision: "Approved",
+                reviewedDate: new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' }),
+                ticketStatus: "Forwarded to Reviewer 2",
+                ticketStatusState: "Success",
+                remediatedItem: oReport.controlName || "System Parameter Configuration",
+                previousValue: "Non-Compliant Parameter",
+                updatedValue: "Verified Compliant Parameter",
+                rcaText: oReport.rcaText,
+                changedBy: oReport.reviewerName || "John Basis",
+                employeeId: oReport.employeeId || "EMP-88492",
+                sigStatus: "Verified (SHA-256)",
+                reviewerComment: "Report approved by Reviewer 1 and forwarded to Reviewer 2 (Basis Manager)."
+            });
+            oModel.setProperty("/history", aHistory);
+
+            var iHistApproved = oModel.getProperty("/historyKpis/approved") || 0;
+            oModel.setProperty("/historyKpis/approved", iHistApproved + 1);
 
             oModel.refresh(true);
             MessageToast.show("Report " + oReport.reportId + " Approved & Forwarded to Reviewer 2.");
@@ -443,23 +574,20 @@ sap.ui.define([
             }
         },
 
-        // VALIDATION & SECTION 7: REJECT BUTTON HANDLER
+        // REJECT WORKFLOW
         onRejectReport: function () {
             var oReport = this._getSelectedReport();
 
-            // Rule 1: Root Cause Analysis is mandatory
             if (!oReport.rcaText || oReport.rcaText.trim() === "") {
                 MessageBox.error("Root Cause Analysis (Mandatory) is required before rejecting.");
                 return;
             }
 
-            // Rule 2: Electronic Signature confirmation is required
             if (!oReport.elecSigConfirmed) {
                 MessageBox.error("Please check the Electronic Signature confirmation box: 'I confirm that I have personally reviewed this deviation.' before rejecting.");
                 return;
             }
 
-            // Open Reject Dialog for final sign-off
             var oDialog = this.byId("rejectDialog");
             if (oDialog) {
                 oDialog.open();
@@ -471,7 +599,6 @@ sap.ui.define([
             oReport.reviewerStatus = "Rejected";
             oReport.reviewerState = "Error";
 
-            // Append to Review History
             if (!oReport.reviewHistory) { oReport.reviewHistory = []; }
             oReport.reviewHistory.unshift({
                 action: "Level 1 Rejection",
@@ -480,10 +607,35 @@ sap.ui.define([
                 status: "Rejected"
             });
 
-            // Update KPI counts
             var oModel = this.getView().getModel("reviewer1Model");
             var iRejected = oModel.getProperty("/kpi/rejectedToday") || 0;
             oModel.setProperty("/kpi/rejectedToday", iRejected + 1);
+
+            // Add record to Reviewer History table
+            var aHistory = oModel.getProperty("/history") || [];
+            aHistory.unshift({
+                ticketId: "TCK-" + Math.floor(1000 + Math.random() * 9000),
+                reportId: oReport.reportId,
+                controlId: oReport.controlId,
+                reportName: oReport.reportName,
+                system: oReport.system,
+                decision: "Rejected",
+                reviewedDate: new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' }),
+                ticketStatus: "Remediation Required",
+                ticketStatusState: "Error",
+                remediatedItem: oReport.controlName || "System Parameter Configuration",
+                previousValue: "Non-Compliant Parameter",
+                updatedValue: "Rejected - Non-Compliant",
+                rcaText: oReport.rcaText,
+                changedBy: oReport.reviewerName || "John Basis",
+                employeeId: oReport.employeeId || "EMP-88492",
+                sigStatus: "Verified (SHA-256)",
+                reviewerComment: "Report rejected by Reviewer 1 due to unmitigated non-compliance."
+            });
+            oModel.setProperty("/history", aHistory);
+
+            var iHistRejected = oModel.getProperty("/historyKpis/rejected") || 0;
+            oModel.setProperty("/historyKpis/rejected", iHistRejected + 1);
 
             oModel.refresh(true);
             MessageToast.show("Report " + oReport.reportId + " Rejected.");
@@ -497,7 +649,42 @@ sap.ui.define([
             }
         },
 
-        // Search & Filter Handlers
+        // HISTORY SEARCH & DIALOG HANDLERS
+        onSearchHistory: function (oEvent) {
+            var sQuery = oEvent ? oEvent.getParameter("query") || (this.byId("searchHistory") ? this.byId("searchHistory").getValue() : "") : "";
+            MessageToast.show("Filtering history for query: " + sQuery);
+        },
+
+        onResetHistoryFilters: function () {
+            if (this.byId("searchHistory")) { this.byId("searchHistory").setValue(""); }
+            if (this.byId("inputHistoryControlId")) { this.byId("inputHistoryControlId").setValue(""); }
+            if (this.byId("selectHistorySystem")) { this.byId("selectHistorySystem").setSelectedKey("All"); }
+            if (this.byId("selectHistoryDecision")) { this.byId("selectHistoryDecision").setSelectedKey("All"); }
+            if (this.byId("selectHistoryStatus")) { this.byId("selectHistoryStatus").setSelectedKey("All"); }
+            if (this.byId("dpHistoryDate")) { this.byId("dpHistoryDate").setValue(""); }
+            MessageToast.show("Reviewer History Filters Reset.");
+        },
+
+        onViewHistoryDetails: function (oEvent) {
+            var oContext = oEvent.getSource().getBindingContext("reviewer1Model");
+            if (oContext) {
+                var oHistoryItem = oContext.getObject();
+                this.getView().getModel("reviewer1Model").setProperty("/selectedHistoryItem", oHistoryItem);
+                var oDialog = this.byId("viewHistoryDetailsDialog");
+                if (oDialog) {
+                    oDialog.open();
+                }
+            }
+        },
+
+        onCloseHistoryDetailsDialog: function () {
+            var oDialog = this.byId("viewHistoryDetailsDialog");
+            if (oDialog) {
+                oDialog.close();
+            }
+        },
+
+        // SEARCH & FILTER HANDLERS
         onSearchReports: function (oEvent) {
             var sQuery = oEvent.getParameter("query") || (this.byId("searchReviewer1") ? this.byId("searchReviewer1").getValue() : "");
             MessageToast.show("Searching reports: " + sQuery);

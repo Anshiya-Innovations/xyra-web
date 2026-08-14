@@ -99,6 +99,21 @@
           "target": "Reviewer1"
         },
         {
+          "name": "Reviewer1Queue",
+          "pattern": "Reviewer1/Queue",
+          "target": "Reviewer1"
+        },
+        {
+          "name": "Reviewer1Analysis",
+          "pattern": "Reviewer1/Analysis/:reportId:",
+          "target": "Reviewer1"
+        },
+        {
+          "name": "Reviewer1History",
+          "pattern": "Reviewer1/History",
+          "target": "Reviewer1"
+        },
+        {
           "name": "Reviewer2",
           "pattern": "Reviewer2",
           "target": "Reviewer2"
