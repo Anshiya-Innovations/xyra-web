@@ -22,7 +22,7 @@
 
                 <tnt:fixedItem>
                     <tnt:NavigationList>
-                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfilePress"/>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfileNav"/>
                     </tnt:NavigationList>
                 </tnt:fixedItem>
             </tnt:SideNavigation>

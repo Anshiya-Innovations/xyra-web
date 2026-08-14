@@ -709,6 +709,10 @@ sap.ui.define([
             MessageToast.show("Filtered by Status: " + sKey);
         },
 
+        onProfileNav: function () {
+            UIComponent.getRouterFor(this).navTo("Reviewer1Profile");
+        },
+
         onProfilePress: function (oEvent) {
             var oButton = oEvent.getSource();
             var oPopover = this.byId("rev1ProfilePopover");

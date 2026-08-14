@@ -114,6 +114,11 @@
           "target": "Reviewer1"
         },
         {
+          "name": "Reviewer1Profile",
+          "pattern": "Reviewer1/Profile",
+          "target": "Reviewer1Profile"
+        },
+        {
           "name": "Reviewer2",
           "pattern": "Reviewer2",
           "target": "Reviewer2"
@@ -203,6 +208,9 @@
         },
         "Reviewer1": {
           "viewName": "Reviewer1"
+        },
+        "Reviewer1Profile": {
+          "viewName": "Reviewer1Profile"
         },
         "Reviewer2": {
           "viewName": "Reviewer2"
