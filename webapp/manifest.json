@@ -163,6 +163,16 @@
           "name": "AlertItem",
           "pattern": "AlertItem/:alertId:/:controlId:",
           "target": "AlertItem"
+        },
+        {
+          "name": "SystemHealth",
+          "pattern": "SystemHealth",
+          "target": "Configuration"
+        },
+        {
+          "name": "SystemHealthDetails",
+          "pattern": "SystemHealthDetails/:systemId:",
+          "target": "SystemHealthDetails"
         }
       ],
 
@@ -190,6 +200,12 @@
         },
         "Configuration": {
           "viewName": "Configuration"
+        },
+        "SystemHealth": {
+          "viewName": "SystemHealth"
+        },
+        "SystemHealthDetails": {
+          "viewName": "SystemHealthDetails"
         },
         "Profile": {
           "viewName": "Profile"

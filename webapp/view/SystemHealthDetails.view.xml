@@ -1,0 +1,168 @@
+<mvc:View
+    controllerName="xyraweb.controller.SystemHealthDetails"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="detailsToolPage" sideExpanded="true">
+
+        <!-- ENTERPRISE NAVIGATION SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="SystemHealth" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement"/>
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights">
+                        <tnt:tag><ObjectStatus text="New" state="Indication15" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag><ObjectStatus text="98.4%" state="Indication16" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    
+                    <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics">
+                        <tnt:tag><ObjectStatus text="3 Risks" state="Indication18" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="systemHealthDetailsPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <!-- HEADER WITH BACK NAVIGATION -->
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            text="Back to System Health"
+                            icon="sap-icon://nav-back"
+                            type="Emphasized"
+                            press="onNavBack"
+                            tooltip="Back to System Health"
+                            class="sapUiTinyMarginBegin xyraBoldBtn fontWeightBold"/>
+                        <Avatar src="sap-icon://sys-monitor" displaySize="S" class="sapUiTinyMarginBegin sapUiTinyMarginEnd"/>
+                        <VBox justifyContent="Center">
+                            <Title text="{= 'XYRA – System Health Details (' + ${detailsModel>/sysId} + ')' }" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Detailed runtime diagnostics, availability trends &amp; RFC health events" class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+
+                        <Button text="Test RFC Connection" icon="sap-icon://chain-link" type="Emphasized" press="onTestConnection" class="sapUiSmallMarginEnd"/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+
+                        <!-- SYSTEM PARAMETERS OVERVIEW CARD -->
+                        <Panel expandable="false" headerText="System Overview &amp; Health Telemetry" class="sapUiSmallMarginBottom">
+                            <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMargin">
+                                <VBox width="30%" class="sapUiSmallMarginBottom">
+                                    <Text text="System ID" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <Title text="{detailsModel>/sysId}" level="H3" class="sapUiTinyMarginTop fontWeightBold"/>
+                                </VBox>
+                                <VBox width="30%" class="sapUiSmallMarginBottom">
+                                    <Text text="Client Number" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <Text text="{detailsModel>/client}" class="sapUiTinyMarginTop fontSizeLarge fontWeightBold"/>
+                                </VBox>
+                                <VBox width="30%" class="sapUiSmallMarginBottom">
+                                    <Text text="System Type" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <ObjectStatus text="{detailsModel>/sysType}" state="{= ${detailsModel>/sysType} === 'Production' ? 'Error' : (${detailsModel>/sysType} === 'Quality' ? 'Warning' : 'Information') }" class="sapUiTinyMarginTop"/>
+                                </VBox>
+
+                                <VBox width="30%" class="sapUiSmallMarginBottom">
+                                    <Text text="Current Status" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <ObjectStatus text="{detailsModel>/status}" state="{detailsModel>/statusState}" icon="{detailsModel>/statusIcon}" class="sapUiTinyMarginTop fontWeightBold"/>
+                                </VBox>
+                                <VBox width="30%" class="sapUiSmallMarginBottom">
+                                    <Text text="Last Health Check" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <Text text="{detailsModel>/lastCheck}" class="sapUiTinyMarginTop fontSizeMedium textMuted"/>
+                                </VBox>
+                                <VBox width="30%" class="sapUiSmallMarginBottom">
+                                    <Text text="Connection Status" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <Text text="{detailsModel>/connectionStatus}" class="sapUiTinyMarginTop fontSizeMedium"/>
+                                </VBox>
+                            </HBox>
+                        </Panel>
+
+                        <!-- AVAILABILITY TREND CARD -->
+                        <Panel expandable="false" headerText="24-Hour Operational Heartbeat Trend" class="sapUiSmallMarginBottom">
+                            <VBox class="sapUiSmallMargin">
+                                <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <VBox width="33%" class="sapUiMediumMarginEnd">
+                                        <Text text="Total RFC Heartbeats" class="textMuted fontSizeSmall"/>
+                                        <Title text="2,880 Pings" level="H4" class="fontWeightBold"/>
+                                    </VBox>
+                                    <VBox width="33%">
+                                        <Text text="Failed Pings (24h)" class="textMuted fontSizeSmall"/>
+                                        <Title text="0 Failures" level="H4" class="textSuccess fontWeightBold"/>
+                                    </VBox>
+                                </HBox>
+
+                                <Text text="Hourly Availability Heartbeat (Last 24 Hours):" class="fontWeightBold textMuted sapUiTinyMarginBottom"/>
+                                <ProgressIndicator percentValue="99" displayValue="24/24 Hours Operational (100% Uptime)" state="Success" height="1.8rem" class="sapUiSmallMarginBottom"/>
+                            </VBox>
+                        </Panel>
+
+                        <!-- RECENT HEALTH EVENTS TABLE -->
+                        <Panel expandable="false" headerText="Recent Health Events &amp; Audit Logs" class="sapUiSmallMarginBottom">
+                            <Table items="{detailsModel>/events}" mode="None" width="100%">
+                                <columns>
+                                    <Column width="22%"><Text text="Timestamp" class="fontWeightBold"/></Column>
+                                    <Column width="22%"><Text text="Event Type"/></Column>
+                                    <Column width="40%"><Text text="Diagnostic Details"/></Column>
+                                    <Column width="16%"><Text text="Status / Severity"/></Column>
+                                </columns>
+
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{detailsModel>timestamp}" class="fontSizeSmall textMuted"/>
+                                            <Text text="{detailsModel>eventType}" class="fontWeightBold"/>
+                                            <Text text="{detailsModel>details}"/>
+                                            <ObjectStatus text="{detailsModel>severityText}" state="{detailsModel>severityState}"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </Panel>
+
+                    </VBox>
+                </content>
+
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations"/>
+                        <ToolbarSpacer/>
+                        <Button
+                            text="Back to System Health"
+                            icon="sap-icon://nav-back"
+                            type="Emphasized"
+                            press="onNavBack"
+                            class="xyraBoldBtn fontWeightBold sapUiSmallMarginEnd"/>
+                    </OverflowToolbar>
+                </footer>
+
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>
