@@ -164,6 +164,31 @@
           "target": "Auditor"
         },
         {
+          "name": "AuditorRecords",
+          "pattern": "Auditor/Records",
+          "target": "Auditor"
+        },
+        {
+          "name": "AuditorAnalysis",
+          "pattern": "Auditor/Analysis",
+          "target": "Auditor"
+        },
+        {
+          "name": "AuditorRemediation",
+          "pattern": "Auditor/Remediation",
+          "target": "Auditor"
+        },
+        {
+          "name": "AuditorHistory",
+          "pattern": "Auditor/History",
+          "target": "Auditor"
+        },
+        {
+          "name": "AuditorProfile",
+          "pattern": "Auditor/Profile",
+          "target": "AuditorProfile"
+        },
+        {
           "name": "AccessManagement",
           "pattern": "AccessManagement",
           "target": "AccessManagement"
@@ -258,6 +283,9 @@
         },
         "Auditor": {
           "viewName": "Auditor"
+        },
+        "AuditorProfile": {
+          "viewName": "AuditorProfile"
         },
         "AccessManagement": {
           "viewName": "AccessManagement"

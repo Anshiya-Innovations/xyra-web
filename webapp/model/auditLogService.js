@@ -61,7 +61,7 @@ sap.ui.define([
         {
             logId: "LOG-2026-004",
             timestamp: "2026-08-11 18:22:14",
-            adminUser: "secops@xyra.com (Security Lead)",
+            adminUser: "secops@xyra.com (Escalation Manager)",
             action: "Access Grant",
             module: "Access Management",
             objectId: "USR-REV-104",

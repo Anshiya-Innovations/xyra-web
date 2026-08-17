@@ -220,7 +220,7 @@
                                                 <core:Item key="All" text="All Admins"/>
                                                 <core:Item key="admin@xyra.com (System Admin)" text="admin@xyra.com"/>
                                                 <core:Item key="sysadmin@xyra.com (Security Manager)" text="sysadmin@xyra.com"/>
-                                                <core:Item key="secops@xyra.com (Security Lead)" text="secops@xyra.com"/>
+                                                <core:Item key="secops@xyra.com (Escalation Manager)" text="secops@xyra.com"/>
                                             </Select>
                                         </VBox>
 

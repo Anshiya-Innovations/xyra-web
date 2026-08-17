@@ -6,275 +6,861 @@
     xmlns:layout="sap.ui.layout"
     xmlns:f="sap.f"
     xmlns:card="sap.f.cards"
+    xmlns:tnt="sap.tnt"
     height="100%">
 
-    <Page
-        id="auditorPage"
-        showHeader="true"
-        enableScrolling="true"
-        class="sapUiContentPadding">
+    <tnt:ToolPage id="auditorToolPage" sideExpanded="true">
 
-        <dependents>
-            <!-- Auditor Profile Popover -->
-            <ResponsivePopover
-                id="auditorProfilePopover"
-                title="Auditor Profile"
-                placement="Bottom"
-                contentWidth="320px">
-                <content>
-                    <VBox class="sapUiMediumMargin">
-                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
-                            <Avatar displaySize="M" initials="AO" backgroundColor="Accent5" class="sapUiSmallMarginEnd"/>
-                            <VBox>
-                                <Title text="Internal Audit Officer" level="H3"/>
-                                <Text text="Senior Internal Auditor"/>
-                                <ObjectStatus text="Online" state="Success"/>
+        <!-- PERSISTENT AUDITOR LEFT NAVIGATION SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="auditorSideNavigation" expanded="true" selectedKey="AuditRecords" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Audit Records" icon="sap-icon://grid" key="AuditRecords" select="onSelectTabAuditRecords"/>
+                    <tnt:NavigationListItem text="Audit Analysis" icon="sap-icon://area-chart" key="AuditAnalysis" select="onSelectTabAuditAnalysis"/>
+                    <tnt:NavigationListItem text="Remediation Review" icon="sap-icon://checklist-item" key="RemediationReview" select="onSelectTabRemediationReview"/>
+                    <tnt:NavigationListItem text="Audit History" icon="sap-icon://history" key="AuditHistory" select="onSelectTabAuditHistory"/>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfileNav"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="auditorPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <dependents>
+                    <!-- Auditor Profile Popover -->
+                    <ResponsivePopover
+                        id="auditorProfilePopover"
+                        title="Auditor Profile"
+                        placement="Bottom"
+                        contentWidth="340px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <Avatar displaySize="M" initials="AO" backgroundColor="Accent5" class="sapUiSmallMarginEnd"/>
+                                    <VBox>
+                                        <Title text="Alex Auditor" level="H3"/>
+                                        <Text text="Senior Internal Auditor &amp; Compliance Specialist"/>
+                                        <ObjectStatus text="Online - Active Auditor" state="Success"/>
+                                    </VBox>
+                                </HBox>
+                                <VBox class="sapUiSmallMarginBottom">
+                                    <Label text="Auditor ID" design="Bold"/>
+                                    <Text text="AUD001"/>
+                                    <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="Internal Audit &amp; Compliance Governance"/>
+                                    <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="auditor@xyra.ai"/>
+                                    <Label text="Scope &amp; Responsibilities" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Text text="SOX 404 control testing, audit evidence inspection, remediation verification, and independent compliance reporting."/>
+                                </VBox>
+                                <HBox justifyContent="End" class="sapUiSmallMarginTop">
+                                    <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
+                                </HBox>
                             </VBox>
-                        </HBox>
-                        <VBox class="sapUiSmallMarginBottom">
-                            <Label text="Auditor ID" design="Bold"/>
-                            <Text text="AUD001"/>
-                            <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="Internal Audit &amp; Compliance"/>
-                            <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="auditor@xyra.ai"/>
-                            <Label text="Region" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="Global"/>
-                            <Label text="Assigned Audits" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="12 Active Audits"/>
-                            <Label text="Completed Audits" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="88 Audits Passed"/>
-                            <Label text="Pending Findings" design="Bold" class="sapUiTinyMarginTop"/>
-                            <Text text="3 Open Findings"/>
+                        </content>
+                    </ResponsivePopover>
+
+                    <!-- REMEDIATION EVIDENCE INSPECTION DIALOG -->
+                    <Dialog id="viewEvidenceDialogAuditor" title="Audit Evidence &amp; Remediation Verification" contentWidth="600px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Title text="{auditorModel>/selectedRemediation/finding}" level="H3" class="sapUiTinyMarginBottom"/>
+                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <ObjectStatus text="Audit ID: {auditorModel>/selectedRemediation/auditId}" state="Information" class="sapUiTinyMarginEnd fontWeightBold"/>
+                                    <ObjectStatus text="Control: {auditorModel>/selectedRemediation/controlId}" state="None" class="sapUiTinyMarginEnd"/>
+                                    <ObjectStatus text="App: {auditorModel>/selectedRemediation/application}" state="None"/>
+                                </HBox>
+
+                                <Panel headerText="1. Finding &amp; Deviation Summary" expandable="false" class="sapUiSmallMarginBottom">
+                                    <VBox class="sapUiTinyMargin">
+                                        <Label text="Deviation Detail" design="Bold"/>
+                                        <Text text="{auditorModel>/selectedRemediation/deviation}" class="sapUiTinyMarginBottom textDanger"/>
+
+                                        <Label text="Remediation Action Executed" design="Bold"/>
+                                        <Text text="{auditorModel>/selectedRemediation/remediation}" class="sapUiSmallMarginBottom textSuccess"/>
+                                    </VBox>
+                                </Panel>
+
+                                <Panel headerText="2. Evidence Package &amp; Verification Details" expandable="false" class="sapUiSmallMarginBottom">
+                                    <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiTinyMargin">
+                                        <VBox>
+                                            <Label text="Evidence Status" design="Bold"/>
+                                            <ObjectStatus text="{auditorModel>/selectedRemediation/evidenceStatus}" state="Success" icon="sap-icon://sys-enter-2" class="sapUiTinyMarginBottom"/>
+
+                                            <Label text="Remediation Status" design="Bold"/>
+                                            <ObjectStatus text="{auditorModel>/selectedRemediation/remediationStatus}" state="{auditorModel>/selectedRemediation/remediationState}" class="sapUiTinyMarginBottom"/>
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="Review Status" design="Bold"/>
+                                            <ObjectStatus text="{auditorModel>/selectedRemediation/reviewStatus}" state="{auditorModel>/selectedRemediation/reviewState}" class="sapUiTinyMarginBottom"/>
+
+                                            <Label text="Evidence File Attachment" design="Bold"/>
+                                            <Text text="{auditorModel>/selectedRemediation/evidenceFile}"/>
+                                        </VBox>
+                                    </layout:Grid>
+                                    <VBox class="sapUiTinyMargin">
+                                        <Label text="Auditor Verification Note" design="Bold"/>
+                                        <MessageStrip text="{auditorModel>/selectedRemediation/verificationNote}" type="Information" showIcon="true"/>
+                                    </VBox>
+                                </Panel>
+                            </VBox>
+                        </content>
+                        <endButton>
+                            <Button text="Close" press="onCloseEvidenceDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- HISTORICAL AUDIT INSPECTION DIALOG -->
+                    <Dialog id="viewAuditHistoryDetailsDialog" title="Historical Audit Record &amp; Archive Traceability" contentWidth="600px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <Title text="{auditorModel>/selectedHistoryItem/businessProcess}" level="H3" class="sapUiTinyMarginBottom"/>
+                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <ObjectStatus text="Audit ID: {auditorModel>/selectedHistoryItem/auditId}" state="Information" class="sapUiTinyMarginEnd fontWeightBold"/>
+                                    <ObjectStatus text="Control ID: {auditorModel>/selectedHistoryItem/controlId}" state="None" class="sapUiTinyMarginEnd"/>
+                                    <ObjectStatus text="App: {auditorModel>/selectedHistoryItem/application}" state="None"/>
+                                </HBox>
+
+                                <Panel headerText="Historical Audit Summary" expandable="false" class="sapUiSmallMarginBottom">
+                                    <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiTinyMargin">
+                                        <VBox>
+                                            <Label text="Auditor" design="Bold"/>
+                                            <Text text="{auditorModel>/selectedHistoryItem/auditorName}" class="sapUiTinyMarginBottom"/>
+
+                                            <Label text="Completion Date" design="Bold"/>
+                                            <Text text="{auditorModel>/selectedHistoryItem/completionDate}" class="sapUiTinyMarginBottom"/>
+
+                                            <Label text="Compliance Score" design="Bold"/>
+                                            <ObjectStatus text="{auditorModel>/selectedHistoryItem/complianceScore}" state="Success" class="sapUiTinyMarginBottom"/>
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="Remediation Status" design="Bold"/>
+                                            <ObjectStatus text="{auditorModel>/selectedHistoryItem/remediationStatus}" state="Success" class="sapUiTinyMarginBottom"/>
+
+                                            <Label text="Audit Status" design="Bold"/>
+                                            <ObjectStatus text="{auditorModel>/selectedHistoryItem/status}" state="Success" class="sapUiTinyMarginBottom"/>
+
+                                            <Label text="Archive Checksum Hash" design="Bold"/>
+                                            <Text text="{auditorModel>/selectedHistoryItem/checksumHash}"/>
+                                        </VBox>
+                                    </layout:Grid>
+                                    <VBox class="sapUiTinyMargin">
+                                        <Label text="Audit Archival Summary" design="Bold"/>
+                                        <MessageStrip text="{auditorModel>/selectedHistoryItem/archiveSummary}" type="Success" showIcon="true"/>
+                                    </VBox>
+                                </Panel>
+                            </VBox>
+                        </content>
+                        <endButton>
+                            <Button text="Close" press="onCloseHistoryDetailsDialog"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- READ-ONLY SYSTEM ACTIVITY LOG DETAILS DIALOG -->
+                    <Dialog id="auditDetailsDialog" title="System Activity Evidence Record" contentWidth="680px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <VBox>
+                                        <Title text="{auditorModel>/selectedLog/logId}" level="H3"/>
+                                        <Text text="System Activity &amp; Governance Evidence Record" class="textMuted"/>
+                                    </VBox>
+                                    <ObjectStatus text="{auditorModel>/selectedLog/result}" state="{auditorModel>/selectedLog/resultState}" inverted="true" class="badgeWhite"/>
+                                </HBox>
+
+                                <layout:Grid defaultSpan="L6 M6 S12" class="sapUiSmallMarginBottom">
+                                    <VBox>
+                                        <Label text="Log ID" class="fontWeightBold"/>
+                                        <Input value="{auditorModel>/selectedLog/logId}" editable="false"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Timestamp" class="fontWeightBold"/>
+                                        <Input value="{auditorModel>/selectedLog/timestamp}" editable="false"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Performed By" class="fontWeightBold"/>
+                                        <Input value="{auditorModel>/selectedLog/performedBy}" editable="false"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Action" class="fontWeightBold"/>
+                                        <Input value="{auditorModel>/selectedLog/action}" editable="false"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Module" class="fontWeightBold"/>
+                                        <Input value="{auditorModel>/selectedLog/module}" editable="false"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Object ID" class="fontWeightBold"/>
+                                        <Input value="{auditorModel>/selectedLog/objectId}" editable="false"/>
+                                    </VBox>
+                                </layout:Grid>
+
+                                <Label text="Description" class="fontWeightBold sapUiTinyMarginTop"/>
+                                <TextArea value="{auditorModel>/selectedLog/description}" editable="false" rows="2" width="100%" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Previous Value" class="fontWeightBold"/>
+                                <TextArea value="{auditorModel>/selectedLog/previousValue}" editable="false" rows="2" width="100%" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="New Value" class="fontWeightBold"/>
+                                <TextArea value="{auditorModel>/selectedLog/newValue}" editable="false" rows="2" width="100%" class="sapUiSmallMarginBottom"/>
+
+                                <Label text="Immutable Checksum Hash" class="fontWeightBold"/>
+                                <Text text="{auditorModel>/selectedLog/checksumHash}"/>
+                            </VBox>
+                        </content>
+                        <endButton>
+                            <Button text="Close" type="Emphasized" press="onCloseAuditDetailsDialog"/>
+                        </endButton>
+                    </Dialog>
+                </dependents>
+
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+
+                        <Avatar initials="AO" displaySize="S" backgroundColor="Accent5" class="sapUiTinyMarginEnd"/>
+
+                        <VBox justifyContent="Center">
+                            <Title text="XYRA – Auditor Dashboard" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Internal Audit &amp; Compliance Portal - AI Powered Security Audit Platform" class="textMuted sapUiNoMargin"/>
                         </VBox>
-                        <HBox justifyContent="End" class="sapUiSmallMarginTop">
-                            <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
-                        </HBox>
+
+                        <ToolbarSpacer/>
+
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onActionPress"/>
+                        <Button text="Logout" type="Reject" icon="sap-icon://log" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+
+                        <!-- BUSINESS ROLE & RESPONSIBILITIES BANNER -->
+                        <MessageStrip
+                            text="Business Role: Internal Auditor | Purpose: Perform continuous internal control testing, SOX 404 compliance inspection, evidence verification, and independent audit reporting."
+                            type="Information"
+                            showIcon="true"
+                            showCloseButton="false"
+                            class="sapUiSmallMarginBottom"/>
+
+                        <!-- SLIDE 1: AUDIT RECORDS (MAIN DASHBOARD LANDING PAGE) -->
+                        <VBox id="vboxAuditRecords" visible="true" width="100%">
+
+                            <!-- TOP KPI DASHBOARD (6 Cards) -->
+                            <Title text="Audit Performance &amp; Governance Overview" level="H3" class="sapUiSmallMarginBottom"/>
+
+                            <layout:Grid defaultSpan="XL2 L4 M6 S12" class="sapUiSmallMarginBottom">
+                                <f:Card class="sapUiTinyMarginBottom">
+                                    <f:header>
+                                        <card:Header
+                                            title="{auditorModel>/kpis/active} Active"
+                                            subtitle="Pending Audits"
+                                            iconSrc="sap-icon://inspection"
+                                            statusText="In Progress"/>
+                                    </f:header>
+                                </f:Card>
+
+                                <f:Card class="sapUiTinyMarginBottom">
+                                    <f:header>
+                                        <card:Header
+                                            title="{auditorModel>/kpis/completed} Verified"
+                                            subtitle="Completed Audits"
+                                            iconSrc="sap-icon://accept"
+                                            statusText="Archived"/>
+                                    </f:header>
+                                </f:Card>
+
+                                <f:Card class="sapUiTinyMarginBottom">
+                                    <f:header>
+                                        <card:Header
+                                            title="{auditorModel>/kpis/critical} Critical"
+                                            subtitle="Critical Findings"
+                                            iconSrc="sap-icon://alert"
+                                            statusText="Action Required"/>
+                                    </f:header>
+                                </f:Card>
+
+                                <f:Card class="sapUiTinyMarginBottom">
+                                    <f:header>
+                                        <card:Header
+                                            title="{auditorModel>/kpis/open} Open"
+                                            subtitle="Open Findings"
+                                            iconSrc="sap-icon://warning"
+                                            statusText="Pending Response"/>
+                                    </f:header>
+                                </f:Card>
+
+                                <f:Card class="sapUiTinyMarginBottom">
+                                    <f:header>
+                                        <card:Header
+                                            title="{auditorModel>/kpis/score}%"
+                                            subtitle="Compliance Score"
+                                            iconSrc="sap-icon://sys-enter-2"
+                                            statusText="Target: 95%"/>
+                                    </f:header>
+                                </f:Card>
+
+                                <f:Card class="sapUiTinyMarginBottom">
+                                    <f:header>
+                                        <card:Header
+                                            title="{auditorModel>/kpis/progress}% Complete"
+                                            subtitle="Audit Progress"
+                                            iconSrc="sap-icon://line-chart"
+                                            statusText="Q3 Cycle"/>
+                                    </f:header>
+                                </f:Card>
+                            </layout:Grid>
+
+                            <!-- FILTER PANEL (MATCHING AUDIT LOGS DESIGN FOR OVERALL DASHBOARD HISTORY) -->
+                            <Panel headerText="Overall System Activity Filters" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Overall System Activity Filters" level="H4"/>
+                                        <ToolbarSpacer/>
+                                        <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchAuditor" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Refresh" type="Transparent" icon="sap-icon://refresh" press="onResetFilters" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Export" icon="sap-icon://excel-attachment" press="onActionPress"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <content>
+                                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center">
+                                        <!-- Search Input -->
+                                        <VBox width="23%" class="xyraFieldGroup">
+                                            <Label text="Search" class="xyraLoginLabel"/>
+                                            <SearchField id="searchAuditor" placeholder="Search Log ID, Admin, Action..." search="onSearchAuditor" liveChange="onSearchAuditor" width="100%"/>
+                                        </VBox>
+
+                                        <!-- Action Filter -->
+                                        <VBox width="15%" class="xyraFieldGroup">
+                                            <Label text="Action" class="xyraLoginLabel"/>
+                                            <Select id="filterActionAuditor" change="onSearchAuditor" width="100%">
+                                                <core:Item key="All" text="All Actions"/>
+                                                <core:Item key="Create" text="Create"/>
+                                                <core:Item key="Update" text="Update"/>
+                                                <core:Item key="Delete" text="Delete"/>
+                                                <core:Item key="Configuration Change" text="Configuration Change"/>
+                                                <core:Item key="Access Grant" text="Access Grant"/>
+                                                <core:Item key="Review Sign-Off" text="Review Sign-Off"/>
+                                                <core:Item key="Escalation Approval" text="Escalation Approval"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <!-- Module Filter -->
+                                        <VBox width="17%" class="xyraFieldGroup">
+                                            <Label text="Module" class="xyraLoginLabel"/>
+                                            <Select id="filterModuleAuditor" change="onSearchAuditor" width="100%">
+                                                <core:Item key="All" text="All Modules"/>
+                                                <core:Item key="Control Management" text="Control Management"/>
+                                                <core:Item key="System Configuration" text="System Configuration"/>
+                                                <core:Item key="Access Management" text="Access Management"/>
+                                                <core:Item key="SOX Compliance" text="SOX Compliance"/>
+                                                <core:Item key="Reviewer 1 Queue" text="Reviewer 1 Queue"/>
+                                                <core:Item key="Reviewer 2 Queue" text="Reviewer 2 Queue"/>
+                                                <core:Item key="Escalation Manager Queue" text="Escalation Manager Queue"/>
+                                                <core:Item key="Auditor Governance" text="Auditor Governance"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <!-- Admin User / Performed By Filter -->
+                                        <VBox width="17%" class="xyraFieldGroup">
+                                            <Label text="Admin User" class="xyraLoginLabel"/>
+                                            <Select id="filterUserAuditor" change="onSearchAuditor" width="100%">
+                                                <core:Item key="All" text="All Admins"/>
+                                                <core:Item key="admin@xyra.com" text="admin@xyra.com (System Admin)"/>
+                                                <core:Item key="sysadmin@xyra.com" text="sysadmin@xyra.com (Security Manager)"/>
+                                                <core:Item key="secops@xyra.com" text="secops@xyra.com (Escalation Manager)"/>
+                                                <core:Item key="reviewer1@xyra.com" text="reviewer1@xyra.com (Manual Team)"/>
+                                                <core:Item key="reviewer2@xyra.com" text="reviewer2@xyra.com (Technical Team)"/>
+                                                <core:Item key="escalation@xyra.com" text="escalation@xyra.com (Escalation Manager)"/>
+                                                <core:Item key="auditor@xyra.com" text="auditor@xyra.com (Internal Auditor)"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <!-- Start Date Filter -->
+                                        <VBox width="11%" class="xyraFieldGroup">
+                                            <Label text="Start Date" class="xyraLoginLabel"/>
+                                            <DatePicker id="filterStartDateAuditor" placeholder="Start Date" change="onSearchAuditor" width="100%"/>
+                                        </VBox>
+
+                                        <!-- End Date Filter -->
+                                        <VBox width="11%" class="xyraFieldGroup">
+                                            <Label text="End Date" class="xyraLoginLabel"/>
+                                            <DatePicker id="filterEndDateAuditor" placeholder="End Date" change="onSearchAuditor" width="100%"/>
+                                        </VBox>
+                                    </HBox>
+                                </content>
+                            </Panel>
+
+                            <!-- OVERALL SYSTEM ACTIVITY AUDIT TRAIL TABLE -->
+                            <Panel expandable="false" class="sapUiSmallMarginBottom">
+                                <Table id="auditorTable" items="{auditorModel>/audits}" mode="None" width="100%">
+                                    <headerToolbar>
+                                        <OverflowToolbar>
+                                            <Title text="Overall System Activity Audit Trail" level="H3"/>
+                                            <ToolbarSpacer/>
+                                            <Text text="Read-Only Evidence Records" class="textMuted"/>
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+
+                                    <columns>
+                                        <Column width="14%"><Text text="Timestamp" class="fontWeightBold"/></Column>
+                                        <Column width="16%"><Text text="Admin User" class="fontWeightBold"/></Column>
+                                        <Column width="12%"><Text text="Action" class="fontWeightBold"/></Column>
+                                        <Column width="16%"><Text text="Module" class="fontWeightBold"/></Column>
+                                        <Column width="11%"><Text text="Object ID" class="fontWeightBold"/></Column>
+                                        <Column width="20%"><Text text="Description" class="fontWeightBold"/></Column>
+                                        <Column width="11%"><Text text="Result" class="fontWeightBold"/></Column>
+                                        <Column width="8%" hAlign="Center"><Text text="Details" class="fontWeightBold"/></Column>
+                                    </columns>
+
+                                    <items>
+                                        <ColumnListItem type="Active" press="onInspectAuditAnalysis">
+                                            <cells>
+                                                <Text text="{auditorModel>timestamp}"/>
+                                                <ObjectIdentifier title="{auditorModel>performedBy}" subtitle="{auditorModel>role}"/>
+                                                <ObjectStatus
+                                                    text="{auditorModel>action}"
+                                                    state="{= ${auditorModel>action} === 'Delete' ? 'Error' : (${auditorModel>action} === 'Create' ? 'Success' : (${auditorModel>action} === 'Update' ? 'Information' : (${auditorModel>action} === 'Escalation Approval' ? 'Success' : 'Warning')))}"/>
+                                                <Text text="{auditorModel>module}"/>
+                                                <ObjectStatus text="{auditorModel>objectId}" state="Information"/>
+                                                <Text text="{auditorModel>description}" wrapping="true"/>
+                                                <ObjectStatus text="{auditorModel>result}" state="{auditorModel>resultState}"/>
+                                                <Button text="Inspect" icon="sap-icon://show" type="Emphasized" tooltip="Inspect Detailed Analysis" press="onInspectAuditAnalysis"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </Panel>
+
+                            <!-- AI INSIGHTS -->
+                            <Panel headerText="AI Audit Analytics &amp; Risk Insights" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                                <VBox class="sapUiSmallMargin">
+                                    <HBox width="100%" justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                        <!-- Visual SVG Pie Chart -->
+                                        <VBox alignItems="Center" justifyContent="Center" width="45%">
+                                            <core:HTML content="{auditorModel>/riskPieChartSvgHtml}"/>
+                                        </VBox>
+
+                                        <!-- Risk Breakdown Legend matching Auditor Records Table -->
+                                        <VBox width="52%">
+                                            <Title text="Audit Records Risk Breakdown" level="H5" class="sapUiTinyMarginBottom"/>
+                                            
+                                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                                <core:Icon src="sap-icon://sys-enter" color="#10b981" class="sapUiTinyMarginEnd"/>
+                                                <Text text="Low Risk" class="fontWeightBold"/>
+                                            </HBox>
+                                            
+                                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                                <core:Icon src="sap-icon://warning" color="#f59e0b" class="sapUiTinyMarginEnd"/>
+                                                <Text text="Medium Risk" class="fontWeightBold"/>
+                                            </HBox>
+
+                                            <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                                <core:Icon src="sap-icon://alert" color="#ef4444" class="sapUiTinyMarginEnd"/>
+                                                <Text text="High Risk" class="fontWeightBold"/>
+                                            </HBox>
+                                        </VBox>
+                                    </HBox>
+
+                                    <MessageStrip text="AI Scanner: Control Effectiveness score calculated at 98.2% with 99% confidence rating." type="Success" showIcon="true"/>
+                                </VBox>
+                            </Panel>
+
+                        </VBox>
+
+                        <!-- SLIDE 2: AUDIT ANALYSIS (DETAILED REVIEW VIEW FOR SELECTED AUDIT RECORD) -->
+                        <VBox id="vboxAuditAnalysis" visible="false" width="100%">
+
+                            <OverflowToolbar class="sapUiSmallMarginBottom">
+                                <Button icon="sap-icon://nav-back" text="Back to Audit Records" type="Ghost" press="onSelectTabAuditRecords" class="sapUiTinyMarginEnd"/>
+                                <Title text="Detailed Audit Analysis View – {auditorModel>/selectedAudit/logId}" level="H4"/>
+                                <ToolbarSpacer/>
+                                <Button text="Export Analysis PDF" icon="sap-icon://pdf-attachment" press="onActionPress" class="sapUiTinyMarginEnd"/>
+                                <Button text="Raise Remediation Finding" type="Reject" icon="sap-icon://add-filter" press="onActionPress"/>
+                            </OverflowToolbar>
+
+                            <!-- AUDIT ANALYSIS HEADER CARDS -->
+                            <Panel expandable="false" class="sapUiSmallMarginBottom">
+                                <layout:Grid defaultSpan="XL4 L4 M6 S12" class="sapUiSmallMargin">
+                                    <VBox>
+                                        <Label text="Log ID / Record ID" design="Bold"/>
+                                        <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                            <Title text="{auditorModel>/selectedAudit/logId}" level="H3" class="sapUiTinyMarginEnd textPrimary"/>
+                                            <ObjectStatus text="{auditorModel>/selectedAudit/module}" state="Information"/>
+                                        </HBox>
+
+                                        <Label text="Object ID" design="Bold"/>
+                                        <Text text="{auditorModel>/selectedAudit/objectId}" class="sapUiTinyMarginBottom fontWeightBold"/>
+
+                                        <Label text="System / Application" design="Bold"/>
+                                        <Text text="{auditorModel>/selectedAudit/module}"/>
+                                    </VBox>
+
+                                    <VBox>
+                                        <Label text="Performed By" design="Bold"/>
+                                        <Text text="{auditorModel>/selectedAudit/performedBy}" class="sapUiTinyMarginBottom fontWeightBold"/>
+
+                                        <Label text="User Role" design="Bold"/>
+                                        <Text text="{auditorModel>/selectedAudit/role}" class="sapUiTinyMarginBottom"/>
+
+                                        <Label text="Action Executed" design="Bold"/>
+                                        <ObjectStatus text="{auditorModel>/selectedAudit/action}" state="{= ${auditorModel>/selectedAudit/action} === 'Delete' ? 'Error' : (${auditorModel>/selectedAudit/action} === 'Create' ? 'Success' : 'Information') }"/>
+                                    </VBox>
+
+                                    <VBox>
+                                        <Label text="Timestamp" design="Bold"/>
+                                        <Text text="{auditorModel>/selectedAudit/timestamp}" class="sapUiTinyMarginBottom"/>
+
+                                        <Label text="Execution Result" design="Bold"/>
+                                        <ObjectStatus text="{auditorModel>/selectedAudit/result}" state="{auditorModel>/selectedAudit/resultState}" class="sapUiTinyMarginBottom"/>
+
+                                        <Label text="Risk Rating Score" design="Bold"/>
+                                        <ProgressIndicator percentValue="{= ${auditorModel>/selectedAudit/resultState} === 'Success' ? 98 : (${auditorModel>/selectedAudit/resultState} === 'Warning' ? 88 : 65) }" displayValue="{= ${auditorModel>/selectedAudit/resultState} === 'Success' ? '98% Compliant' : (${auditorModel>/selectedAudit/resultState} === 'Warning' ? '88% Compliant' : '65% Non-Compliant') }" state="{auditorModel>/selectedAudit/resultState}"/>
+                                    </VBox>
+                                </layout:Grid>
+                            </Panel>
+
+                            <!-- DETAILED INSPECTION PANELS -->
+                            <Panel headerText="1. Control Scope &amp; Activity Execution Details" expandable="false" class="sapUiSmallMarginBottom">
+                                <VBox class="sapUiSmallMargin">
+                                    <Label text="Activity &amp; Execution Description" design="Bold"/>
+                                    <Text text="{auditorModel>/selectedAudit/description}" class="sapUiSmallMarginBottom"/>
+
+                                    <layout:Grid defaultSpan="XL6 L6 M12 S12">
+                                        <VBox>
+                                            <Label text="Target Module &amp; Subsystem" design="Bold"/>
+                                            <Text text="{auditorModel>/selectedAudit/module}" class="sapUiTinyMarginBottom"/>
+
+                                            <Label text="Target Object ID / Resource" design="Bold"/>
+                                            <Text text="{auditorModel>/selectedAudit/objectId}"/>
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="Executed By Admin User" design="Bold"/>
+                                            <Text text="{auditorModel>/selectedAudit/performedBy} ({auditorModel>/selectedAudit/role})" class="sapUiTinyMarginBottom"/>
+
+                                            <Label text="Execution Timestamp" design="Bold"/>
+                                            <Text text="{auditorModel>/selectedAudit/timestamp}"/>
+                                        </VBox>
+                                    </layout:Grid>
+                                </VBox>
+                            </Panel>
+
+                            <Panel headerText="2. Findings, Evidence Delta &amp; Hash Verification" expandable="false" class="sapUiSmallMarginBottom">
+                                <VBox class="sapUiSmallMargin">
+                                    <Label text="Audit Trail Activity Summary" design="Bold"/>
+                                    <MessageStrip text="{auditorModel>/selectedAudit/description}" type="{= ${auditorModel>/selectedAudit/resultState} === 'Error' ? 'Error' : (${auditorModel>/selectedAudit/resultState} === 'Warning' ? 'Warning' : 'Success') }" showIcon="true" class="sapUiSmallMarginBottom"/>
+
+                                    <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                                        <VBox>
+                                            <Label text="Previous System State / Value" design="Bold"/>
+                                            <TextArea value="{auditorModel>/selectedAudit/previousValue}" editable="false" rows="2" width="100%" class="sapUiTinyMarginBottom"/>
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="New System State / Value" design="Bold"/>
+                                            <TextArea value="{auditorModel>/selectedAudit/newValue}" editable="false" rows="2" width="100%" class="sapUiTinyMarginBottom"/>
+                                        </VBox>
+                                    </layout:Grid>
+
+                                    <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                                        <VBox>
+                                            <Label text="Evidence Package Vault Status" design="Bold"/>
+                                            <ObjectStatus text="Verified &amp; Cryptographically Sealed" state="Success" icon="sap-icon://sys-enter-2"/>
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="Immutable Hash Checksum" design="Bold"/>
+                                            <Text text="{auditorModel>/selectedAudit/checksumHash}"/>
+                                        </VBox>
+                                    </layout:Grid>
+
+                                    <Label text="Auditor Verification Comments" design="Bold"/>
+                                    <Text text="Independent audit inspection completed for {auditorModel>/selectedAudit/logId}. Evidence hash verified against master vault." class="textMuted"/>
+                                </VBox>
+                            </Panel>
+
+                        </VBox>
+
+                        <!-- SLIDE 3: REMEDIATION REVIEW -->
+                        <VBox id="vboxRemediationReview" visible="false" width="100%">
+
+                            <OverflowToolbar class="sapUiSmallMarginBottom">
+                                <Title text="Remediation Review &amp; Evidence Verification" level="H4"/>
+                                <ToolbarSpacer/>
+                                <Text text="Verify remediation progress, evidence attachments, &amp; audit finding resolution" class="textMuted"/>
+                            </OverflowToolbar>
+
+                            <!-- KPI SUMMARY CARDS -->
+                            <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                                <VBox width="31%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #ef4444; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox>
+                                            <Text text="Open Remediation Items" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Title text="{auditorModel>/remediationKpis/open}" level="H2" class="sapUiTinyMarginTop textDanger fontWeightBold"/>
+                                        </VBox>
+                                        <Avatar src="sap-icon://warning" backgroundColor="Accent1" displaySize="M"/>
+                                    </HBox>
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                        <ObjectStatus text="🔴 Action Required" state="Error"/>
+                                        <Text text="Pending Owner Fix" class="fontSizeSmall textDanger fontWeightBold"/>
+                                    </HBox>
+                                </VBox>
+
+                                <VBox width="31%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #10b981; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox>
+                                            <Text text="Evidence Verified" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Title text="{auditorModel>/remediationKpis/verified}" level="H2" class="sapUiTinyMarginTop textSuccess fontWeightBold"/>
+                                        </VBox>
+                                        <Avatar src="sap-icon://sys-enter-2" backgroundColor="Accent8" displaySize="M"/>
+                                    </HBox>
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                        <ObjectStatus text="🟢 Verified &amp; Closed" state="Success"/>
+                                        <Text text="Proof Sealed" class="fontSizeSmall textMuted"/>
+                                    </HBox>
+                                </VBox>
+
+                                <VBox width="31%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #3b82f6; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox>
+                                            <Text text="Under Review" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Title text="{auditorModel>/remediationKpis/underReview}" level="H2" class="sapUiTinyMarginTop textPrimary fontWeightBold"/>
+                                        </VBox>
+                                        <Avatar src="sap-icon://inspection" backgroundColor="Accent6" displaySize="M"/>
+                                    </HBox>
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                        <ObjectStatus text="⚙ Auditor Inspection" state="Information"/>
+                                        <Text text="In Verification" class="fontSizeSmall textMuted"/>
+                                    </HBox>
+                                </VBox>
+                            </HBox>
+
+                            <!-- FILTER BAR (WITH LIVE AUTOMATIC FILTERING) -->
+                            <Panel headerText="Filter Remediation Records" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                                <layout:Grid defaultSpan="XL3 L3 M6 S12">
+                                    <SearchField id="searchRemediation" placeholder="Search Finding / Audit ID..." search="onSearchRemediation" liveChange="onSearchRemediation"/>
+                                    <Input id="inputRemediationControlId" placeholder="Control ID (e.g. SOX-002)" liveChange="onSearchRemediation" change="onSearchRemediation"/>
+                                    <Select id="selectRemediationApp" width="100%" change="onSearchRemediation">
+                                        <core:Item key="All" text="All Applications"/>
+                                        <core:Item key="SAP ECC" text="SAP ECC"/>
+                                        <core:Item key="SAP S/4HANA" text="SAP S/4HANA"/>
+                                        <core:Item key="HANA DB" text="HANA DB"/>
+                                    </Select>
+                                    <Select id="selectRemediationStatus" width="100%" change="onSearchRemediation">
+                                        <core:Item key="All" text="All Remediation Statuses"/>
+                                        <core:Item key="Remediated" text="Remediated"/>
+                                        <core:Item key="In Progress" text="In Progress"/>
+                                        <core:Item key="Action Required" text="Action Required"/>
+                                    </Select>
+                                </layout:Grid>
+                                <OverflowToolbar class="sapUiTinyMarginTop">
+                                    <ToolbarSpacer/>
+                                    <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchRemediation"/>
+                                    <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetRemediationFilters"/>
+                                </OverflowToolbar>
+                            </Panel>
+
+                            <!-- REMEDIATION TABLE -->
+                            <Panel headerText="Remediation Tracking &amp; Evidence Queue" expandable="false" class="sapUiSmallMarginBottom">
+                                <Table id="remediationTable" items="{auditorModel>/remediations}" mode="None" width="100%">
+                                    <columns>
+                                        <Column width="10%"><Text text="Audit ID" class="fontWeightBold"/></Column>
+                                        <Column width="18%"><Text text="Finding"/></Column>
+                                        <Column width="18%"><Text text="Deviation"/></Column>
+                                        <Column width="16%"><Text text="Remediation Action"/></Column>
+                                        <Column width="11%"><Text text="Remediation"/></Column>
+                                        <Column width="11%"><Text text="Evidence Status"/></Column>
+                                        <Column width="10%"><Text text="Review Status"/></Column>
+                                        <Column width="11%" hAlign="Center"><Text text="Action"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <ObjectStatus text="{auditorModel>auditId}" state="Information" class="fontWeightBold"/>
+                                                <ObjectIdentifier title="{auditorModel>finding}" subtitle="{auditorModel>controlId}"/>
+                                                <Text text="{auditorModel>deviation}" maxLines="2"/>
+                                                <Text text="{auditorModel>remediation}" maxLines="2"/>
+                                                <ObjectStatus text="{auditorModel>remediationStatus}" state="{auditorModel>remediationState}"/>
+                                                <ObjectStatus text="{auditorModel>evidenceStatus}" state="Success" icon="sap-icon://sys-enter-2"/>
+                                                <ObjectStatus text="{auditorModel>reviewStatus}" state="{auditorModel>reviewState}"/>
+                                                <Button text="View Evidence" icon="sap-icon://show" type="Emphasized" press="onViewEvidence"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </Panel>
+
+                        </VBox>
+
+                        <!-- SLIDE 4: AUDIT HISTORY (READ-ONLY HISTORICAL AUDIT LOGS) -->
+                        <VBox id="vboxAuditHistory" visible="false" width="100%">
+
+                            <OverflowToolbar class="sapUiSmallMarginBottom">
+                                <Title text="Audit History &amp; Immutable Governance Logs" level="H4"/>
+                                <ToolbarSpacer/>
+                                <Text text="Read-only historical audit records, compliance certificates &amp; archived evidence" class="textMuted"/>
+                            </OverflowToolbar>
+
+                            <!-- KPI CARDS -->
+                            <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                                <VBox width="31%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #10b981; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox>
+                                            <Text text="Historical Audits Passed" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Title text="{auditorModel>/historyKpis/passed}" level="H2" class="sapUiTinyMarginTop textSuccess fontWeightBold"/>
+                                        </VBox>
+                                        <Avatar src="sap-icon://accept" backgroundColor="Accent8" displaySize="M"/>
+                                    </HBox>
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                        <ObjectStatus text="🟢 Fully Compliant" state="Success"/>
+                                        <Text text="SOX Certified" class="fontSizeSmall textMuted"/>
+                                    </HBox>
+                                </VBox>
+
+                                <VBox width="31%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #3b82f6; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox>
+                                            <Text text="Archived Evidence Packages" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Title text="{auditorModel>/historyKpis/archived}" level="H2" class="sapUiTinyMarginTop textPrimary fontWeightBold"/>
+                                        </VBox>
+                                        <Avatar src="sap-icon://attachment-zip-file" backgroundColor="Accent6" displaySize="M"/>
+                                    </HBox>
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                        <ObjectStatus text="🔒 Hash Checksum Sealed" state="Information"/>
+                                        <Text text="Immutable Records" class="fontSizeSmall textMuted"/>
+                                    </HBox>
+                                </VBox>
+
+                                <VBox width="31%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #8b5cf6; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox>
+                                            <Text text="Avg Remediation Cycle" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Title text="{auditorModel>/historyKpis/avgRemediationTime}" level="H2" class="sapUiTinyMarginTop textPrimary fontWeightBold"/>
+                                        </VBox>
+                                        <Avatar src="sap-icon://history" backgroundColor="Accent3" displaySize="M"/>
+                                    </HBox>
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                        <ObjectStatus text="⏱ Fast Turnaround" state="Success"/>
+                                        <Text text="SLA: &lt; 5 Days" class="fontSizeSmall textMuted"/>
+                                    </HBox>
+                                </VBox>
+                            </HBox>
+
+                            <!-- FILTER PANEL FOR AUDITOR HISTORICAL VERIFIED AUDITS -->
+                            <Panel headerText="Filter Auditor History" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Filter Auditor History" level="H4"/>
+                                        <ToolbarSpacer/>
+                                        <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchAuditHistory" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Refresh" type="Transparent" icon="sap-icon://refresh" press="onResetAuditHistoryFilters" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Export History" icon="sap-icon://excel-attachment" press="onActionPress"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <content>
+                                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center">
+                                        <!-- Search Input -->
+                                        <VBox width="23%" class="xyraFieldGroup">
+                                            <Label text="Search" class="xyraLoginLabel"/>
+                                            <SearchField id="searchAuditHistory" placeholder="Search Audit ID, Process, Auditor..." search="onSearchAuditHistory" liveChange="onSearchAuditHistory" width="100%"/>
+                                        </VBox>
+
+                                        <!-- Control ID Filter -->
+                                        <VBox width="18%" class="xyraFieldGroup">
+                                            <Label text="Control ID" class="xyraLoginLabel"/>
+                                            <Input id="inputHistoryControlIdAud" placeholder="Control ID (e.g. SOX-001)" liveChange="onSearchAuditHistory" change="onSearchAuditHistory" width="100%"/>
+                                        </VBox>
+
+                                        <!-- Application Filter -->
+                                        <VBox width="18%" class="xyraFieldGroup">
+                                            <Label text="Application" class="xyraLoginLabel"/>
+                                            <Select id="selectHistoryAppAud" change="onSearchAuditHistory" width="100%">
+                                                <core:Item key="All" text="All Applications"/>
+                                                <core:Item key="SAP ECC" text="SAP ECC"/>
+                                                <core:Item key="SAP S/4HANA" text="SAP S/4HANA"/>
+                                                <core:Item key="HANA DB" text="HANA DB"/>
+                                                <core:Item key="SAP GRC" text="SAP GRC"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <!-- Historical Status Filter -->
+                                        <VBox width="18%" class="xyraFieldGroup">
+                                            <Label text="Status" class="xyraLoginLabel"/>
+                                            <Select id="selectHistoryStatusAud" change="onSearchAuditHistory" width="100%">
+                                                <core:Item key="All" text="All Historical Statuses"/>
+                                                <core:Item key="Archived &amp; Closed" text="Archived &amp; Closed"/>
+                                                <core:Item key="Passed" text="Passed"/>
+                                                <core:Item key="SOX Certified" text="SOX Certified"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <!-- Completion Date Filter -->
+                                        <VBox width="18%" class="xyraFieldGroup">
+                                            <Label text="Completion Date" class="xyraLoginLabel"/>
+                                            <DatePicker id="dpHistoryDateAud" placeholder="Completion Date" change="onSearchAuditHistory" width="100%"/>
+                                        </VBox>
+                                    </HBox>
+                                </content>
+                            </Panel>
+
+                            <!-- AUDITOR HISTORICAL VERIFIED AUDIT RECORDS TABLE -->
+                            <Panel headerText="Auditor Verified Historical Records (Read-Only Archive)" expandable="false" class="sapUiSmallMarginBottom">
+                                <Table id="auditHistoryTable" items="{auditorModel>/history}" mode="None" width="100%">
+                                    <columns>
+                                        <Column width="12%"><Text text="Audit ID" class="fontWeightBold"/></Column>
+                                        <Column width="12%"><Text text="Control ID" class="fontWeightBold"/></Column>
+                                        <Column width="14%"><Text text="Application" class="fontWeightBold"/></Column>
+                                        <Column width="26%"><Text text="Business Process" class="fontWeightBold"/></Column>
+                                        <Column width="14%"><Text text="Auditor" class="fontWeightBold"/></Column>
+                                        <Column width="12%"><Text text="Completion Date" class="fontWeightBold"/></Column>
+                                        <Column width="10%"><Text text="Status" class="fontWeightBold"/></Column>
+                                        <Column width="10%" hAlign="Center"><Text text="Action" class="fontWeightBold"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem type="Active" press="onViewHistoryDetails">
+                                            <cells>
+                                                <ObjectStatus text="{auditorModel>auditId}" state="Information" class="fontWeightBold"/>
+                                                <Text text="{auditorModel>controlId}"/>
+                                                <Text text="{auditorModel>application}"/>
+                                                <ObjectIdentifier title="{auditorModel>businessProcess}"/>
+                                                <Text text="{auditorModel>auditorName}"/>
+                                                <Text text="{auditorModel>completionDate}"/>
+                                                <ObjectStatus text="{auditorModel>status}" state="Success" icon="sap-icon://sys-enter-2"/>
+                                                <Button text="View Details" icon="sap-icon://show" type="Emphasized" press="onViewHistoryDetails"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </Panel>
+
+                        </VBox>
+
                     </VBox>
                 </content>
-            </ResponsivePopover>
-        </dependents>
 
-        <customHeader>
-            <OverflowToolbar height="4.5rem">
-                <Avatar initials="AO" displaySize="S" backgroundColor="Accent5" class="sapUiTinyMarginBegin sapUiTinyMarginEnd"/>
-                <VBox justifyContent="Center">
-                    <Title text="XYRA – Auditor Dashboard" level="H4" class="sapUiNoMargin"/>
-                    <Text text="Internal Audit &amp; Compliance Portal - AI Powered Security Audit Platform" class="textMuted sapUiNoMargin"/>
-                </VBox>
-                <ToolbarSpacer/>
-
-                <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onActionPress"/>
-                <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
-            </OverflowToolbar>
-        </customHeader>
-
-        <content>
-            <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
-
-                <!-- TOP KPI DASHBOARD (6 Cards) -->
-                <Title text="Audit Performance &amp; Governance Overview" level="H3" class="sapUiSmallMarginBottom"/>
-
-                <layout:Grid defaultSpan="XL2 L4 M6 S12" class="sapUiSmallMarginBottom">
-                    <f:Card class="sapUiTinyMarginBottom">
-                        <f:header>
-                            <card:Header
-                                title="12 Active"
-                                subtitle="Pending Audits"
-                                iconSrc="sap-icon://inspection"
-                                statusText="In Progress"/>
-                        </f:header>
-                    </f:Card>
-
-                    <f:Card class="sapUiTinyMarginBottom">
-                        <f:header>
-                            <card:Header
-                                title="88 Verified"
-                                subtitle="Completed Audits"
-                                iconSrc="sap-icon://accept"
-                                statusText="Archived"/>
-                        </f:header>
-                    </f:Card>
-
-                    <f:Card class="sapUiTinyMarginBottom">
-                        <f:header>
-                            <card:Header
-                                title="2 Critical"
-                                subtitle="Critical Findings"
-                                iconSrc="sap-icon://alert"
-                                statusText="Action Required"/>
-                        </f:header>
-                    </f:Card>
-
-                    <f:Card class="sapUiTinyMarginBottom">
-                        <f:header>
-                            <card:Header
-                                title="3 Open"
-                                subtitle="Open Findings"
-                                iconSrc="sap-icon://warning"
-                                statusText="Pending Response"/>
-                        </f:header>
-                    </f:Card>
-
-                    <f:Card class="sapUiTinyMarginBottom">
-                        <f:header>
-                            <card:Header
-                                title="96.8%"
-                                subtitle="Compliance Score"
-                                iconSrc="sap-icon://sys-enter-2"
-                                statusText="Target: 95%"/>
-                        </f:header>
-                    </f:Card>
-
-                    <f:Card class="sapUiTinyMarginBottom">
-                        <f:header>
-                            <card:Header
-                                title="82% Complete"
-                                subtitle="Audit Progress"
-                                iconSrc="sap-icon://line-chart"
-                                statusText="Q3 Cycle"/>
-                        </f:header>
-                    </f:Card>
-                </layout:Grid>
-
-                <!-- FILTER BAR -->
-                <Panel headerText="Filter Audit Records" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
-                    <layout:Grid defaultSpan="XL3 L3 M6 S12">
-                        <SearchField placeholder="Search audit logs..." search="onRefresh"/>
-                        <Input placeholder="Audit ID (e.g. AUD-101)"/>
-                        <Input placeholder="Business User"/>
-                        <Input placeholder="Application (e.g. SAP ECC)"/>
-                        <Input placeholder="Control ID (e.g. SOX-001)"/>
-                        <Select width="100%">
-                            <core:Item key="" text="All Risk Levels"/>
-                            <core:Item key="High" text="High"/>
-                            <core:Item key="Medium" text="Medium"/>
-                            <core:Item key="Low" text="Low"/>
-                        </Select>
-                        <Select width="100%">
-                            <core:Item key="" text="All Compliance Statuses"/>
-                            <core:Item key="Compliant" text="Compliant"/>
-                            <core:Item key="NonCompliant" text="Non-Compliant"/>
-                        </Select>
-                        <DatePicker placeholder="Audit Date" width="100%"/>
-                    </layout:Grid>
-                    <OverflowToolbar class="sapUiTinyMarginTop">
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer/>
-                        <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onRefresh"/>
-                        <Button text="Reset" type="Transparent" icon="sap-icon://reset" press="onActionPress"/>
-                        <Button text="Export" icon="sap-icon://excel-attachment" press="onActionPress"/>
+                        <Text text="XYRA Internal Audit Platform | Auditor Portal v1.0"/>
                     </OverflowToolbar>
-                </Panel>
+                </footer>
 
-                <!-- QUICK ACTIONS -->
-                <Panel expandable="false" class="sapUiSmallMarginBottom">
-                    <headerToolbar>
-                        <OverflowToolbar>
-                            <Title text="Auditor Quick Actions" level="H5"/>
-                            <ToolbarSpacer/>
-                            <Button text="Start Audit" type="Emphasized" icon="sap-icon://play" press="onActionPress" class="sapUiTinyMarginEnd"/>
-                            <Button text="Raise Finding" type="Reject" icon="sap-icon://add-filter" press="onActionPress" class="sapUiTinyMarginEnd"/>
-                            <Button text="Generate Report" icon="sap-icon://pdf-attachment" press="onActionPress" class="sapUiTinyMarginEnd"/>
-                            <Button text="Download Evidence" icon="sap-icon://download" press="onActionPress" class="sapUiTinyMarginEnd"/>
-                            <Button text="Export Report" icon="sap-icon://excel-attachment" press="onActionPress" class="sapUiTinyMarginEnd"/>
-                            <Button text="Assign Review" icon="sap-icon://personnel" press="onActionPress"/>
-                        </OverflowToolbar>
-                    </headerToolbar>
-                </Panel>
+            </Page>
+        </tnt:mainContents>
 
-                <!-- MAIN TABLE -->
-                <Panel headerText="Audit Review Queue &amp; Compliance Logs" expandable="false" class="sapUiSmallMarginBottom">
-                    <Table id="auditorTable" inset="false" width="100%">
-                        <columns>
-                            <Column width="10%"><Text text="Audit ID"/></Column>
-                            <Column width="10%"><Text text="Control ID"/></Column>
-                            <Column width="12%"><Text text="Application"/></Column>
-                            <Column width="18%"><Text text="Business Process"/></Column>
-                            <Column width="12%"><Text text="Business User"/></Column>
-                            <Column width="12%"><Text text="Control Owner"/></Column>
-                            <Column width="10%"><Text text="Risk"/></Column>
-                            <Column width="16%"><Text text="Compliance %"/></Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <ObjectIdentifier title="AUD-101" subtitle="SOX"/>
-                                    <Text text="SOX-001"/>
-                                    <Text text="SAP ECC"/>
-                                    <Text text="User Access Review"/>
-                                    <Text text="John Smith"/>
-                                    <Text text="Reviewer 2"/>
-                                    <ObjectStatus text="Low" state="Success" icon="sap-icon://sys-enter"/>
-                                    <ProgressIndicator percentValue="98" displayValue="98%" state="Success"/>
-                                </cells>
-                            </ColumnListItem>
-                            <ColumnListItem>
-                                <cells>
-                                    <ObjectIdentifier title="AUD-102" subtitle="SOD"/>
-                                    <Text text="SOX-002"/>
-                                    <Text text="SAP S/4HANA"/>
-                                    <Text text="Emergency Access Log Review"/>
-                                    <Text text="Jane Doe"/>
-                                    <Text text="Reviewer 1"/>
-                                    <ObjectStatus text="High" state="Error" icon="sap-icon://alert"/>
-                                    <ProgressIndicator percentValue="65" displayValue="65%" state="Warning"/>
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
-                </Panel>
-
-                <!-- AI INSIGHTS & AUDIT TIMELINE -->
-                <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
-                    <Panel headerText="AI Audit Analytics &amp; Risk Insights" expandable="true" expanded="true">
-                        <VBox class="sapUiSmallMargin">
-                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
-                                <Label text="Overall Audit Compliance Score" design="Bold"/>
-                                <ObjectStatus text="96.8% Compliant" state="Success"/>
-                            </HBox>
-                            <ProgressIndicator percentValue="97" displayValue="97%" state="Success" class="sapUiSmallMarginBottom"/>
-
-                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
-                                <Label text="AI Deficiencies Prediction" design="Bold"/>
-                                <ObjectStatus text="Zero Critical Anomalies" state="Success"/>
-                            </HBox>
-                            <Text text="AI Audit Scanner completed analysis on 1,420 user accounts across SAP ECC &amp; S/4HANA. All controls comply with SOX 404 specs." class="sapUiSmallMarginBottom"/>
-                            <MessageStrip text="Control Effectiveness score calculated at 98.2%. Confidence rating: 99%." type="Success" showIcon="true"/>
-                        </VBox>
-                    </Panel>
-
-                    <Panel headerText="Audit Lifecycle Timeline" expandable="true" expanded="true">
-                        <VBox class="sapUiSmallMargin">
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://accept" color="green" class="sapUiSmallMarginEnd"/>
-                                <Text text="Step 1: Audit Scope &amp; Schedule Created"/>
-                            </HBox>
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://accept" color="green" class="sapUiSmallMarginEnd"/>
-                                <Text text="Step 2: Evidence Collected &amp; Validated"/>
-                            </HBox>
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://process" color="orange" class="sapUiSmallMarginEnd"/>
-                                <Text text="Step 3: Internal Control Testing (Active)"/>
-                            </HBox>
-                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                <core:Icon src="sap-icon://future" color="gray" class="sapUiSmallMarginEnd"/>
-                                <Text text="Step 4: Final Management Report &amp; Closure"/>
-                            </HBox>
-                        </VBox>
-                    </Panel>
-                </layout:Grid>
-
-            </VBox>
-        </content>
-
-        <footer>
-            <OverflowToolbar>
-                <Text text="© 2026 Forte Innovations"/>
-                <ToolbarSpacer/>
-                <Text text="XYRA Internal Audit Platform | Version 1.0 | Status: Active"/>
-            </OverflowToolbar>
-        </footer>
-
-    </Page>
+    </tnt:ToolPage>
 </mvc:View>
