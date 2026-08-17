@@ -261,70 +261,39 @@
                         <!-- SLIDE 1: AUDIT RECORDS (MAIN DASHBOARD LANDING PAGE) -->
                         <VBox id="vboxAuditRecords" visible="true" width="100%">
 
-                            <!-- TOP KPI DASHBOARD (6 Cards) -->
-                            <Title text="Audit Performance &amp; Governance Overview" level="H3" class="sapUiSmallMarginBottom"/>
+                            <!-- AI INSIGHTS & RISK ANALYTICS -->
+                            <Panel headerText="AI Audit Analytics &amp; Risk Insights" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                                <VBox class="sapUiSmallMargin">
+                                    <HBox width="100%" justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                        <!-- Visual SVG Pie Chart -->
+                                        <VBox alignItems="Center" justifyContent="Center" width="45%">
+                                            <core:HTML content="{auditorModel>/riskPieChartSvgHtml}"/>
+                                        </VBox>
 
-                            <layout:Grid defaultSpan="XL2 L4 M6 S12" class="sapUiSmallMarginBottom">
-                                <f:Card class="sapUiTinyMarginBottom">
-                                    <f:header>
-                                        <card:Header
-                                            title="{auditorModel>/kpis/active} Active"
-                                            subtitle="Pending Audits"
-                                            iconSrc="sap-icon://inspection"
-                                            statusText="In Progress"/>
-                                    </f:header>
-                                </f:Card>
+                                        <!-- Risk Breakdown Legend matching Auditor Records Table -->
+                                        <VBox width="52%">
+                                            <Title text="Audit Records Risk Breakdown" level="H5" class="sapUiTinyMarginBottom"/>
+                                            
+                                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                                <core:Icon src="sap-icon://sys-enter" color="#10b981" class="sapUiTinyMarginEnd"/>
+                                                <Text text="Low Risk" class="fontWeightBold"/>
+                                            </HBox>
+                                            
+                                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                                <core:Icon src="sap-icon://warning" color="#f59e0b" class="sapUiTinyMarginEnd"/>
+                                                <Text text="Medium Risk" class="fontWeightBold"/>
+                                            </HBox>
 
-                                <f:Card class="sapUiTinyMarginBottom">
-                                    <f:header>
-                                        <card:Header
-                                            title="{auditorModel>/kpis/completed} Verified"
-                                            subtitle="Completed Audits"
-                                            iconSrc="sap-icon://accept"
-                                            statusText="Archived"/>
-                                    </f:header>
-                                </f:Card>
+                                            <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                                <core:Icon src="sap-icon://alert" color="#ef4444" class="sapUiTinyMarginEnd"/>
+                                                <Text text="High Risk" class="fontWeightBold"/>
+                                            </HBox>
+                                        </VBox>
+                                    </HBox>
 
-                                <f:Card class="sapUiTinyMarginBottom">
-                                    <f:header>
-                                        <card:Header
-                                            title="{auditorModel>/kpis/critical} Critical"
-                                            subtitle="Critical Findings"
-                                            iconSrc="sap-icon://alert"
-                                            statusText="Action Required"/>
-                                    </f:header>
-                                </f:Card>
-
-                                <f:Card class="sapUiTinyMarginBottom">
-                                    <f:header>
-                                        <card:Header
-                                            title="{auditorModel>/kpis/open} Open"
-                                            subtitle="Open Findings"
-                                            iconSrc="sap-icon://warning"
-                                            statusText="Pending Response"/>
-                                    </f:header>
-                                </f:Card>
-
-                                <f:Card class="sapUiTinyMarginBottom">
-                                    <f:header>
-                                        <card:Header
-                                            title="{auditorModel>/kpis/score}%"
-                                            subtitle="Compliance Score"
-                                            iconSrc="sap-icon://sys-enter-2"
-                                            statusText="Target: 95%"/>
-                                    </f:header>
-                                </f:Card>
-
-                                <f:Card class="sapUiTinyMarginBottom">
-                                    <f:header>
-                                        <card:Header
-                                            title="{auditorModel>/kpis/progress}% Complete"
-                                            subtitle="Audit Progress"
-                                            iconSrc="sap-icon://line-chart"
-                                            statusText="Q3 Cycle"/>
-                                    </f:header>
-                                </f:Card>
-                            </layout:Grid>
+                                    <MessageStrip text="AI Scanner: Control Effectiveness score calculated at 98.2% with 99% confidence rating." type="Success" showIcon="true"/>
+                                </VBox>
+                            </Panel>
 
                             <!-- FILTER PANEL (MATCHING AUDIT LOGS DESIGN FOR OVERALL DASHBOARD HISTORY) -->
                             <Panel headerText="Overall System Activity Filters" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
@@ -447,40 +416,6 @@
                                 </Table>
                             </Panel>
 
-                            <!-- AI INSIGHTS -->
-                            <Panel headerText="AI Audit Analytics &amp; Risk Insights" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
-                                <VBox class="sapUiSmallMargin">
-                                    <HBox width="100%" justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
-                                        <!-- Visual SVG Pie Chart -->
-                                        <VBox alignItems="Center" justifyContent="Center" width="45%">
-                                            <core:HTML content="{auditorModel>/riskPieChartSvgHtml}"/>
-                                        </VBox>
-
-                                        <!-- Risk Breakdown Legend matching Auditor Records Table -->
-                                        <VBox width="52%">
-                                            <Title text="Audit Records Risk Breakdown" level="H5" class="sapUiTinyMarginBottom"/>
-                                            
-                                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                                <core:Icon src="sap-icon://sys-enter" color="#10b981" class="sapUiTinyMarginEnd"/>
-                                                <Text text="Low Risk" class="fontWeightBold"/>
-                                            </HBox>
-                                            
-                                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                                <core:Icon src="sap-icon://warning" color="#f59e0b" class="sapUiTinyMarginEnd"/>
-                                                <Text text="Medium Risk" class="fontWeightBold"/>
-                                            </HBox>
-
-                                            <HBox alignItems="Center" class="sapUiSmallMarginBottom">
-                                                <core:Icon src="sap-icon://alert" color="#ef4444" class="sapUiTinyMarginEnd"/>
-                                                <Text text="High Risk" class="fontWeightBold"/>
-                                            </HBox>
-                                        </VBox>
-                                    </HBox>
-
-                                    <MessageStrip text="AI Scanner: Control Effectiveness score calculated at 98.2% with 99% confidence rating." type="Success" showIcon="true"/>
-                                </VBox>
-                            </Panel>
-
                         </VBox>
 
                         <!-- SLIDE 2: AUDIT ANALYSIS (DETAILED REVIEW VIEW FOR SELECTED AUDIT RECORD) -->
@@ -527,10 +462,7 @@
                                         <Text text="{auditorModel>/selectedAudit/timestamp}" class="sapUiTinyMarginBottom"/>
 
                                         <Label text="Execution Result" design="Bold"/>
-                                        <ObjectStatus text="{auditorModel>/selectedAudit/result}" state="{auditorModel>/selectedAudit/resultState}" class="sapUiTinyMarginBottom"/>
-
-                                        <Label text="Risk Rating Score" design="Bold"/>
-                                        <ProgressIndicator percentValue="{= ${auditorModel>/selectedAudit/resultState} === 'Success' ? 98 : (${auditorModel>/selectedAudit/resultState} === 'Warning' ? 88 : 65) }" displayValue="{= ${auditorModel>/selectedAudit/resultState} === 'Success' ? '98% Compliant' : (${auditorModel>/selectedAudit/resultState} === 'Warning' ? '88% Compliant' : '65% Non-Compliant') }" state="{auditorModel>/selectedAudit/resultState}"/>
+                                        <ObjectStatus text="{auditorModel>/selectedAudit/result}" state="{auditorModel>/selectedAudit/resultState}"/>
                                     </VBox>
                                 </layout:Grid>
                             </Panel>
