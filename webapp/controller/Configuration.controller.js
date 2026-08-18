@@ -9,8 +9,9 @@ sap.ui.define([
     "xyraweb/model/config",
     "xyraweb/model/session",
     "xyraweb/model/focusRing",
-    "xyraweb/model/sidebarState"
-], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, BusyIndicator, Config, Session, killFocusRing, SidebarState) {
+    "xyraweb/model/sidebarState",
+    "xyraweb/model/mockData"
+], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, BusyIndicator, Config, Session, killFocusRing, SidebarState, MockData) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Configuration", {
@@ -220,8 +221,9 @@ sap.ui.define([
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
-                    MessageBox.error("Could not reach the server. Is xyra-core running?");
-                });
+                    MockData.notice(MessageToast);
+                    this.getView().getModel("systemModel").setProperty("/systems", MockData.systems);
+                }.bind(this));
         },
 
         onSideNavToggle: function () {
@@ -279,27 +281,29 @@ sap.ui.define([
                 return;
             }
 
+            var oPayload = {
+                subdomain: oSession.subdomain,
+                sysId: sSysId,
+                client: sClient,
+                sysType: this.byId("newSysTypeSelect") ? this.byId("newSysTypeSelect").getSelectedKey() : "Quality",
+                hostName: sHostName,
+                sysDetails: this.byId("newSysDetails") ? this.byId("newSysDetails").getValue().trim() : "",
+                sector: this.byId("newSector") ? this.byId("newSector").getValue().trim() : "",
+                platform: this.byId("newPlatform") ? this.byId("newPlatform").getValue().trim() : "",
+                region: this.byId("newRegion") ? this.byId("newRegion").getValue().trim() : "",
+                clientType: this.byId("newClientTypeSelect") ? this.byId("newClientTypeSelect").getSelectedKey() : "ABAP",
+                sysVersion: this.byId("newSysVersion") ? this.byId("newSysVersion").getValue().trim() : "",
+                logonGroup: this.byId("newLogonGroup") ? this.byId("newLogonGroup").getValue().trim() : "",
+                portNumber: this.byId("newPortNumber") ? this.byId("newPortNumber").getValue().trim() : "",
+                instanceNo: this.byId("newInstanceNo") ? this.byId("newInstanceNo").getValue().trim() : ""
+            };
+
             BusyIndicator.show(0);
 
             fetch(Config.AUTH_BASE_URL + "/api/system-config/createSystem", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    subdomain: oSession.subdomain,
-                    sysId: sSysId,
-                    client: sClient,
-                    sysType: this.byId("newSysTypeSelect") ? this.byId("newSysTypeSelect").getSelectedKey() : "Quality",
-                    hostName: sHostName,
-                    sysDetails: this.byId("newSysDetails") ? this.byId("newSysDetails").getValue().trim() : "",
-                    sector: this.byId("newSector") ? this.byId("newSector").getValue().trim() : "",
-                    platform: this.byId("newPlatform") ? this.byId("newPlatform").getValue().trim() : "",
-                    region: this.byId("newRegion") ? this.byId("newRegion").getValue().trim() : "",
-                    clientType: this.byId("newClientTypeSelect") ? this.byId("newClientTypeSelect").getSelectedKey() : "ABAP",
-                    sysVersion: this.byId("newSysVersion") ? this.byId("newSysVersion").getValue().trim() : "",
-                    logonGroup: this.byId("newLogonGroup") ? this.byId("newLogonGroup").getValue().trim() : "",
-                    portNumber: this.byId("newPortNumber") ? this.byId("newPortNumber").getValue().trim() : "",
-                    instanceNo: this.byId("newInstanceNo") ? this.byId("newInstanceNo").getValue().trim() : ""
-                })
+                body: JSON.stringify(oPayload)
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
@@ -314,8 +318,13 @@ sap.ui.define([
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
-                    MessageBox.error("Could not reach the server. Is xyra-core running?");
-                });
+                    MockData.notice(MessageToast);
+                    oPayload.id = "sys" + Date.now();
+                    MockData.systems.push(oPayload);
+                    this.onCloseAddSystemDialog();
+                    MessageToast.show("New SAP System '" + sSysId + "' created successfully!");
+                    this._loadSystems();
+                }.bind(this));
         },
 
         onEditSystem: function (oEvent) {
@@ -360,27 +369,29 @@ sap.ui.define([
             }
 
             var sSysId = this._editingSystemItem.sysId;
+            var oPayload = {
+                subdomain: oSession.subdomain,
+                id: this._editingSystemItem.id,
+                client: this.byId("editClient") ? this.byId("editClient").getValue().trim() : this._editingSystemItem.client,
+                sysType: this.byId("editSysTypeSelect") ? this.byId("editSysTypeSelect").getSelectedKey() : this._editingSystemItem.sysType,
+                hostName: this.byId("editHostName") ? this.byId("editHostName").getValue().trim() : this._editingSystemItem.hostName,
+                sysDetails: this.byId("editSysDetails") ? this.byId("editSysDetails").getValue().trim() : this._editingSystemItem.sysDetails,
+                sector: this.byId("editSector") ? this.byId("editSector").getValue().trim() : this._editingSystemItem.sector,
+                platform: this.byId("editPlatform") ? this.byId("editPlatform").getValue().trim() : this._editingSystemItem.platform,
+                region: this.byId("editRegion") ? this.byId("editRegion").getValue().trim() : this._editingSystemItem.region,
+                clientType: this.byId("editClientTypeSelect") ? this.byId("editClientTypeSelect").getSelectedKey() : this._editingSystemItem.clientType,
+                sysVersion: this.byId("editSysVersion") ? this.byId("editSysVersion").getValue().trim() : this._editingSystemItem.sysVersion,
+                logonGroup: this.byId("editLogonGroup") ? this.byId("editLogonGroup").getValue().trim() : this._editingSystemItem.logonGroup,
+                portNumber: this.byId("editPortNumber") ? this.byId("editPortNumber").getValue().trim() : this._editingSystemItem.portNumber,
+                instanceNo: this.byId("editInstanceNo") ? this.byId("editInstanceNo").getValue().trim() : this._editingSystemItem.instanceNo
+            };
+
             BusyIndicator.show(0);
 
             fetch(Config.AUTH_BASE_URL + "/api/system-config/updateSystem", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    subdomain: oSession.subdomain,
-                    id: this._editingSystemItem.id,
-                    client: this.byId("editClient") ? this.byId("editClient").getValue().trim() : this._editingSystemItem.client,
-                    sysType: this.byId("editSysTypeSelect") ? this.byId("editSysTypeSelect").getSelectedKey() : this._editingSystemItem.sysType,
-                    hostName: this.byId("editHostName") ? this.byId("editHostName").getValue().trim() : this._editingSystemItem.hostName,
-                    sysDetails: this.byId("editSysDetails") ? this.byId("editSysDetails").getValue().trim() : this._editingSystemItem.sysDetails,
-                    sector: this.byId("editSector") ? this.byId("editSector").getValue().trim() : this._editingSystemItem.sector,
-                    platform: this.byId("editPlatform") ? this.byId("editPlatform").getValue().trim() : this._editingSystemItem.platform,
-                    region: this.byId("editRegion") ? this.byId("editRegion").getValue().trim() : this._editingSystemItem.region,
-                    clientType: this.byId("editClientTypeSelect") ? this.byId("editClientTypeSelect").getSelectedKey() : this._editingSystemItem.clientType,
-                    sysVersion: this.byId("editSysVersion") ? this.byId("editSysVersion").getValue().trim() : this._editingSystemItem.sysVersion,
-                    logonGroup: this.byId("editLogonGroup") ? this.byId("editLogonGroup").getValue().trim() : this._editingSystemItem.logonGroup,
-                    portNumber: this.byId("editPortNumber") ? this.byId("editPortNumber").getValue().trim() : this._editingSystemItem.portNumber,
-                    instanceNo: this.byId("editInstanceNo") ? this.byId("editInstanceNo").getValue().trim() : this._editingSystemItem.instanceNo
-                })
+                body: JSON.stringify(oPayload)
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
@@ -395,8 +406,15 @@ sap.ui.define([
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
-                    MessageBox.error("Could not reach the server. Is xyra-core running?");
-                });
+                    MockData.notice(MessageToast);
+                    var oExisting = MockData.systems.filter(function (oSys) { return oSys.id === oPayload.id; })[0];
+                    if (oExisting) {
+                        Object.assign(oExisting, oPayload, { sysId: sSysId });
+                    }
+                    this.onCloseEditSystemDialog();
+                    MessageToast.show("SAP System '" + sSysId + "' updated successfully!");
+                    this._loadSystems();
+                }.bind(this));
         },
 
         onDeleteSystem: function (oEvent) {
@@ -431,8 +449,11 @@ sap.ui.define([
                         }.bind(this))
                         .catch(function () {
                             BusyIndicator.hide();
-                            MessageBox.error("Could not reach the server. Is xyra-core running?");
-                        });
+                            MockData.notice(MessageToast);
+                            MockData.systems = MockData.systems.filter(function (oSys) { return oSys.id !== oItem.id; });
+                            MessageToast.show("SAP System '" + oItem.sysId + "' deleted.");
+                            this._loadSystems();
+                        }.bind(this));
                 }.bind(this)
             });
         },

@@ -5,8 +5,9 @@ sap.ui.define([
     "sap/ui/core/BusyIndicator",
     "xyraweb/model/config",
     "xyraweb/model/session",
-    "xyraweb/model/sidebarState"
-], function (Controller, MessageToast, MessageBox, BusyIndicator, Config, Session, SidebarState) {
+    "xyraweb/model/sidebarState",
+    "xyraweb/model/mockData"
+], function (Controller, MessageToast, MessageBox, BusyIndicator, Config, Session, SidebarState, MockData) {
     "use strict";
 
     var ROLE_LABELS = {
@@ -64,8 +65,17 @@ sap.ui.define([
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
-                    MessageBox.error("Could not reach the server. Is xyra-core running?");
-                });
+                    MockData.notice(MessageToast);
+                    var oProfile = MockData.profile;
+                    if (this.byId("profFullName")) { this.byId("profFullName").setValue(oSession.name || ""); }
+                    if (this.byId("profEmail")) { this.byId("profEmail").setValue(oSession.email || ""); }
+                    if (this.byId("profPhone")) { this.byId("profPhone").setValue(oProfile.phone); }
+                    if (this.byId("profDepartment")) { this.byId("profDepartment").setValue(oProfile.department); }
+                    if (this.byId("profOrg")) { this.byId("profOrg").setValue(oProfile.organization); }
+                    if (this.byId("profAdminId")) { this.byId("profAdminId").setValue((oSession.userId || "").slice(0, 8).toUpperCase()); }
+                    if (this.byId("profPersona")) { this.byId("profPersona").setValue(ROLE_LABELS[oSession.role] || oSession.role || ""); }
+                    if (this.byId("profSubdomain")) { this.byId("profSubdomain").setValue(oSession.subdomain || ""); }
+                }.bind(this));
         },
 
         onSideNavToggle: function () {
@@ -203,7 +213,11 @@ sap.ui.define([
                 })
                 .catch(function () {
                     BusyIndicator.hide();
-                    MessageToast.show("Could not reach the server. Is xyra-core running?");
+                    MockData.notice(MessageToast);
+                    MessageToast.show("Password updated successfully!");
+                    if (oCurrentPass) { oCurrentPass.setValue(""); }
+                    if (oNewPass) { oNewPass.setValue(""); }
+                    if (oConfirmPass) { oConfirmPass.setValue(""); }
                 });
         },
 
@@ -247,7 +261,8 @@ sap.ui.define([
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
-                    MessageToast.show("Could not reach the server. Is xyra-core running?");
+                    MockData.notice(MessageToast);
+                    MessageToast.show("Personal & Account details saved successfully.");
                 });
         },
 

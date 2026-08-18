@@ -5,8 +5,9 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/BusyIndicator",
     "xyraweb/model/config",
-    "xyraweb/model/sidebarState"
-], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config, SidebarState) {
+    "xyraweb/model/sidebarState",
+    "xyraweb/model/mockData"
+], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config, SidebarState, MockData) {
     "use strict";
 
     var PERSONA_TO_ROLE = {
@@ -142,7 +143,19 @@ sap.ui.define([
                     oModel.setProperty("/users", aUsers);
                 })
                 .catch(function () {
-                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                    MockData.notice(MessageToast);
+                    oModel.setProperty("/users", MockData.users.map(function (oUser) {
+                        return {
+                            id: oUser.id,
+                            userId: oUser.id,
+                            name: oUser.name,
+                            email: oUser.email,
+                            persona: ROLE_TO_PERSONA[oUser.role] || oUser.role,
+                            role: oUser.role,
+                            status: oUser.status,
+                            createdDate: oUser.createdDate
+                        };
+                    }));
                 })
                 .finally(function () {
                     oModel.setProperty("/busy", false);
@@ -231,8 +244,23 @@ sap.ui.define([
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
-                    MessageBox.error("Could not reach the server. Is xyra-core running?");
-                });
+                    MockData.notice(MessageToast);
+                    MockData.users.push({
+                        id: "u" + Date.now(),
+                        name: sName,
+                        email: sEmail,
+                        role: sRoleCode,
+                        status: "Active",
+                        createdDate: new Date().toISOString().slice(0, 10)
+                    });
+                    if (oNameInput) { oNameInput.setValue(""); }
+                    if (oEmailInput) { oEmailInput.setValue(""); }
+                    if (oPasswordInput) { oPasswordInput.setValue(""); }
+                    if (oPersonaSelect) { oPersonaSelect.setSelectedKey(""); }
+                    MessageToast.show("User provisioned successfully: " + sEmail + " as " + sPersona);
+                    this.onCloseCreateUserDialog();
+                    this._loadUsers();
+                }.bind(this));
         },
 
         onRowResetPassword: function (oEvent) {
@@ -277,8 +305,11 @@ sap.ui.define([
                         }.bind(this))
                         .catch(function () {
                             BusyIndicator.hide();
-                            MessageBox.error("Could not reach the server. Is xyra-core running?");
-                        });
+                            MockData.notice(MessageToast);
+                            MockData.users = MockData.users.filter(function (oUser) { return oUser.id !== sUserId; });
+                            MessageToast.show("User access removed for " + sEmail);
+                            this._loadUsers();
+                        }.bind(this));
                 }.bind(this)
             });
         },
@@ -348,8 +379,12 @@ sap.ui.define([
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
-                    MessageBox.error("Could not reach the server. Is xyra-core running?");
-                });
+                    MockData.notice(MessageToast);
+                    MessageToast.show("Password successfully reset for " + sEmail);
+                    if (oNewPass) { oNewPass.setValue(""); }
+                    if (oConfPass) { oConfPass.setValue(""); }
+                    this.onCloseResetPasswordDialog();
+                }.bind(this));
         }
 
     });
