@@ -347,7 +347,30 @@ sap.ui.define([
 
         onNavAutomationMonitoring: function () {
             this.getOwnerComponent().getRouter().navTo("AutomationMonitoring");
-        }
+        },
+
+        onSideNavItemSelect: function (oEvent) {
+            var oItem = oEvent.getParameter("item");
+            if (oItem) {
+                var sKey = oItem.getKey();
+                if (sKey && this[sKey]) {
+                    this[sKey]();
+                } else if (sKey) {
+                    this.getOwnerComponent().getRouter().navTo(sKey);
+                }
+            }
+        },
+
+        onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
+        onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
+        onAIInsights: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
+        onSOXCompliance: function () { this.getOwnerComponent().getRouter().navTo("SOXCompliance"); },
+        onReports: function () { this.getOwnerComponent().getRouter().navTo("Reports"); },
+        onAuditLogs: function () { this.getOwnerComponent().getRouter().navTo("AuditLogs"); },
+        onConfiguration: function () { this.getOwnerComponent().getRouter().navTo("Configuration"); },
+        onAccessManagement: function () { this.getOwnerComponent().getRouter().navTo("AccessManagement"); },
+        onOrganization: function () { this.getOwnerComponent().getRouter().navTo("Organization"); },
+        onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); }
 
     });
 });

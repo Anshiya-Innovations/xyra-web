@@ -126,7 +126,7 @@ sap.ui.define([
             // Initialize Rule Builder Model
             var oRuleData = {
                 createRules: [
-                    { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "All", parameter: "", operator: "", expectedValue: "" }
+                    { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "All", parameterType: "SET/GET Parameter", parameter: "", operator: "", expectedValue: "" }
                 ],
                 editRules: []
             };
@@ -139,6 +139,15 @@ sap.ui.define([
             if (iNum === 1) { return "Rule 1"; }
             if (iNum === 2) { return "Then another rule: Rule 2"; }
             return "Then: Rule " + iNum;
+        },
+
+        onParameterTypeChange: function (oEvent) {
+            var oContext = oEvent.getSource().getBindingContext("ruleModel");
+            if (oContext) {
+                var oRuleModel = this.getView().getModel("ruleModel");
+                oRuleModel.setProperty(oContext.getPath() + "/parameter", "");
+                oRuleModel.setProperty(oContext.getPath() + "/customParameter", "");
+            }
         },
 
         _validateRules: function (aRules) {
@@ -203,6 +212,7 @@ sap.ui.define([
                 stepLabel: sLabel,
                 sapObject: "SAP*",
                 client: "000",
+                parameterType: "SET/GET Parameter",
                 parameter: "",
                 operator: "",
                 expectedValue: ""
@@ -235,6 +245,7 @@ sap.ui.define([
                 stepLabel: sLabel,
                 sapObject: "SAP*",
                 client: "000",
+                parameterType: "SET/GET Parameter",
                 parameter: "",
                 operator: "",
                 expectedValue: ""

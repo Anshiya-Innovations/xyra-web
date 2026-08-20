@@ -26,6 +26,7 @@
                     <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
 
                     <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+                    <tnt:NavigationListItem text="Organization" icon="sap-icon://building" key="Organization" select="onOrganization"/>
                     <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics">
                         <tnt:tag><ObjectStatus text="3 Risks" state="Indication18" inverted="true"/></tnt:tag>
                     </tnt:NavigationListItem>

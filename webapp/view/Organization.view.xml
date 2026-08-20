@@ -1,0 +1,262 @@
+<mvc:View
+    controllerName="xyraweb.controller.Organization"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="orgToolPage" sideExpanded="true">
+
+        <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="Organization" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement"/>
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights" select="onAIInsights">
+                        <tnt:tag>
+                            <ObjectStatus text="New" state="Indication15" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag>
+                            <ObjectStatus text="98.4%" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+                    <tnt:NavigationListItem text="Organization" icon="sap-icon://building" key="Organization" select="onOrganization"/>
+
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
+                        <tnt:tag>
+                            <ObjectStatus text="3 Risks" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="orgManagementPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <dependents>
+                    <!-- CREATE ORGANIZATION DIALOG -->
+                    <Dialog
+                        id="addOrgDialog"
+                        title="Create Organization"
+                        contentWidth="620px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <MessageStrip
+                                    text="Register a new enterprise customer or company unit. Detailed SAP configurations and policies can be assigned inside Organization Details."
+                                    type="Information"
+                                    showIcon="true"
+                                    class="sapUiSmallMarginBottom"/>
+
+                                <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiNoMargin">
+                                    <VBox>
+                                        <VBox class="xyraFormField">
+                                            <Label text="Organization ID" required="true" class="xyraFormLabel"/>
+                                            <Input id="addOrgIdInput" placeholder="e.g. ORG-TATA-01, ORG-ACCN-02"/>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Company Name" required="true" class="xyraFormLabel"/>
+                                            <Input id="addCompanyNameInput" placeholder="e.g. Tata Sons &amp; Group"/>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Industry" required="true" class="xyraFormLabel"/>
+                                            <Select id="addIndustrySelect" selectedKey="Conglomerate &amp; Technology" width="100%">
+                                                <core:Item key="Conglomerate &amp; Technology" text="Conglomerate &amp; Technology"/>
+                                                <core:Item key="IT Consulting &amp; Services" text="IT Consulting &amp; Services"/>
+                                                <core:Item key="Enterprise Software" text="Enterprise Software"/>
+                                                <core:Item key="Manufacturing &amp; Automotive" text="Manufacturing &amp; Automotive"/>
+                                                <core:Item key="Banking &amp; Financial Services" text="Banking &amp; Financial Services"/>
+                                                <core:Item key="Energy &amp; Retail" text="Energy &amp; Retail"/>
+                                                <core:Item key="Healthcare &amp; Pharmaceuticals" text="Healthcare &amp; Pharmaceuticals"/>
+                                                <core:Item key="Custom" text="Custom"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Region" required="true" class="xyraFormLabel"/>
+                                            <Select id="addRegionSelect" selectedKey="Asia Pacific" width="100%">
+                                                <core:Item key="Asia Pacific" text="Asia Pacific (APAC)"/>
+                                                <core:Item key="North America" text="North America (NA)"/>
+                                                <core:Item key="Europe" text="Europe (EMEA)"/>
+                                                <core:Item key="Latin America" text="Latin America (LATAM)"/>
+                                                <core:Item key="Middle East &amp; Africa" text="Middle East &amp; Africa (MEA)"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Organization Status" required="true" class="xyraFormLabel"/>
+                                            <Select id="addStatusSelect" selectedKey="Active" width="100%">
+                                                <core:Item key="Active" text="Active"/>
+                                                <core:Item key="Pending Setup" text="Pending Setup"/>
+                                                <core:Item key="Inactive" text="Inactive"/>
+                                            </Select>
+                                        </VBox>
+                                    </VBox>
+
+                                    <VBox>
+                                        <VBox class="xyraFormField">
+                                            <Label text="Country" required="true" class="xyraFormLabel"/>
+                                            <Input id="addCountryInput" placeholder="e.g. India, United States, Germany"/>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Primary Contact" required="true" class="xyraFormLabel"/>
+                                            <Input id="addContactInput" placeholder="e.g. Ratan Sharma (VP GRC)"/>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Email" required="true" class="xyraFormLabel"/>
+                                            <Input id="addEmailInput" type="Email" placeholder="e.g. grc@tata.com"/>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Phone" class="xyraFormLabel"/>
+                                            <Input id="addPhoneInput" placeholder="e.g. +91 22 6665 8282"/>
+                                        </VBox>
+                                    </VBox>
+                                </layout:Grid>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Cancel" press="onCloseAddOrgDialog"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Save" type="Emphasized" icon="sap-icon://save" press="onSubmitAddOrg"/>
+                        </endButton>
+                    </Dialog>
+                </dependents>
+
+                <!-- PAGE HEADER WITH TITLE & SUBTITLE -->
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+                        <Avatar src="sap-icon://building" displaySize="S" type="Icon" backgroundColor="Accent3" class="sapUiTinyMarginEnd"/>
+                        <VBox justifyContent="Center">
+                            <Title text="Organization Management" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Manage organizations, company access and organization-specific configurations." class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+                        <Button text="Add Organization" icon="sap-icon://add" type="Emphasized" press="onOpenAddOrgDialog" class="sapUiSmallMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+
+                        <!-- MAIN ORGANIZATION TABLE & FILTERS -->
+                        <Panel expandable="false" class="sapUiSmallMarginBottom">
+                            <headerToolbar>
+                                <OverflowToolbar height="3.5rem">
+                                    <Title text="Managed Companies &amp; Client Entities" level="H3" class="sapUiSmallMarginBegin"/>
+                                    <ToolbarSpacer/>
+
+                                    <!-- SEARCH ORGANIZATIONS -->
+                                    <SearchField
+                                        id="searchOrgInput"
+                                        width="18rem"
+                                        placeholder="Search Organization / Company ID..."
+                                        liveChange="onSearchOrg"
+                                        search="onSearchOrg"/>
+
+                                    <!-- STATUS FILTER -->
+                                    <Select id="statusFilterSelect" selectedKey="All" change="onFilterOrg" width="11rem" class="sapUiTinyMarginBegin">
+                                        <core:Item key="All" text="All Statuses"/>
+                                        <core:Item key="Active" text="Active"/>
+                                        <core:Item key="Pending Setup" text="Pending Setup"/>
+                                        <core:Item key="Under Audit Review" text="Under Audit Review"/>
+                                        <core:Item key="Inactive" text="Inactive"/>
+                                    </Select>
+
+                                    <!-- REGION FILTER -->
+                                    <Select id="regionFilterSelect" selectedKey="All" change="onFilterOrg" width="11rem" class="sapUiTinyMarginBegin sapUiSmallMarginEnd">
+                                        <core:Item key="All" text="All Regions"/>
+                                        <core:Item key="Asia Pacific" text="Asia Pacific"/>
+                                        <core:Item key="North America" text="North America"/>
+                                        <core:Item key="Europe" text="Europe"/>
+                                        <core:Item key="Latin America" text="Latin America"/>
+                                        <core:Item key="Middle East &amp; Africa" text="Middle East &amp; Africa"/>
+                                    </Select>
+                                </OverflowToolbar>
+                            </headerToolbar>
+
+                            <Table id="orgsTable" items="{orgModel>/organizations}" mode="None" width="100%" class="sapUiNoMargin">
+                                <columns>
+                                    <Column width="14%"><Text text="Organization ID"/></Column>
+                                    <Column width="22%"><Text text="Company Name"/></Column>
+                                    <Column width="16%"><Text text="Industry"/></Column>
+                                    <Column width="12%"><Text text="Region"/></Column>
+                                    <Column width="15%"><Text text="System"/></Column>
+                                    <Column width="10%"><Text text="Status"/></Column>
+                                    <Column width="11%"><Text text="Created Date"/></Column>
+                                    <Column width="10%" hAlign="Center"><Text text="Actions"/></Column>
+                                </columns>
+
+                                <items>
+                                    <ColumnListItem vAlign="Middle">
+                                        <cells>
+                                            <ObjectIdentifier title="{orgModel>orgId}" text="{orgModel>country}"/>
+                                            <VBox>
+                                                <Text text="{orgModel>companyName}" class="fontWeightBold"/>
+                                                <Text text="{orgModel>primaryContact}" class="textMuted sapUiTinyMarginTop"/>
+                                            </VBox>
+                                            <Text text="{orgModel>industry}"/>
+                                            <Text text="{orgModel>region}"/>
+                                            <ObjectStatus text="{orgModel>sapSystems}" state="Information"/>
+                                            <ObjectStatus text="{orgModel>status}" state="{orgModel>statusState}"/>
+                                            <Text text="{orgModel>createdDate}"/>
+                                            <Button
+                                                text="View Details →"
+                                                type="Default"
+                                                press="onViewDetails"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </Panel>
+
+                    </VBox>
+                </content>
+
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations | XYRA Multi-Tenant Governance"/>
+                        <ToolbarSpacer/>
+                        <Text text="Organization Management Module v1.0"/>
+                    </OverflowToolbar>
+                </footer>
+
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>

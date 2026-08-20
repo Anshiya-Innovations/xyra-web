@@ -212,6 +212,7 @@ sap.ui.define([
         onAuditLogs: function () { this.navToRoute("AuditLogs"); },
         onConfiguration: function () { this.navToRoute("Configuration"); },
         onAccessManagement: function () { this.navToRoute("AccessManagement"); },
+        onOrganization: function () { this.navToRoute("Organization"); },
         onRiskAnalytics: function () { this.navToRoute("Admin"); },
         onSystemHealth: function () { this.navToRoute("Admin"); },
         onProfile: function () { this.navToRoute("Profile"); },

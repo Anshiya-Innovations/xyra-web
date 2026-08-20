@@ -253,6 +253,16 @@
           "name": "SystemHealthDetails",
           "pattern": "SystemHealthDetails/:systemId:",
           "target": "SystemHealthDetails"
+        },
+        {
+          "name": "Organization",
+          "pattern": "Organization",
+          "target": "Organization"
+        },
+        {
+          "name": "OrganizationDetails",
+          "pattern": "OrganizationDetails/:orgId:",
+          "target": "OrganizationDetails"
         }
       ],
 
@@ -326,6 +336,12 @@
         },
         "AlertItem": {
           "viewName": "AlertItem"
+        },
+        "Organization": {
+          "viewName": "Organization"
+        },
+        "OrganizationDetails": {
+          "viewName": "OrganizationDetails"
         }
       }
     }

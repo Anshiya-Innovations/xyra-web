@@ -327,6 +327,10 @@ sap.ui.define([
             sap.ui.core.UIComponent.getRouterFor(this).navTo("AccessManagement");
         },
 
+        onOrganization: function () {
+            sap.ui.core.UIComponent.getRouterFor(this).navTo("Organization");
+        },
+
         onRiskAnalytics: function () {
             MessageToast.show("Risk Analytics Module Opening...");
         },

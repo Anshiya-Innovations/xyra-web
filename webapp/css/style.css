@@ -517,30 +517,191 @@ body,
   padding-top: 0 !important;
 }
 
-.sapMDialogFooter,
-.sapMDialogFooter .sapMBar,
-.sapMDialogFooter .sapMIBar {
+.sapMDialogFooter {
   min-width: 100% !important;
   width: 100% !important;
-  height: 3.5rem !important;
-  min-height: 3.5rem !important;
-  padding: 0.5rem 1.25rem !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
   box-sizing: border-box !important;
   background-color: #ffffff !important;
   border-top: 1px solid #e2e8f0 !important;
   border-radius: 0 0 16px 16px !important;
+  overflow: hidden !important;
 }
 
+.sapMDialogFooter .sapMBar,
+.sapMDialogFooter .sapMIBar,
 .sapMDialogFooter .sapMIBar.sapMTBInactive.sapMTB {
-  height: 3.5rem !important;
-  min-height: 3.5rem !important;
+  min-width: 100% !important;
+  width: 100% !important;
+  height: 4rem !important;
+  min-height: 4rem !important;
   padding: 0.5rem 1.25rem !important;
+  margin: 0 !important;
   box-sizing: border-box !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
 }
 
 .sapMDialog {
   border-radius: 16px !important;
   overflow: hidden !important;
+}
+
+/* ===== Global Dialog Popup Form Alignment Standard (App-Wide All Popups) ===== */
+.sapMDialogContent,
+.sapMDialogSection,
+.sapMDialogScrollCont {
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.sapMDialogContent > .sapUiMediumMargin,
+.sapMDialogContent > .sapUiSmallMargin,
+.sapMDialogContent > .sapUiContentPadding,
+.sapMDialogScrollCont > .sapUiMediumMargin,
+.sapMDialogScrollCont > .sapUiSmallMargin,
+.sapMDialogScrollCont > .sapUiContentPadding {
+  margin: 0 !important;
+  padding: 1.25rem 1.5rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Vertical Field Group Containers inside ALL Dialogs */
+.sapMDialogContent .xyraFormField,
+.sapMDialogContent .xyraFieldGroup,
+.sapMDialogContent .sapVBox:has(> .sapMLabel),
+.sapMDialogContent .sapVBox:has(> label) {
+  margin-bottom: 0.85rem !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  box-sizing: border-box !important;
+}
+
+/* Label Alignment inside ALL Dialogs */
+.sapMDialogContent .sapMLabel,
+.sapMDialogContent label,
+.xyraFormLabel,
+.xyraLoginLabel {
+  font-size: 0.825rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.35rem !important;
+  padding: 0 !important;
+  display: block !important;
+  line-height: 1.25 !important;
+  text-align: left !important;
+}
+
+.sapMDialogContent .sapMLabel:first-child,
+.sapMDialogContent label:first-child,
+.xyraFormField > .sapMLabel:first-child {
+  margin-top: 0 !important;
+}
+
+/* Input, Select & Control Sizing & Alignment inside ALL Dialogs */
+.sapMDialogContent .sapMInputBase,
+.sapMDialogContent .sapMSelect,
+.sapMDialogContent .sapMDatePicker,
+.sapMDialogContent .sapMStepInput {
+  width: 100% !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  margin-bottom: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.sapMDialogContent .sapMTextArea {
+  width: 100% !important;
+  margin-bottom: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.sapMDialogContent .sapMInputBaseInner,
+.sapMDialogContent .sapMSelectListItem,
+.sapMDialogContent .sapMSelectSelectElement {
+  height: 42px !important;
+  line-height: 42px !important;
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 0 0.85rem !important;
+  box-sizing: border-box !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+.sapMDialogContent .sapMTextAreaInner {
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 0.65rem 0.85rem !important;
+  box-sizing: border-box !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+.sapMDialogContent .sapMInputBaseInner:focus,
+.sapMDialogContent .sapMSelectListItem:focus,
+.sapMDialogContent .sapMTextAreaInner:focus {
+  border-color: #533bff !important;
+  box-shadow: 0 0 0 2px rgba(83, 59, 255, 0.15) !important;
+}
+
+/* Rule Configuration Table Selects & Column Headers inside Dialogs */
+.sapMDialogContent .sapMListTblCell {
+  padding-left: 0.2rem !important;
+  padding-right: 0.2rem !important;
+}
+
+.sapMDialogContent .sapMTable .sapMSelect,
+.sapMDialogContent .sapMTable .sapMInputBase {
+  width: 100% !important;
+  height: 36px !important;
+  min-height: 36px !important;
+}
+
+.sapMDialogContent .sapMTable .sapMSelectListItem,
+.sapMDialogContent .sapMTable .sapMInputBaseInner,
+.sapMDialogContent .sapMTable .sapMSelectSelectElement {
+  height: 36px !important;
+  line-height: 36px !important;
+  font-size: 0.775rem !important;
+  padding-left: 0.35rem !important;
+  padding-right: 1.25rem !important;
+  text-overflow: clip !important;
+}
+
+.sapMDialogContent .sapMTable .sapMColumnHeader .sapMText {
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+
+/* Responsive Grid Alignment inside ALL Dialogs */
+.sapMDialogContent .sapUiRespGrid {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.sapMDialogContent .sapUiRespGrid > div {
+  padding: 0 0.75rem !important;
+  box-sizing: border-box !important;
+}
+
+.sapMDialogContent .sapUiRespGrid > div:first-child {
+  padding-left: 0 !important;
+}
+
+.sapMDialogContent .sapUiRespGrid > div:last-child {
+  padding-right: 0 !important;
 }
 
 /* ===== Modern Login Page ===== */
@@ -923,39 +1084,46 @@ body,
    no type-specific class of its own) so it doesn't stay theme-default-height
    and clip the taller inner span. */
 
+/* ===== Remove inner board & double-borders for ALL buttons app-wide ===== */
+.sapMBtn {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.sapMBtnInner {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sapMBtnInner::before,
+.sapMBtnInner::after {
+  display: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
 .sapMBtn:has(.sapMBtnEmphasized) {
   height: 46px !important;
   box-sizing: border-box !important;
   overflow: visible !important;
 }
 
-/* Icon-only buttons (Edit/Delete row actions: no text, so ButtonRenderer never
-   emits a .sapMBtnContent span at all) were only getting the line-height trick
-   built for text buttons — icon-font glyphs don't sit centered on that the
-   way text does. Flexbox actually centers the rendered box instead of relying
-   on font metrics; scoped to "no .sapMBtnContent inside" so it can't touch
-   the text buttons' already-working centering. */
+/* Icon-only buttons (Edit/Delete row actions: no text) */
 .sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)) {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
 }
 
-/* The Emphasized/Reject icon rules further down still set line-height: 46px
-   on .sapMBtnIcon (needed for icon+text buttons like Save/Logout, where the
-   icon is a sibling of real text). On an icon-only button that inflates the
-   icon's own internal line box, so it renders low within it — flex is now
-   centering the box, but the glyph itself sits low inside that tall box.
-   Reset it back to normal for the icon-only case specifically. */
 .sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)) .sapMBtnIcon {
   line-height: normal !important;
   vertical-align: baseline !important;
 }
 
-/* Reject-type buttons (e.g. the Delete row action next to an Emphasized Edit
-   one) never got this sizing — theme default padding is smaller, which is
-   why Delete looked noticeably tighter than Edit right beside it. Matching
-   height/padding only, not touching Reject's own red/pink coloring. */
+/* Reject-type buttons */
 .sapMBtn:has(.sapMBtnReject) {
   height: 46px !important;
   box-sizing: border-box !important;
@@ -968,9 +1136,6 @@ body,
   box-sizing: border-box !important;
 }
 
-/* Reject only got height/padding above — text buttons of this type (Logout:
-   icon + text, not icon-only so the flexbox rule above skips it) never got
-   the same content/icon centering Emphasized has. Same two rules, mirrored. */
 .sapMBtnReject .sapMBtnContent {
   line-height: 46px !important;
 }
@@ -1003,35 +1168,21 @@ body,
   display: inline-block !important;
 }
 
-/* Icon is a sibling of .sapMBtnContent, not inside it — the line-height trick
-   above only centers the text. Same fix already proven in this file for
-   .nextStepBtn/.createUserBtn's icon-alignment bug, reused here. */
 .sapMBtnEmphasized .sapMBtnIcon {
   vertical-align: middle !important;
   line-height: 46px !important;
 }
 
-/* ===== Secondary button (Dialog Cancel + any page-level secondary action) =====
-   .sapMDialogEndButton: confirmed via DevTools, the Dialog puts this marker
-   class directly on the outer <button> for its Cancel/end button. It had no
-   type set, so it rendered as plain unstyled text next to Save's gradient.
-   .xyraBtnSecondary: the same look, opt-in via class for buttons outside a
-   dialog (e.g. Configuration's "System History") that want the same pairing
-   without being an actual Dialog end button. */
-.sapMDialogEndButton,
+/* ===== Secondary button & Dialog Cancel button styling ===== */
 .xyraBtnSecondary {
   height: 46px !important;
   border: 1px solid #e2e8f0 !important;
   border-radius: 10px !important;
-  background-color: #ffffff !important;
-  padding: 0 1.25rem !important;
+  background-color: #f8fafc !important;
+  padding: 0 1rem !important;
   box-sizing: border-box !important;
 }
 
-/* Chrome (border/bg) lives on the outer button only — this inner span just
-   needs matching size, or it draws its own concentric border/bg underneath,
-   which is exactly the double-border this was. */
-.sapMDialogEndButton .sapMBtnInner,
 .xyraBtnSecondary .sapMBtnInner {
   height: 46px !important;
   line-height: 46px !important;
@@ -1040,25 +1191,21 @@ body,
   box-sizing: border-box !important;
 }
 
-.sapMDialogEndButton:hover,
 .xyraBtnSecondary:hover {
-  border-color: #533bff !important;
-  background-color: #f8fafc !important;
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
 }
 
-.sapMDialogEndButton .sapMBtnContent,
 .xyraBtnSecondary .sapMBtnContent {
-  color: #0f172a !important;
+  color: #334155 !important;
   font-weight: 600 !important;
   line-height: 46px !important;
 }
 
-/* Same icon-as-sibling issue as .sapMBtnEmphasized — the line-height trick on
-   .sapMBtnContent above doesn't reach it. */
 .xyraBtnSecondary .sapMBtnIcon {
   vertical-align: middle !important;
   line-height: 46px !important;
-  color: #0f172a !important;
+  color: #334155 !important;
 }
 
 /* ===== Admin Dashboard — modern KPI cards + charts =====

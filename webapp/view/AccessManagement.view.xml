@@ -36,6 +36,7 @@
                     <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
                     <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
                     <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+                    <tnt:NavigationListItem text="Organization" icon="sap-icon://building" key="Organization" select="onOrganization"/>
 
                     <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
                         <tnt:tag>
@@ -80,6 +81,17 @@
                                 <VBox width="100%" class="xyraFieldGroup">
                                     <Label text="Password" required="true" class="xyraLoginLabel"/>
                                     <Input id="createPasswordInput" type="Password" placeholder="Enter temporary password"/>
+                                </VBox>
+
+                                <VBox width="100%" class="xyraFieldGroup">
+                                    <Label text="Organization / Company" required="true" class="xyraLoginLabel"/>
+                                    <Select id="createOrgSelect" selectedKey="Tata Sons &amp; Group" width="100%">
+                                        <core:Item key="Tata Sons &amp; Group" text="Tata Sons &amp; Group (ORG-TATA-01)"/>
+                                        <core:Item key="Accenture Global Services" text="Accenture Global Services (ORG-ACCN-02)"/>
+                                        <core:Item key="SAP Enterprise Systems" text="SAP Enterprise Systems (ORG-SAP-03)"/>
+                                        <core:Item key="Infosys Technologies" text="Infosys Technologies (ORG-INFY-04)"/>
+                                        <core:Item key="Reliance Industries" text="Reliance Industries (ORG-RELIANCE-05)"/>
+                                    </Select>
                                 </VBox>
 
                                 <VBox width="100%" class="xyraFieldGroup">
@@ -169,22 +181,24 @@
                             <Table id="usersTable" items="{userModel>/users}" mode="None" width="100%" class="sapUiNoMargin" busy="{userModel>/busy}" busyIndicatorDelay="0">
                                 <columns>
                                     <Column width="14%" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Name"/></Column>
-                                    <Column width="26%"><Text text="Email ID"/></Column>
+                                    <Column width="22%"><Text text="Email ID"/></Column>
+                                    <Column width="16%" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Organization"/></Column>
                                     <Column width="14%" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Persona / Role"/></Column>
                                     <Column width="8%" minScreenWidth="Phone" demandPopin="true" popinDisplay="Inline"><Text text="Status"/></Column>
-                                    <Column width="12%" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"><Text text="Created Date"/></Column>
-                                    <Column width="26%" hAlign="Center"><Text text="Actions"/></Column>
+                                    <Column width="10%" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"><Text text="Created Date"/></Column>
+                                    <Column width="16%" hAlign="Center"><Text text="Actions"/></Column>
                                 </columns>
                                 <items>
                                     <ColumnListItem>
                                         <cells>
                                             <Text text="{userModel>name}"/>
                                             <Text text="{userModel>email}"/>
+                                            <ObjectStatus text="{= ${userModel>organization} || 'Tata Sons &amp; Group' }" state="Indication17"/>
                                             <ObjectStatus text="{userModel>persona}" state="Information"/>
                                             <ObjectStatus text="{userModel>status}" state="Success"/>
                                             <Text text="{userModel>createdDate}"/>
                                             <HBox justifyContent="Center" alignItems="Center">
-                                                <Button icon="sap-icon://reset" text="Reset Password" type="Transparent" press="onRowResetPassword" class="sapUiTinyMarginEnd"/>
+                                                <Button icon="sap-icon://reset" text="Reset" type="Transparent" press="onRowResetPassword" class="sapUiTinyMarginEnd"/>
                                                 <Button icon="sap-icon://delete" text="Remove" type="Reject" press="onRowRemoveUser"/>
                                             </HBox>
                                         </cells>

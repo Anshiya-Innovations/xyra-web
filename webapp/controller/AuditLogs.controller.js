@@ -248,6 +248,7 @@ sap.ui.define([
         onAuditLogs: function () { this.getOwnerComponent().getRouter().navTo("AuditLogs"); },
         onConfiguration: function () { this.getOwnerComponent().getRouter().navTo("Configuration"); },
         onAccessManagement: function () { this.getOwnerComponent().getRouter().navTo("AccessManagement"); },
+        onOrganization: function () { this.getOwnerComponent().getRouter().navTo("Organization"); },
         onRiskAnalytics: function () { MessageToast.show("Navigating to Risk Analytics..."); },
         onSystemHealth: function () { MessageToast.show("Navigating to System Health..."); },
         onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); },

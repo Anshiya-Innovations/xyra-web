@@ -1,0 +1,523 @@
+<mvc:View
+    controllerName="xyraweb.controller.OrganizationDetails"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="orgDetailsToolPage" sideExpanded="true">
+
+        <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="Organization" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement"/>
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights" select="onAIInsights">
+                        <tnt:tag>
+                            <ObjectStatus text="New" state="Indication15" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag>
+                            <ObjectStatus text="98.4%" state="Indication16" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+                    <tnt:NavigationListItem text="Organization" icon="sap-icon://building" key="Organization" select="onOrganization"/>
+
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
+                        <tnt:tag>
+                            <ObjectStatus text="3 Risks" state="Indication18" inverted="true"/>
+                        </tnt:tag>
+                    </tnt:NavigationListItem>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="orgDetailsPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <dependents>
+                    <!-- ADD PARAMETER MODAL -->
+                    <Dialog id="addParamDialog" title="Add Organization Parameter" contentWidth="500px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <VBox class="xyraFormField">
+                                    <Label text="Parameter Type" required="true" class="xyraFormLabel"/>
+                                    <Select id="newParamTypeSelect" selectedKey="SET/GET Parameter" width="100%" change="onParamTypeChange">
+                                        <core:Item key="SET/GET Parameter" text="SET/GET Parameter"/>
+                                        <core:Item key="User Default Value" text="User Default Value"/>
+                                    </Select>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Parameter ID / Name" required="true" class="xyraFormLabel"/>
+                                    <Select id="newParamIdSetGetSelect" visible="true" width="100%">
+                                        <core:Item key="BUK - Company Code" text="BUK - Company Code"/>
+                                        <core:Item key="WRK - Plant" text="WRK - Plant"/>
+                                        <core:Item key="VKO - Sales Organization" text="VKO - Sales Organization"/>
+                                        <core:Item key="VTEG - Distribution Channel" text="VTEG - Distribution Channel"/>
+                                        <core:Item key="SPA - Memory ID" text="SPA - Memory ID"/>
+                                        <core:Item key="KOK - Cost Center" text="KOK - Cost Center"/>
+                                        <core:Item key="EKO - Purchasing Organization" text="EKO - Purchasing Organization"/>
+                                        <core:Item key="Custom" text="Custom"/>
+                                    </Select>
+
+                                    <Select id="newParamIdUserDefSelect" visible="false" width="100%">
+                                        <core:Item key="Decimal Notation" text="Decimal Notation"/>
+                                        <core:Item key="Date Format" text="Date Format"/>
+                                        <core:Item key="Time Zone" text="Time Zone"/>
+                                        <core:Item key="Logon Language" text="Logon Language"/>
+                                        <core:Item key="Spool Output (DEST)" text="Spool Output (DEST)"/>
+                                        <core:Item key="Output Device (PRINTER)" text="Output Device (PRINTER)"/>
+                                        <core:Item key="Custom" text="Custom"/>
+                                    </Select>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Configured Value" required="true" class="xyraFormLabel"/>
+                                    <Input id="newParamValueInput" placeholder="e.g. 1000, DD.MM.YYYY, IST"/>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Status" required="true" class="xyraFormLabel"/>
+                                    <Select id="newParamStatusSelect" selectedKey="Active" width="100%">
+                                        <core:Item key="Active" text="Active"/>
+                                        <core:Item key="Enforced" text="Enforced"/>
+                                        <core:Item key="Pending Verification" text="Pending Verification"/>
+                                    </Select>
+                                </VBox>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Cancel" press="onCloseAddParamDialog"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Add Parameter" type="Emphasized" icon="sap-icon://add" press="onSubmitAddParam"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- ASSIGN POLICY MODAL -->
+                    <Dialog id="assignPolicyDialog" title="Assign Governance Policy" contentWidth="500px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <VBox class="xyraFormField">
+                                    <Label text="Policy Category" required="true" class="xyraFormLabel"/>
+                                    <Select id="policyCategorySelect" selectedKey="Security Policy" width="100%">
+                                        <core:Item key="Security Policy" text="Security Policy"/>
+                                        <core:Item key="Access Policy" text="Access Policy"/>
+                                        <core:Item key="SAP Control Policy" text="SAP Control Policy"/>
+                                        <core:Item key="Compliance Policy" text="Compliance Policy"/>
+                                    </Select>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Policy Name" required="true" class="xyraFormLabel"/>
+                                    <Input id="policyNameInput" placeholder="e.g. Enterprise SAP Password &amp; Lockout Standard"/>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Policy ID Code" required="true" class="xyraFormLabel"/>
+                                    <Input id="policyIdInput" placeholder="e.g. POL-SEC-05, POL-ACC-09"/>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Initial Status" required="true" class="xyraFormLabel"/>
+                                    <Select id="policyStatusSelect" selectedKey="Active" width="100%">
+                                        <core:Item key="Active" text="Active"/>
+                                        <core:Item key="Under Review" text="Under Review"/>
+                                        <core:Item key="Draft" text="Draft"/>
+                                    </Select>
+                                </VBox>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Cancel" press="onCloseAssignPolicyDialog"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Assign Policy" type="Emphasized" icon="sap-icon://accept" press="onSubmitAssignPolicy"/>
+                        </endButton>
+                    </Dialog>
+                    <!-- EDIT SUMMARY MODAL -->
+                    <Dialog id="editSummaryDialog" title="Edit Company Executive Summary" contentWidth="600px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiNoMargin">
+                                    <VBox>
+                                        <VBox class="xyraFormField">
+                                            <Label text="Organization ID" required="true" class="xyraFormLabel"/>
+                                            <Input id="editSummaryOrgIdInput" placeholder="e.g. ORG-TATA-01"/>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Company Name" required="true" class="xyraFormLabel"/>
+                                            <Input id="editSummaryCompanyNameInput" placeholder="e.g. Tata Sons &amp; Group"/>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Industry" required="true" class="xyraFormLabel"/>
+                                            <Select id="editSummaryIndustrySelect" selectedKey="Conglomerate &amp; Technology" width="100%">
+                                                <core:Item key="Conglomerate &amp; Technology" text="Conglomerate &amp; Technology"/>
+                                                <core:Item key="IT Consulting &amp; Services" text="IT Consulting &amp; Services"/>
+                                                <core:Item key="Enterprise Software" text="Enterprise Software"/>
+                                                <core:Item key="Manufacturing &amp; Automotive" text="Manufacturing &amp; Automotive"/>
+                                                <core:Item key="Banking &amp; Financial Services" text="Banking &amp; Financial Services"/>
+                                                <core:Item key="Energy &amp; Retail" text="Energy &amp; Retail"/>
+                                                <core:Item key="Healthcare &amp; Pharmaceuticals" text="Healthcare &amp; Pharmaceuticals"/>
+                                                <core:Item key="Custom" text="Custom"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Region" required="true" class="xyraFormLabel"/>
+                                            <Select id="editSummaryRegionSelect" selectedKey="Asia Pacific" width="100%">
+                                                <core:Item key="Asia Pacific" text="Asia Pacific"/>
+                                                <core:Item key="North America" text="North America"/>
+                                                <core:Item key="Europe" text="Europe"/>
+                                                <core:Item key="Latin America" text="Latin America"/>
+                                                <core:Item key="Middle East &amp; Africa" text="Middle East &amp; Africa"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Status" required="true" class="xyraFormLabel"/>
+                                            <Select id="editSummaryStatusSelect" selectedKey="Active" width="100%">
+                                                <core:Item key="Active" text="Active"/>
+                                                <core:Item key="Pending Setup" text="Pending Setup"/>
+                                                <core:Item key="Under Audit Review" text="Under Audit Review"/>
+                                                <core:Item key="Inactive" text="Inactive"/>
+                                            </Select>
+                                        </VBox>
+                                    </VBox>
+
+                                    <VBox>
+                                        <VBox class="xyraFormField">
+                                            <Label text="Country" required="true" class="xyraFormLabel"/>
+                                            <Input id="editSummaryCountryInput" placeholder="e.g. India"/>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Primary Contact" required="true" class="xyraFormLabel"/>
+                                            <Input id="editSummaryContactInput" placeholder="e.g. Ratan Sharma (VP GRC)"/>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Email Address" required="true" class="xyraFormLabel"/>
+                                            <Input id="editSummaryEmailInput" type="Email" placeholder="e.g. grc@tata.com"/>
+                                        </VBox>
+
+                                        <VBox class="xyraFormField">
+                                            <Label text="Phone Number" class="xyraFormLabel"/>
+                                            <Input id="editSummaryPhoneInput" placeholder="e.g. +91 22 6665 8282"/>
+                                        </VBox>
+                                    </VBox>
+                                </layout:Grid>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Cancel" press="onCloseEditSummaryDialog"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Save Changes" type="Emphasized" icon="sap-icon://save" press="onSubmitEditSummary"/>
+                        </endButton>
+                    </Dialog>
+                </dependents>
+
+                <!-- PAGE HEADER WITH BACK BUTTON & SUMMARY -->
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            text="Back to Organizations"
+                            icon="sap-icon://nav-back"
+                            type="Transparent"
+                            press="onNavBack"
+                            class="sapUiTinyMarginBegin"/>
+                        <ToolbarSeparator/>
+                        <Avatar src="sap-icon://building" displaySize="S" type="Icon" backgroundColor="Accent3" class="sapUiTinyMarginEnd"/>
+                        <VBox justifyContent="Center">
+                            <Title text="{orgDetailsModel>/currentOrg/companyName} ({orgDetailsModel>/currentOrg/orgId})" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Enterprise Governance &amp; Configuration Sub-Page" class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+                        <ObjectStatus text="{orgDetailsModel>/currentOrg/status}" state="{orgDetailsModel>/currentOrg/statusState}" icon="sap-icon://shield" class="sapUiSmallMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+
+                        <!-- COMPANY SUMMARY HEADER CARD -->
+                        <Panel expandable="false" class="sapUiSmallMarginBottom">
+                            <headerToolbar>
+                                <OverflowToolbar height="3rem">
+                                    <Title text="Company Executive Summary" level="H3" class="sapUiSmallMarginBegin"/>
+                                    <ToolbarSpacer/>
+                                    <Button text="Edit Summary" icon="sap-icon://edit" type="Transparent" press="onEditSummaryPress"/>
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <content>
+                                <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMargin">
+                                    <VBox>
+                                        <Label text="Company Name" design="Bold" class="textMuted"/>
+                                        <Text text="{orgDetailsModel>/currentOrg/companyName}" class="fontWeightBold fontLarge sapUiTinyMarginTop"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Organization ID" design="Bold" class="textMuted"/>
+                                        <Text text="{orgDetailsModel>/currentOrg/orgId}" class="fontWeightBold fontLarge sapUiTinyMarginTop"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Industry" design="Bold" class="textMuted"/>
+                                        <Text text="{orgDetailsModel>/currentOrg/industry}" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Region &amp; Country" design="Bold" class="textMuted"/>
+                                        <Text text="{orgDetailsModel>/currentOrg/region} ({orgDetailsModel>/currentOrg/country})" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                    <VBox class="sapUiSmallMarginTop">
+                                        <Label text="Primary Contact" design="Bold" class="textMuted"/>
+                                        <Text text="{orgDetailsModel>/currentOrg/primaryContact}" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                    <VBox class="sapUiSmallMarginTop">
+                                        <Label text="Email Address" design="Bold" class="textMuted"/>
+                                        <Text text="{orgDetailsModel>/currentOrg/email}" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                    <VBox class="sapUiSmallMarginTop">
+                                        <Label text="Phone Number" design="Bold" class="textMuted"/>
+                                        <Text text="{orgDetailsModel>/currentOrg/phone}" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                    <VBox class="sapUiSmallMarginTop">
+                                        <Label text="Status" design="Bold" class="textMuted"/>
+                                        <ObjectStatus text="{orgDetailsModel>/currentOrg/status}" state="{orgDetailsModel>/currentOrg/statusState}" class="sapUiTinyMarginTop"/>
+                                    </VBox>
+                                </layout:Grid>
+                            </content>
+                        </Panel>
+
+                        <!-- TABS FOR COMPANY DETAILS, CONFIGURATIONS, PARAMETERS, POLICIES -->
+                        <IconTabBar id="orgDetailsTabBar" class="sapUiNoMargin">
+                            <items>
+
+                                <!-- TAB 1: COMPANY DETAILS -->
+                                <IconTabFilter icon="sap-icon://building" text="Company Details" key="details">
+                                    <VBox width="100%" class="sapUiSmallMarginTop">
+                                        <layout:Grid defaultSpan="XL6 L6 M12 S12">
+                                            <!-- COMPANY OVERVIEW PANEL -->
+                                            <Panel headerText="Enterprise Profile &amp; Governance Structure" expandable="false">
+                                                <VBox class="sapUiSmallMargin">
+                                                    <Label text="Legal Entity Name" design="Bold"/>
+                                                    <Text text="{orgDetailsModel>/currentOrg/companyName} Corporate Operations" class="sapUiSmallMarginBottom"/>
+
+                                                    <Label text="Global HQ Address" design="Bold"/>
+                                                    <Text text="Bombay House, 24 Homi Mody Street, Fort, Mumbai 400001, India" class="sapUiSmallMarginBottom"/>
+
+                                                    <Label text="Enterprise Business Units" design="Bold"/>
+                                                    <Text text="Technology, Energy, Automotive, Steel, Retail &amp; Consumer Services" class="sapUiSmallMarginBottom"/>
+
+                                                    <Label text="Multi-Tenant Isolation Key" design="Bold"/>
+                                                    <Text text="TENANT_KEY_09182_TATA_SEC" class="textMuted"/>
+                                                </VBox>
+                                            </Panel>
+
+                                            <!-- SYSTEM & ACCESS SUMMARY PANEL -->
+                                            <Panel headerText="SAP System Assignments &amp; User Seats" expandable="false">
+                                                <VBox class="sapUiSmallMargin">
+                                                    <Label text="Connected SAP Environments" design="Bold"/>
+                                                    <Text text="{orgDetailsModel>/currentOrg/sapSystems}" class="sapUiSmallMarginBottom"/>
+
+                                                    <Label text="Provisioned User Seats" design="Bold"/>
+                                                    <Text text="450 Active Users (500 License Limit)" class="sapUiSmallMarginBottom"/>
+
+                                                    <Label text="Primary Compliance Officer" design="Bold"/>
+                                                    <Text text="{orgDetailsModel>/currentOrg/primaryContact} ({orgDetailsModel>/currentOrg/email})" class="sapUiSmallMarginBottom"/>
+
+                                                    <Label text="Last Audit Validation Date" design="Bold"/>
+                                                    <Text text="2024-05-15 (Passed 100% Integrity Check)"/>
+                                                </VBox>
+                                            </Panel>
+                                        </layout:Grid>
+                                    </VBox>
+                                </IconTabFilter>
+
+                                <!-- TAB 2: CONFIGURATIONS -->
+                                <IconTabFilter icon="sap-icon://action-settings" text="Configurations" key="config">
+                                    <VBox width="100%" class="sapUiSmallMarginTop">
+                                        <layout:Grid defaultSpan="XL6 L6 M12 S12">
+
+                                            <!-- SAP LANDSCAPE PANEL -->
+                                            <Panel headerText="SAP Landscape &amp; System Environments" expandable="false">
+                                                <VBox class="sapUiSmallMargin">
+                                                    <Title text="Target SAP Systems" level="H4" class="sapUiTinyMarginBottom"/>
+                                                    <MessageStrip text="Configured environments scanned by XYRA Automated Rule Engine." type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
+
+                                                    <VBox class="sapUiSmallMarginBottom">
+                                                        <Label text="DEV Systems (Development)" design="Bold"/>
+                                                        <Text text="DEV-100 (Core S/4HANA Development) | DEV-200 (Customizing &amp; Workbench)"/>
+                                                    </VBox>
+
+                                                    <VBox class="sapUiSmallMarginBottom">
+                                                        <Label text="QAS Systems (Quality Assurance)" design="Bold"/>
+                                                        <Text text="QAS-300 (Integration &amp; Staging Test Environment)"/>
+                                                    </VBox>
+
+                                                    <VBox class="sapUiSmallMarginBottom">
+                                                        <Label text="PRD Systems (Production)" design="Bold"/>
+                                                        <Text text="PRD-500 (Production S/4HANA Enterprise Suite)"/>
+                                                    </VBox>
+
+                                                    <VBox>
+                                                        <Label text="Supported SAP Platforms" design="Bold"/>
+                                                        <Text text="SAP S/4HANA 2023 | SAP ECC 6.0 EHP8 | SAP BW/4HANA | SAP BTP"/>
+                                                    </VBox>
+                                                </VBox>
+                                            </Panel>
+
+                                            <!-- EXECUTION SETTINGS PANEL -->
+                                            <Panel headerText="Execution Settings &amp; Rule Automation" expandable="false">
+                                                <VBox class="sapUiSmallMargin">
+                                                    <Title text="Automation &amp; Monitoring Rules" level="H4" class="sapUiTinyMarginBottom"/>
+
+                                                    <VBox class="sapUiSmallMarginBottom">
+                                                        <Label text="Control Execution Frequency" design="Bold"/>
+                                                        <Text text="Daily Run (Every 24 Hours at 00:00 UTC) / Realtime Scanner Enabled"/>
+                                                    </VBox>
+
+                                                    <VBox class="sapUiSmallMarginBottom">
+                                                        <Label text="Automated Report Generation" design="Bold"/>
+                                                        <Text text="Weekly Automated PDF &amp; Excel Reports sent to grc@tata.com"/>
+                                                    </VBox>
+
+                                                    <VBox class="sapUiSmallMarginBottom">
+                                                        <Label text="Real-Time Deviation Detection" design="Bold"/>
+                                                        <ObjectStatus text="Active (High &amp; Critical Threshold Alerts)" state="Success"/>
+                                                    </VBox>
+
+                                                    <VBox>
+                                                        <Label text="Reviewer Escalation SLA Window" design="Bold"/>
+                                                        <Text text="48 Hours (Level 1 Reviewer) / 24 Hours (Level 2 Technical Manager)"/>
+                                                    </VBox>
+                                                </VBox>
+                                            </Panel>
+
+                                        </layout:Grid>
+                                    </VBox>
+                                </IconTabFilter>
+
+                                <!-- TAB 3: PARAMETERS -->
+                                <IconTabFilter icon="sap-icon://parameter" text="Parameters" key="parameters">
+                                    <VBox width="100%" class="sapUiSmallMarginTop">
+                                        <Panel expandable="false">
+                                            <headerToolbar>
+                                                <OverflowToolbar height="3.5rem">
+                                                    <Title text="Organization-Specific SAP Parameters" level="H3" class="sapUiSmallMarginBegin"/>
+                                                    <ToolbarSpacer/>
+
+                                                    <!-- PARAMETER TYPE FILTER -->
+                                                    <Select id="paramTypeFilterSelect" selectedKey="All" change="onFilterParameters" width="13rem" class="sapUiTinyMarginEnd">
+                                                        <core:Item key="All" text="All Parameter Types"/>
+                                                        <core:Item key="SET/GET Parameter" text="SET/GET Parameter"/>
+                                                        <core:Item key="User Default Value" text="User Default Value"/>
+                                                    </Select>
+
+                                                    <Button text="Add Parameter" icon="sap-icon://add" type="Emphasized" press="onOpenAddParamDialog" class="sapUiSmallMarginEnd"/>
+                                                </OverflowToolbar>
+                                            </headerToolbar>
+
+                                            <Table id="paramsTable" items="{orgDetailsModel>/parameters}" mode="None" width="100%" class="sapUiNoMargin">
+                                                <columns>
+                                                    <Column width="22%"><Text text="Parameter Type"/></Column>
+                                                    <Column width="30%"><Text text="Parameter ID / Name"/></Column>
+                                                    <Column width="20%"><Text text="Configured Value"/></Column>
+                                                    <Column width="14%"><Text text="Status"/></Column>
+                                                    <Column width="14%" hAlign="Center"><Text text="Actions"/></Column>
+                                                </columns>
+                                                <items>
+                                                    <ColumnListItem vAlign="Middle">
+                                                        <cells>
+                                                            <ObjectStatus text="{orgDetailsModel>paramType}" state="Information"/>
+                                                            <Text text="{orgDetailsModel>paramIdName}" class="fontWeightBold"/>
+                                                            <Text text="{orgDetailsModel>value}"/>
+                                                            <ObjectStatus text="{orgDetailsModel>status}" state="{orgDetailsModel>statusState}"/>
+                                                            <Button icon="sap-icon://delete" type="Transparent" tooltip="Remove Parameter" press="onRemoveParameter"/>
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>
+                                        </Panel>
+                                    </VBox>
+                                </IconTabFilter>
+
+                                <!-- TAB 4: POLICIES -->
+                                <IconTabFilter icon="sap-icon://shield" text="Policies" key="policies">
+                                    <VBox width="100%" class="sapUiSmallMarginTop">
+                                        <Panel expandable="false">
+                                            <headerToolbar>
+                                                <OverflowToolbar height="3.5rem">
+                                                    <Title text="Organization Compliance &amp; Security Policies" level="H3" class="sapUiSmallMarginBegin"/>
+                                                    <ToolbarSpacer/>
+                                                    <Button text="Assign Policy" icon="sap-icon://add" type="Emphasized" press="onOpenAssignPolicyDialog" class="sapUiSmallMarginEnd"/>
+                                                </OverflowToolbar>
+                                            </headerToolbar>
+
+                                            <Table id="policiesTable" items="{orgDetailsModel>/policies}" mode="None" width="100%" class="sapUiNoMargin">
+                                                <columns>
+                                                    <Column width="15%"><Text text="Policy ID"/></Column>
+                                                    <Column width="35%"><Text text="Policy Name"/></Column>
+                                                    <Column width="20%"><Text text="Category / Type"/></Column>
+                                                    <Column width="12%"><Text text="Status"/></Column>
+                                                    <Column width="18%" hAlign="Center"><Text text="Last Updated"/></Column>
+                                                </columns>
+                                                <items>
+                                                    <ColumnListItem vAlign="Middle">
+                                                        <cells>
+                                                            <Text text="{orgDetailsModel>policyId}" class="fontWeightBold"/>
+                                                            <Text text="{orgDetailsModel>policyName}"/>
+                                                            <ObjectStatus text="{orgDetailsModel>category}" state="Information"/>
+                                                            <ObjectStatus text="{orgDetailsModel>status}" state="{orgDetailsModel>statusState}"/>
+                                                            <Text text="{orgDetailsModel>lastUpdated}"/>
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>
+                                        </Panel>
+                                    </VBox>
+                                </IconTabFilter>
+
+                            </items>
+                        </IconTabBar>
+
+                    </VBox>
+                </content>
+
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations | XYRA Multi-Tenant Governance"/>
+                        <ToolbarSpacer/>
+                        <Text text="Organization Details Sub-Page v1.0"/>
+                    </OverflowToolbar>
+                </footer>
+
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>

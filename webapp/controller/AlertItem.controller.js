@@ -118,6 +118,17 @@ sap.ui.define([
             MessageToast.show("Alert line items refreshed.");
         },
 
+        onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
+        onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
+        onAIInsights: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
+        onSOXCompliance: function () { this.getOwnerComponent().getRouter().navTo("SOXCompliance"); },
+        onReports: function () { this.getOwnerComponent().getRouter().navTo("Reports"); },
+        onAuditLogs: function () { this.getOwnerComponent().getRouter().navTo("AuditLogs"); },
+        onConfiguration: function () { this.getOwnerComponent().getRouter().navTo("Configuration"); },
+        onAccessManagement: function () { this.getOwnerComponent().getRouter().navTo("AccessManagement"); },
+        onOrganization: function () { this.getOwnerComponent().getRouter().navTo("Organization"); },
+        onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); },
+
         onLogout: function () {
             this.getOwnerComponent().getRouter().navTo("Login");
         }

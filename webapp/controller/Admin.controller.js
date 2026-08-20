@@ -371,6 +371,10 @@ sap.ui.define([
             this.navToRoute("AccessManagement");
         },
 
+        onOrganization: function () {
+            this.navToRoute("Organization");
+        },
+
         onRiskAnalytics: function () {
             this.navToRoute("RiskAnalytics");
         },

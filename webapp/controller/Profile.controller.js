@@ -140,6 +140,10 @@ sap.ui.define([
             this.getOwnerComponent().getRouter().navTo("AccessManagement");
         },
 
+        onOrganization: function () {
+            this.getOwnerComponent().getRouter().navTo("Organization");
+        },
+
         onRiskAnalytics: function () {
             this.getOwnerComponent().getRouter().navTo("RiskAnalytics");
         },

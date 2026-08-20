@@ -290,6 +290,7 @@ sap.ui.define([
         onAuditLogs: function () { this.getOwnerComponent().getRouter().navTo("AuditLogs"); },
         onConfiguration: function () { this.getOwnerComponent().getRouter().navTo("Configuration"); },
         onAccessManagement: function () { this.getOwnerComponent().getRouter().navTo("AccessManagement"); },
+        onOrganization: function () { this.getOwnerComponent().getRouter().navTo("Organization"); },
         onRiskAnalytics: function () { this.getOwnerComponent().getRouter().navTo("RiskAnalytics"); },
         onSystemHealth: function () { this.getOwnerComponent().getRouter().navTo("SystemHealth"); },
         onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); },
