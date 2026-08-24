@@ -855,15 +855,34 @@ body,
   color: #64748b !important;
   font-size: 0.8rem !important;
   font-weight: 600 !important;
-  margin-bottom: 0.4rem !important;
+  margin-top: 0 !important;
+  margin-bottom: 0.45rem !important;
+  display: block !important;
 }
 
-.xyraLoginField {
-  margin-bottom: 1.4rem !important;
+/* Persona Select Container: 16px bottom margin separating Persona dropdown from Email Label */
+.xyraLoginCard > .sapMFlexItem:has(> #role),
+.xyraLoginCard > .sapMFlexItem:has(> .xyraLoginField:first-of-type) {
+  margin-bottom: 1rem !important;
+}
+
+/* Email Input Container: 0 bottom margin */
+.xyraLoginCard > .sapMFlexItem:has(> #username) {
+  margin-bottom: 0 !important;
+}
+
+/* Remember Me Checkbox Container: 16px top margin below Email input box, 26px bottom margin above Sign In button */
+.xyraLoginCard > .sapMFlexItem:has(> #_IDGenCheckBox),
+.xyraLoginCard > .sapMFlexItem:has(> .xyraLoginCheckbox) {
+  margin-top: 1rem !important;
+  margin-bottom: 1.65rem !important;
+  display: block !important;
 }
 
 .xyraLoginCheckbox {
-  margin-bottom: 1.5rem !important;
+  margin: 0 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
 }
 
 .xyraLoginFooter {
