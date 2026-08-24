@@ -65,7 +65,7 @@
                         contentWidth="1020px">
                         <content>
                             <VBox class="sapUiMediumMargin">
-                                <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiNoMargin">
+                                <layout:Grid defaultSpan="XL6 L6 M12 S12" class="xyraCreateControlGrid">
                                     <VBox>
                                         <VBox class="xyraFormField">
                                             <Label text="Control ID" required="true" class="xyraFormLabel"/>
@@ -352,7 +352,7 @@
                         contentWidth="1020px">
                         <content>
                             <VBox class="sapUiMediumMargin">
-                                <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiNoMargin">
+                                <layout:Grid defaultSpan="XL6 L6 M12 S12" class="xyraCreateControlGrid">
                                     <VBox>
                                         <VBox class="xyraFormField">
                                             <Label text="Control ID" class="xyraFormLabel"/>

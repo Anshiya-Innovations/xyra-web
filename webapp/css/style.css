@@ -581,33 +581,92 @@ body,
   box-sizing: border-box !important;
 }
 
-/* Vertical Field Group Containers inside ALL Dialogs */
-.sapMDialogContent .xyraFormField,
-.sapMDialogContent .xyraFieldGroup,
-.sapMDialogContent .sapVBox:has(> .sapMLabel),
-.sapMDialogContent .sapVBox:has(> label) {
-  margin-bottom: 0.85rem !important;
+.sapMDialogContent:has(.xyraFormField) {
+  padding: 1.75rem 2.25rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Completely collapse hidden flex item wrappers and placeholders inside Dialogs */
+.sapMDialogContent .sapMFlexItem:has(> .sapUiHiddenPlaceholder),
+.sapMDialogContent .sapMFlexItem:has(> [style*="display: none"]),
+.sapMDialogContent .sapMFlexItem:has(> .sapUiHidden),
+.sapMFlexItem:has(> .sapUiHiddenPlaceholder) {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* ===== Scoped Dialog Grid Spacing (Create & Edit Security Control Master) ===== */
+
+.xyraCreateControlGrid {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.xyraCreateControlGrid .xyraFormField {
+  margin-top: 0 !important;
+  margin-bottom: 16px !important;
   width: 100% !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: stretch !important;
-  justify-content: flex-start !important;
+}
+
+/* Ensure flex item wrappers inside xyraCreateControlGrid do not swallow/collapse 16px bottom margin */
+.xyraCreateControlGrid .sapMFlexItem:has(> .xyraFormField),
+.xyraCreateControlGrid .sapVBox > .sapMFlexItem:not(:has(> .sapUiHiddenPlaceholder)) {
+  margin-bottom: 16px !important;
+  margin-top: 0 !important;
+}
+
+.xyraCreateControlGrid .sapMFlexItem:last-child > .xyraFormField,
+.xyraCreateControlGrid .sapVBox > .sapMFlexItem:last-child:not(:has(> .sapUiHiddenPlaceholder)) {
+  margin-bottom: 0 !important;
+}
+
+.xyraCreateControlGrid .xyraFormLabel {
+  display: block !important;
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  line-height: 1.3 !important;
+  text-align: left !important;
+}
+
+/* Scoped Column Gap (28px horizontal spacing between Column 1 & Column 2) */
+.xyraCreateControlGrid > div:first-child {
+  padding-left: 0 !important;
+  padding-right: 14px !important;
+  box-sizing: border-box !important;
+}
+
+.xyraCreateControlGrid > div:last-child {
+  padding-left: 14px !important;
+  padding-right: 0 !important;
   box-sizing: border-box !important;
 }
 
 /* Label Alignment inside ALL Dialogs */
 .sapMDialogContent .sapMLabel,
 .sapMDialogContent label,
-.xyraFormLabel,
-.xyraLoginLabel {
-  font-size: 0.825rem !important;
+.xyraFormLabel {
+  font-size: 0.85rem !important;
   font-weight: 600 !important;
   color: #334155 !important;
-  margin-top: 0.25rem !important;
-  margin-bottom: 0.35rem !important;
+  margin-top: 0 !important;
+  margin-bottom: 0.45rem !important;
   padding: 0 !important;
   display: block !important;
-  line-height: 1.25 !important;
+  line-height: 1.3 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  position: static !important;
   text-align: left !important;
 }
 
@@ -727,23 +786,32 @@ body,
   white-space: nowrap !important;
 }
 
-/* Responsive Grid Alignment inside ALL Dialogs */
+/* Responsive Grid Alignment & Column Gap (28px horizontal gap between Column 1 and Column 2) */
 .sapMDialogContent .sapUiRespGrid {
   padding: 0 !important;
   margin: 0 !important;
 }
 
 .sapMDialogContent .sapUiRespGrid > div {
-  padding: 0 0.75rem !important;
+  padding: 0 0.875rem !important;
   box-sizing: border-box !important;
 }
 
 .sapMDialogContent .sapUiRespGrid > div:first-child {
   padding-left: 0 !important;
+  padding-right: 0.875rem !important;
 }
 
 .sapMDialogContent .sapUiRespGrid > div:last-child {
+  padding-left: 0.875rem !important;
   padding-right: 0 !important;
+}
+
+/* Control Description Spacing (Full-width, 18px top spacing) */
+.sapMDialogContent .xyraFormField:has(> #createControlDescInput),
+.sapMDialogContent .xyraFormField:has(> #editControlDescInput) {
+  margin-top: 1.15rem !important;
+  margin-bottom: 1.5rem !important;
 }
 
 /* ===== Modern Login Page ===== */
