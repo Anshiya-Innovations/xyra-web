@@ -13,8 +13,8 @@
 
         <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
         <tnt:sideContent>
-                        <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="AccessManagement" itemSelect="onSideNavItemSelect">
-                <tnt:NavigationList>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="AccessManagement" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList selectedKey="AccessManagement">
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
 
 

@@ -14,7 +14,7 @@
         <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
         <tnt:sideContent>
             <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="SOXCompliance" itemSelect="onSideNavItemSelect">
-                <tnt:NavigationList>
+                <tnt:NavigationList selectedKey="SOXCompliance">
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
                     <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement"/>
                     <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights" select="onAIInsights">

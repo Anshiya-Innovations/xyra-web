@@ -258,6 +258,21 @@ sap.ui.define([
             }
         },
 
+        onAfterRendering: function () {
+            var oToolPage = this.byId("orgToolPage");
+            if (oToolPage) {
+                oToolPage.setSideExpanded(SidebarState.get());
+            }
+            var oNav = this.byId("sideNavigation");
+            if (oNav) {
+                oNav.setSelectedKey("Organization");
+                var oList = oNav.getItem();
+                if (oList && oList.setSelectedKey) {
+                    oList.setSelectedKey("Organization");
+                }
+            }
+        },
+
         onSideNavToggle: function () {
             var oToolPage = this.byId("orgToolPage");
             if (oToolPage) {

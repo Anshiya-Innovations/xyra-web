@@ -17,6 +17,14 @@ sap.ui.define([
             if (oToolPage) {
                 oToolPage.setSideExpanded(SidebarState.get());
             }
+            var oNav = this.byId("sideNavigation");
+            if (oNav) {
+                oNav.setSelectedKey("ControlManagement");
+                var oList = oNav.getItem();
+                if (oList && oList.setSelectedKey) {
+                    oList.setSelectedKey("ControlManagement");
+                }
+            }
         },
 
         onInit: function () {

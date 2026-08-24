@@ -13,8 +13,8 @@
     <tnt:ToolPage id="adminToolPage" sideExpanded="true">
 
         <tnt:sideContent>
-                        <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="Admin" itemSelect="onSideNavItemSelect">
-                <tnt:NavigationList>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="Admin" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList selectedKey="Admin">
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
 
                     <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement"/>

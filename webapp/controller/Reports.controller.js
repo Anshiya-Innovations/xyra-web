@@ -17,6 +17,10 @@ sap.ui.define([
             var oNav = this.byId("sideNavigation");
             if (oNav) {
                 oNav.setSelectedKey("Reports");
+                var oList = oNav.getItem();
+                if (oList && oList.setSelectedKey) {
+                    oList.setSelectedKey("Reports");
+                }
             }
         },
 

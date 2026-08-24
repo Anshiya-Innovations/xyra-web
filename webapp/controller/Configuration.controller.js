@@ -22,6 +22,14 @@ sap.ui.define([
             if (oToolPage) {
                 oToolPage.setSideExpanded(SidebarState.get());
             }
+            var oNav = this.byId("sideNavigation");
+            if (oNav) {
+                oNav.setSelectedKey("Configuration");
+                var oList = oNav.getItem();
+                if (oList && oList.setSelectedKey) {
+                    oList.setSelectedKey("Configuration");
+                }
+            }
         },
 
         onInit: function () {

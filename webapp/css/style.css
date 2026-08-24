@@ -48,13 +48,13 @@ body,
   transition: background-color 0.15s ease !important;
 }
 
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]) {
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) {
   background: transparent !important;
   background-color: transparent !important;
 }
 
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]) .sapTntNLIText,
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]) .sapTntNLIIcon {
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) .sapTntNLIText,
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) .sapTntNLIIcon {
   color: #94A3B8 !important;
 }
 
@@ -65,7 +65,7 @@ body,
   font-size: 0.95rem !important;
 }
 
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):hover {
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])):hover {
   background-color: rgba(255, 255, 255, 0.06) !important;
   background: rgba(255, 255, 255, 0.06) !important;
 }
@@ -73,7 +73,9 @@ body,
 /* Sidebar Selected Highlight */
 .sapTntNLISelected,
 .sapTntNLI[aria-selected="true"],
-.sapTntNLI.sapTntNLISelected {
+.sapTntNLI.sapTntNLISelected,
+.sapTntNLI:has(a[aria-selected="true"]),
+.sapTntNLI:has(a[aria-current="page"]) {
   background: linear-gradient(135deg, #533BFF, #5A5FF4) !important;
   background-color: #533BFF !important;
   transition: background 0.15s ease !important;
@@ -82,13 +84,18 @@ body,
 .sapTntNLISelected .sapTntNLIText,
 .sapTntNLISelected .sapTntNLIIcon,
 .sapTntNLI[aria-selected="true"] .sapTntNLIText,
-.sapTntNLI[aria-selected="true"] .sapTntNLIIcon {
+.sapTntNLI[aria-selected="true"] .sapTntNLIIcon,
+.sapTntNLI:has(a[aria-selected="true"]) .sapTntNLIText,
+.sapTntNLI:has(a[aria-selected="true"]) .sapTntNLIIcon,
+.sapTntNLI:has(a[aria-current="page"]) .sapTntNLIText,
+.sapTntNLI:has(a[aria-current="page"]) .sapTntNLIIcon {
   color: #FFFFFF !important;
+  font-weight: 600 !important;
 }
 
 /* Unselected sidebar item tag badges must be subtle chips, NOT solid bright purple */
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]) .sapTntNLITagContainer .sapMObjStatusInverted,
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]) .sapTntNLITagContainer .sapMObjStatus {
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) .sapTntNLITagContainer .sapMObjStatusInverted,
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) .sapTntNLITagContainer .sapMObjStatus {
   background-color: rgba(255, 255, 255, 0.12) !important;
   background: rgba(255, 255, 255, 0.12) !important;
   color: #cbd5e1 !important;
@@ -98,7 +105,9 @@ body,
 
 /* Selected sidebar item tag badge styling */
 .sapTntNLISelected .sapTntNLITagContainer .sapMObjStatusInverted,
-.sapTntNLI[aria-selected="true"] .sapTntNLITagContainer .sapMObjStatusInverted {
+.sapTntNLI[aria-selected="true"] .sapTntNLITagContainer .sapMObjStatusInverted,
+.sapTntNLI:has(a[aria-selected="true"]) .sapTntNLITagContainer .sapMObjStatusInverted,
+.sapTntNLI:has(a[aria-current="page"]) .sapTntNLITagContainer .sapMObjStatusInverted {
   background-color: rgba(255, 255, 255, 0.25) !important;
   background: rgba(255, 255, 255, 0.25) !important;
   color: #ffffff !important;

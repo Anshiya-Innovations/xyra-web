@@ -270,6 +270,10 @@ sap.ui.define([
             var oNav = this.byId("sideNavigation");
             if (oNav) {
                 oNav.setSelectedKey("Admin");
+                var oList = oNav.getItem();
+                if (oList && oList.setSelectedKey) {
+                    oList.setSelectedKey("Admin");
+                }
             }
             killFocusRing(this.getView());
         },

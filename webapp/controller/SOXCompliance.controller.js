@@ -114,6 +114,10 @@ sap.ui.define([
             var oNav = this.byId("sideNavigation");
             if (oNav) {
                 oNav.setSelectedKey("SOXCompliance");
+                var oList = oNav.getItem();
+                if (oList && oList.setSelectedKey) {
+                    oList.setSelectedKey("SOXCompliance");
+                }
             }
             killFocusRing(this.getView());
         },
