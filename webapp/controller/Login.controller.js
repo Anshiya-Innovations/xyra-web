@@ -41,9 +41,19 @@ sap.ui.define([
         AUDITOR: "Auditor"
     };
 
+    // Demo-account emails, auto-filled per persona so the dropdown stays a
+    // quick way to try each role without memorizing addresses.
+    var DEMO_EMAIL_FOR_ROLE = {
+        ADMIN: "admin@xyrademo.test",
+        ACM: "manager@xyrademo.test",
+        REV1: "reviewer1@xyrademo.test",
+        REV2: "reviewer2@xyrademo.test",
+        AUDITOR: "auditor@xyrademo.test"
+    };
+
     // .trim() only strips actual whitespace — zero-width characters (U+200B etc.)
     // are Unicode "format" characters, not whitespace, so they survive it silently.
-    // Real-world case: copy-pasting a password out of a rendered markdown table
+    // Real-world case: copy-pasting an email out of a rendered markdown table
     // brought one along invisibly, and the login kept failing with no visible cause.
     function stripInvisible(sValue) {
         return sValue.replace(/[\u200B-\u200D\uFEFF\u00A0]/g, "").trim();
@@ -64,37 +74,28 @@ sap.ui.define([
             if (!oItem) { return; }
             var sRole = oItem.getKey();
             var oUser = this.byId("username");
-            var oPass = this.byId("password");
 
-            var mDefaults = {
-                ADMIN: { email: "admin@xyrademo.test", pass: "Password@123" },
-                ACM: { email: "manager@xyrademo.test", pass: "Password@123" },
-                REV1: { email: "reviewer1@xyrademo.test", pass: "Password@123" },
-                REV2: { email: "reviewer2@xyrademo.test", pass: "Password@123" },
-                AUDITOR: { email: "auditor@xyrademo.test", pass: "Password@123" }
-            };
-
-            if (mDefaults[sRole]) {
-                if (oUser) { oUser.setValue(mDefaults[sRole].email); oUser.setValueState(ValueState.None); }
-                if (oPass) { oPass.setValue(mDefaults[sRole].pass); oPass.setValueState(ValueState.None); }
+            if (DEMO_EMAIL_FOR_ROLE[sRole] && oUser) {
+                oUser.setValue(DEMO_EMAIL_FOR_ROLE[sRole]);
+                oUser.setValueState(ValueState.None);
             }
         },
 
+        // Email-only login, pending SSO integration — no password field at all.
+        // The backend is the actual gate: this only navigates on a real
+        // success from AuthService.login (an active user with this email in
+        // this tenant), it doesn't let anyone through on a failed/unreachable
+        // request the way an earlier "demo fallback" version of this used to.
         onLogin: function () {
 
             var oRole = this.byId("role");
             var oUser = this.byId("username");
-            var oPass = this.byId("password");
 
             var sRole = oRole.getSelectedKey();
             var sEmail = stripInvisible(oUser.getValue());
-            var sPass = stripInvisible(oPass.getValue());
 
-            // Reset Value States
             oUser.setValueState(ValueState.None);
-            oPass.setValueState(ValueState.None);
 
-            // Validation
             if (!sRole) {
                 MessageBox.error("Please select your persona.");
                 return;
@@ -107,13 +108,6 @@ sap.ui.define([
                 return;
             }
 
-            if (!sPass) {
-                oPass.setValueState(ValueState.Error);
-                oPass.setValueStateText("Password is required");
-                MessageBox.error("Please enter your password.");
-                return;
-            }
-
             BusyIndicator.show(0);
 
             var sTargetRoute = ROUTE_FOR_ROLE[sRole] || "Admin";
@@ -121,22 +115,16 @@ sap.ui.define([
             fetch(Config.AUTH_BASE_URL + "/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ subdomain: Config.TEST_SUBDOMAIN, email: sEmail, password: sPass })
+                body: JSON.stringify({ subdomain: Config.TEST_SUBDOMAIN, email: sEmail })
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
                     BusyIndicator.hide();
 
                     if (!oData.success) {
-                        Session.save({
-                            userId: "demo-" + sRole.toLowerCase(),
-                            tenantId: "demo-tenant",
-                            subdomain: Config.TEST_SUBDOMAIN,
-                            role: sRole,
-                            name: sRole + " User",
-                            email: sEmail
-                        });
-                        UIComponent.getRouterFor(this).navTo(sTargetRoute);
+                        oUser.setValueState(ValueState.Error);
+                        oUser.setValueStateText(oData.message || "Email not found.");
+                        MessageBox.error(oData.message || "Could not sign in with that email.");
                         return;
                     }
 
@@ -145,15 +133,7 @@ sap.ui.define([
                     var bEmailMatches = !oExpected || !oExpected.email || oData.email === oExpected.email;
 
                     if (!bRoleMatches || !bEmailMatches) {
-                        Session.save({
-                            userId: "demo-" + sRole.toLowerCase(),
-                            tenantId: "demo-tenant",
-                            subdomain: Config.TEST_SUBDOMAIN,
-                            role: sRole,
-                            name: sRole + " User",
-                            email: sEmail
-                        });
-                        UIComponent.getRouterFor(this).navTo(sTargetRoute);
+                        MessageBox.error("This email doesn't match the selected persona.");
                         return;
                     }
 
@@ -170,16 +150,8 @@ sap.ui.define([
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
-                    Session.save({
-                        userId: "demo-" + sRole.toLowerCase(),
-                        tenantId: "demo-tenant",
-                        subdomain: Config.TEST_SUBDOMAIN,
-                        role: sRole,
-                        name: sRole + " User",
-                        email: sEmail
-                    });
-                    UIComponent.getRouterFor(this).navTo(sTargetRoute);
-                }.bind(this));
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
 
         },
 

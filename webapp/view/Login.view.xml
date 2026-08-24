@@ -78,18 +78,7 @@
                         type="Email"
                         placeholder="Enter Email"
                         liveChange="onEmailLiveChange"
-                        class="xyraLoginField"/>
-
-                    <Label id="_IDGenLabel2"
-                        text="Password"
-                        required="true"
-                        class="xyraLoginLabel"/>
-
-                    <Input
-                        id="password"
-                        type="Password"
-                        width="100%"
-                        placeholder="Enter Password"
+                        submit="onLogin"
                         class="xyraLoginField"/>
 
                     <CheckBox id="_IDGenCheckBox"
