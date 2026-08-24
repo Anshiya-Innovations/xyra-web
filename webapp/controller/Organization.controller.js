@@ -302,7 +302,11 @@ sap.ui.define([
         onAccessManagement: function () { this.navToRoute("AccessManagement"); },
         onOrganization: function () { this.navToRoute("Organization"); },
         onRiskAnalytics: function () { this.navToRoute("Admin"); },
-        onProfile: function () { this.navToRoute("Profile"); }
+        onProfile: function () { this.navToRoute("Profile"); },
+        onLogout: function () {
+            MessageToast.show("Logged Out Successfully");
+            this.navToRoute("Login");
+        }
 
     });
 

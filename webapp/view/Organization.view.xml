@@ -167,6 +167,7 @@
                         </VBox>
                         <ToolbarSpacer/>
                         <Button text="Add Organization" icon="sap-icon://add" type="Emphasized" press="onOpenAddOrgDialog" class="sapUiSmallMarginEnd"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
                     </OverflowToolbar>
                 </customHeader>
 

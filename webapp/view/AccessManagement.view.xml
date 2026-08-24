@@ -162,6 +162,7 @@
                         <ToolbarSpacer/>
                         <ObjectStatus text="Active Security Policy" state="Success" icon="sap-icon://shield" class="sapUiSmallMarginEnd"/>
                         <Button icon="sap-icon://home" tooltip="Home" type="Transparent" press="onNavBack" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
                     </OverflowToolbar>
                 </customHeader>
 
