@@ -626,33 +626,66 @@ body,
   box-sizing: border-box !important;
 }
 
+/* Unified Dialog Input, TextArea & Select Content Wrappers */
+.sapMDialogContent .sapMInputBaseContentWrapper,
+.sapMDialogContent .sapMSlt {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  background-color: #ffffff !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
 .sapMDialogContent .sapMInputBaseInner,
 .sapMDialogContent .sapMSelectListItem,
-.sapMDialogContent .sapMSelectSelectElement {
-  height: 42px !important;
-  line-height: 42px !important;
-  border-radius: 8px !important;
-  border: 1px solid #cbd5e1 !important;
+.sapMDialogContent .sapMSelectSelectElement,
+.sapMDialogContent .sapMSltLabel {
+  height: 40px !important;
+  line-height: 40px !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   padding: 0 0.85rem !important;
   box-sizing: border-box !important;
-  background-color: #ffffff !important;
+  background-color: transparent !important;
   color: #0f172a !important;
 }
 
 .sapMDialogContent .sapMTextAreaInner {
-  border-radius: 8px !important;
-  border: 1px solid #cbd5e1 !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   padding: 0.65rem 0.85rem !important;
   box-sizing: border-box !important;
-  background-color: #ffffff !important;
+  background-color: transparent !important;
   color: #0f172a !important;
+  resize: vertical !important;
 }
 
+/* Remove all inner borders/outlines on focus to prevent double-ring corner misalignment */
+.sapMInputBaseInner,
+.sapMTextAreaInner,
+.sapMInputBaseInner:focus,
+.sapMTextAreaInner:focus,
+.sapMInputBaseInner.sapMFocus,
+.sapMTextAreaInner.sapMFocus,
 .sapMDialogContent .sapMInputBaseInner:focus,
 .sapMDialogContent .sapMSelectListItem:focus,
 .sapMDialogContent .sapMTextAreaInner:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+/* Smooth Focus Ring applied exclusively to outer wrapper */
+.sapMDialogContent .sapMInputBaseContentWrapper:focus-within,
+.sapMDialogContent .sapMSlt:focus-within,
+.sapMInputBaseContentWrapper:focus-within,
+.sapMSlt:focus-within {
   border-color: #533bff !important;
   box-shadow: 0 0 0 2px rgba(83, 59, 255, 0.15) !important;
+  border-radius: 5px !important;
 }
 
 /* Rule Configuration Table Selects & Column Headers inside Dialogs */
