@@ -631,6 +631,46 @@ span.sapTntNLITagContainer {
   overflow: hidden !important;
 }
 
+/* ===== Rule Configuration & Dialog List Items - Remove Blue Outer Frame / Border ===== */
+
+.sapMList .sapMCLI,
+.sapMCLI,
+.sapMCustomListItem,
+[id*="RulesList"] .sapMCLI,
+[id*="RulesList"] .sapMCustomListItem {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.sapMList .sapMCLI:focus,
+.sapMList .sapMCLI:hover,
+.sapMList .sapMCLISelected,
+.sapMCLI:focus,
+.sapMCLI:hover,
+.sapMCLISelected,
+[id*="RulesList"] .sapMCLI:focus,
+[id*="RulesList"] .sapMCLI:hover,
+[id*="RulesList"] .sapMCLISelected {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.sapMList .sapMCLI::before,
+.sapMList .sapMCLI::after,
+.sapMCLI::before,
+.sapMCLI::after {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  display: none !important;
+}
+
 /* ===== Global Dialog Popup Form Alignment Standard (App-Wide All Popups) ===== */
 .sapMDialogContent,
 .sapMDialogSection,
