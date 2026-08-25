@@ -121,28 +121,6 @@
                             </form:SimpleForm>
                         </Panel>
 
-                        <!-- SECTION 2 – SECURITY & CREDENTIALS -->
-                        <Panel headerText="Security &amp; Password Settings" expandable="false" class="sapUiSmallMarginBottom">
-                            <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="4" labelSpanS="12" emptySpanXL="5" emptySpanL="5" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1">
-                                <form:content>
-                                    <core:Title text="Password Management"/>
-
-                                    <Label text="Current Password"/>
-                                    <Input id="profCurrentPassAud" type="Password" placeholder="Enter current password"/>
-
-                                    <Label text="New Password"/>
-                                    <Input id="profNewPassAud" type="Password" placeholder="Enter new password"/>
-
-                                    <Label text="Confirm New Password"/>
-                                    <Input id="profConfirmPassAud" type="Password" placeholder="Re-enter new password"/>
-
-                                    <Label text=""/>
-                                    <HBox class="sapUiTinyMarginTop">
-                                        <Button text="Save Password" type="Emphasized" icon="sap-icon://save" press="onSavePassword"/>
-                                    </HBox>
-                                </form:content>
-                            </form:SimpleForm>
-                        </Panel>
 
                         <!-- BOTTOM ACTION BAR -->
                         <HBox justifyContent="End" class="sapUiMediumMarginTop sapUiSmallMarginBottom">

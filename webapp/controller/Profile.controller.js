@@ -40,6 +40,21 @@ sap.ui.define([
 
             BusyIndicator.show(0);
 
+            var fnApplyData = function (oDataObj) {
+                this._initialProfileData = Object.assign({}, oDataObj);
+                var oModel = new JSONModel(Object.assign({}, oDataObj));
+                this.getView().setModel(oModel, "profileModel");
+
+                if (this.byId("profFullName")) { this.byId("profFullName").setValue(oDataObj.fullName || ""); }
+                if (this.byId("profEmail")) { this.byId("profEmail").setValue(oDataObj.email || ""); }
+                if (this.byId("profPhone")) { this.byId("profPhone").setValue(oDataObj.phone || ""); }
+                if (this.byId("profDepartment")) { this.byId("profDepartment").setValue(oDataObj.department || ""); }
+                if (this.byId("profOrg")) { this.byId("profOrg").setValue(oDataObj.organization || ""); }
+                if (this.byId("profAdminId")) { this.byId("profAdminId").setValue(oDataObj.adminId || ""); }
+                if (this.byId("profPersona")) { this.byId("profPersona").setValue(oDataObj.persona || ""); }
+                if (this.byId("profSubdomain")) { this.byId("profSubdomain").setValue(oDataObj.subdomain || ""); }
+            }.bind(this);
+
             fetch(Config.AUTH_BASE_URL + "/api/profile/getProfile", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -54,27 +69,33 @@ sap.ui.define([
                         return;
                     }
 
-                    if (this.byId("profFullName")) { this.byId("profFullName").setValue(oData.name || ""); }
-                    if (this.byId("profEmail")) { this.byId("profEmail").setValue(oData.email || ""); }
-                    if (this.byId("profPhone")) { this.byId("profPhone").setValue(oData.phone || ""); }
-                    if (this.byId("profDepartment")) { this.byId("profDepartment").setValue(oData.department || ""); }
-                    if (this.byId("profOrg")) { this.byId("profOrg").setValue(oData.organization || ""); }
-                    if (this.byId("profAdminId")) { this.byId("profAdminId").setValue((oData.id || "").slice(0, 8).toUpperCase()); }
-                    if (this.byId("profPersona")) { this.byId("profPersona").setValue(ROLE_LABELS[oData.role] || oData.role || ""); }
-                    if (this.byId("profSubdomain")) { this.byId("profSubdomain").setValue(oSession.subdomain || ""); }
+                    fnApplyData({
+                        fullName: oData.name || "Demo Admin",
+                        email: oData.email || "admin@xyrademo.test",
+                        phone: oData.phone || "1234567890",
+                        department: oData.department || "IT Security",
+                        organization: oData.organization || "Xyra Demo Corp",
+                        adminId: (oData.id || "50FF17BB").slice(0, 8).toUpperCase(),
+                        persona: ROLE_LABELS[oData.role] || oData.role || "Global Administrator",
+                        subdomain: oSession.subdomain || "xyrademo",
+                        accountStatus: "ACTIVE"
+                    });
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
                     MockData.notice(MessageToast);
                     var oProfile = MockData.profile;
-                    if (this.byId("profFullName")) { this.byId("profFullName").setValue(oSession.name || ""); }
-                    if (this.byId("profEmail")) { this.byId("profEmail").setValue(oSession.email || ""); }
-                    if (this.byId("profPhone")) { this.byId("profPhone").setValue(oProfile.phone); }
-                    if (this.byId("profDepartment")) { this.byId("profDepartment").setValue(oProfile.department); }
-                    if (this.byId("profOrg")) { this.byId("profOrg").setValue(oProfile.organization); }
-                    if (this.byId("profAdminId")) { this.byId("profAdminId").setValue((oSession.userId || "").slice(0, 8).toUpperCase()); }
-                    if (this.byId("profPersona")) { this.byId("profPersona").setValue(ROLE_LABELS[oSession.role] || oSession.role || ""); }
-                    if (this.byId("profSubdomain")) { this.byId("profSubdomain").setValue(oSession.subdomain || ""); }
+                    fnApplyData({
+                        fullName: oSession.name || "Demo Admin",
+                        email: oSession.email || "admin@xyrademo.test",
+                        phone: oProfile.phone || "1234567890",
+                        department: oProfile.department || "IT Security",
+                        organization: oProfile.organization || "Xyra Demo Corp",
+                        adminId: (oSession.userId || "50FF17BB").slice(0, 8).toUpperCase(),
+                        persona: ROLE_LABELS[oSession.role] || oSession.role || "Global Administrator",
+                        subdomain: oSession.subdomain || "xyrademo",
+                        accountStatus: "ACTIVE"
+                    });
                 }.bind(this));
         },
 
@@ -271,15 +292,25 @@ sap.ui.define([
         },
 
         onResetProfile: function () {
-            var aPasswordIds = ["profCurrentPass", "profNewPass", "profConfirmPass"];
-            aPasswordIds.forEach(function (sId) {
-                var oInput = this.byId(sId);
-                if (oInput) {
-                    oInput.setValue("");
+            if (this._initialProfileData) {
+                var oDataObj = this._initialProfileData;
+                var oModel = this.getView().getModel("profileModel");
+                if (oModel) {
+                    oModel.setData(Object.assign({}, oDataObj));
                 }
-            }.bind(this));
-            this._loadProfile();
-            MessageToast.show("Changes discarded — reloaded from server.");
+
+                if (this.byId("profFullName")) { this.byId("profFullName").setValue(oDataObj.fullName || ""); }
+                if (this.byId("profEmail")) { this.byId("profEmail").setValue(oDataObj.email || ""); }
+                if (this.byId("profPhone")) { this.byId("profPhone").setValue(oDataObj.phone || ""); }
+                if (this.byId("profDepartment")) { this.byId("profDepartment").setValue(oDataObj.department || ""); }
+                if (this.byId("profOrg")) { this.byId("profOrg").setValue(oDataObj.organization || ""); }
+                if (this.byId("profAdminId")) { this.byId("profAdminId").setValue(oDataObj.adminId || ""); }
+                if (this.byId("profPersona")) { this.byId("profPersona").setValue(oDataObj.persona || ""); }
+                if (this.byId("profSubdomain")) { this.byId("profSubdomain").setValue(oDataObj.subdomain || ""); }
+            } else {
+                this._loadProfile();
+            }
+            MessageToast.show("Personal & Account details reset to original values.");
         },
 
         onNotificationPress: function () {

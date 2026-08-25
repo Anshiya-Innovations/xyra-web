@@ -113,59 +113,37 @@
                                     <core:Title text="Personal Details"/>
 
                                     <Label text="Full Name"/>
-                                    <Input id="profFullName" value="System Administrator"/>
+                                    <Input id="profFullName" value="{profileModel>/fullName}"/>
 
                                     <Label text="Email Address"/>
-                                    <Input id="profEmail" type="Email" value="admin@xyra.ai"/>
+                                    <Input id="profEmail" type="Email" value="{profileModel>/email}"/>
 
                                     <Label text="Phone Number"/>
-                                    <Input id="profPhone" type="Number" value="15550192834" liveChange="onPhoneLiveChange"/>
+                                    <Input id="profPhone" type="Tel" value="{profileModel>/phone}"/>
 
                                     <Label text="Department"/>
-                                    <Input id="profDepartment" value="Security &amp; Compliance"/>
+                                    <Input id="profDepartment" value="{profileModel>/department}"/>
 
                                     <Label text="Organization"/>
-                                    <Input id="profOrg" value="XYRA Enterprise Solutions"/>
+                                    <Input id="profOrg" value="{profileModel>/organization}"/>
 
                                     <core:Title text="Account &amp; System Details"/>
 
                                     <Label text="Admin ID"/>
-                                    <Input id="profAdminId" value="ADM001" editable="false"/>
+                                    <Input id="profAdminId" value="{profileModel>/adminId}" editable="false"/>
 
                                     <Label text="Assigned Persona"/>
-                                    <Input id="profPersona" value="Global Administrator" editable="false"/>
+                                    <Input id="profPersona" value="{profileModel>/persona}" editable="false"/>
 
                                     <Label text="Enterprise Subdomain"/>
-                                    <Input id="profSubdomain" value="xyra-prod" editable="false"/>
+                                    <Input id="profSubdomain" value="{profileModel>/subdomain}" editable="false"/>
 
                                     <Label text="Account Status"/>
-                                    <ObjectStatus text="ACTIVE" state="Success" icon="sap-icon://sys-enter-2"/>
+                                    <ObjectStatus text="{profileModel>/accountStatus}" state="Success" icon="sap-icon://sys-enter-2"/>
                                 </form:content>
                             </form:SimpleForm>
                         </Panel>
 
-                        <!-- SECTION 2 – SECURITY & CREDENTIALS -->
-                        <Panel headerText="Security &amp; Password Settings" expandable="false" class="sapUiSmallMarginBottom">
-                            <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="4" labelSpanS="12" emptySpanXL="5" emptySpanL="5" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1">
-                                <form:content>
-                                    <core:Title text="Password Management"/>
-
-                                    <Label text="Current Password"/>
-                                    <Input id="profCurrentPass" type="Password" placeholder="Enter current password"/>
-
-                                    <Label text="New Password"/>
-                                    <Input id="profNewPass" type="Password" placeholder="Enter new password"/>
-
-                                    <Label text="Confirm New Password"/>
-                                    <Input id="profConfirmPass" type="Password" placeholder="Re-enter new password"/>
-
-                                    <Label text=""/>
-                                    <HBox class="sapUiTinyMarginTop">
-                                        <Button text="Save Password" type="Emphasized" icon="sap-icon://save" press="onSavePassword"/>
-                                    </HBox>
-                                </form:content>
-                            </form:SimpleForm>
-                        </Panel>
 
                         <!-- BOTTOM ACTION BAR -->
                         <HBox justifyContent="End" class="sapUiMediumMarginTop sapUiSmallMarginBottom">

@@ -30,6 +30,7 @@ sap.ui.define([
                 lastLogin: "14-Aug-2026 17:45:12 UTC"
             };
 
+            this._initialProfileData = Object.assign({}, oProfileData);
             var oModel = new JSONModel(oProfileData);
             this.getView().setModel(oModel, "profileModel");
         },
@@ -73,12 +74,33 @@ sap.ui.define([
                 return;
             }
 
+            if (this._initialProfileData) {
+                this._initialProfileData.fullName = sName;
+                this._initialProfileData.email = sEmail;
+                this._initialProfileData.phone = this.byId("profPhoneEsc") ? this.byId("profPhoneEsc").getValue() : this._initialProfileData.phone;
+                this._initialProfileData.department = this.byId("profDepartmentEsc") ? this.byId("profDepartmentEsc").getValue() : this._initialProfileData.department;
+                this._initialProfileData.organization = this.byId("profOrgEsc") ? this.byId("profOrgEsc").getValue() : this._initialProfileData.organization;
+            }
+
             MessageToast.show("Escalation Manager profile changes saved successfully!");
         },
 
         onResetProfile: function () {
-            this.onInit();
-            MessageToast.show("Profile details reset.");
+            if (this._initialProfileData) {
+                var oModel = this.getView().getModel("profileModel");
+                if (oModel) {
+                    oModel.setData(Object.assign({}, this._initialProfileData));
+                }
+                var d = this._initialProfileData;
+                if (this.byId("profFullNameEsc")) { this.byId("profFullNameEsc").setValue(d.fullName || ""); }
+                if (this.byId("profEmailEsc")) { this.byId("profEmailEsc").setValue(d.email || ""); }
+                if (this.byId("profPhoneEsc")) { this.byId("profPhoneEsc").setValue(d.phone || ""); }
+                if (this.byId("profDepartmentEsc")) { this.byId("profDepartmentEsc").setValue(d.department || ""); }
+                if (this.byId("profOrgEsc")) { this.byId("profOrgEsc").setValue(d.organization || ""); }
+            } else {
+                this.onInit();
+            }
+            MessageToast.show("Personal & Account details reset to original values.");
         },
 
         onSavePassword: function () {

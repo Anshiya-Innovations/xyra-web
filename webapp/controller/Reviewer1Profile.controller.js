@@ -132,9 +132,19 @@ sap.ui.define([
 
         onResetProfile: function () {
             if (this._initialProfileData) {
+                var d = this._initialProfileData;
                 var oModel = this.getView().getModel("profileModel");
-                oModel.setData(Object.assign({}, this._initialProfileData));
-                MessageToast.show("Profile fields reset to saved values.");
+                if (oModel) {
+                    oModel.setData(Object.assign({}, d));
+                }
+                if (this.byId("profFullName")) { this.byId("profFullName").setValue(d.fullName || ""); }
+                if (this.byId("profEmail")) { this.byId("profEmail").setValue(d.email || ""); }
+                if (this.byId("profPhone")) { this.byId("profPhone").setValue(d.phone || ""); }
+                if (this.byId("profDepartment")) { this.byId("profDepartment").setValue(d.department || ""); }
+                if (this.byId("profOrg")) { this.byId("profOrg").setValue(d.organization || ""); }
+                MessageToast.show("Personal & Account details reset to original values.");
+            } else {
+                this._loadProfileData();
             }
         }
 
