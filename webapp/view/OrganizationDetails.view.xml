@@ -423,7 +423,7 @@
                                 </IconTabFilter>
 
                                 <!-- TAB 3: PARAMETERS -->
-                                <IconTabFilter icon="sap-icon://parameter" text="Parameters" key="parameters">
+                                <IconTabFilter icon="sap-icon://chain-link" text="Parameters" key="parameters">
                                     <VBox width="100%" class="sapUiSmallMarginTop">
                                         <Panel expandable="false">
                                             <headerToolbar>

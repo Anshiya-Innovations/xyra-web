@@ -1813,3 +1813,66 @@ span.sapTntNLITagContainer {
   background-color: #f0fdf4 !important;
   border: 1px solid #dcfce7 !important;
 }
+
+/* ===== IconTabBar & IconTabFilter Full Text Labels Override ===== */
+
+.sapMITHTextContent,
+.sapMITBText .sapMITHTextContent,
+span.sapMITHTextContent,
+div[id*="-text"] span {
+  width: auto !important;
+  max-width: none !important;
+  min-width: auto !important;
+  display: inline-block !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+  word-break: normal !important;
+}
+
+.sapMITBFilter,
+.sapMITBItem,
+.sapMITBTab,
+.sapMITBFilterWrapper,
+div[id*="filter"] {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 140px !important;
+  flex: 0 0 auto !important;
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.sapMITBText,
+div[id*="-text"] {
+  width: auto !important;
+  max-width: none !important;
+  overflow: visible !important;
+}
+
+/* ===== IconTabBar Outer Ring Border Removal ===== */
+
+.sapMITBFilterIcon,
+.sapMITBTab,
+.sapMITBFilter,
+.sapMITBSelected .sapMITBFilterIcon,
+.sapMITBSelected .sapMITBTab,
+.sapMITBSelected .sapMITBFilter,
+.sapMITBFilterSelected .sapMITBFilterIcon,
+.sapMITBFilterSelected .sapMITBTab,
+.sapMITBFilterSelected .sapMITBFilter {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sapMITBFilterIcon::before,
+.sapMITBFilterIcon::after,
+.sapMITBTab::before,
+.sapMITBTab::after,
+.sapMITBFilter::before,
+.sapMITBFilter::after {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
