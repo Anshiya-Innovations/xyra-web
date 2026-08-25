@@ -1411,6 +1411,163 @@ span.sapTntNLITagContainer {
   line-height: 46px !important;
 }
 
+/* ===== Toolbar Container & Table Top Toolbar Button Alignment & Spacing ===== */
+
+.sapMOverflowToolbar,
+.sapMTB,
+.sapMHeaderToolbar,
+.sapMBar {
+  min-height: 54px !important;
+  height: auto !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+/* Ensure all toolbar children (buttons, search fields, titles) share zero top margin & exact vertical center alignment */
+.sapMOverflowToolbar .sapMBarChild,
+.sapMTB .sapMBarChild,
+.sapMHeaderToolbar .sapMBarChild,
+.sapMBar .sapMBarChild {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  align-self: center !important;
+}
+
+/* Buttons inside Toolbars / Table Headers */
+.sapMOverflowToolbar .sapMBtn,
+.sapMTB .sapMBtn,
+.sapMHeaderToolbar .sapMBtn,
+.sapMBar .sapMBtn,
+.sapMOverflowToolbar .sapMBtn:has(.sapMBtnEmphasized),
+.sapMTB .sapMBtn:has(.sapMBtnEmphasized),
+.sapMHeaderToolbar .sapMBtn:has(.sapMBtnEmphasized),
+.sapMBar .sapMBtn:has(.sapMBtnEmphasized) {
+  height: 38px !important;
+  max-height: 38px !important;
+  box-sizing: border-box !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 0.5rem !important;
+  margin-right: 0.5rem !important;
+  align-self: center !important;
+  overflow: visible !important;
+}
+
+.sapMOverflowToolbar .sapMBtnInner,
+.sapMTB .sapMBtnInner,
+.sapMHeaderToolbar .sapMBtnInner,
+.sapMBar .sapMBtnInner,
+.sapMOverflowToolbar .sapMBtnEmphasized,
+.sapMTB .sapMBtnEmphasized,
+.sapMHeaderToolbar .sapMBtnEmphasized,
+.sapMBar .sapMBtnEmphasized {
+  height: 38px !important;
+  max-height: 38px !important;
+  line-height: 38px !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+}
+
+.sapMOverflowToolbar .sapMBtnContent,
+.sapMTB .sapMBtnContent,
+.sapMHeaderToolbar .sapMBtnContent,
+.sapMBar .sapMBtnContent,
+.sapMOverflowToolbar .sapMBtnIcon,
+.sapMTB .sapMBtnIcon,
+.sapMHeaderToolbar .sapMBtnIcon,
+.sapMBar .sapMBtnIcon,
+.sapMOverflowToolbar .sapMBtnEmphasized .sapMBtnContent,
+.sapMTB .sapMBtnEmphasized .sapMBtnContent,
+.sapMHeaderToolbar .sapMBtnEmphasized .sapMBtnContent,
+.sapMBar .sapMBtnEmphasized .sapMBtnContent,
+.sapMOverflowToolbar .sapMBtnEmphasized .sapMBtnIcon,
+.sapMTB .sapMBtnEmphasized .sapMBtnIcon,
+.sapMHeaderToolbar .sapMBtnEmphasized .sapMBtnIcon,
+.sapMBar .sapMBtnEmphasized .sapMBtnIcon {
+  line-height: 38px !important;
+}
+
+/* ===== SearchField Container & Focus Border Reset (Eliminate Double Blue Borders & Bottom Overlap) ===== */
+
+.sapMSF {
+  height: 38px !important;
+  max-height: 38px !important;
+  box-sizing: border-box !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 0.5rem !important;
+  margin-right: 0.5rem !important;
+  align-self: center !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+.sapMSFF {
+  height: 38px !important;
+  max-height: 38px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  box-sizing: border-box !important;
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.sapMSF:focus,
+.sapMSFF:focus,
+.sapMSFFocused,
+.sapMSF:focus-within,
+.sapMSFF:focus-within {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sapMSFF:focus-within,
+.sapMSFFocused .sapMSFF,
+.sapMSF:focus-within .sapMSFF {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+  outline: none !important;
+}
+
+.sapMSF .sapMSFI,
+.sapMSFF .sapMSFI {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  box-sizing: border-box !important;
+}
+
+.sapMSF .sapMSFBtn,
+.sapMSF .sapMSFReload,
+.sapMSFF .sapMSFBtn,
+.sapMSFF .sapMSFReload {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  height: 36px !important;
+  line-height: 36px !important;
+}
+
 /* ===== Secondary button & Dialog Cancel button styling ===== */
 .xyraBtnSecondary {
   height: 46px !important;
