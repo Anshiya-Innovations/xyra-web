@@ -40,9 +40,10 @@
                         id="escProfilePopover"
                         title="Escalation Manager Profile"
                         placement="Bottom"
-                        contentWidth="340px">
+                        contentWidth="340px"
+                        class="xyraProfilePopover">
                         <content>
-                            <VBox class="sapUiMediumMargin">
+                            <VBox class="xyraProfilePopoverContent">
                                 <HBox alignItems="Center" class="sapUiSmallMarginBottom">
                                     <Avatar displaySize="M" initials="EM" backgroundColor="Accent6" class="sapUiSmallMarginEnd"/>
                                     <VBox>

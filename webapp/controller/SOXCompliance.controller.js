@@ -7,8 +7,9 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "xyraweb/model/soxComplianceService",
     "xyraweb/model/sidebarState",
-    "xyraweb/model/focusRing"
-], function (Controller, JSONModel, MessageToast, UIComponent, Filter, FilterOperator, SOXComplianceService, SidebarState, killFocusRing) {
+    "xyraweb/model/focusRing",
+    "xyraweb/model/GlobalLoading"
+], function (Controller, JSONModel, MessageToast, UIComponent, Filter, FilterOperator, SOXComplianceService, SidebarState, killFocusRing, GlobalLoading) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.SOXCompliance", {
@@ -304,8 +305,7 @@ sap.ui.define([
         },
 
         onLogout: function () {
-            MessageToast.show("Logged Out Successfully");
-            this.navToRoute("Login");
+            GlobalLoading.logout(this);
         }
 
     });

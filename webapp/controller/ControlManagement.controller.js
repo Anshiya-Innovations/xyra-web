@@ -6,8 +6,9 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "xyraweb/model/sidebarState",
-    "xyraweb/model/auditLogService"
-], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, SidebarState, AuditLogService) {
+    "xyraweb/model/auditLogService",
+    "xyraweb/model/GlobalLoading"
+], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, SidebarState, AuditLogService, GlobalLoading) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.ControlManagement", {
@@ -752,8 +753,7 @@ sap.ui.define([
 
         onNotificationPress: function () { MessageToast.show("No new notifications."); },
         onLogout: function () {
-            MessageToast.show("Logged Out Successfully");
-            this.getOwnerComponent().getRouter().navTo("Login");
+            GlobalLoading.logout(this);
         }
 
     });

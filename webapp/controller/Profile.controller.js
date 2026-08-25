@@ -6,8 +6,9 @@ sap.ui.define([
     "xyraweb/model/config",
     "xyraweb/model/session",
     "xyraweb/model/sidebarState",
-    "xyraweb/model/mockData"
-], function (Controller, MessageToast, MessageBox, BusyIndicator, Config, Session, SidebarState, MockData) {
+    "xyraweb/model/mockData",
+    "xyraweb/model/GlobalLoading"
+], function (Controller, MessageToast, MessageBox, BusyIndicator, Config, Session, SidebarState, MockData, GlobalLoading) {
     "use strict";
 
     var ROLE_LABELS = {
@@ -324,8 +325,7 @@ sap.ui.define([
 
         onLogout: function () {
             Session.clear();
-            MessageToast.show("Logged Out Successfully");
-            this.getOwnerComponent().getRouter().navTo("Login");
+            GlobalLoading.logout(this);
         }
 
     });

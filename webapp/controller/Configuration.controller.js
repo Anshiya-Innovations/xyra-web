@@ -10,8 +10,9 @@ sap.ui.define([
     "xyraweb/model/session",
     "xyraweb/model/focusRing",
     "xyraweb/model/sidebarState",
-    "xyraweb/model/mockData"
-], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, BusyIndicator, Config, Session, killFocusRing, SidebarState, MockData) {
+    "xyraweb/model/mockData",
+    "xyraweb/model/GlobalLoading"
+], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, BusyIndicator, Config, Session, killFocusRing, SidebarState, MockData, GlobalLoading) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Configuration", {
@@ -535,8 +536,7 @@ sap.ui.define([
         onNotificationPress: function () { MessageToast.show("No new notifications."); },
         onLogout: function () {
             Session.clear();
-            MessageToast.show("Logged Out Successfully");
-            this.getOwnerComponent().getRouter().navTo("Login");
+            GlobalLoading.logout(this);
         }
 
     });

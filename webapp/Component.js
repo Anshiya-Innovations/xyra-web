@@ -1,7 +1,8 @@
 sap.ui.define([
     "sap/ui/core/UIComponent",
-    "xyraweb/model/models"
-], (UIComponent, models) => {
+    "xyraweb/model/models",
+    "xyraweb/model/GlobalLoading"
+], (UIComponent, models, GlobalLoading) => {
     "use strict";
 
     return UIComponent.extend("xyraweb.Component", {
@@ -19,8 +20,18 @@ sap.ui.define([
             // set the device model
             this.setModel(models.createDeviceModel(), "device");
 
-            // enable routing
-            this.getRouter().initialize();
+            // enable routing & handle ONLY allowed loading screens (System Configuration & Access Management)
+            var oRouter = this.getRouter();
+            if (oRouter) {
+                oRouter.attachBeforeRouteMatched((oEvent) => {
+                    var sRouteName = oEvent.getParameter("name");
+                    if (GlobalLoading.isAllowedRoute(sRouteName)) {
+                        var sActivity = GlobalLoading.getActivityForRoute(sRouteName);
+                        GlobalLoading.show(sActivity, 3000);
+                    }
+                });
+                oRouter.initialize();
+            }
         }
     });
 });

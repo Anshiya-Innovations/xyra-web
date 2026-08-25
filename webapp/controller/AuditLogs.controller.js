@@ -13,7 +13,8 @@ sap.ui.define([
     MessageBox,
     SidebarState,
     AuditLogService,
-    Session
+    Session,
+    GlobalLoading
 ) {
     "use strict";
 
@@ -261,7 +262,7 @@ sap.ui.define([
         onSystemHealth: function () { MessageToast.show("Navigating to System Health..."); },
         onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); },
         onNotificationPress: function () { MessageToast.show("No new audit log alerts."); },
-        onLogout: function () { this.getOwnerComponent().getRouter().navTo("Login"); }
+        onLogout: function () { GlobalLoading.logout(this); }
 
     });
 

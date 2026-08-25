@@ -6,8 +6,9 @@ sap.ui.define([
     "sap/ui/core/BusyIndicator",
     "xyraweb/model/config",
     "xyraweb/model/sidebarState",
-    "xyraweb/model/mockData"
-], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config, SidebarState, MockData) {
+    "xyraweb/model/mockData",
+    "xyraweb/model/GlobalLoading"
+], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config, SidebarState, MockData, GlobalLoading) {
     "use strict";
 
     var PERSONA_TO_ROLE = {
@@ -121,8 +122,7 @@ sap.ui.define([
         },
 
         onLogout: function () {
-            MessageToast.show("Logged Out Successfully");
-            this.getOwnerComponent().getRouter().navTo("Login");
+            GlobalLoading.logout(this);
         },
 
         _loadUsers: function () {

@@ -4,8 +4,9 @@ sap.ui.define([
     "sap/ui/core/UIComponent",
     "sap/ui/model/json/JSONModel",
     "xyraweb/model/sidebarState",
-    "xyraweb/model/focusRing"
-], function (Controller, MessageToast, UIComponent, JSONModel, SidebarState, killFocusRing) {
+    "xyraweb/model/focusRing",
+    "xyraweb/model/GlobalLoading"
+], function (Controller, MessageToast, UIComponent, JSONModel, SidebarState, killFocusRing, GlobalLoading) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Admin", {
@@ -427,8 +428,7 @@ sap.ui.define([
         },
 
         onLogout: function () {
-            MessageToast.show("Logged Out Successfully");
-            this.navToRoute("Login");
+            GlobalLoading.logout(this);
         }
 
     });

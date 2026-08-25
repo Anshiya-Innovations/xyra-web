@@ -6,7 +6,8 @@ sap.ui.define([
     "sap/ui/core/library",
     "xyraweb/model/config",
     "xyraweb/model/session",
-    "xyraweb/model/focusRing"
+    "xyraweb/model/focusRing",
+    "xyraweb/model/GlobalLoading"
 ], function (
     Controller,
     UIComponent,
@@ -15,7 +16,8 @@ sap.ui.define([
     coreLibrary,
     Config,
     Session,
-    killFocusRing
+    killFocusRing,
+    GlobalLoading
 ) {
     "use strict";
 
@@ -108,7 +110,7 @@ sap.ui.define([
                 return;
             }
 
-            BusyIndicator.show(0);
+            GlobalLoading.show("Signing in...", 3000, true);
 
             var sTargetRoute = ROUTE_FOR_ROLE[sRole] || "Admin";
 

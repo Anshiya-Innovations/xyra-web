@@ -64,9 +64,10 @@
                         id="adminProfilePopover"
                         title="Administrator Profile"
                         placement="Bottom"
-                        contentWidth="320px">
+                        contentWidth="320px"
+                        class="xyraProfilePopover">
                         <content>
-                            <VBox class="sapUiMediumMargin">
+                            <VBox class="xyraProfilePopoverContent">
                                 <HBox alignItems="Center" class="sapUiSmallMarginBottom">
                                     <Avatar displaySize="M" initials="SA" backgroundColor="Accent6" class="sapUiSmallMarginEnd"/>
                                     <VBox>
@@ -78,13 +79,13 @@
                                 <VBox class="sapUiSmallMarginBottom">
                                     <Label text="Admin ID" design="Bold"/>
                                     <Text text="ADM001"/>
-                                    <Label text="Department" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Label text="Department" design="Bold"/>
                                     <Text text="Security &amp; Compliance"/>
-                                    <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Label text="Email" design="Bold"/>
                                     <Text text="admin@xyra.ai"/>
-                                    <Label text="Last Login" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Label text="Last Login" design="Bold"/>
                                     <Text text="Current Session"/>
-                                    <Label text="Theme / Language" design="Bold" class="sapUiTinyMarginTop"/>
+                                    <Label text="Theme / Language" design="Bold"/>
                                     <Text text="SAP Horizon / English"/>
                                 </VBox>
                                 <HBox justifyContent="End" class="sapUiSmallMarginTop">

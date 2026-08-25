@@ -42,9 +42,10 @@
                         id="auditorProfilePopover"
                         title="Auditor Profile"
                         placement="Bottom"
-                        contentWidth="340px">
+                        contentWidth="340px"
+                        class="xyraProfilePopover">
                         <content>
-                            <VBox class="sapUiMediumMargin">
+                            <VBox class="xyraProfilePopoverContent">
                                 <HBox alignItems="Center" class="sapUiSmallMarginBottom">
                                     <Avatar displaySize="M" initials="AO" backgroundColor="Accent5" class="sapUiSmallMarginEnd"/>
                                     <VBox>
