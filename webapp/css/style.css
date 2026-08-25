@@ -35,22 +35,58 @@ body,
   margin: 2px 0.6rem !important;
   border-radius: 10px !important;
   box-sizing: border-box !important;
-  /* theme's own default is a white/light item background — never overridden,
-     so every unselected item showed as a white card instead of blending into
-     the dark sidebar */
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   background-color: transparent !important;
   height: 46px !important;
-  /* the .sapTntNLISelected class is applied on first render of the new page
-     (selectedKey is static per-view), but the browser sometimes doesn't
-     repaint a background swap triggered by a class toggle until something
-     else forces a layout pass — a second click was doing that by accident.
-     Declaring a transition nudges the browser to actually repaint it. */
   transition: background-color 0.15s ease !important;
+}
+
+/* Remove ALL outer blue borders, focus outlines, focus rings & pseudo-element borders from sidebar navigation items */
+.sapTntNLI,
+.sapTntNLI *,
+.sapTntNLI a,
+.sapTntNLISelected,
+.sapTntNLISelected a,
+.sapTntNLIFirstLevel,
+.sapTntNLIElementsContainer,
+.sapTntNLI:focus,
+.sapTntNLI:focus-within,
+.sapTntNLI:focus-visible,
+.sapTntNLI a:focus,
+.sapTntNLI a:focus-within,
+.sapTntNLI a:focus-visible,
+.sapTntNLISelected:focus,
+.sapTntNLISelected a:focus,
+.sapTntNLI[aria-selected="true"],
+.sapTntNLI:has(a[aria-selected="true"]),
+.sapTntNLI:has(a[aria-current="page"]) {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.sapTntNLI::before,
+.sapTntNLI::after,
+.sapTntNLI a::before,
+.sapTntNLI a::after,
+.sapTntNLISelected::before,
+.sapTntNLISelected::after,
+.sapTntNLISelected a::before,
+.sapTntNLISelected a::after {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  display: none !important;
 }
 
 .sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) {
   background: transparent !important;
   background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
 }
 
 .sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) .sapTntNLIText,
@@ -68,6 +104,8 @@ body,
 .sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])):hover {
   background-color: rgba(255, 255, 255, 0.06) !important;
   background: rgba(255, 255, 255, 0.06) !important;
+  border: none !important;
+  outline: none !important;
 }
 
 /* Sidebar Selected Highlight */
@@ -78,6 +116,9 @@ body,
 .sapTntNLI:has(a[aria-current="page"]) {
   background: linear-gradient(135deg, #533BFF, #5A5FF4) !important;
   background-color: #533BFF !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   transition: background 0.15s ease !important;
 }
 
