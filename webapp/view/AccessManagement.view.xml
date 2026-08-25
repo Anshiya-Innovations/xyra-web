@@ -78,10 +78,6 @@
                                     <Input id="createEmailInput" type="Email" placeholder="e.g. user@xyra.ai"/>
                                 </VBox>
 
-                                <VBox width="100%" class="xyraFieldGroup">
-                                    <Label text="Password" required="true" class="xyraLoginLabel"/>
-                                    <Input id="createPasswordInput" type="Password" placeholder="Enter temporary password"/>
-                                </VBox>
 
                                 <VBox width="100%" class="xyraFieldGroup">
                                     <Label text="Organization / Company" required="true" class="xyraLoginLabel"/>

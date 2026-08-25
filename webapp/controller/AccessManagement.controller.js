@@ -200,16 +200,15 @@ sap.ui.define([
         onSubmitCreateUser: function () {
             var oNameInput = this.byId("createNameInput");
             var oEmailInput = this.byId("createEmailInput");
-            var oPasswordInput = this.byId("createPasswordInput");
             var oPersonaSelect = this.byId("createPersonaSelect");
 
             var sName = oNameInput ? oNameInput.getValue().trim() : "";
             var sEmail = oEmailInput ? oEmailInput.getValue().trim() : "";
-            var sPassword = oPasswordInput ? oPasswordInput.getValue().trim() : "";
+            var sPassword = "TemporaryPassword123!";
             var sPersona = oPersonaSelect ? oPersonaSelect.getSelectedKey() : "";
 
-            if (!sName || !sEmail || !sPassword || !sPersona) {
-                MessageBox.error("Please fill in Name, Email, Password, and select a Persona.");
+            if (!sName || !sEmail || !sPersona) {
+                MessageBox.error("Please fill in Name, Email, and select a Persona.");
                 return;
             }
 
