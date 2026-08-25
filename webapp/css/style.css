@@ -93,25 +93,53 @@ body,
   font-weight: 600 !important;
 }
 
-/* Unselected sidebar item tag badges must be subtle chips, NOT solid bright purple */
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) .sapTntNLITagContainer .sapMObjStatusInverted,
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) .sapTntNLITagContainer .sapMObjStatus {
-  background-color: rgba(255, 255, 255, 0.12) !important;
-  background: rgba(255, 255, 255, 0.12) !important;
-  color: #cbd5e1 !important;
-  border-radius: 6px !important;
+/* ===== Sidebar Tag Badge Reflection & Container Background Fix ===== */
+
+.sapTntNLITagContainer,
+span.sapTntNLITagContainer {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+.sapTntNLITagContainer .sapMObjStatus {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  outline: none !important;
   border: none !important;
 }
 
-/* Selected sidebar item tag badge styling */
-.sapTntNLISelected .sapTntNLITagContainer .sapMObjStatusInverted,
-.sapTntNLI[aria-selected="true"] .sapTntNLITagContainer .sapMObjStatusInverted,
-.sapTntNLI:has(a[aria-selected="true"]) .sapTntNLITagContainer .sapMObjStatusInverted,
-.sapTntNLI:has(a[aria-current="page"]) .sapTntNLITagContainer .sapMObjStatusInverted {
-  background-color: rgba(255, 255, 255, 0.25) !important;
-  background: rgba(255, 255, 255, 0.25) !important;
-  color: #ffffff !important;
-  border-radius: 6px !important;
+.sapTntNLITagContainer .sapMObjStatusWrapper {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  outline: none !important;
+}
+
+/* Inverted indication chip styling (light green 98.4% badge) cleanly without dark reflection */
+.sapTntNLITagContainer .sapMObjStatusInverted.sapMObjStatusIndication16,
+.sapTntNLITagContainer .sapMObjStatusIndication16 {
+  background-color: #d1fae5 !important;
+  background: #d1fae5 !important;
+  color: #065f46 !important;
+  border-radius: 12px !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 2px 8px !important;
+}
+
+.sapTntNLITagContainer .sapMObjStatusInverted.sapMObjStatusIndication16 .sapMObjStatusText,
+.sapTntNLITagContainer .sapMObjStatusIndication16 .sapMObjStatusText {
+  color: #065f46 !important;
+  font-weight: 700 !important;
 }
 
 .sapTntSideNavigationSeparator {
