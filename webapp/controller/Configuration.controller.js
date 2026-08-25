@@ -15,6 +15,18 @@ sap.ui.define([
 ], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, BusyIndicator, Config, Session, killFocusRing, SidebarState, MockData, GlobalLoading) {
     "use strict";
 
+    // ponytail: shown only when the tenant has zero Systems on file yet, so a
+    // fresh install's Health tab isn't just blank — never blended with real
+    // rows (_syncHealthFromSystems picks one or the other, never both).
+    // isDummy lets Test Connection / Refresh refuse to hit the backend with
+    // a fake id instead of producing a confusing "not found" error.
+    var DUMMY_HEALTH_SYSTEMS = [
+        { id: "dummy-1", isDummy: true, sysId: "MY8", client: "000", sysType: "Development", status: "Online", statusState: "Success", statusIcon: "sap-icon://sys-enter-2", lastCheck: "—", connectionStatus: "Example data — add a real system to test connectivity." },
+        { id: "dummy-2", isDummy: true, sysId: "MQ8", client: "100", sysType: "Quality", status: "Degraded", statusState: "Warning", statusIcon: "sap-icon://alert", lastCheck: "—", connectionStatus: "Example data — add a real system to test connectivity." },
+        { id: "dummy-3", isDummy: true, sysId: "MP8", client: "800", sysType: "Production", status: "Offline", statusState: "Error", statusIcon: "sap-icon://sys-cancel-2", lastCheck: "—", connectionStatus: "Example data — add a real system to test connectivity." },
+        { id: "dummy-4", isDummy: true, sysId: "BW1", client: "100", sysType: "Production", status: "Unknown", statusState: "Information", statusIcon: "sap-icon://question-mark", lastCheck: "—", connectionStatus: "Example data — add a real system to test connectivity." }
+    ];
+
     return Controller.extend("xyraweb.controller.Configuration", {
 
         onAfterRendering: function () {
@@ -62,22 +74,87 @@ sap.ui.define([
         },
 
         _initHealthModel: function () {
-            var timestamp = this._getFormattedTimestamp();
-            var oData = {
-                kpis: { online: 5, offline: 1, degraded: 1, maintenance: 1 },
-                systems: [
-                    { sysId: "200", client: "100", sysType: "Quality", status: "Online", statusState: "Success", statusIcon: "sap-icon://sys-enter-2", responseTime: "24 ms", availability: "99.98%", availabilityState: "Success", lastCheck: timestamp, connectionStatus: "Connected - RFC Ping OK", hostName: "asmy01.xyra.com", portNumber: "3600" },
-                    { sysId: "006", client: "100", sysType: "Production", status: "Online", statusState: "Success", statusIcon: "sap-icon://sys-enter-2", responseTime: "18 ms", availability: "99.99%", availabilityState: "Success", lastCheck: timestamp, connectionStatus: "Connected - RFC Ping OK", hostName: "asmy0801.xyra.com", portNumber: "3600" },
-                    { sysId: "100", client: "100", sysType: "Production", status: "Degraded", statusState: "Warning", statusIcon: "sap-icon://alert", responseTime: "145 ms", availability: "98.20%", availabilityState: "Warning", lastCheck: timestamp, connectionStatus: "High Latency Spikes (>120ms)", hostName: "s4hana.enterprise.xyra.internal", portNumber: "44300" },
-                    { sysId: "MY8", client: "000", sysType: "Development", status: "Online", statusState: "Success", statusIcon: "sap-icon://sys-enter-2", responseTime: "32 ms", availability: "99.95%", availabilityState: "Success", lastCheck: timestamp, connectionStatus: "Connected - RFC Ping OK", hostName: "sapdev01.xyra.com", portNumber: "3200" },
-                    { sysId: "MQ8", client: "100", sysType: "Quality", status: "Offline", statusState: "Error", statusIcon: "sap-icon://sys-cancel-2", responseTime: "Timeout", availability: "94.50%", availabilityState: "Error", lastCheck: timestamp, connectionStatus: "Connection Refused (Port 3600)", hostName: "sapqas01.xyra.com", portNumber: "3600" },
-                    { sysId: "MP8", client: "800", sysType: "Production", status: "Online", statusState: "Success", statusIcon: "sap-icon://sys-enter-2", responseTime: "15 ms", availability: "99.99%", availabilityState: "Success", lastCheck: timestamp, connectionStatus: "Connected - RFC Ping OK", hostName: "sapprd01.xyra.com", portNumber: "3200" },
-                    { sysId: "BW1", client: "100", sysType: "Production", status: "Maintenance", statusState: "Information", statusIcon: "sap-icon://settings", responseTime: "N/A", availability: "99.50%", availabilityState: "Information", lastCheck: timestamp, connectionStatus: "Scheduled Kernel Maintenance", hostName: "bwprd01.xyra.com", portNumber: "3200" },
-                    { sysId: "SBX", client: "800", sysType: "Development", status: "Online", statusState: "Success", statusIcon: "sap-icon://sys-enter-2", responseTime: "42 ms", availability: "99.90%", availabilityState: "Success", lastCheck: timestamp, connectionStatus: "Connected - RFC Ping OK", hostName: "sapsbx01.xyra.com", portNumber: "3200" }
-                ]
-            };
-            this.getView().setModel(new JSONModel(oData), "healthModel");
+            this.getView().setModel(new JSONModel({ kpis: { online: 0, offline: 0, degraded: 0, unknown: 0 }, systems: [], isDummyData: false }), "healthModel");
+        },
+
+        // Rebuilds the health table from the real Systems list (systemModel,
+        // loaded by _loadSystems) — every row starts "Unknown" until a real
+        // testSystemConnection call has actually run against it. Keeps
+        // existing test results for systems that were already checked
+        // (e.g. after a plain reload of the landscape list) instead of
+        // wiping them back to Unknown every time. If no real systems exist
+        // yet, falls back to DUMMY_HEALTH_SYSTEMS so the tab isn't blank.
+        _syncHealthFromSystems: function () {
+            var aSystems = this.getView().getModel("systemModel").getProperty("/systems") || [];
+            var oHealthModel = this.getView().getModel("healthModel");
+
+            if (!aSystems.length) {
+                oHealthModel.setProperty("/systems", DUMMY_HEALTH_SYSTEMS.map(function (r) { return Object.assign({}, r); }));
+                oHealthModel.setProperty("/isDummyData", true);
+                this._recalculateHealthKpis();
+                return;
+            }
+
+            var oExistingById = {};
+            (oHealthModel.getProperty("/systems") || []).forEach(function (row) { oExistingById[row.id] = row; });
+
+            var aRows = aSystems.map(function (sys) {
+                var oRow = oExistingById[sys.id] || {
+                    id: sys.id,
+                    status: "Unknown",
+                    statusState: "Information",
+                    statusIcon: "sap-icon://question-mark",
+                    lastCheck: "Never",
+                    connectionStatus: "Not yet tested"
+                };
+                oRow.sysId = sys.sysId;
+                oRow.client = sys.client;
+                oRow.sysType = sys.sysType;
+                return oRow;
+            });
+
+            oHealthModel.setProperty("/isDummyData", false);
+            oHealthModel.setProperty("/systems", aRows);
             this._recalculateHealthKpis();
+        },
+
+        // Fixed latency cutoff for "reachable but slow" vs. "Online" — the
+        // only degradation signal we actually have from connection_engine's
+        // real latencyMs, not a fabricated metric. Tune if real systems'
+        // normal latency runs higher than this.
+        _isDegradedLatency: function (iLatencyMs) {
+            return iLatencyMs != null && iLatencyMs >= 1000;
+        },
+
+        // Runs one real connection test (via SystemConfigService.testSystemConnection
+        // -> connection_engine) and mutates oRow in place with the result.
+        _testOneSystem: function (oRow, oSession) {
+            return fetch(Config.AUTH_BASE_URL + "/api/system-config/testSystemConnection", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: oSession.subdomain, id: oRow.id })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    oRow.lastCheck = this._getFormattedTimestamp();
+                    oRow.connectionStatus = oData.message || (oData.success ? "OK" : "Connection test failed.");
+                    if (!oData.success) {
+                        oRow.status = "Offline"; oRow.statusState = "Error"; oRow.statusIcon = "sap-icon://sys-cancel-2";
+                    } else if (this._isDegradedLatency(oData.latencyMs)) {
+                        oRow.status = "Degraded"; oRow.statusState = "Warning"; oRow.statusIcon = "sap-icon://alert";
+                    } else {
+                        oRow.status = "Online"; oRow.statusState = "Success"; oRow.statusIcon = "sap-icon://sys-enter-2";
+                    }
+                    return oData;
+                }.bind(this))
+                .catch(function () {
+                    oRow.lastCheck = this._getFormattedTimestamp();
+                    oRow.status = "Offline";
+                    oRow.statusState = "Error";
+                    oRow.statusIcon = "sap-icon://sys-cancel-2";
+                    oRow.connectionStatus = "Could not reach xyra-core to run the test.";
+                    return { success: false };
+                }.bind(this));
         },
 
         _getFormattedTimestamp: function () {
@@ -95,44 +172,55 @@ sap.ui.define([
             var oModel = this.getView().getModel("healthModel");
             if (!oModel) { return; }
             var aSystems = oModel.getProperty("/systems") || [];
-            var iOnline = 0, iOffline = 0, iDegraded = 0, iMaint = 0;
+            var iOnline = 0, iOffline = 0, iDegraded = 0, iUnknown = 0;
             aSystems.forEach(function (sys) {
                 if (sys.status === "Online") { iOnline++; }
                 else if (sys.status === "Offline") { iOffline++; }
                 else if (sys.status === "Degraded") { iDegraded++; }
-                else if (sys.status === "Maintenance") { iMaint++; }
+                else { iUnknown++; }
             });
-            oModel.setProperty("/kpis", { online: iOnline, offline: iOffline, degraded: iDegraded, maintenance: iMaint });
+            oModel.setProperty("/kpis", { online: iOnline, offline: iOffline, degraded: iDegraded, unknown: iUnknown });
         },
 
+        // Runs a real connection test against every system on file, in
+        // parallel, via connection_engine — no simulated latency/status.
         onRefreshHealth: function () {
+            var oHealthModel = this.getView().getModel("healthModel");
+            if (oHealthModel.getProperty("/isDummyData")) {
+                MessageToast.show("Showing example data — add a real system under System Landscape to run live checks.");
+                return;
+            }
+
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                return;
+            }
+
+            var aRows = oHealthModel.getProperty("/systems") || [];
+            if (!aRows.length) {
+                MessageToast.show("No systems on file — add one under System Landscape first.");
+                return;
+            }
+
             BusyIndicator.show(0);
-            setTimeout(function () {
-                BusyIndicator.hide();
-                var oModel = this.getView().getModel("healthModel");
-                var aSystems = oModel.getProperty("/systems");
-                var timestamp = this._getFormattedTimestamp();
-                aSystems.forEach(function (sys) {
-                    sys.lastCheck = timestamp;
-                    if (sys.status === "Online") {
-                        sys.responseTime = (12 + Math.floor(Math.random() * 25)) + " ms";
-                    } else if (sys.status === "Degraded") {
-                        sys.responseTime = (115 + Math.floor(Math.random() * 40)) + " ms";
-                    }
-                });
-                oModel.setProperty("/systems", aSystems);
-                this._recalculateHealthKpis();
-                MessageToast.show("SAP System Health telemetry refreshed.");
-            }.bind(this), 600);
+            Promise.all(aRows.map(function (oRow) { return this._testOneSystem(oRow, oSession); }.bind(this)))
+                .then(function (aResults) {
+                    BusyIndicator.hide();
+                    oHealthModel.refresh(true);
+                    this._recalculateHealthKpis();
+                    var iOk = aResults.filter(function (r) { return r.success; }).length;
+                    MessageToast.show("Connectivity check complete: " + iOk + "/" + aRows.length + " systems reachable.");
+                }.bind(this));
         },
 
         onAutoRefreshToggle: function (oEvent) {
             var bState = oEvent.getParameter("state");
             if (bState) {
-                MessageToast.show("Auto Refresh Enabled (5s Interval)");
+                MessageToast.show("Auto Refresh Enabled (15s Interval)");
                 this._autoRefreshInterval = setInterval(function () {
                     this.onRefreshHealth();
-                }.bind(this), 5000);
+                }.bind(this), 15000);
             } else {
                 if (this._autoRefreshInterval) {
                     clearInterval(this._autoRefreshInterval);
@@ -172,25 +260,34 @@ sap.ui.define([
 
         onTestSingleConnection: function (oEvent) {
             var oContext = oEvent.getSource().getBindingContext("healthModel");
-            var oSys = oContext.getObject();
+            var oRow = oContext.getObject();
+            if (oRow.isDummy) {
+                MessageToast.show("Showing example data — add a real system under System Landscape to run live checks.");
+                return;
+            }
+
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                return;
+            }
+
             BusyIndicator.show(0);
-            setTimeout(function () {
+            this._testOneSystem(oRow, oSession).then(function (oData) {
                 BusyIndicator.hide();
-                if (oSys.status === "Offline") {
-                    MessageBox.error("RFC Ping Failed for System " + oSys.sysId + " (" + oSys.hostName + ":" + oSys.portNumber + ").\nReason: Connection Refused / Port Unreachable.");
+                this.getView().getModel("healthModel").refresh(true);
+                this._recalculateHealthKpis();
+                if (oData.success) {
+                    var sLatency = oData.latencyMs != null ? " (" + oData.latencyMs + " ms)" : "";
+                    MessageToast.show("Connection to " + oRow.sysId + " succeeded" + sLatency + ".");
                 } else {
-                    MessageToast.show("RFC Ping Successful for " + oSys.sysId + " (Latency: " + oSys.responseTime + ")");
+                    MessageBox.error(oRow.connectionStatus || "Connection test failed.");
                 }
-            }, 800);
+            }.bind(this));
         },
 
         onTestAllConnections: function () {
-            BusyIndicator.show(0);
-            setTimeout(function () {
-                BusyIndicator.hide();
-                MessageToast.show("All SAP Systems Connectivity Verified. 7 Systems Active, 1 Offline.");
-                this.onRefreshHealth();
-            }.bind(this), 1000);
+            this.onRefreshHealth();
         },
 
         onSystemIdPress: function (oEvent) {
@@ -227,11 +324,19 @@ sap.ui.define([
                         return;
                     }
                     this.getView().getModel("systemModel").setProperty("/systems", oData.systems || []);
+                    this._syncHealthFromSystems();
+                    // Real systems on file -> run a live check immediately so
+                    // the Health tab shows actual status on load instead of
+                    // sitting at "Unknown" until someone clicks Refresh.
+                    if (!this.getView().getModel("healthModel").getProperty("/isDummyData")) {
+                        this.onRefreshHealth();
+                    }
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
                     MockData.notice(MessageToast);
                     this.getView().getModel("systemModel").setProperty("/systems", MockData.systems);
+                    this._syncHealthFromSystems();
                 }.bind(this));
         },
 
@@ -263,6 +368,9 @@ sap.ui.define([
                 if (this.byId("newClient")) { this.byId("newClient").setValue("100"); }
                 if (this.byId("newHostName")) { this.byId("newHostName").setValue(""); }
                 if (this.byId("newSysDetails")) { this.byId("newSysDetails").setValue(""); }
+                if (this.byId("newEndpoint")) { this.byId("newEndpoint").setValue(""); }
+                if (this.byId("newCredUserId")) { this.byId("newCredUserId").setValue(""); }
+                if (this.byId("newCredPassword")) { this.byId("newCredPassword").setValue(""); }
                 oDialog.open();
             }
         },
@@ -304,7 +412,10 @@ sap.ui.define([
                 sysVersion: this.byId("newSysVersion") ? this.byId("newSysVersion").getValue().trim() : "",
                 logonGroup: this.byId("newLogonGroup") ? this.byId("newLogonGroup").getValue().trim() : "",
                 portNumber: this.byId("newPortNumber") ? this.byId("newPortNumber").getValue().trim() : "",
-                instanceNo: this.byId("newInstanceNo") ? this.byId("newInstanceNo").getValue().trim() : ""
+                instanceNo: this.byId("newInstanceNo") ? this.byId("newInstanceNo").getValue().trim() : "",
+                endpoint: this.byId("newEndpoint") ? this.byId("newEndpoint").getValue().trim() : "",
+                credUserId: this.byId("newCredUserId") ? this.byId("newCredUserId").getValue().trim() : "",
+                credPassword: this.byId("newCredPassword") ? this.byId("newCredPassword").getValue() : ""
             };
 
             BusyIndicator.show(0);
@@ -355,6 +466,9 @@ sap.ui.define([
                 if (this.byId("editLogonGroup")) { this.byId("editLogonGroup").setValue(oItem.logonGroup); }
                 if (this.byId("editPortNumber")) { this.byId("editPortNumber").setValue(oItem.portNumber); }
                 if (this.byId("editInstanceNo")) { this.byId("editInstanceNo").setValue(oItem.instanceNo); }
+                if (this.byId("editEndpoint")) { this.byId("editEndpoint").setValue(oItem.endpoint || ""); }
+                if (this.byId("editCredUserId")) { this.byId("editCredUserId").setValue(""); }
+                if (this.byId("editCredPassword")) { this.byId("editCredPassword").setValue(""); }
                 oDialog.open();
             }
         },
@@ -392,7 +506,10 @@ sap.ui.define([
                 sysVersion: this.byId("editSysVersion") ? this.byId("editSysVersion").getValue().trim() : this._editingSystemItem.sysVersion,
                 logonGroup: this.byId("editLogonGroup") ? this.byId("editLogonGroup").getValue().trim() : this._editingSystemItem.logonGroup,
                 portNumber: this.byId("editPortNumber") ? this.byId("editPortNumber").getValue().trim() : this._editingSystemItem.portNumber,
-                instanceNo: this.byId("editInstanceNo") ? this.byId("editInstanceNo").getValue().trim() : this._editingSystemItem.instanceNo
+                instanceNo: this.byId("editInstanceNo") ? this.byId("editInstanceNo").getValue().trim() : this._editingSystemItem.instanceNo,
+                endpoint: this.byId("editEndpoint") ? this.byId("editEndpoint").getValue().trim() : this._editingSystemItem.endpoint,
+                credUserId: this.byId("editCredUserId") ? this.byId("editCredUserId").getValue().trim() : "",
+                credPassword: this.byId("editCredPassword") ? this.byId("editCredPassword").getValue() : ""
             };
 
             BusyIndicator.show(0);
@@ -424,6 +541,42 @@ sap.ui.define([
                     MessageToast.show("SAP System '" + sSysId + "' updated successfully!");
                     this._loadSystems();
                 }.bind(this));
+        },
+
+        // Live-hits the system's authenticated ping endpoint via
+        // connection_engine (see xyra-core). Deliberately no offline mock
+        // fallback here, unlike the other System actions — faking "success"
+        // when xyra-core itself is unreachable would defeat the point of a
+        // connection test.
+        onTestSystemConnection: function (oEvent) {
+            var oItem = oEvent.getSource().getBindingContext("systemModel").getObject();
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                return;
+            }
+
+            BusyIndicator.show(0);
+
+            fetch(Config.AUTH_BASE_URL + "/api/system-config/testSystemConnection", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: oSession.subdomain, id: oItem.id })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+                    var sLatency = oData.latencyMs != null ? " (" + oData.latencyMs + " ms)" : "";
+                    if (oData.success) {
+                        MessageToast.show("Connection to " + oItem.sysId + " succeeded" + sLatency + ".");
+                    } else {
+                        MessageBox.error((oData.message || "Connection test failed.") + sLatency);
+                    }
+                })
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onDeleteSystem: function (oEvent) {

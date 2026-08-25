@@ -47,7 +47,7 @@ sap.ui.define([
     // quick way to try each role without memorizing addresses.
     var DEMO_EMAIL_FOR_ROLE = {
         ADMIN: "admin@xyrademo.test",
-        ACM: "manager@xyrademo.test",
+        ACM: "escalationmanager@xyrademo.test",
         REV1: "reviewer1@xyrademo.test",
         REV2: "reviewer2@xyrademo.test",
         AUDITOR: "auditor@xyrademo.test"

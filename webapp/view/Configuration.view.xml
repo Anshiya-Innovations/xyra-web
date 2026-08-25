@@ -137,6 +137,22 @@
                                         <Input id="newInstanceNo" value="00" placeholder="e.g. 00"/>
                                     </VBox>
                                 </HBox>
+
+                                <Title text="Connection &amp; Credentials" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Endpoint (base URL)" class="xyraLoginLabel"/>
+                                        <Input id="newEndpoint" placeholder="e.g. http://localhost:8000"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="User ID" class="xyraLoginLabel"/>
+                                        <Input id="newCredUserId" placeholder="Basic Auth user"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Password" class="xyraLoginLabel"/>
+                                        <Input id="newCredPassword" type="Password" placeholder="Basic Auth password"/>
+                                    </VBox>
+                                </HBox>
                             </VBox>
                         </content>
                         <beginButton>
@@ -225,6 +241,27 @@
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="Instance Number" class="xyraLoginLabel"/>
                                         <Input id="editInstanceNo"/>
+                                    </VBox>
+                                </HBox>
+
+                                <Title text="Connection &amp; Credentials" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
+                                <MessageStrip
+                                    text="Leave User ID / Password blank to keep the credentials already on file."
+                                    type="Information"
+                                    showIcon="true"
+                                    class="sapUiTinyMarginBottom"/>
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Endpoint (base URL)" class="xyraLoginLabel"/>
+                                        <Input id="editEndpoint" placeholder="e.g. http://localhost:8000"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="User ID" class="xyraLoginLabel"/>
+                                        <Input id="editCredUserId" placeholder="Basic Auth user"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Password" class="xyraLoginLabel"/>
+                                        <Input id="editCredPassword" type="Password" placeholder="Basic Auth password"/>
                                     </VBox>
                                 </HBox>
                             </VBox>
@@ -360,6 +397,7 @@
                                                 <Text text="{systemModel>portNumber}"/>
                                                 <Text text="{systemModel>instanceNo}"/>
                                                 <HBox justifyContent="Center" alignItems="Center">
+                                                    <Button icon="sap-icon://connected" type="Transparent" press="onTestSystemConnection" tooltip="Test Connection" class="sapUiTinyMarginEnd"/>
                                                     <Button icon="sap-icon://edit" type="Emphasized" press="onEditSystem" tooltip="Edit System" class="sapUiTinyMarginEnd"/>
                                                     <Button icon="sap-icon://delete" type="Reject" press="onDeleteSystem" tooltip="Delete System"/>
                                                 </HBox>
@@ -387,6 +425,13 @@
                                 </HBox>
                             </HBox>
 
+                            <MessageStrip
+                                text="No systems configured yet — showing example data below. Add a system under System Landscape to see live health."
+                                type="Information"
+                                showIcon="true"
+                                visible="{healthModel>/isDummyData}"
+                                class="sapUiSmallMarginBottom"/>
+
                             <!-- HEALTH KPI CARDS SUMMARY BAR -->
                             <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
                                 <!-- ONLINE SYSTEMS -->
@@ -399,8 +444,7 @@
                                         <Avatar src="sap-icon://sys-enter-2" backgroundColor="Accent8" displaySize="M"/>
                                     </HBox>
                                     <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
-                                        <ObjectStatus text="🟢 Operational" state="Success"/>
-                                        <Text text="SLA: 99.98%" class="fontSizeSmall textMuted sapUiTinyMarginBegin"/>
+                                        <ObjectStatus text="Reachable, authenticated OK" state="Success"/>
                                     </HBox>
                                 </VBox>
 
@@ -414,12 +458,11 @@
                                         <Avatar src="sap-icon://sys-cancel-2" backgroundColor="Accent1" displaySize="M"/>
                                     </HBox>
                                     <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
-                                        <ObjectStatus text="🔴 Connection Failure" state="Error"/>
-                                        <Text text="Alert Active" class="fontSizeSmall textDanger fontWeightBold sapUiTinyMarginBegin"/>
+                                        <ObjectStatus text="Unreachable or auth rejected" state="Error"/>
                                     </HBox>
                                 </VBox>
 
-                                <!-- DEGRADED SYSTEMS -->
+                                <!-- DEGRADED SYSTEMS (reachable but slow) -->
                                 <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #f59e0b; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
                                     <HBox justifyContent="SpaceBetween" alignItems="Center">
                                         <VBox>
@@ -429,23 +472,21 @@
                                         <Avatar src="sap-icon://alert" backgroundColor="Accent3" displaySize="M"/>
                                     </HBox>
                                     <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
-                                        <ObjectStatus text="🟠 High Latency" state="Warning"/>
-                                        <Text text="Latency > 120ms" class="fontSizeSmall textWarning sapUiTinyMarginBegin"/>
+                                        <ObjectStatus text="Reachable, high latency" state="Warning"/>
                                     </HBox>
                                 </VBox>
 
-                                <!-- MAINTENANCE SYSTEMS -->
+                                <!-- UNTESTED SYSTEMS -->
                                 <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #3b82f6; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
                                     <HBox justifyContent="SpaceBetween" alignItems="Center">
                                         <VBox>
-                                            <Text text="Maintenance Systems" class="textMuted fontSizeSmall fontWeightBold"/>
-                                            <Title text="{healthModel>/kpis/maintenance}" level="H2" class="sapUiTinyMarginTop textPrimary fontWeightBold"/>
+                                            <Text text="Untested Systems" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Title text="{healthModel>/kpis/unknown}" level="H2" class="sapUiTinyMarginTop textPrimary fontWeightBold"/>
                                         </VBox>
-                                        <Avatar src="sap-icon://settings" backgroundColor="Accent6" displaySize="M"/>
+                                        <Avatar src="sap-icon://question-mark" backgroundColor="Accent6" displaySize="M"/>
                                     </HBox>
                                     <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
-                                        <ObjectStatus text="⚙ Scheduled Patch" state="Information"/>
-                                        <Text text="Window Active" class="fontSizeSmall textMuted sapUiTinyMarginBegin"/>
+                                        <ObjectStatus text="No check run yet" state="Information"/>
                                     </HBox>
                                 </VBox>
                             </HBox>
@@ -459,7 +500,7 @@
                                     <core:Item key="Online" text="🟢 Online"/>
                                     <core:Item key="Offline" text="🔴 Offline"/>
                                     <core:Item key="Degraded" text="🟠 Degraded"/>
-                                    <core:Item key="Maintenance" text="⚙ Maintenance"/>
+                                    <core:Item key="Unknown" text="❔ Untested"/>
                                 </Select>
                             </HBox>
 
@@ -486,7 +527,7 @@
                                                 <Text text="{healthModel>lastCheck}" class="fontSizeSmall textMuted"/>
                                                 <Text text="{healthModel>connectionStatus}"/>
                                                 <HBox justifyContent="Center" alignItems="Center">
-                                                    <Button icon="sap-icon://chain-link" type="Transparent" press="onTestSingleConnection" tooltip="Test RFC Connection" class="sapUiTinyMarginEnd"/>
+                                                    <Button icon="sap-icon://chain-link" type="Transparent" press="onTestSingleConnection" tooltip="Test Connection" class="sapUiTinyMarginEnd"/>
                                                     <Button icon="sap-icon://slim-arrow-right" type="Emphasized" press="onSystemIdPress" tooltip="View System Health Details"/>
                                                 </HBox>
                                             </cells>
