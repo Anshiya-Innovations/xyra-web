@@ -89,12 +89,25 @@ sap.ui.define([
             }
 
             this._loadOrgData("ORG-TATA-01");
+            this._syncSidebar();
         },
 
         _onRouteMatched: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments");
             var sOrgId = oArgs && oArgs.orgId ? oArgs.orgId : "ORG-TATA-01";
             this._loadOrgData(sOrgId);
+            this._syncSidebar();
+        },
+
+        _syncSidebar: function () {
+            var oSideNav = this.byId("sideNavigation");
+            if (oSideNav) {
+                oSideNav.setSelectedKey("Organization");
+            }
+            var oNavList = this.byId("navigationList");
+            if (oNavList) {
+                oNavList.setSelectedKey("Organization");
+            }
         },
 
         _loadOrgData: function (sOrgId) {
