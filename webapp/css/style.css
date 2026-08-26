@@ -2112,4 +2112,131 @@ div[id*="-text"] {
   flex-shrink: 0 !important;
 }
 
+/* ==========================================================================
+   PROFILE INPUT BOX STYLING (MATCHING CONTROL MANAGEMENT DESCR TEXTAREA)
+   ========================================================================== */
+.sapUiFormCLFormElement,
+.sapUiFormCLElement,
+.sapUiFormCLContent,
+.sapUiFormCLRow,
+.sapUiFormCLContainer,
+.sapUiFormElement,
+.sapFormElement,
+.sapUiFormResLayoutFormElement,
+.sapUiFormResLayoutRow {
+  margin-bottom: 18px !important;
+  padding-bottom: 6px !important;
+  min-height: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.sapUiFormCLFormElement .sapMInputBase,
+.sapUiFormCLElement .sapMInputBase,
+.sapUiFormCLContainer .sapMInputBase,
+.sapUiFormElement .sapMInputBase,
+.sapMSimpleForm .sapMInputBase,
+.sapUiForm .sapMInputBase,
+.sapForm .sapMInputBase,
+.sapMInputBase,
+.xyraFormInput {
+  margin-top: 4px !important;
+  margin-bottom: 20px !important;
+}
+
+.sapMSimpleForm .sapMInputBaseContentWrapper,
+.sapUiForm .sapMInputBaseContentWrapper,
+.sapMInputBaseContentWrapper,
+.xyraFormInput .sapMInputBaseContentWrapper {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
+  margin-top: 4px !important;
+  margin-bottom: 20px !important;
+  box-sizing: border-box !important;
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  outline: none !important;
+  outline-offset: 0 !important;
+}
+
+/* Suppress SAPUI5 inner pseudo-element double borders */
+.sapMSimpleForm .sapMInputBaseContentWrapper::before,
+.sapMSimpleForm .sapMInputBaseContentWrapper::after,
+.sapUiForm .sapMInputBaseContentWrapper::before,
+.sapUiForm .sapMInputBaseContentWrapper::after,
+.sapMInputBaseContentWrapper::before,
+.sapMInputBaseContentWrapper::after,
+.xyraFormInput .sapMInputBaseContentWrapper::before,
+.xyraFormInput .sapMInputBaseContentWrapper::after {
+  display: none !important;
+  content: none !important;
+}
+
+.sapMSimpleForm .sapMInputBaseContentWrapper:hover,
+.sapUiForm .sapMInputBaseContentWrapper:hover,
+.xyraFormInput .sapMInputBaseContentWrapper:hover {
+  border: 1px solid #5b50f6 !important;
+}
+
+.sapMSimpleForm .sapMInputBaseContentWrapper.sapMInputBaseContentWrapperFocus,
+.sapUiForm .sapMInputBaseContentWrapper.sapMInputBaseContentWrapperFocus,
+.xyraFormInput .sapMInputBaseContentWrapper.sapMInputBaseContentWrapperFocus,
+.sapMInputBaseContentWrapper:focus-within {
+  border: 1px solid #4337e7 !important;
+  box-shadow: 0 0 0 3px rgba(91, 80, 246, 0.2) !important;
+  outline: none !important;
+}
+
+/* Readonly Input Styling (Admin ID, Persona, Subdomain) */
+.sapMInputBaseReadonlyWrapper,
+.sapMSimpleForm .sapMInputBaseReadonlyWrapper,
+.sapUiForm .sapMInputBaseReadonlyWrapper {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+}
+
+.sapMInputBaseReadonlyWrapper:hover,
+.sapMSimpleForm .sapMInputBaseReadonlyWrapper:hover {
+  border: 1px solid #e2e8f0 !important;
+}
+
+.sapMSimpleForm .sapMInputBaseInner,
+.sapUiForm .sapMInputBaseInner,
+.sapForm .sapMInputBaseInner,
+.xyraFormInput .sapMInputBaseInner,
+.sapMInputBaseInner {
+  padding: 0 0.875rem !important;
+  font-size: 0.875rem !important;
+  color: #1e293b !important;
+  background: transparent !important;
+  height: 100% !important;
+  line-height: 40px !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  box-sizing: border-box !important;
+}
+
+.sapMInputBaseReadonlyWrapper .sapMInputBaseInner {
+  color: #64748b !important;
+  cursor: not-allowed !important;
+}
+
+.sapUiForm .sapMLabel,
+.sapForm .sapMLabel,
+.sapMSimpleForm .sapMLabel,
+.sapMForm .sapMLabel,
+.sapUiFormCLLabel {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.35rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+}
+
 

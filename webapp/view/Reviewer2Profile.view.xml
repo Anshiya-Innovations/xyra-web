@@ -84,7 +84,7 @@
 
                         <!-- SECTION 1 – PERSONAL & ACCOUNT DETAILS -->
                         <Panel headerText="Personal &amp; Account Details" expandable="false" class="sapUiSmallMarginBottom">
-                            <form:SimpleForm editable="true" layout="ColumnLayout">
+                            <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                                 <form:content>
                                     <core:Title text="Personal Details"/>
 
@@ -106,13 +106,13 @@
                                     <core:Title text="Account &amp; System Details"/>
 
                                     <Label text="Reviewer ID"/>
-                                    <Input id="profReviewerId2" value="{profileModel>/reviewerId}" editable="false" class="xyraFormInput"/>
+                                    <Input id="profReviewerId2" value="{profileModel>/reviewerId}" editable="true" class="xyraFormInput"/>
 
                                     <Label text="Assigned Persona"/>
-                                    <Input id="profPersona2" value="{profileModel>/persona}" editable="false" class="xyraFormInput"/>
+                                    <Input id="profPersona2" value="{profileModel>/persona}" editable="true" class="xyraFormInput"/>
 
                                     <Label text="Enterprise Subdomain"/>
-                                    <Input id="profSubdomain2" value="{profileModel>/subdomain}" editable="false" class="xyraFormInput"/>
+                                    <Input id="profSubdomain2" value="{profileModel>/subdomain}" editable="true" class="xyraFormInput"/>
                                 </form:content>
                             </form:SimpleForm>
                         </Panel>
