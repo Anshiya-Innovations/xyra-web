@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
     "sap/ui/model/json/JSONModel",
-    "xyraweb/service/DeviationService"
-], function (Controller, MessageToast, JSONModel, DeviationService) {
+    "xyraweb/service/DeviationService",
+    "xyraweb/model/GlobalLoading"
+], function (Controller, MessageToast, JSONModel, DeviationService, GlobalLoading) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.AlertItem", {
@@ -130,7 +131,7 @@ sap.ui.define([
         onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); },
 
         onLogout: function () {
-            this.getOwnerComponent().getRouter().navTo("Login");
+            GlobalLoading.logout(this);
         }
 
     });

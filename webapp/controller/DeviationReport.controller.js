@@ -3,8 +3,9 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "sap/ui/model/json/JSONModel",
-    "xyraweb/service/DeviationService"
-], function (Controller, MessageToast, MessageBox, JSONModel, DeviationService) {
+    "xyraweb/service/DeviationService",
+    "xyraweb/model/GlobalLoading"
+], function (Controller, MessageToast, MessageBox, JSONModel, DeviationService, GlobalLoading) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.DeviationReport", {
@@ -248,7 +249,7 @@ sap.ui.define([
         },
 
         onLogout: function () {
-            this.getOwnerComponent().getRouter().navTo("Login");
+            GlobalLoading.logout(this);
         },
 
         _runQuery: function () {

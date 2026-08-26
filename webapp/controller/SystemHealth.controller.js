@@ -5,8 +5,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/core/BusyIndicator",
     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
-], function (Controller, JSONModel, MessageToast, MessageBox, BusyIndicator, Filter, FilterOperator) {
+    "sap/ui/model/FilterOperator",
+    "xyraweb/model/GlobalLoading"
+], function (Controller, JSONModel, MessageToast, MessageBox, BusyIndicator, Filter, FilterOperator, GlobalLoading) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.SystemHealth", {
@@ -344,7 +345,7 @@ sap.ui.define([
         },
 
         onLogout: function () {
-            sap.ui.core.UIComponent.getRouterFor(this).navTo("Login");
+            GlobalLoading.logout(this);
         }
     });
 });

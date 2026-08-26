@@ -3,13 +3,15 @@ sap.ui.define([
     "sap/ui/core/UIComponent",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
-    "sap/m/MessageBox"
+    "sap/m/MessageBox",
+    "xyraweb/model/GlobalLoading"
 ], function (
     Controller,
     UIComponent,
     JSONModel,
     MessageToast,
-    MessageBox
+    MessageBox,
+    GlobalLoading
 ) {
     "use strict";
 
@@ -145,7 +147,7 @@ sap.ui.define([
         },
 
         onLogout: function () {
-            UIComponent.getRouterFor(this).navTo("Login");
+            GlobalLoading.logout(this);
         },
 
         onQuickAction: function () {

@@ -106,12 +106,32 @@ sap.ui.define([
         },
 
         logout: function (oController) {
-            this.show("Logout", 3000, true);
+            try {
+                var Session = sap.ui.require("xyraweb/model/session");
+                if (Session && typeof Session.clear === "function") {
+                    Session.clear();
+                }
+            } catch (e) {
+                // Ignore if session module not yet loaded
+            }
+
+            this.show("Logout", 500, true);
             setTimeout(function () {
-                if (oController && typeof oController.navToRoute === "function") {
-                    oController.navToRoute("Login");
-                } else if (oController && oController.getOwnerComponent && oController.getOwnerComponent().getRouter()) {
-                    oController.getOwnerComponent().getRouter().navTo("Login");
+                var oRouter = null;
+                if (oController) {
+                    if (typeof oController.getOwnerComponent === "function" && oController.getOwnerComponent()) {
+                        oRouter = oController.getOwnerComponent().getRouter();
+                    }
+                    if (!oRouter && typeof sap !== "undefined" && sap.ui && sap.ui.core && sap.ui.core.UIComponent) {
+                        oRouter = sap.ui.core.UIComponent.getRouterFor(oController);
+                    }
+                    if (!oRouter && typeof oController.navToRoute === "function") {
+                        oController.navToRoute("Login");
+                        return;
+                    }
+                }
+                if (oRouter) {
+                    oRouter.navTo("Login");
                 } else {
                     window.location.hash = "#/Login";
                 }

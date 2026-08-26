@@ -5,7 +5,8 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
-    "sap/m/MessageBox"
+    "sap/m/MessageBox",
+    "xyraweb/model/GlobalLoading"
 ], function (
     Controller,
     UIComponent,
@@ -13,7 +14,8 @@ sap.ui.define([
     Filter,
     FilterOperator,
     MessageToast,
-    MessageBox
+    MessageBox,
+    GlobalLoading
 ) {
     "use strict";
 
@@ -710,7 +712,7 @@ sap.ui.define([
         },
 
         onLogout: function () {
-            UIComponent.getRouterFor(this).navTo("Login");
+            GlobalLoading.logout(this);
         }
 
     });

@@ -3,8 +3,9 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/ui/core/BusyIndicator",
-    "sap/ui/core/routing/History"
-], function (Controller, JSONModel, MessageToast, BusyIndicator, History) {
+    "sap/ui/core/routing/History",
+    "xyraweb/model/GlobalLoading"
+], function (Controller, JSONModel, MessageToast, BusyIndicator, History, GlobalLoading) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.SystemHealthDetails", {
@@ -136,7 +137,7 @@ sap.ui.define([
         },
 
         onLogout: function () {
-            sap.ui.core.UIComponent.getRouterFor(this).navTo("Login");
+            GlobalLoading.logout(this);
         }
     });
 });

@@ -5,7 +5,8 @@ sap.ui.define([
     "sap/m/MessageBox",
     "xyraweb/model/sidebarState",
     "xyraweb/model/auditLogService",
-    "xyraweb/model/session"
+    "xyraweb/model/session",
+    "xyraweb/model/GlobalLoading"
 ], function (
     Controller,
     UIComponent,

@@ -5,8 +5,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "xyraweb/model/sidebarState"
-], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, SidebarState) {
+    "xyraweb/model/sidebarState",
+    "xyraweb/model/GlobalLoading"
+], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, SidebarState, GlobalLoading) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.AutomationMonitoring", {
@@ -305,8 +306,7 @@ sap.ui.define([
 
         onNotificationPress: function () { MessageToast.show("No new notifications."); },
         onLogout: function () {
-            MessageToast.show("Logged Out Successfully");
-            this.getOwnerComponent().getRouter().navTo("Login");
+            GlobalLoading.logout(this);
         }
 
     });
