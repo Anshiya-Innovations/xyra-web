@@ -2239,4 +2239,49 @@ div[id*="-text"] {
   color: #334155 !important;
 }
 
+/* ==========================================================================
+   MODERN HYPER-ELEGANT TOGGLE NAVIGATION BUTTON DESIGN
+   ========================================================================== */
+.sapMBtn[tooltip="Toggle Navigation"],
+.xyraNavToggleButton {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  padding: 0 !important;
+  width: 38px !important;
+  height: 38px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.sapMBtn[tooltip="Toggle Navigation"]:hover,
+.xyraNavToggleButton:hover {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+  border-color: #4f46e5 !important;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3) !important;
+  transform: translateY(-1px) scale(1.04) !important;
+}
+
+.sapMBtn[tooltip="Toggle Navigation"] .sapMBtnIcon,
+.xyraNavToggleButton .sapMBtnIcon {
+  color: #475569 !important;
+  font-size: 1.15rem !important;
+  transition: color 0.2s ease-in-out, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.sapMBtn[tooltip="Toggle Navigation"]:hover .sapMBtnIcon,
+.xyraNavToggleButton:hover .sapMBtnIcon {
+  color: #ffffff !important;
+  transform: rotate(90deg) !important;
+}
+
+.sapMBtn[tooltip="Toggle Navigation"]:active,
+.xyraNavToggleButton:active {
+  transform: translateY(0) scale(0.97) !important;
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2) !important;
+}
+
 
