@@ -89,33 +89,30 @@
                                     <core:Title text="Personal Details"/>
 
                                     <Label text="Full Name"/>
-                                    <Input id="profFullName" value="{profileModel>/fullName}"/>
+                                    <Input id="profFullName" value="{profileModel>/fullName}" class="xyraFormInput"/>
 
                                     <Label text="Email Address"/>
-                                    <Input id="profEmail" type="Email" value="{profileModel>/email}"/>
+                                    <Input id="profEmail" type="Email" value="{profileModel>/email}" class="xyraFormInput"/>
 
                                     <Label text="Phone Number"/>
-                                    <Input id="profPhone" type="Tel" value="{profileModel>/phone}"/>
+                                    <Input id="profPhone" type="Tel" value="{profileModel>/phone}" class="xyraFormInput"/>
 
                                     <Label text="Department"/>
-                                    <Input id="profDepartment" value="{profileModel>/department}"/>
+                                    <Input id="profDepartment" value="{profileModel>/department}" class="xyraFormInput"/>
 
                                     <Label text="Organization"/>
-                                    <Input id="profOrg" value="{profileModel>/organization}"/>
+                                    <Input id="profOrg" value="{profileModel>/organization}" class="xyraFormInput"/>
 
                                     <core:Title text="Account &amp; System Details"/>
 
                                     <Label text="Reviewer ID"/>
-                                    <Input id="profReviewerId" value="{profileModel>/reviewerId}" editable="false"/>
+                                    <Input id="profReviewerId" value="{profileModel>/reviewerId}" editable="false" class="xyraFormInput"/>
 
                                     <Label text="Assigned Persona"/>
-                                    <Input id="profPersona" value="{profileModel>/persona}" editable="false"/>
+                                    <Input id="profPersona" value="{profileModel>/persona}" editable="false" class="xyraFormInput"/>
 
                                     <Label text="Enterprise Subdomain"/>
-                                    <Input id="profSubdomain" value="{profileModel>/subdomain}" editable="false"/>
-
-                                    <Label text="Account Status"/>
-                                    <ObjectStatus text="{profileModel>/accountStatus}" state="Success" icon="sap-icon://sys-enter-2"/>
+                                    <Input id="profSubdomain" value="{profileModel>/subdomain}" editable="false" class="xyraFormInput"/>
                                 </form:content>
                             </form:SimpleForm>
                         </Panel>

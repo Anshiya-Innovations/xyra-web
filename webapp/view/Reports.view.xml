@@ -324,7 +324,6 @@
                                         </layout:Grid>
 
                                         <HBox justifyContent="End" alignItems="Center" class="sapUiTinyMarginTop">
-                                            <SearchField id="filterSearchField" width="18rem" placeholder="Search reports by title..." search="onApplyFilters" class="sapUiTinyMarginEnd"/>
                                             <Button text="Filter" icon="sap-icon://filter" type="Emphasized" press="onApplyFilters" class="sapUiTinyMarginEnd"/>
                                             <Button text="Clear Filters" icon="sap-icon://clear-filter" type="Ghost" press="onClearFilters"/>
                                         </HBox>

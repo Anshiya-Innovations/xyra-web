@@ -154,7 +154,7 @@ sap.ui.define([
                 // Ignore if session module not yet loaded
             }
 
-            this.show("Logout", 3000, true, false);
+            this.show("Logout", 500, true, false);
             setTimeout(function () {
                 var oRouter = null;
                 if (oController) {

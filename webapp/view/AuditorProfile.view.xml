@@ -90,33 +90,30 @@
                                     <core:Title text="Personal Details"/>
 
                                     <Label text="Full Name"/>
-                                    <Input id="profFullNameAud" value="{profileModel>/fullName}"/>
+                                    <Input id="profFullNameAud" value="{profileModel>/fullName}" class="xyraFormInput"/>
 
                                     <Label text="Email Address"/>
-                                    <Input id="profEmailAud" type="Email" value="{profileModel>/email}"/>
+                                    <Input id="profEmailAud" type="Email" value="{profileModel>/email}" class="xyraFormInput"/>
 
                                     <Label text="Phone Number"/>
-                                    <Input id="profPhoneAud" type="Tel" value="{profileModel>/phone}"/>
+                                    <Input id="profPhoneAud" type="Tel" value="{profileModel>/phone}" class="xyraFormInput"/>
 
                                     <Label text="Department"/>
-                                    <Input id="profDepartmentAud" value="{profileModel>/department}"/>
+                                    <Input id="profDepartmentAud" value="{profileModel>/department}" class="xyraFormInput"/>
 
                                     <Label text="Organization"/>
-                                    <Input id="profOrgAud" value="{profileModel>/organization}"/>
+                                    <Input id="profOrgAud" value="{profileModel>/organization}" class="xyraFormInput"/>
 
                                     <core:Title text="Account &amp; System Details"/>
 
                                     <Label text="Auditor ID"/>
-                                    <Input id="profAuditorIdAud" value="{profileModel>/auditorId}" editable="false"/>
+                                    <Input id="profAuditorIdAud" value="{profileModel>/auditorId}" editable="false" class="xyraFormInput"/>
 
                                     <Label text="Assigned Persona"/>
-                                    <Input id="profPersonaAud" value="{profileModel>/persona}" editable="false"/>
+                                    <Input id="profPersonaAud" value="{profileModel>/persona}" editable="false" class="xyraFormInput"/>
 
                                     <Label text="Enterprise Subdomain"/>
-                                    <Input id="profSubdomainAud" value="{profileModel>/subdomain}" editable="false"/>
-
-                                    <Label text="Account Status"/>
-                                    <ObjectStatus text="{profileModel>/accountStatus}" state="Success" icon="sap-icon://sys-enter-2"/>
+                                    <Input id="profSubdomainAud" value="{profileModel>/subdomain}" editable="false" class="xyraFormInput"/>
                                 </form:content>
                             </form:SimpleForm>
                         </Panel>

@@ -364,20 +364,20 @@
                             <Panel expandable="false" class="sapUiSmallMarginBottom">
                                 <Table id="systemsTable" items="{systemModel>/systems}" mode="None" width="100%">
                                     <columns>
-                                        <Column width="7%"><Text text="System ID"/></Column>
-                                        <Column width="5%"><Text text="Client"/></Column>
+                                        <Column width="6%"><Text text="System ID"/></Column>
+                                        <Column width="4%"><Text text="Client"/></Column>
                                         <Column width="7%"><Text text="System Type"/></Column>
-                                        <Column width="11%"><Text text="Host Name"/></Column>
-                                        <Column width="17%"><Text text="System Details"/></Column>
-                                        <Column width="6%"><Text text="Sector"/></Column>
-                                        <Column width="6%"><Text text="Platform"/></Column>
-                                        <Column width="8%"><Text text="Region"/></Column>
+                                        <Column width="10%"><Text text="Host Name"/></Column>
+                                        <Column width="15%"><Text text="System Details"/></Column>
+                                        <Column width="5%"><Text text="Sector"/></Column>
+                                        <Column width="5%"><Text text="Platform"/></Column>
+                                        <Column width="5%"><Text text="Region"/></Column>
                                         <Column width="6%"><Text text="Client Type"/></Column>
                                         <Column width="6%"><Text text="System Version"/></Column>
                                         <Column width="6%"><Text text="Logon Group"/></Column>
                                         <Column width="5%"><Text text="Port Number"/></Column>
-                                        <Column width="5%"><Text text="Instance N..."/></Column>
-                                        <Column width="9%" hAlign="Center"><Text text="Actions"/></Column>
+                                        <Column width="5%"><Text text="Instance No"/></Column>
+                                        <Column width="160px" hAlign="Center"><Text text="Actions"/></Column>
                                     </columns>
 
                                     <items>
@@ -396,9 +396,9 @@
                                                 <Text text="{systemModel>logonGroup}"/>
                                                 <Text text="{systemModel>portNumber}"/>
                                                 <Text text="{systemModel>instanceNo}"/>
-                                                <HBox justifyContent="Center" alignItems="Center">
-                                                    <Button icon="sap-icon://connected" type="Transparent" press="onTestSystemConnection" tooltip="Test Connection" class="sapUiTinyMarginEnd"/>
-                                                    <Button icon="sap-icon://edit" type="Emphasized" press="onEditSystem" tooltip="Edit System" class="sapUiTinyMarginEnd"/>
+                                                <HBox justifyContent="Center" alignItems="Center" class="xyraTableActionsHBox">
+                                                    <Button icon="sap-icon://connected" type="Transparent" press="onTestSystemConnection" tooltip="Test Connection"/>
+                                                    <Button icon="sap-icon://edit" type="Emphasized" press="onEditSystem" tooltip="Edit System"/>
                                                     <Button icon="sap-icon://delete" type="Reject" press="onDeleteSystem" tooltip="Delete System"/>
                                                 </HBox>
                                             </cells>
