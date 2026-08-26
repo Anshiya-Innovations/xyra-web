@@ -1905,6 +1905,12 @@ div[id*="-text"] {
   pointer-events: auto !important;
 }
 
+.xyraLoadingOverlayContainer.xyraContentOnlyOverlay {
+  left: 240px !important;
+  width: calc(100vw - 240px) !important;
+  border-radius: 0 !important;
+}
+
 .xyraLoadingOverlayCard {
   background: #ffffff !important;
   padding: 1.75rem 2.5rem !important;

@@ -61,20 +61,59 @@ sap.ui.define([
             return ALLOWED_ACTIVITIES[sRouteName] || "";
         },
 
-        show: function (sActivityText, iDurationMs, bForce) {
+        show: function (sActivityText, iDurationMs, bForce, bContentOnly) {
+            // Auto-detect activity text from hash if missing
+            var sHash = window.location.hash || "";
+            if (!sActivityText) {
+                if (sHash.indexOf("Configuration") !== -1) {
+                    sActivityText = "System Configuration";
+                } else if (sHash.indexOf("AccessManagement") !== -1) {
+                    sActivityText = "Access Management";
+                }
+            }
+
             if (!sActivityText || (!bIsAppLoaded && !bForce)) {
                 return;
             }
 
             createOverlay();
 
+            var sClean = sActivityText
+                .replace(/loading\.{0,3}/gi, "")
+                .replace(/please wait\.{0,3}/gi, "")
+                .replace(/\.\.\./g, "")
+                .trim();
+
+            if (!sClean) {
+                sClean = sActivityText;
+            }
+
             if (oTextEl) {
-                var sClean = sActivityText
-                    .replace(/loading\.{0,3}/gi, "")
-                    .replace(/please wait\.{0,3}/gi, "")
-                    .replace(/\.\.\./g, "...")
-                    .trim();
-                oTextEl.textContent = sClean || sActivityText;
+                oTextEl.textContent = sClean;
+                oTextEl.style.display = "block";
+            }
+
+            if (bContentOnly === undefined) {
+                bContentOnly = (sClean === "System Configuration" || sClean === "Access Management" ||
+                                sHash.indexOf("Configuration") !== -1 || sHash.indexOf("AccessManagement") !== -1);
+            }
+
+            if (bContentOnly) {
+                // Ensure left sidebar is NOT blurred by offsetting overlay past sidebar width
+                var oSideNav = document.querySelector(".sapTNTSideNavigation") ||
+                               document.querySelector(".sapTNTToolPageSide");
+                var iSideWidth = oSideNav ? oSideNav.getBoundingClientRect().width : 240;
+                if (!iSideWidth || iSideWidth < 10) {
+                    iSideWidth = 240;
+                }
+
+                oOverlay.style.setProperty("left", iSideWidth + "px", "important");
+                oOverlay.style.setProperty("width", "calc(100vw - " + iSideWidth + "px)", "important");
+                oOverlay.classList.add("xyraContentOnlyOverlay");
+            } else {
+                oOverlay.style.setProperty("left", "0px", "important");
+                oOverlay.style.setProperty("width", "100vw", "important");
+                oOverlay.classList.remove("xyraContentOnlyOverlay");
             }
 
             if (iHideTimer) {
@@ -115,7 +154,7 @@ sap.ui.define([
                 // Ignore if session module not yet loaded
             }
 
-            this.show("Logout", 500, true);
+            this.show("Logout", 3000, true, false);
             setTimeout(function () {
                 var oRouter = null;
                 if (oController) {
@@ -140,7 +179,19 @@ sap.ui.define([
 
         _patchNativeBusyIndicator: function () {
             var self = this;
+            var fnOrigShow = BusyIndicator.show;
             var fnOrigHide = BusyIndicator.hide;
+
+            BusyIndicator.show = function (iDelay, sText) {
+                var sHash = window.location.hash || "";
+                if (sHash.indexOf("Configuration") !== -1) {
+                    self.show("System Configuration", 3000, true, true);
+                } else if (sHash.indexOf("AccessManagement") !== -1) {
+                    self.show("Access Management", 3000, true, true);
+                }
+                fnOrigShow.apply(BusyIndicator, arguments);
+            };
+
             BusyIndicator.hide = function () {
                 self.hide();
                 fnOrigHide.apply(BusyIndicator, arguments);
