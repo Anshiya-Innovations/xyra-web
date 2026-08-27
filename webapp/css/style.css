@@ -1423,18 +1423,18 @@ span.sapTntNLITagContainer {
   color: #533BFF !important;
 }
 
-/* Enforce fixed height & border-box for non-emphasized buttons in page content area to match Emphasized buttons */
-.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):has(.sapMBtnTransparent),
-.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):has(.sapMBtnDefault),
-.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):has(.sapMBtnGhost) {
+/* Enforce fixed height & border-box for non-emphasized buttons in page content area to match Emphasized buttons (excluding table cells & toolbars) */
+.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):not(.sapMListTblCell *):not(.sapMTable *):not(td *):has(.sapMBtnTransparent),
+.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):not(.sapMListTblCell *):not(.sapMTable *):not(td *):has(.sapMBtnDefault),
+.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):not(.sapMListTblCell *):not(.sapMTable *):not(td *):has(.sapMBtnGhost) {
   height: 46px !important;
   box-sizing: border-box !important;
   overflow: visible !important;
 }
 
-.sapMBtnTransparent:not(.sapMOverflowToolbar .sapMBtnTransparent):not(.sapMTB .sapMBtnTransparent):not(.sapMHeaderToolbar .sapMBtnTransparent):not(.sapMBar .sapMBtnTransparent),
-.sapMBtnDefault:not(.sapMOverflowToolbar .sapMBtnDefault):not(.sapMTB .sapMBtnDefault):not(.sapMHeaderToolbar .sapMBtnDefault):not(.sapMBar .sapMBtnDefault),
-.sapMBtnGhost:not(.sapMOverflowToolbar .sapMBtnGhost):not(.sapMTB .sapMBtnGhost):not(.sapMHeaderToolbar .sapMBtnGhost):not(.sapMBar .sapMBtnGhost) {
+.sapMBtnTransparent:not(.sapMOverflowToolbar *):not(.sapMTB *):not(.sapMHeaderToolbar *):not(.sapMBar *):not(.sapMListTblCell *):not(.sapMTable *):not(td *),
+.sapMBtnDefault:not(.sapMOverflowToolbar *):not(.sapMTB *):not(.sapMHeaderToolbar *):not(.sapMBar *):not(.sapMListTblCell *):not(.sapMTable *):not(td *),
+.sapMBtnGhost:not(.sapMOverflowToolbar *):not(.sapMTB *):not(.sapMHeaderToolbar *):not(.sapMBar *):not(.sapMListTblCell *):not(.sapMTable *):not(td *) {
   height: 46px !important;
   border-radius: 10px !important;
   box-sizing: border-box !important;
@@ -1494,6 +1494,65 @@ span.sapTntNLITagContainer {
   height: 46px !important;
   box-sizing: border-box !important;
   overflow: visible !important;
+}
+
+/* ===== Table Cell Actions HBox Spacing & Icon-Only Button Sizing ===== */
+.sapMListTblCell,
+.sapMTable td {
+  vertical-align: middle !important;
+  overflow: visible !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.sapMListTblCell .sapMHBox,
+.sapMTable .sapMHBox,
+td .sapMHBox {
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 0.5rem !important;
+  overflow: visible !important;
+  height: auto !important;
+}
+
+.sapMListTblCell .sapMBtn,
+.sapMTable .sapMBtn,
+td .sapMBtn {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+.sapMListTblCell .sapMBtnInner,
+.sapMTable .sapMBtnInner,
+td .sapMBtnInner {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  background-color: #f8fafc !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.sapMListTblCell .sapMBtnInner:hover,
+.sapMTable .sapMBtnInner:hover,
+td .sapMBtnInner:hover {
+  border: 1px solid #533bff !important;
+  background-color: rgba(83, 59, 255, 0.08) !important;
 }
 
 /* Icon-only buttons (Edit/Delete row actions: no text) */
