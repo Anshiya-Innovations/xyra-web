@@ -165,86 +165,86 @@
                                 </headerToolbar>
 
                                 <content>
-                                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
-                                        <!-- Search Field -->
-                                        <VBox width="23%" class="xyraFieldGroup">
-                                            <Label text="Search" class="xyraLoginLabel"/>
-                                            <SearchField
-                                                id="searchAuditLog"
-                                                value="{auditLogsModel>/filters/searchQuery}"
-                                                placeholder="Search Log ID, Admin, Action..."
-                                                search="onApplyFilters"
-                                                liveChange="onApplyFilters"/>
-                                        </VBox>
+                                     <HBox wrap="Wrap" justifyContent="Start" alignItems="End" style="gap: 1.25rem;">
+                                         <!-- Search Field -->
+                                         <VBox width="16rem" class="xyraFieldGroup">
+                                             <Label text="Search" class="xyraLoginLabel"/>
+                                             <SearchField
+                                                 id="searchAuditLog"
+                                                 value="{auditLogsModel>/filters/searchQuery}"
+                                                 placeholder="Search Log ID, Admin..."
+                                                 search="onApplyFilters"
+                                                 liveChange="onApplyFilters"/>
+                                         </VBox>
 
-                                        <!-- Action Filter -->
-                                        <VBox width="18%" class="xyraFieldGroup">
-                                            <Label text="Action" class="xyraLoginLabel"/>
-                                            <Select
-                                                id="filterAction"
-                                                selectedKey="{auditLogsModel>/filters/action}"
-                                                change="onApplyFilters"
-                                                width="100%">
-                                                <core:Item key="All" text="All Actions"/>
-                                                <core:Item key="Create" text="Create"/>
-                                                <core:Item key="Update" text="Update"/>
-                                                <core:Item key="Delete" text="Delete"/>
-                                                <core:Item key="Configuration Change" text="Configuration Change"/>
-                                                <core:Item key="Access Grant" text="Access Grant"/>
-                                            </Select>
-                                        </VBox>
+                                         <!-- Action Filter -->
+                                         <VBox width="13.5rem" class="xyraFieldGroup">
+                                             <Label text="Action" class="xyraLoginLabel"/>
+                                             <Select
+                                                 id="filterAction"
+                                                 selectedKey="{auditLogsModel>/filters/action}"
+                                                 change="onApplyFilters"
+                                                 width="100%">
+                                                 <core:Item key="All" text="All Actions"/>
+                                                 <core:Item key="Create" text="Create"/>
+                                                 <core:Item key="Update" text="Update"/>
+                                                 <core:Item key="Delete" text="Delete"/>
+                                                 <core:Item key="Configuration Change" text="Configuration Change"/>
+                                                 <core:Item key="Access Grant" text="Access Grant"/>
+                                             </Select>
+                                         </VBox>
 
-                                        <!-- Module Filter -->
-                                        <VBox width="18%" class="xyraFieldGroup">
-                                            <Label text="Module" class="xyraLoginLabel"/>
-                                            <Select
-                                                id="filterModule"
-                                                selectedKey="{auditLogsModel>/filters/module}"
-                                                change="onApplyFilters"
-                                                width="100%">
-                                                <core:Item key="All" text="All Modules"/>
-                                                <core:Item key="Control Management" text="Control Management"/>
-                                                <core:Item key="System Configuration" text="System Configuration"/>
-                                                <core:Item key="Access Management" text="Access Management"/>
-                                                <core:Item key="SOX Compliance" text="SOX Compliance"/>
-                                            </Select>
-                                        </VBox>
+                                         <!-- Module Filter -->
+                                         <VBox width="13.5rem" class="xyraFieldGroup">
+                                             <Label text="Module" class="xyraLoginLabel"/>
+                                             <Select
+                                                 id="filterModule"
+                                                 selectedKey="{auditLogsModel>/filters/module}"
+                                                 change="onApplyFilters"
+                                                 width="100%">
+                                                 <core:Item key="All" text="All Modules"/>
+                                                 <core:Item key="Control Management" text="Control Management"/>
+                                                 <core:Item key="System Configuration" text="System Configuration"/>
+                                                 <core:Item key="Access Management" text="Access Management"/>
+                                                 <core:Item key="SOX Compliance" text="SOX Compliance"/>
+                                             </Select>
+                                         </VBox>
 
-                                        <!-- Admin User Filter -->
-                                        <VBox width="18%" class="xyraFieldGroup">
-                                            <Label text="Admin User" class="xyraLoginLabel"/>
-                                            <Select
-                                                id="filterAdmin"
-                                                selectedKey="{auditLogsModel>/filters/adminUser}"
-                                                change="onApplyFilters"
-                                                width="100%">
-                                                <core:Item key="All" text="All Admins"/>
-                                                <core:Item key="admin@xyra.com (System Admin)" text="admin@xyra.com"/>
-                                                <core:Item key="sysadmin@xyra.com (Security Manager)" text="sysadmin@xyra.com"/>
-                                                <core:Item key="secops@xyra.com (Escalation Manager)" text="secops@xyra.com"/>
-                                            </Select>
-                                        </VBox>
+                                         <!-- Admin User Filter -->
+                                         <VBox width="13.5rem" class="xyraFieldGroup">
+                                             <Label text="Admin User" class="xyraLoginLabel"/>
+                                             <Select
+                                                 id="filterAdmin"
+                                                 selectedKey="{auditLogsModel>/filters/adminUser}"
+                                                 change="onApplyFilters"
+                                                 width="100%">
+                                                 <core:Item key="All" text="All Admins"/>
+                                                 <core:Item key="admin@xyra.com (System Admin)" text="admin@xyra.com"/>
+                                                 <core:Item key="sysadmin@xyra.com (Security Manager)" text="sysadmin@xyra.com"/>
+                                                 <core:Item key="secops@xyra.com (Escalation Manager)" text="secops@xyra.com"/>
+                                             </Select>
+                                         </VBox>
 
-                                        <!-- Date Range Filters -->
-                                        <VBox width="10%" class="xyraFieldGroup">
-                                            <Label text="Start Date" class="xyraLoginLabel"/>
-                                            <DatePicker
-                                                id="filterStartDate"
-                                                placeholder="Start Date"
-                                                change="onApplyFilters"
-                                                width="100%"/>
-                                        </VBox>
+                                         <!-- Date Range Filters -->
+                                         <VBox width="13.5rem" class="xyraFieldGroup">
+                                             <Label text="Start Date" class="xyraLoginLabel"/>
+                                             <DatePicker
+                                                 id="filterStartDate"
+                                                 placeholder="Start Date"
+                                                 change="onApplyFilters"
+                                                 width="100%"/>
+                                         </VBox>
 
-                                        <VBox width="10%" class="xyraFieldGroup">
-                                            <Label text="End Date" class="xyraLoginLabel"/>
-                                            <DatePicker
-                                                id="filterEndDate"
-                                                placeholder="End Date"
-                                                change="onApplyFilters"
-                                                width="100%"/>
-                                        </VBox>
-                                    </HBox>
-                                </content>
+                                         <VBox width="13.5rem" class="xyraFieldGroup">
+                                             <Label text="End Date" class="xyraLoginLabel"/>
+                                             <DatePicker
+                                                 id="filterEndDate"
+                                                 placeholder="End Date"
+                                                 change="onApplyFilters"
+                                                 width="100%"/>
+                                         </VBox>
+                                     </HBox>
+                                 </content>
                             </Panel>
 
                             <!-- READ-ONLY AUDIT TRAIL TABLE -->

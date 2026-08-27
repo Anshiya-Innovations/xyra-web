@@ -66,7 +66,7 @@
                         </HBox>
 
                         <!-- COMPACT FILTER AREA CARD -->
-                        <Panel expandable="false" class="sapUiTinyMarginBottom noInternalScroll">
+                        <Panel expandable="false" class="sapUiTinyMarginBottom xyraEqualPaddingFilterPanel">
                             <headerToolbar>
                                 <OverflowToolbar height="3rem">
                                     <Title text="Filter Criteria" level="H5"/>
@@ -76,9 +76,10 @@
                                 </OverflowToolbar>
                             </headerToolbar>
                             <content>
-                                <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center">
+                                <!-- Row 1: Top 5 Filters -->
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="End" class="sapUiSmallMarginBottom">
                                     <!-- Sector -->
-                                    <VBox width="19%" class="xyraFieldGroup">
+                                    <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="Sector" required="true" class="xyraLoginLabel"/>
                                         <Select id="filterSector" selectedKey="{reportModel>/filters/sector}" change="onSectorChange" width="100%">
                                             <core:Item key="All" text="All Sectors"/>
@@ -90,7 +91,7 @@
                                     </VBox>
 
                                     <!-- Region -->
-                                    <VBox width="19%" class="xyraFieldGroup">
+                                    <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="Region" class="xyraLoginLabel"/>
                                         <Select id="filterRegion" selectedKey="{reportModel>/filters/region}" change="onRegionChange" width="100%" items="{reportModel>/options/regions}">
                                             <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
@@ -98,7 +99,7 @@
                                     </VBox>
 
                                     <!-- Platform -->
-                                    <VBox width="19%" class="xyraFieldGroup">
+                                    <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="Platform" class="xyraLoginLabel"/>
                                         <Select id="filterPlatform" selectedKey="{reportModel>/filters/platform}" change="onPlatformChange" width="100%" items="{reportModel>/options/platforms}">
                                             <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
@@ -106,7 +107,7 @@
                                     </VBox>
 
                                     <!-- System -->
-                                    <VBox width="19%" class="xyraFieldGroup">
+                                    <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="System" class="xyraLoginLabel"/>
                                         <Select id="filterSystem" selectedKey="{reportModel>/filters/system}" change="onSystemChange" width="100%" items="{reportModel>/options/systems}">
                                             <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
@@ -114,7 +115,7 @@
                                     </VBox>
 
                                     <!-- Client -->
-                                    <VBox width="19%" class="xyraFieldGroup">
+                                    <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="Client" class="xyraLoginLabel"/>
                                         <Select id="filterClient" selectedKey="{reportModel>/filters/client}" width="100%" items="{reportModel>/options/clients}">
                                             <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
@@ -122,9 +123,10 @@
                                     </VBox>
                                 </HBox>
 
-                                <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                <!-- Row 2: Bottom 4 Filters Aligned Straight Under Row 1 Columns -->
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="End">
                                     <!-- Control -->
-                                    <VBox width="24%" class="xyraFieldGroup">
+                                    <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="Control" class="xyraLoginLabel"/>
                                         <Select id="filterControl" selectedKey="{reportModel>/filters/control}" width="100%" items="{reportModel>/options/controls}">
                                             <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
@@ -132,7 +134,7 @@
                                     </VBox>
 
                                     <!-- Incident Status -->
-                                    <VBox width="24%" class="xyraFieldGroup">
+                                    <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="Incident Status" class="xyraLoginLabel"/>
                                         <Select id="filterStatus" selectedKey="{reportModel>/filters/status}" width="100%">
                                             <core:Item key="All" text="All Statuses"/>
@@ -143,16 +145,19 @@
                                     </VBox>
 
                                     <!-- Start Date -->
-                                    <VBox width="24%" class="xyraFieldGroup">
+                                    <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="Start Date" class="xyraLoginLabel"/>
                                         <DatePicker id="filterStartDate" value="{reportModel>/filters/startDate}" displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" width="100%"/>
                                     </VBox>
 
                                     <!-- End Date -->
-                                    <VBox width="24%" class="xyraFieldGroup">
+                                    <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="End Date" class="xyraLoginLabel"/>
                                         <DatePicker id="filterEndDate" value="{reportModel>/filters/endDate}" displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" width="100%"/>
                                     </VBox>
+
+                                    <!-- Empty Spacer Column for 5-Column Alignment -->
+                                    <VBox width="18.5%"/>
                                 </HBox>
                             </content>
                         </Panel>

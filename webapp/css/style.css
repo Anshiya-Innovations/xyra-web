@@ -2331,6 +2331,22 @@ div[id*="-text"] {
   animation: xyraDotPulse 1.4s infinite ease-in-out both !important;
 }
 
+/* Compact Filter Panel Container Padding Reduction */
+.xyraCompactFilterPanel .sapMPanelContent,
+.xyraCompactFilterPanel .sapMPanelExpandablePart {
+  padding: 0.5rem 1rem !important;
+}
+
+/* Equal, Symmetrical Top & Bottom Padding for Filter Criteria Panel */
+.xyraEqualPaddingFilterPanel .sapMPanelContent,
+.xyraEqualPaddingFilterPanel .sapMPanelExpandablePart {
+  padding: 1.25rem 1.5rem !important;
+}
+
+.xyraEqualPaddingFilterPanel .sapMPanelContent > .sapUiSmallMarginBottom {
+  margin-bottom: 1.25rem !important;
+}
+
 .xyra-dot-flashing span:nth-child(1) {
   animation-delay: -0.32s !important;
 }
