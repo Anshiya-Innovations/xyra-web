@@ -28,7 +28,19 @@ sap.ui.define([
     return Controller.extend("xyraweb.controller.AccessManagement", {
 
         onInit: function () {
-            this.getView().setModel(new JSONModel({ users: [], busy: false }), "userModel");
+            var aInitialUsers = (MockData.users || []).map(function (oUser) {
+                return {
+                    id: oUser.id,
+                    userId: oUser.id,
+                    name: oUser.name,
+                    email: oUser.email,
+                    persona: ROLE_TO_PERSONA[oUser.role] || oUser.role,
+                    role: oUser.role,
+                    status: oUser.status || "ACTIVE",
+                    createdDate: oUser.createdDate || "2026-07-28"
+                };
+            });
+            this.getView().setModel(new JSONModel({ users: aInitialUsers, busy: false }), "userModel");
             this._loadUsers();
         },
 
@@ -127,7 +139,15 @@ sap.ui.define([
 
         _loadUsers: function () {
             var oModel = this.getView().getModel("userModel");
-            oModel.setProperty("/busy", true);
+            if (!oModel) {
+                return;
+            }
+
+            var iBusyTimer = setTimeout(function () {
+                if (oModel) {
+                    oModel.setProperty("/busy", false);
+                }
+            }, 800);
 
             return fetch(Config.AUTH_BASE_URL + "/api/admin/listUsers", {
                 method: "POST",
@@ -136,36 +156,43 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    var aUsers = (oData.value || []).map(function (oUser) {
-                        return {
-                            id: oUser.id,
-                            userId: oUser.id,
-                            name: oUser.name,
-                            email: oUser.email,
-                            persona: ROLE_TO_PERSONA[oUser.role] || oUser.role,
-                            role: oUser.role,
-                            status: oUser.status,
-                            createdDate: (oUser.createdAt || "").slice(0, 10)
-                        };
-                    });
-                    oModel.setProperty("/users", aUsers);
+                    clearTimeout(iBusyTimer);
+                    if (oData && oData.value && oData.value.length > 0) {
+                        var aUsers = oData.value.map(function (oUser) {
+                            return {
+                                id: oUser.id,
+                                userId: oUser.id,
+                                name: oUser.name,
+                                email: oUser.email,
+                                persona: ROLE_TO_PERSONA[oUser.role] || oUser.role,
+                                role: oUser.role,
+                                status: oUser.status || "ACTIVE",
+                                createdDate: (oUser.createdAt || "").slice(0, 10) || "2026-07-28"
+                            };
+                        });
+                        oModel.setProperty("/users", aUsers);
+                    }
                 })
                 .catch(function () {
-                    MockData.notice(MessageToast);
-                    oModel.setProperty("/users", MockData.users.map(function (oUser) {
-                        return {
-                            id: oUser.id,
-                            userId: oUser.id,
-                            name: oUser.name,
-                            email: oUser.email,
-                            persona: ROLE_TO_PERSONA[oUser.role] || oUser.role,
-                            role: oUser.role,
-                            status: oUser.status,
-                            createdDate: oUser.createdDate
-                        };
-                    }));
+                    clearTimeout(iBusyTimer);
+                    if (!oModel.getProperty("/users") || oModel.getProperty("/users").length === 0) {
+                        MockData.notice(MessageToast);
+                        oModel.setProperty("/users", MockData.users.map(function (oUser) {
+                            return {
+                                id: oUser.id,
+                                userId: oUser.id,
+                                name: oUser.name,
+                                email: oUser.email,
+                                persona: ROLE_TO_PERSONA[oUser.role] || oUser.role,
+                                role: oUser.role,
+                                status: oUser.status || "ACTIVE",
+                                createdDate: oUser.createdDate || "2026-07-28"
+                            };
+                        }));
+                    }
                 })
                 .finally(function () {
+                    clearTimeout(iBusyTimer);
                     oModel.setProperty("/busy", false);
                 });
         },

@@ -1649,16 +1649,71 @@ td .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):hover,
   justify-content: center !important;
 }
 
-/* Table Cell Delete / Reject Action Buttons — Soft Danger Red Fill (Matching Logout Button Palette) */
-td .sapMBtnInner.sapMBtnReject,
-td .sapMBtnReject,
-.sapMListTblCell .sapMBtnInner.sapMBtnReject,
-.sapMTable td .sapMBtnInner.sapMBtnReject {
+/* Table Cell Delete / Reject Action Buttons — Soft Danger Red Fill & 34px Square Sizing (Matching Edit Button Size) */
+/* 1. Icon-Only Table Cell Delete / Reject Action Buttons (34px x 34px Square) */
+td .sapMBtn:has(.sapMBtnReject):not(:has(.sapMBtnContent)),
+.sapMListTblCell .sapMBtn:has(.sapMBtnReject):not(:has(.sapMBtnContent)) {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+td .sapMBtnInner.sapMBtnReject:not(:has(.sapMBtnContent)),
+.sapMListTblCell .sapMBtnInner.sapMBtnReject:not(:has(.sapMBtnContent)),
+.sapMTable td .sapMBtnInner.sapMBtnReject:not(:has(.sapMBtnContent)) {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
   background-color: #ffe4e6 !important;
   background: #ffe4e6 !important;
   border: 1px solid #fda4af !important;
-  border-radius: 8px !important;
   box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+/* 2. Text & Content Table Cell Delete / Reject Action Buttons (e.g. "Remove" button in AccessManagement) */
+td .sapMBtn:has(.sapMBtnReject):has(.sapMBtnContent),
+.sapMListTblCell .sapMBtn:has(.sapMBtnReject):has(.sapMBtnContent) {
+  width: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
+  height: 34px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+td .sapMBtnInner.sapMBtnReject:has(.sapMBtnContent),
+.sapMListTblCell .sapMBtnInner.sapMBtnReject:has(.sapMBtnContent),
+.sapMTable td .sapMBtnInner.sapMBtnReject:has(.sapMBtnContent) {
+  width: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
+  height: 34px !important;
+  padding: 0 0.875rem !important;
+  border-radius: 8px !important;
+  background-color: #ffe4e6 !important;
+  background: #ffe4e6 !important;
+  border: 1px solid #fda4af !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
   transition: all 0.15s ease-in-out !important;
 }
 

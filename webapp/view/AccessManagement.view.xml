@@ -178,12 +178,12 @@
                             <Table id="usersTable" items="{userModel>/users}" mode="None" width="100%" class="sapUiNoMargin" busy="{userModel>/busy}" busyIndicatorDelay="0">
                                 <columns>
                                     <Column width="14%" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Name"/></Column>
-                                    <Column width="22%"><Text text="Email ID"/></Column>
-                                    <Column width="16%" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Organization"/></Column>
+                                    <Column width="20%"><Text text="Email ID"/></Column>
+                                    <Column width="15%" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Organization"/></Column>
                                     <Column width="14%" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline"><Text text="Persona / Role"/></Column>
                                     <Column width="8%" minScreenWidth="Phone" demandPopin="true" popinDisplay="Inline"><Text text="Status"/></Column>
                                     <Column width="10%" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"><Text text="Created Date"/></Column>
-                                    <Column width="16%" hAlign="Center"><Text text="Actions"/></Column>
+                                    <Column width="19%" hAlign="Center"><Text text="Actions"/></Column>
                                 </columns>
                                 <items>
                                     <ColumnListItem>
