@@ -1333,6 +1333,10 @@ span.sapTntNLITagContainer {
 .sapMBtnInner {
   outline: none !important;
   box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
 }
 
 .sapMBtnInner::before,
@@ -1343,7 +1347,29 @@ span.sapTntNLITagContainer {
   outline: none !important;
 }
 
-/* ===== Primary Brand Purple Color for Transparent, Ghost & Default Buttons (Text & Icons) ===== */
+.sapMBtnContent {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: normal !important;
+}
+
+.sapMBtnContent bdi {
+  display: inline-block !important;
+  line-height: normal !important;
+}
+
+.sapMBtnIcon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* ===== Primary Brand Purple Color & Fixed Sizing for Non-Highlighted Buttons ===== */
 
 .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnContent,
 .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnIcon,
@@ -1367,6 +1393,58 @@ span.sapTntNLITagContainer {
 .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) bdi,
 .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)) bdi {
   color: #533BFF !important;
+}
+
+/* Enforce fixed height & border-box for non-emphasized buttons in page content area to match Emphasized buttons */
+.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):has(.sapMBtnTransparent),
+.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):has(.sapMBtnDefault),
+.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):has(.sapMBtnGhost) {
+  height: 46px !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+.sapMBtnTransparent:not(.sapMOverflowToolbar .sapMBtnTransparent):not(.sapMTB .sapMBtnTransparent):not(.sapMHeaderToolbar .sapMBtnTransparent):not(.sapMBar .sapMBtnTransparent),
+.sapMBtnDefault:not(.sapMOverflowToolbar .sapMBtnDefault):not(.sapMTB .sapMBtnDefault):not(.sapMHeaderToolbar .sapMBtnDefault):not(.sapMBar .sapMBtnDefault),
+.sapMBtnGhost:not(.sapMOverflowToolbar .sapMBtnGhost):not(.sapMTB .sapMBtnGhost):not(.sapMHeaderToolbar .sapMBtnGhost):not(.sapMBar .sapMBtnGhost) {
+  height: 46px !important;
+  border-radius: 10px !important;
+  box-sizing: border-box !important;
+  padding: 0 1rem !important;
+  border: 1px solid #cbd5e1 !important;
+  background-color: #f8fafc !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+}
+
+/* Stable hover state — border turns brand purple #533bff, zero height/width/padding expansion */
+.sapMBtnTransparent:not(.sapMOverflowToolbar .sapMBtnTransparent):not(.sapMTB .sapMBtnTransparent):not(.sapMHeaderToolbar .sapMBtnTransparent):not(.sapMBar .sapMBtnTransparent):hover,
+.sapMBtnDefault:not(.sapMOverflowToolbar .sapMBtnDefault):not(.sapMTB .sapMBtnDefault):not(.sapMHeaderToolbar .sapMBtnDefault):not(.sapMBar .sapMBtnDefault):hover,
+.sapMBtnGhost:not(.sapMOverflowToolbar .sapMBtnGhost):not(.sapMTB .sapMBtnGhost):not(.sapMHeaderToolbar .sapMBtnGhost):not(.sapMBar .sapMBtnGhost):hover,
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover {
+  background-color: rgba(83, 59, 255, 0.08) !important;
+  border: 1px solid #533bff !important;
+  border-color: #533bff !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+}
+
+/* Stable click/active state — border stays brand purple #533bff, zero height/width/padding expansion */
+.sapMBtnTransparent:not(.sapMOverflowToolbar .sapMBtnTransparent):not(.sapMTB .sapMBtnTransparent):not(.sapMHeaderToolbar .sapMBtnTransparent):not(.sapMBar .sapMBtnTransparent):active,
+.sapMBtnDefault:not(.sapMOverflowToolbar .sapMBtnDefault):not(.sapMTB .sapMBtnDefault):not(.sapMHeaderToolbar .sapMBtnDefault):not(.sapMBar .sapMBtnDefault):active,
+.sapMBtnGhost:not(.sapMOverflowToolbar .sapMBtnGhost):not(.sapMTB .sapMBtnGhost):not(.sapMHeaderToolbar .sapMBtnGhost):not(.sapMBar .sapMBtnGhost):active,
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized).sapMBtnActive,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized).sapMBtnActive,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized).sapMBtnActive {
+  background-color: rgba(83, 59, 255, 0.16) !important;
+  border: 1px solid #533bff !important;
+  border-color: #533bff !important;
+  box-sizing: border-box !important;
+  transform: none !important;
 }
 
 .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
@@ -1413,15 +1491,9 @@ span.sapTntNLITagContainer {
   height: 46px !important;
   padding: 0 1rem !important;
   box-sizing: border-box !important;
-}
-
-.sapMBtnReject .sapMBtnContent {
-  line-height: 46px !important;
-}
-
-.sapMBtnReject .sapMBtnIcon {
-  vertical-align: middle !important;
-  line-height: 46px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .sapMBtnEmphasized {
@@ -1430,7 +1502,9 @@ span.sapTntNLITagContainer {
   box-shadow: none !important;
   border-radius: 10px !important;
   height: 46px !important;
-  line-height: 46px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   padding: 0 1rem !important;
   box-sizing: border-box !important;
 }
