@@ -165,20 +165,21 @@
                                 </headerToolbar>
 
                                 <content>
-                                     <HBox wrap="Wrap" justifyContent="Start" alignItems="End" style="gap: 1.25rem;">
+                                     <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="End">
                                          <!-- Search Field -->
-                                         <VBox width="16rem" class="xyraFieldGroup">
+                                         <VBox width="15%" class="xyraFieldGroup">
                                              <Label text="Search" class="xyraLoginLabel"/>
                                              <SearchField
                                                  id="searchAuditLog"
                                                  value="{auditLogsModel>/filters/searchQuery}"
                                                  placeholder="Search Log ID, Admin..."
                                                  search="onApplyFilters"
-                                                 liveChange="onApplyFilters"/>
+                                                 liveChange="onApplyFilters"
+                                                 width="100%"/>
                                          </VBox>
 
                                          <!-- Action Filter -->
-                                         <VBox width="13.5rem" class="xyraFieldGroup">
+                                         <VBox width="15%" class="xyraFieldGroup">
                                              <Label text="Action" class="xyraLoginLabel"/>
                                              <Select
                                                  id="filterAction"
@@ -195,7 +196,7 @@
                                          </VBox>
 
                                          <!-- Module Filter -->
-                                         <VBox width="13.5rem" class="xyraFieldGroup">
+                                         <VBox width="15%" class="xyraFieldGroup">
                                              <Label text="Module" class="xyraLoginLabel"/>
                                              <Select
                                                  id="filterModule"
@@ -211,7 +212,7 @@
                                          </VBox>
 
                                          <!-- Admin User Filter -->
-                                         <VBox width="13.5rem" class="xyraFieldGroup">
+                                         <VBox width="15%" class="xyraFieldGroup">
                                              <Label text="Admin User" class="xyraLoginLabel"/>
                                              <Select
                                                  id="filterAdmin"
@@ -226,7 +227,7 @@
                                          </VBox>
 
                                          <!-- Date Range Filters -->
-                                         <VBox width="13.5rem" class="xyraFieldGroup">
+                                         <VBox width="15%" class="xyraFieldGroup">
                                              <Label text="Start Date" class="xyraLoginLabel"/>
                                              <DatePicker
                                                  id="filterStartDate"
@@ -235,7 +236,7 @@
                                                  width="100%"/>
                                          </VBox>
 
-                                         <VBox width="13.5rem" class="xyraFieldGroup">
+                                         <VBox width="15%" class="xyraFieldGroup">
                                              <Label text="End Date" class="xyraLoginLabel"/>
                                              <DatePicker
                                                  id="filterEndDate"
