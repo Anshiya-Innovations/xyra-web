@@ -1343,6 +1343,47 @@ span.sapTntNLITagContainer {
   outline: none !important;
 }
 
+/* ===== Primary Brand Purple Color for Transparent, Ghost & Default Buttons (Text & Icons) ===== */
+
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnContent,
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnIcon,
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapUiIcon,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnContent,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnIcon,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapUiIcon,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnContent,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnIcon,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapUiIcon,
+.sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnContent,
+.sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnIcon,
+.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)) .sapMBtnContent,
+.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)) .sapMBtnIcon,
+.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)) .sapUiIcon {
+  color: #533BFF !important;
+}
+
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) bdi,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) bdi,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) bdi,
+.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)) bdi {
+  color: #533BFF !important;
+}
+
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi {
+  color: #533BFF !important;
+}
+
 .sapMBtn:has(.sapMBtnEmphasized) {
   height: 46px !important;
   box-sizing: border-box !important;
@@ -1540,8 +1581,8 @@ span.sapTntNLITagContainer {
 .sapMSFF:focus-within,
 .sapMSFFocused .sapMSFF,
 .sapMSF:focus-within .sapMSFF {
-  border-color: #2563eb !important;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+  border-color: #533bff !important;
+  box-shadow: 0 0 0 3px rgba(83, 59, 255, 0.15) !important;
   outline: none !important;
 }
 
