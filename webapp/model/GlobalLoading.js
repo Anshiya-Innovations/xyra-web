@@ -72,7 +72,7 @@ sap.ui.define([
                 }
             }
 
-            if (!sActivityText || (!bIsAppLoaded && !bForce)) {
+            if (!sActivityText || (!bIsAppLoaded && !bForce && sActivityText !== "System Configuration" && sActivityText !== "Access Management")) {
                 return;
             }
 
@@ -99,7 +99,7 @@ sap.ui.define([
             }
 
             if (bContentOnly) {
-                // Ensure left sidebar is NOT blurred by offsetting overlay past sidebar width
+                // Ensure left sidebar is NOT blurred by offsetting overlay past sidebar width (default 240px)
                 var oSideNav = document.querySelector(".sapTNTSideNavigation") ||
                                document.querySelector(".sapTNTToolPageSide");
                 var iSideWidth = oSideNav ? oSideNav.getBoundingClientRect().width : 240;

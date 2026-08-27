@@ -27,7 +27,7 @@ sap.ui.define([
                     var sRouteName = oEvent.getParameter("name");
                     if (GlobalLoading.isAllowedRoute(sRouteName)) {
                         var sActivity = GlobalLoading.getActivityForRoute(sRouteName);
-                        GlobalLoading.show(sActivity, 3000, false, true);
+                        GlobalLoading.show(sActivity, 2000, true, true);
                     }
                 });
                 oRouter.initialize();
