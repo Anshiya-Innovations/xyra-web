@@ -8,8 +8,9 @@ sap.ui.define([
     "xyraweb/model/soxComplianceService",
     "xyraweb/model/sidebarState",
     "xyraweb/model/focusRing",
-    "xyraweb/model/GlobalLoading"
-], function (Controller, JSONModel, MessageToast, UIComponent, Filter, FilterOperator, SOXComplianceService, SidebarState, killFocusRing, GlobalLoading) {
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, JSONModel, MessageToast, UIComponent, Filter, FilterOperator, SOXComplianceService, SidebarState, killFocusRing, GlobalLoading, NotificationPopover) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.SOXCompliance", {
@@ -300,8 +301,8 @@ sap.ui.define([
             MessageToast.show("SOX Compliance Data Refreshed");
         },
 
-        onNotificationPress: function () {
-            MessageToast.show("SOX Alert: 1 Critical SOD Conflict Pending Sign-off");
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         },
 
         onLogout: function () {

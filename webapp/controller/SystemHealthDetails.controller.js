@@ -4,8 +4,9 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/BusyIndicator",
     "sap/ui/core/routing/History",
-    "xyraweb/model/GlobalLoading"
-], function (Controller, JSONModel, MessageToast, BusyIndicator, History, GlobalLoading) {
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, JSONModel, MessageToast, BusyIndicator, History, GlobalLoading, NotificationPopover) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.SystemHealthDetails", {
@@ -132,8 +133,8 @@ sap.ui.define([
             sap.ui.core.UIComponent.getRouterFor(this).navTo("Profile");
         },
 
-        onNotificationPress: function () {
-            MessageToast.show("Notifications clicked.");
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         },
 
         onLogout: function () {

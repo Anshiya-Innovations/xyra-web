@@ -1,8 +1,9 @@
 sap.ui.define([
     "sap/ui/core/UIComponent",
     "xyraweb/model/models",
-    "xyraweb/model/GlobalLoading"
-], (UIComponent, models, GlobalLoading) => {
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationService"
+], (UIComponent, models, GlobalLoading, NotificationService) => {
     "use strict";
 
     return UIComponent.extend("xyraweb.Component", {
@@ -17,8 +18,9 @@ sap.ui.define([
             // call the base component's init function
             UIComponent.prototype.init.apply(this, arguments);
 
-            // set the device model
+            // set device model & global notifications model
             this.setModel(models.createDeviceModel(), "device");
+            this.setModel(NotificationService.getModel(), "notifications");
 
             // enable routing & handle ONLY allowed loading screens (System Configuration & Access Management)
             var oRouter = this.getRouter();

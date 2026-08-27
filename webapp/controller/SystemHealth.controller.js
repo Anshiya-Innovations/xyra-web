@@ -6,8 +6,9 @@ sap.ui.define([
     "sap/ui/core/BusyIndicator",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "xyraweb/model/GlobalLoading"
-], function (Controller, JSONModel, MessageToast, MessageBox, BusyIndicator, Filter, FilterOperator, GlobalLoading) {
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, JSONModel, MessageToast, MessageBox, BusyIndicator, Filter, FilterOperator, GlobalLoading, NotificationPopover) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.SystemHealth", {
@@ -340,8 +341,8 @@ sap.ui.define([
             sap.ui.core.UIComponent.getRouterFor(this).navTo("Profile");
         },
 
-        onNotificationPress: function () {
-            MessageToast.show("3 System Telemetry Alerts Active.");
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         },
 
         onLogout: function () {

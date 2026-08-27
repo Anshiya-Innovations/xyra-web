@@ -243,7 +243,7 @@
 
                         <ToolbarSpacer/>
 
-                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onActionPress"/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
                         <Button text="Logout" type="Reject" icon="sap-icon://log" press="onLogout" class="sapUiTinyMarginEnd"/>
                     </OverflowToolbar>
                 </customHeader>

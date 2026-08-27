@@ -2705,4 +2705,327 @@ div[id*="-text"] {
   box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2) !important;
 }
 
+/* ==========================================================================
+   NOTIFICATION BELL DYNAMIC BADGE COUNTER & POPOVER STYLING
+   ========================================================================== */
+.sapMBtn[title="Notifications"],
+.sapMBtn[title="Alert Notifications"],
+.sapMBtn[aria-label="Notifications"],
+.sapMBtn[tooltip="Notifications"],
+.sapMBtn[tooltip="Alert Notifications"],
+.xyraNotificationBtn {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.sapMBtn[title="Notifications"] .sapMBtnInner,
+.sapMBtn[title="Alert Notifications"] .sapMBtnInner,
+.sapMBtn[aria-label="Notifications"] .sapMBtnInner,
+.sapMBtn[tooltip="Notifications"] .sapMBtnInner,
+.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner,
+.xyraNotificationBtn .sapMBtnInner {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.sapMBtn[title="Notifications"]::after,
+.sapMBtn[title="Alert Notifications"]::after,
+.sapMBtn[aria-label="Notifications"]::after,
+.sapMBtn[tooltip="Notifications"]::after,
+.sapMBtn[tooltip="Alert Notifications"]::after,
+.xyraNotificationBtn::after {
+  content: attr(data-unread-count);
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  font-size: 0.65rem !important;
+  font-weight: 800 !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  padding: 0 4px !important;
+  border-radius: 9999px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  pointer-events: none !important;
+  box-shadow: 0 2px 5px rgba(239, 68, 68, 0.5) !important;
+  border: 1.5px solid #ffffff !important;
+  z-index: 100 !important;
+}
+
+.sapMBtn[title="Notifications"]:not([data-unread-count])::after,
+.sapMBtn[title="Alert Notifications"]:not([data-unread-count])::after,
+.sapMBtn[aria-label="Notifications"]:not([data-unread-count])::after,
+.sapMBtn[tooltip="Notifications"]:not([data-unread-count])::after,
+.sapMBtn[tooltip="Alert Notifications"]:not([data-unread-count])::after {
+  content: "4" !important;
+}
+
+.xyraNoUnreadBadge::after,
+.sapMBtn[data-unread-count="0"]::after {
+  display: none !important;
+}
+
+/* ==========================================================================
+   CUSTOM ADVANCED NOTIFICATION POPOVER PANEL (MATCHING DESIGN SCREENSHOT)
+   ========================================================================== */
+.xyraCustomNotificationPopover {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.xyraCustomNotificationPopover .sapMPopoverHeader,
+.xyraCustomNotificationPopover .sapMPopoverHeader * {
+  display: none !important;
+}
+
+.xyraCustomNotificationPopover .sapMPopoverContent {
+  padding: 0 !important;
+  background-color: #ffffff !important;
+  border-radius: 16px !important;
+}
+
+.xyraNotifyHeaderBox {
+  background: #533bff !important;
+  padding: 1.25rem 1.25rem 0.65rem 1.25rem !important;
+}
+
+.xyraNotifyHeaderTopRow {
+  margin-bottom: 0.85rem !important;
+}
+
+.xyraNotifyHeaderTitle {
+  color: #ffffff !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+}
+
+.xyraNotifyBadgePill {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+  font-size: 0.725rem !important;
+  font-weight: 700 !important;
+  padding: 0.25rem 0.65rem !important;
+  border-radius: 6px !important;
+  margin-left: 0.6rem !important;
+  line-height: 1 !important;
+}
+
+/* ==========================================================================
+   NOTIFICATION POPOVER "CLEAR ALL" BUTTONS - EXACT MATCH TO LOGOUT BUTTON
+   ========================================================================== */
+.xyraNotifyClearBtn,
+.xyraNotifyClearBtn:hover,
+.xyraNotifyClearBtn:focus,
+.xyraNotifyClearBtn:active,
+.xyraNotifySubClearBtn,
+.xyraNotifySubClearBtn:hover,
+.xyraNotifySubClearBtn:focus,
+.xyraNotifySubClearBtn:active {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.xyraNotifyClearBtn::before,
+.xyraNotifyClearBtn::after,
+.xyraNotifySubClearBtn::before,
+.xyraNotifySubClearBtn::after {
+  display: none !important;
+  content: none !important;
+  border: none !important;
+}
+
+.xyraNotifyClearBtn .sapMBtnInner,
+.xyraNotifyClearBtn:hover .sapMBtnInner,
+.xyraNotifyClearBtn:focus .sapMBtnInner,
+.xyraNotifyClearBtn:active .sapMBtnInner,
+.xyraNotifyClearBtn.sapMBtnHoverable:hover .sapMBtnInner,
+.xyraNotifySubClearBtn .sapMBtnInner,
+.xyraNotifySubClearBtn:hover .sapMBtnInner,
+.xyraNotifySubClearBtn:focus .sapMBtnInner,
+.xyraNotifySubClearBtn:active .sapMBtnInner,
+.xyraNotifySubClearBtn.sapMBtnHoverable:hover .sapMBtnInner {
+  background-color: #ffe4e6 !important;
+  background: #ffe4e6 !important;
+  border: 1px solid #fda4af !important;
+  border-radius: 8px !important;
+  padding: 0 0.75rem !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
+  line-height: 28px !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+.xyraNotifyClearBtn:hover .sapMBtnInner,
+.xyraNotifyClearBtn .sapMBtnInner:hover,
+.xyraNotifySubClearBtn:hover .sapMBtnInner,
+.xyraNotifySubClearBtn .sapMBtnInner:hover {
+  background-color: #fecdd3 !important;
+  background: #fecdd3 !important;
+  border-color: #f43f5e !important;
+  transform: translateY(-1px) !important;
+}
+
+.xyraNotifyClearBtn .sapMBtnContent,
+.xyraNotifyClearBtn .sapMBtnIcon,
+.xyraNotifyClearBtn .sapMBtnText,
+.xyraNotifyClearBtn .sapUiIcon,
+.xyraNotifyClearBtn span,
+.xyraNotifyClearBtn bdi,
+.xyraNotifySubClearBtn .sapMBtnContent,
+.xyraNotifySubClearBtn .sapMBtnIcon,
+.xyraNotifySubClearBtn .sapMBtnText,
+.xyraNotifySubClearBtn .sapUiIcon,
+.xyraNotifySubClearBtn span,
+.xyraNotifySubClearBtn bdi {
+  color: #be123c !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  line-height: 28px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  text-shadow: none !important;
+  transition: color 0.15s ease !important;
+}
+
+.xyraNotifyClearBtn:hover .sapMBtnContent,
+.xyraNotifyClearBtn:hover .sapMBtnIcon,
+.xyraNotifyClearBtn:hover .sapMBtnText,
+.xyraNotifyClearBtn:hover .sapUiIcon,
+.xyraNotifyClearBtn:hover span,
+.xyraNotifyClearBtn:hover bdi,
+.xyraNotifyClearBtn .sapMBtnInner:hover *,
+.xyraNotifySubClearBtn:hover .sapMBtnContent,
+.xyraNotifySubClearBtn:hover .sapMBtnIcon,
+.xyraNotifySubClearBtn:hover .sapMBtnText,
+.xyraNotifySubClearBtn:hover .sapUiIcon,
+.xyraNotifySubClearBtn:hover span,
+.xyraNotifySubClearBtn:hover bdi,
+.xyraNotifySubClearBtn .sapMBtnInner:hover * {
+  color: #881337 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.xyraNotifyTabRow {
+  gap: 1.5rem !important;
+}
+
+.xyraNotifyTabItem {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  padding-bottom: 0.4rem !important;
+  cursor: pointer !important;
+  transition: color 0.15s ease !important;
+}
+
+.xyraNotifyTabActive {
+  color: #ffffff !important;
+  border-bottom: 3px solid #10b981 !important;
+}
+
+.xyraNotifyList {
+  background-color: #ffffff !important;
+}
+
+.xyraNotifyListItem {
+  transition: background-color 0.15s ease !important;
+}
+
+.xyraNotifyListItem:hover {
+  background-color: #f8fafc !important;
+}
+
+.xyraNotifyIconCircle {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+}
+
+.xyraNotifyIconGreen {
+  background-color: #dcfce7 !important;
+  color: #16a34a !important;
+}
+
+.xyraNotifyIconBlue {
+  background-color: #dbeafe !important;
+  color: #2563eb !important;
+}
+
+.xyraNotifyIconGrey {
+  background-color: #f1f5f9 !important;
+  color: #64748b !important;
+}
+
+.xyraNotifyItemText {
+  color: #1e293b !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+}
+
+.xyraNotifyItemTextRead {
+  color: #64748b !important;
+  font-size: 0.825rem !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+}
+
+.xyraNotifyItemTime {
+  color: #64748b !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+}
+
+.xyraNotifySectionHeader {
+  background-color: #f8fafc !important;
+  padding: 0.6rem 1.25rem !important;
+  border-top: 1px solid #f1f5f9 !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.xyraNotifySectionTitle {
+  color: #64748b !important;
+  font-size: 0.725rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+}
+
+.xyraNotifyItemActionBtn .sapMBtnInner {
+  background-color: #f1f5f9 !important;
+  border-radius: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border: none !important;
+  color: #475569 !important;
+}
+
+.xyraNotifyItemActionBtn:hover .sapMBtnInner {
+  background-color: #533bff !important;
+  color: #ffffff !important;
+}
+
 

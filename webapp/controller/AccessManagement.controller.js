@@ -7,8 +7,9 @@ sap.ui.define([
     "xyraweb/model/config",
     "xyraweb/model/sidebarState",
     "xyraweb/model/mockData",
-    "xyraweb/model/GlobalLoading"
-], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config, SidebarState, MockData, GlobalLoading) {
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config, SidebarState, MockData, GlobalLoading, NotificationPopover) {
     "use strict";
 
     var PERSONA_TO_ROLE = {
@@ -422,8 +423,8 @@ sap.ui.define([
                 }.bind(this));
         },
 
-        onNotificationPress: function () {
-            MessageToast.show("No new notifications.");
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         }
 
     });

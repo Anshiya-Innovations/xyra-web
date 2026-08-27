@@ -5,8 +5,9 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "xyraweb/model/sidebarState",
     "xyraweb/model/focusRing",
-    "xyraweb/model/GlobalLoading"
-], function (Controller, MessageToast, UIComponent, JSONModel, SidebarState, killFocusRing, GlobalLoading) {
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, MessageToast, UIComponent, JSONModel, SidebarState, killFocusRing, GlobalLoading, NotificationPopover) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Admin", {
@@ -404,8 +405,8 @@ sap.ui.define([
             }
         },
 
-        onNotificationPress: function () {
-            MessageToast.show("System Notifications: 0 Critical Alerts");
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         },
 
         onSearchPress: function () {

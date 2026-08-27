@@ -6,7 +6,8 @@ sap.ui.define([
     "xyraweb/model/sidebarState",
     "xyraweb/model/auditLogService",
     "xyraweb/model/session",
-    "xyraweb/model/GlobalLoading"
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
 ], function (
     Controller,
     UIComponent,
@@ -15,7 +16,8 @@ sap.ui.define([
     SidebarState,
     AuditLogService,
     Session,
-    GlobalLoading
+    GlobalLoading,
+    NotificationPopover
 ) {
     "use strict";
 
@@ -262,7 +264,9 @@ sap.ui.define([
         onRiskAnalytics: function () { MessageToast.show("Navigating to Risk Analytics..."); },
         onSystemHealth: function () { MessageToast.show("Navigating to System Health..."); },
         onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); },
-        onNotificationPress: function () { MessageToast.show("No new audit log alerts."); },
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
+        },
         onLogout: function () { GlobalLoading.logout(this); }
 
     });

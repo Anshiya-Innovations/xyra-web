@@ -7,8 +7,9 @@ sap.ui.define([
     "xyraweb/model/session",
     "xyraweb/model/sidebarState",
     "xyraweb/model/mockData",
-    "xyraweb/model/GlobalLoading"
-], function (Controller, MessageToast, MessageBox, BusyIndicator, Config, Session, SidebarState, MockData, GlobalLoading) {
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, MessageToast, MessageBox, BusyIndicator, Config, Session, SidebarState, MockData, GlobalLoading, NotificationPopover) {
     "use strict";
 
     var ROLE_LABELS = {
@@ -314,8 +315,8 @@ sap.ui.define([
             MessageToast.show("Personal & Account details reset to original values.");
         },
 
-        onNotificationPress: function () {
-            MessageToast.show("System Notifications: Account operational.");
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         },
 
         onQuickAction: function (oEvent) {

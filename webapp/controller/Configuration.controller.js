@@ -11,8 +11,9 @@ sap.ui.define([
     "xyraweb/model/focusRing",
     "xyraweb/model/sidebarState",
     "xyraweb/model/mockData",
-    "xyraweb/model/GlobalLoading"
-], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, BusyIndicator, Config, Session, killFocusRing, SidebarState, MockData, GlobalLoading) {
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, BusyIndicator, Config, Session, killFocusRing, SidebarState, MockData, GlobalLoading, NotificationPopover) {
     "use strict";
 
     // ponytail: shown only when the tenant has zero Systems on file yet, so a
@@ -686,7 +687,9 @@ sap.ui.define([
         onSystemHealth: function () { this.getOwnerComponent().getRouter().navTo("SystemHealth"); },
         onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); },
 
-        onNotificationPress: function () { MessageToast.show("No new notifications."); },
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
+        },
         onLogout: function () {
             Session.clear();
             GlobalLoading.logout(this);

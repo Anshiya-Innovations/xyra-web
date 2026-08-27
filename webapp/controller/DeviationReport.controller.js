@@ -4,8 +4,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/model/json/JSONModel",
     "xyraweb/service/DeviationService",
-    "xyraweb/model/GlobalLoading"
-], function (Controller, MessageToast, MessageBox, JSONModel, DeviationService, GlobalLoading) {
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, MessageToast, MessageBox, JSONModel, DeviationService, GlobalLoading, NotificationPopover) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.DeviationReport", {
@@ -244,8 +245,8 @@ sap.ui.define([
             MessageToast.show("Deviation Report refreshed.");
         },
 
-        onNotificationPress: function () {
-            MessageToast.show("No unread system alerts.");
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         },
 
         onLogout: function () {

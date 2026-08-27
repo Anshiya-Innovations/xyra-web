@@ -4,14 +4,16 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
-    "xyraweb/model/GlobalLoading"
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
 ], function (
     Controller,
     UIComponent,
     JSONModel,
     MessageToast,
     MessageBox,
-    GlobalLoading
+    GlobalLoading,
+    NotificationPopover
 ) {
     "use strict";
 
@@ -142,8 +144,8 @@ sap.ui.define([
             UIComponent.getRouterFor(this).navTo("Auditor");
         },
 
-        onNotificationPress: function () {
-            MessageToast.show("No new notifications.");
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         },
 
         onLogout: function () {

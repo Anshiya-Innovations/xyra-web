@@ -6,8 +6,9 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "xyraweb/model/sidebarState",
     "xyraweb/model/focusRing",
-    "xyraweb/model/GlobalLoading"
-], function (Controller, MessageToast, MessageBox, UIComponent, JSONModel, SidebarState, killFocusRing, GlobalLoading) {
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, MessageToast, MessageBox, UIComponent, JSONModel, SidebarState, killFocusRing, GlobalLoading, NotificationPopover) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Organization", {
@@ -304,6 +305,9 @@ sap.ui.define([
         onOrganization: function () { this.navToRoute("Organization"); },
         onRiskAnalytics: function () { this.navToRoute("Admin"); },
         onProfile: function () { this.navToRoute("Profile"); },
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
+        },
         onLogout: function () {
             GlobalLoading.logout(this);
         }

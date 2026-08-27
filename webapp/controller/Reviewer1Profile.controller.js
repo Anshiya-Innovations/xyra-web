@@ -4,14 +4,16 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
-    "xyraweb/model/GlobalLoading"
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
 ], function (
     Controller,
     UIComponent,
     JSONModel,
     MessageToast,
     MessageBox,
-    GlobalLoading
+    GlobalLoading,
+    NotificationPopover
 ) {
     "use strict";
 
@@ -72,8 +74,8 @@ sap.ui.define([
             MessageToast.show("Edit Profile Picture clicked.");
         },
 
-        onNotificationPress: function () {
-            MessageToast.show("No new notifications for Reviewer 1.");
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         },
 
         onLogout: function () {

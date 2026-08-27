@@ -6,7 +6,8 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
-    "xyraweb/model/GlobalLoading"
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
 ], function (
     Controller,
     UIComponent,
@@ -15,7 +16,8 @@ sap.ui.define([
     FilterOperator,
     MessageToast,
     MessageBox,
-    GlobalLoading
+    GlobalLoading,
+    NotificationPopover
 ) {
     "use strict";
 
@@ -530,8 +532,8 @@ sap.ui.define([
             }
         },
 
-        onNotificationPress: function () {
-            MessageToast.show("No new notifications for Escalation Manager.");
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         },
 
         onLogout: function () {

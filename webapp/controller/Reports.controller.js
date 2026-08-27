@@ -4,8 +4,9 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "xyraweb/model/sidebarState",
-    "xyraweb/model/GlobalLoading"
-], function (Controller, JSONModel, MessageToast, MessageBox, SidebarState, GlobalLoading) {
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, JSONModel, MessageToast, MessageBox, SidebarState, GlobalLoading, NotificationPopover) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Reports", {
@@ -460,7 +461,9 @@ sap.ui.define([
         onSystemHealth: function () { this.getOwnerComponent().getRouter().navTo("SystemHealth"); },
         onProfile: function () { this.getOwnerComponent().getRouter().navTo("Profile"); },
 
-        onNotificationPress: function () { MessageToast.show("No new notifications."); },
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
+        },
         onLogout: function () {
             GlobalLoading.logout(this);
         }
