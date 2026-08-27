@@ -420,6 +420,10 @@ sap.ui.define([
                     if (oConfPass) { oConfPass.setValue(""); }
                     this.onCloseResetPasswordDialog();
                 }.bind(this));
+        },
+
+        onNotificationPress: function () {
+            MessageToast.show("No new notifications.");
         }
 
     });

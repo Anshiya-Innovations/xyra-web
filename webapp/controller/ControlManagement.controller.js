@@ -737,6 +737,7 @@ sap.ui.define([
             }
         },
 
+        onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
         onNavAutomationMonitoring: function () { this.getOwnerComponent().getRouter().navTo("AutomationMonitoring"); },
         onNavDeviationReport: function () { this.getOwnerComponent().getRouter().navTo("DeviationReport"); },
         onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
