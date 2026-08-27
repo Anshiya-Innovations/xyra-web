@@ -705,9 +705,9 @@
                                             <Text text="{controlsModel>frequencyRun}" wrapping="false"/>
 
                                             <ObjectStatus text="{controlsModel>totalRun}" state="Success"/>
-                                            <HBox justifyContent="End">
-                                                <Button icon="sap-icon://edit" type="Transparent" press="onEditControl" tooltip="Edit Security Control"/>
-                                                <Button icon="sap-icon://delete" type="Transparent" press="onDeleteControl" tooltip="Delete Security Control"/>
+                                            <HBox justifyContent="End" style="gap: 0.5rem;">
+                                                <Button icon="sap-icon://edit" type="Emphasized" press="onEditControl" tooltip="Edit Security Control"/>
+                                                <Button icon="sap-icon://delete" type="Reject" press="onDeleteControl" tooltip="Delete Security Control"/>
                                             </HBox>
                                         </cells>
                                     </ColumnListItem>

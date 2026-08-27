@@ -1581,6 +1581,28 @@ td .sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)):not(.sapMBtnReject
 }
 
 /* 2. Text & Content Action Buttons in Table Cells (e.g. Generate, View, Download) */
+td .sapMBtn,
+.sapMListTblCell .sapMBtn {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+td .sapMBtn:hover,
+td .sapMBtn:focus,
+td .sapMBtn:active,
+.sapMListTblCell .sapMBtn:hover,
+.sapMListTblCell .sapMBtn:focus,
+.sapMListTblCell .sapMBtn:active {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 td .sapMBtn:has(.sapMBtnContent),
 .sapMListTblCell .sapMBtn:has(.sapMBtnContent) {
   width: auto !important;
@@ -1605,6 +1627,8 @@ td .sapMBtnInner:has(.sapMBtnContent),
   align-items: center !important;
   justify-content: center !important;
   white-space: nowrap !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
 }
 
 td .sapMBtnInner:has(.sapMBtnContent) .sapMBtnContent,
@@ -1619,6 +1643,8 @@ td .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):hover,
 .sapMListTblCell .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):hover {
   border: 1px solid #533bff !important;
   background-color: rgba(83, 59, 255, 0.08) !important;
+  background: rgba(83, 59, 255, 0.08) !important;
+  box-shadow: none !important;
 }
 
 /* Icon-only buttons (Edit/Delete row actions: no text) */
