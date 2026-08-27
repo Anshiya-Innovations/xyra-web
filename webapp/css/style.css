@@ -1062,6 +1062,34 @@ span.sapTntNLITagContainer {
   vertical-align: middle !important;
 }
 
+/* ===== Login Page Sign In Button Full-Width Sizing & Inner Span Stretch ===== */
+.xyraLoginCard .sapMBtn:has(#_IDGenButton),
+.xyraLoginCard .sapMBtn:has(.xyraLoginBtn),
+.xyraLoginBtn {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  box-sizing: border-box !important;
+}
+
+.xyraLoginCard .sapMBtnInner,
+.xyraLoginBtn .sapMBtnInner,
+#_IDGenButton-inner {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+}
+
+.xyraLoginCard > .sapMFlexItem:has(> #_IDGenButton),
+.xyraLoginCard > .sapMFlexItem:has(> .xyraLoginBtn) {
+  display: block !important;
+  width: 100% !important;
+}
+
 .xyraLoginFooter {
   margin-top: 1.75rem !important;
 }

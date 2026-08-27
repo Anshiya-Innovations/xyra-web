@@ -89,7 +89,8 @@
                         text="Sign In"
                         type="Emphasized"
                         width="100%"
-                        press="onLogin"/>
+                        press="onLogin"
+                        class="xyraLoginBtn"/>
 
                     <VBox id="_IDGenVBox1"
                         width="100%"
