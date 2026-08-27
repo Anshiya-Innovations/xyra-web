@@ -1561,9 +1561,9 @@ td .sapMBtn:has(.sapMBtnIcon):not(:has(.sapMBtnContent)),
   overflow: visible !important;
 }
 
-td .sapMBtnInner:not(:has(.sapMBtnContent)),
-td .sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)),
-.sapMListTblCell .sapMBtnInner:not(:has(.sapMBtnContent)) {
+td .sapMBtnInner:not(:has(.sapMBtnContent)):not(.sapMBtnReject),
+td .sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)):not(.sapMBtnReject),
+.sapMListTblCell .sapMBtnInner:not(:has(.sapMBtnContent)):not(.sapMBtnReject) {
   width: 34px !important;
   height: 34px !important;
   min-width: 34px !important;
@@ -1634,19 +1634,70 @@ td .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):hover,
 }
 
 /* Reject-type buttons */
-.sapMBtn:has(.sapMBtnReject) {
+.sapMBtn:has(.sapMBtnReject):not(.sapMListTblCell *):not(.sapMTable *):not(td *) {
   height: 46px !important;
   box-sizing: border-box !important;
   overflow: visible !important;
 }
 
-.sapMBtnReject {
+.sapMBtnReject:not(.sapMListTblCell *):not(.sapMTable *):not(td *) {
   height: 46px !important;
   padding: 0 1rem !important;
   box-sizing: border-box !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+/* Table Cell Delete / Reject Action Buttons — Soft Danger Red Fill (Matching Logout Button Palette) */
+td .sapMBtnInner.sapMBtnReject,
+td .sapMBtnReject,
+.sapMListTblCell .sapMBtnInner.sapMBtnReject,
+.sapMTable td .sapMBtnInner.sapMBtnReject {
+  background-color: #ffe4e6 !important;
+  background: #ffe4e6 !important;
+  border: 1px solid #fda4af !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+td .sapMBtnInner.sapMBtnReject .sapMBtnIcon,
+td .sapMBtnInner.sapMBtnReject .sapUiIcon,
+td .sapMBtnInner.sapMBtnReject .sapMBtnContent,
+td .sapMBtnInner.sapMBtnReject bdi,
+.sapMListTblCell .sapMBtnInner.sapMBtnReject .sapMBtnIcon,
+.sapMListTblCell .sapMBtnInner.sapMBtnReject .sapUiIcon,
+.sapMListTblCell .sapMBtnInner.sapMBtnReject .sapMBtnContent,
+.sapMListTblCell .sapMBtnInner.sapMBtnReject bdi {
+  color: #e11d48 !important;
+}
+
+td .sapMBtnInner.sapMBtnReject:hover,
+.sapMListTblCell .sapMBtnInner.sapMBtnReject:hover,
+.sapMTable td .sapMBtnInner.sapMBtnReject:hover {
+  background-color: #fecdd3 !important;
+  background: #fecdd3 !important;
+  border: 1px solid #e11d48 !important;
+}
+
+td .sapMBtnInner.sapMBtnReject:hover .sapMBtnIcon,
+td .sapMBtnInner.sapMBtnReject:hover .sapUiIcon,
+td .sapMBtnInner.sapMBtnReject:hover .sapMBtnContent,
+td .sapMBtnInner.sapMBtnReject:hover bdi,
+.sapMListTblCell .sapMBtnInner.sapMBtnReject:hover .sapMBtnIcon,
+.sapMListTblCell .sapMBtnInner.sapMBtnReject:hover .sapUiIcon,
+.sapMListTblCell .sapMBtnInner.sapMBtnReject:hover .sapMBtnContent,
+.sapMListTblCell .sapMBtnInner.sapMBtnReject:hover bdi {
+  color: #be123c !important;
+}
+
+td .sapMBtnInner.sapMBtnReject:active,
+.sapMListTblCell .sapMBtnInner.sapMBtnReject:active,
+.sapMTable td .sapMBtnInner.sapMBtnReject:active {
+  background-color: #fda4af !important;
+  background: #fda4af !important;
+  border: 1px solid #be123c !important;
 }
 
 .sapMBtnEmphasized {
@@ -1839,36 +1890,44 @@ td .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):hover,
 /* ===== Secondary button & Dialog Cancel button styling ===== */
 .xyraBtnSecondary {
   height: 46px !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 10px !important;
-  background-color: #f8fafc !important;
-  padding: 0 1rem !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
   box-sizing: border-box !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .xyraBtnSecondary .sapMBtnInner {
   height: 46px !important;
   line-height: 46px !important;
-  border: none !important;
-  background: none !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 10px !important;
+  background-color: #f8fafc !important;
+  padding: 0 1rem !important;
   box-sizing: border-box !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
 }
 
-.xyraBtnSecondary:hover {
-  background-color: #f1f5f9 !important;
-  border-color: #cbd5e1 !important;
+.xyraBtnSecondary:hover .sapMBtnInner,
+.xyraBtnSecondary .sapMBtnInner:hover {
+  background-color: rgba(83, 59, 255, 0.08) !important;
+  border: 1px solid #533bff !important;
 }
 
-.xyraBtnSecondary .sapMBtnContent {
-  color: #334155 !important;
+.xyraBtnSecondary:active .sapMBtnInner,
+.xyraBtnSecondary .sapMBtnInner:active {
+  background-color: rgba(83, 59, 255, 0.16) !important;
+  border: 1px solid #533bff !important;
+}
+
+.xyraBtnSecondary .sapMBtnContent,
+.xyraBtnSecondary .sapMBtnIcon,
+.xyraBtnSecondary .sapUiIcon,
+.xyraBtnSecondary bdi {
+  color: #533BFF !important;
   font-weight: 600 !important;
-  line-height: 46px !important;
-}
-
-.xyraBtnSecondary .sapMBtnIcon {
-  vertical-align: middle !important;
-  line-height: 46px !important;
-  color: #334155 !important;
 }
 
 /* ===== Admin Dashboard — modern KPI cards + charts =====
