@@ -372,13 +372,13 @@
                                         </OverflowToolbar>
                                     </headerToolbar>
 
-                                    <columns>
-                                        <Column width="22%"><Text text="Report Name"/></Column>
-                                        <Column width="15%"><Text text="Category / Type"/></Column>
-                                        <Column width="33%"><Text text="Description / Scope"/></Column>
-                                        <Column width="18%"><Text text="Last Generated"/></Column>
-                                        <Column width="12%" hAlign="Center"><Text text="Action"/></Column>
-                                    </columns>
+                                     <columns>
+                                         <Column width="28%"><Text text="Report Name"/></Column>
+                                         <Column width="15%"><Text text="Category / Type"/></Column>
+                                         <Column width="30%"><Text text="Description / Scope"/></Column>
+                                         <Column width="15%"><Text text="Last Generated"/></Column>
+                                         <Column width="12%" hAlign="Center"><Text text="Action"/></Column>
+                                     </columns>
 
                                     <items>
                                         <ColumnListItem>

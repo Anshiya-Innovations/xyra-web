@@ -1496,28 +1496,60 @@ span.sapTntNLITagContainer {
   overflow: visible !important;
 }
 
-/* ===== Table Cell Actions HBox Spacing & Icon-Only Button Sizing ===== */
+/* Prevent ObjectIdentifier titles & subtitles from overflowing cell bounds */
+.sapMListTblCell .sapMObjectIdentifier,
+.sapMTable .sapMObjectIdentifier,
+td .sapMObjectIdentifier {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+.sapMListTblCell .sapMObjectIdentifierText,
+.sapMTable .sapMObjectIdentifierText,
+td .sapMObjectIdentifierText,
+.sapMListTblCell .sapMObjectIdentifierText .sapMText,
+.sapMTable .sapMObjectIdentifierText .sapMText,
+td .sapMObjectIdentifierText .sapMText {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  max-width: 100% !important;
+  line-height: 1.35 !important;
+  margin-top: 2px !important;
+}
+
+/* ===== Table Cell Actions HBox Spacing & Universal Alignment ===== */
 .sapMListTblCell,
-.sapMTable td {
+.sapMListTblHeaderCell,
+.sapMTable td,
+.sapMTable th {
   vertical-align: middle !important;
   overflow: visible !important;
-  padding-top: 0.5rem !important;
-  padding-bottom: 0.5rem !important;
+  padding-top: 0.55rem !important;
+  padding-bottom: 0.55rem !important;
+}
+
+.sapMListTblHeaderCell .sapMText,
+.sapMListTblHeaderCell .sapMLabel {
+  font-weight: 600 !important;
+  color: #475569 !important;
+  font-size: 0.85rem !important;
 }
 
 .sapMListTblCell .sapMHBox,
 .sapMTable .sapMHBox,
 td .sapMHBox {
   align-items: center !important;
-  justify-content: flex-end !important;
   gap: 0.5rem !important;
   overflow: visible !important;
   height: auto !important;
 }
 
-.sapMListTblCell .sapMBtn,
-.sapMTable .sapMBtn,
-td .sapMBtn {
+/* 1. Icon-Only Action Buttons in Table Cells (e.g. Edit pencil, Delete trash bin) */
+td .sapMBtn:not(:has(.sapMBtnContent)),
+td .sapMBtn:has(.sapMBtnIcon):not(:has(.sapMBtnContent)),
+.sapMListTblCell .sapMBtn:not(:has(.sapMBtnContent)) {
   width: 34px !important;
   height: 34px !important;
   min-width: 34px !important;
@@ -1529,9 +1561,9 @@ td .sapMBtn {
   overflow: visible !important;
 }
 
-.sapMListTblCell .sapMBtnInner,
-.sapMTable .sapMBtnInner,
-td .sapMBtnInner {
+td .sapMBtnInner:not(:has(.sapMBtnContent)),
+td .sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)),
+.sapMListTblCell .sapMBtnInner:not(:has(.sapMBtnContent)) {
   width: 34px !important;
   height: 34px !important;
   min-width: 34px !important;
@@ -1548,9 +1580,43 @@ td .sapMBtnInner {
   justify-content: center !important;
 }
 
-.sapMListTblCell .sapMBtnInner:hover,
-.sapMTable .sapMBtnInner:hover,
-td .sapMBtnInner:hover {
+/* 2. Text & Content Action Buttons in Table Cells (e.g. Generate, View, Download) */
+td .sapMBtn:has(.sapMBtnContent),
+.sapMListTblCell .sapMBtn:has(.sapMBtnContent) {
+  width: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
+  height: 34px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+td .sapMBtnInner:has(.sapMBtnContent),
+.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent) {
+  width: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
+  height: 34px !important;
+  padding: 0 0.875rem !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+}
+
+td .sapMBtnInner:has(.sapMBtnContent) .sapMBtnContent,
+.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent) .sapMBtnContent {
+  font-size: 0.825rem !important;
+  font-weight: 600 !important;
+  line-height: normal !important;
+  overflow: visible !important;
+}
+
+td .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):hover,
+.sapMListTblCell .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):hover {
   border: 1px solid #533bff !important;
   background-color: rgba(83, 59, 255, 0.08) !important;
 }
