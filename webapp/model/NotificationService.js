@@ -38,27 +38,10 @@ sap.ui.define([
         }
     ];
 
-    var DUMMY_PREVIOUS_ITEMS = [
-        {
-            id: "dummy-3",
-            title: "New Control Created",
-            message: "Security control XYRA-28 was successfully configured in DEV/QAS.",
-            category: "TASK",
-            timestamp: "Yesterday",
-            read: true,
-            priority: "LOW",
-            targetPage: "ControlManagement",
-            targetRecord: "XYRA-28",
-            icon: "sap-icon://add",
-            iconClass: "xyraNotifyIconGrey"
-        }
-    ];
-
     var oModel = new JSONModel({
         unreadCount: 0,
         activeTab: "ALL", // "ALL", "TASK", "REMINDER"
         items: [],
-        previousItems: [],
         isDummyData: false
     });
 
@@ -122,6 +105,8 @@ sap.ui.define([
         return (oSession && oSession.subdomain) || Config.TEST_SUBDOMAIN;
     }
 
+    // No "previous/read" archive anymore - a notification is either in this
+    // unread list or it's gone (Mark As Read / Clear All both just drop it).
     function refresh() {
         return fetch(Config.AUTH_BASE_URL + "/api/notifications/listNotifications", {
             method: "POST",
@@ -131,17 +116,15 @@ sap.ui.define([
             .then(function (oResponse) { return oResponse.json(); })
             .then(function (oData) {
                 if (!oData.success) { throw new Error(oData.message || "listNotifications failed"); }
-                var aRows = (oData.notifications || []).map(toDisplayItem);
-                oModel.setProperty("/items", aRows.filter(function (r) { return !r.read; }));
-                oModel.setProperty("/previousItems", aRows.filter(function (r) { return r.read; }));
-                oModel.setProperty("/unreadCount", aRows.filter(function (r) { return !r.read; }).length);
+                var aUnread = (oData.notifications || []).filter(function (r) { return !r.read; }).map(toDisplayItem);
+                oModel.setProperty("/items", aUnread);
+                oModel.setProperty("/unreadCount", aUnread.length);
                 oModel.setProperty("/isDummyData", false);
                 updateGlobalBellBadges();
             })
             .catch(function () {
                 notice();
                 oModel.setProperty("/items", DUMMY_ITEMS.slice());
-                oModel.setProperty("/previousItems", DUMMY_PREVIOUS_ITEMS.slice());
                 oModel.setProperty("/unreadCount", DUMMY_ITEMS.length);
                 oModel.setProperty("/isDummyData", true);
                 updateGlobalBellBadges();
@@ -168,22 +151,10 @@ sap.ui.define([
 
         markAsRead: function (sId) {
             var aItems = oModel.getProperty("/items") || [];
-            var aPrev = oModel.getProperty("/previousItems") || [];
-            var oFoundItem = null;
+            var aNewItems = aItems.filter(function (item) { return item.id !== sId; });
 
-            var aNewItems = aItems.filter(function (item) {
-                if (item.id === sId) {
-                    item.read = true;
-                    oFoundItem = item;
-                    return false;
-                }
-                return true;
-            });
-
-            if (oFoundItem) {
-                aPrev.unshift(oFoundItem);
+            if (aNewItems.length !== aItems.length) {
                 oModel.setProperty("/items", aNewItems);
-                oModel.setProperty("/previousItems", aPrev);
                 oModel.setProperty("/unreadCount", aNewItems.length);
                 updateGlobalBellBadges();
             }
@@ -198,16 +169,7 @@ sap.ui.define([
         },
 
         clearAll: function () {
-            var aItems = oModel.getProperty("/items") || [];
-            var aPrev = oModel.getProperty("/previousItems") || [];
-
-            aItems.forEach(function (item) {
-                item.read = true;
-                aPrev.unshift(item);
-            });
-
             oModel.setProperty("/items", []);
-            oModel.setProperty("/previousItems", aPrev);
             oModel.setProperty("/unreadCount", 0);
             updateGlobalBellBadges();
 
@@ -218,10 +180,6 @@ sap.ui.define([
                     body: JSON.stringify({ subdomain: getSubdomain() })
                 }).catch(function () { /* best-effort - local state already updated */ });
             }
-        },
-
-        clearPrevious: function () {
-            oModel.setProperty("/previousItems", []);
         },
 
         updateBadges: updateGlobalBellBadges

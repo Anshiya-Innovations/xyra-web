@@ -15,12 +15,14 @@ sap.ui.define([
     var oNotificationPopover = null;
     var _oCurrentController = null;
 
-    function renderListItems(aItems, bIsPrevious) {
+    // No "previous/read" archive - Mark As Read just drops the item from this
+    // list (see NotificationService.markAsRead).
+    function renderListItems(aItems) {
         if (!aItems || aItems.length === 0) {
             var oEmptyBox = new VBox({
                 alignItems: "Center",
                 items: [
-                    new Text({ text: bIsPrevious ? "No previous notifications." : "No new notifications." }).addStyleClass("textMuted")
+                    new Text({ text: "No new notifications." }).addStyleClass("textMuted")
                 ]
             }).addStyleClass("sapUiMediumMargin");
 
@@ -45,37 +47,26 @@ sap.ui.define([
             }).addStyleClass("sapUiTinyMarginTop");
 
             var oTextBox = new VBox({
-                width: bIsPrevious ? "74%" : "78%",
+                width: "78%",
                 items: [
                     new Text({
                         text: item.title + " - " + item.message
-                    }).addStyleClass(bIsPrevious ? "xyraNotifyItemTextRead" : "xyraNotifyItemText"),
+                    }).addStyleClass("xyraNotifyItemText"),
                     oTimeBox
                 ]
             }).addStyleClass("sapUiTinyMarginBegin");
 
-            var oRightAction;
-            if (bIsPrevious) {
-                oRightAction = new HBox({
-                    alignItems: "Center",
-                    items: [
-                        new Icon({ src: "sap-icon://decline", size: "0.85rem" }).addStyleClass("textMuted sapUiTinyMarginEnd"),
-                        new Icon({ src: "sap-icon://accept", size: "0.85rem", color: "#10b981" })
-                    ]
-                });
-            } else {
-                oRightAction = new Button({
-                    icon: "sap-icon://accept",
-                    type: "Transparent",
-                    tooltip: "Mark As Read",
-                    press: function (oEvent) {
-                        oEvent.stopPropagation();
-                        NotificationService.markAsRead(item.id);
-                        updatePopoverUI();
-                        MessageToast.show("Marked as read");
-                    }
-                }).addStyleClass("xyraNotifyItemActionBtn");
-            }
+            var oRightAction = new Button({
+                icon: "sap-icon://accept",
+                type: "Transparent",
+                tooltip: "Mark As Read",
+                press: function (oEvent) {
+                    oEvent.stopPropagation();
+                    NotificationService.markAsRead(item.id);
+                    updatePopoverUI();
+                    MessageToast.show("Marked as read");
+                }
+            }).addStyleClass("xyraNotifyItemActionBtn");
 
             var oRowContent = new HBox({
                 alignItems: "Start",
@@ -84,7 +75,7 @@ sap.ui.define([
 
             var oListItem = new CustomListItem({
                 content: [oRowContent]
-            }).addStyleClass(bIsPrevious ? "xyraNotifyListItem xyraNotifyReadItem" : "xyraNotifyListItem");
+            }).addStyleClass("xyraNotifyListItem");
 
             oListItem.attachPress(function () {
                 NotificationService.markAsRead(item.id);
@@ -111,7 +102,6 @@ sap.ui.define([
         var iUnread = oModel.getProperty("/unreadCount") || 0;
         var sTab = oModel.getProperty("/activeTab") || "ALL";
         var aAllItems = oModel.getProperty("/items") || [];
-        var aPrevItems = oModel.getProperty("/previousItems") || [];
 
         // Filter items by category tab
         var aFilteredItems = aAllItems;
@@ -127,18 +117,11 @@ sap.ui.define([
             oNotificationPopover._oBadgePill.setVisible(iUnread > 0);
         }
 
-        // Update lists
+        // Update list
         if (oNotificationPopover._oNewList) {
             oNotificationPopover._oNewList.destroyItems();
-            renderListItems(aFilteredItems, false).forEach(function (oItem) {
+            renderListItems(aFilteredItems).forEach(function (oItem) {
                 oNotificationPopover._oNewList.addItem(oItem);
-            });
-        }
-
-        if (oNotificationPopover._oPrevList) {
-            oNotificationPopover._oPrevList.destroyItems();
-            renderListItems(aPrevItems, true).forEach(function (oItem) {
-                oNotificationPopover._oPrevList.addItem(oItem);
             });
         }
 
@@ -164,7 +147,7 @@ sap.ui.define([
             _oCurrentController = oController;
 
             if (!oNotificationPopover) {
-                var oBadgePill = new Text({ text: "4 New" }).addStyleClass("xyraNotifyBadgePill");
+                var oBadgePill = new Text({ text: "0 New" }).addStyleClass("xyraNotifyBadgePill");
 
                 var oTabAll = new Text({ text: "VIEW ALL" }).addStyleClass("xyraNotifyTabItem xyraNotifyTabActive");
                 var oTabTasks = new Text({ text: "TASKS" }).addStyleClass("xyraNotifyTabItem");
@@ -190,7 +173,7 @@ sap.ui.define([
                     press: function () {
                         NotificationService.clearAll();
                         updatePopoverUI();
-                        MessageToast.show("All new notifications cleared.");
+                        MessageToast.show("All notifications cleared.");
                     }
                 }).addStyleClass("xyraNotifyClearBtn");
 
@@ -219,30 +202,9 @@ sap.ui.define([
                 }).addStyleClass("xyraNotifyHeaderBox");
 
                 var oNewList = new List({ showSeparators: "Inner" }).addStyleClass("xyraNotifyList");
-                var oPrevList = new List({ showSeparators: "Inner" }).addStyleClass("xyraNotifyList");
-
-                var oSubClearBtn = new Button({
-                    text: "Clear All",
-                    icon: "sap-icon://decline",
-                    type: "Reject",
-                    press: function () {
-                        NotificationService.clearPrevious();
-                        updatePopoverUI();
-                        MessageToast.show("Previous notifications cleared.");
-                    }
-                }).addStyleClass("xyraNotifySubClearBtn");
-
-                var oSectionHeader = new HBox({
-                    justifyContent: "SpaceBetween",
-                    alignItems: "Center",
-                    items: [
-                        new Text({ text: "PREVIOUS NOTIFICATIONS" }).addStyleClass("xyraNotifySectionTitle"),
-                        oSubClearBtn
-                    ]
-                }).addStyleClass("xyraNotifySectionHeader");
 
                 var oMainContainer = new VBox({
-                    items: [oHeaderBox, oNewList, oSectionHeader, oPrevList]
+                    items: [oHeaderBox, oNewList]
                 });
 
                 oNotificationPopover = new ResponsivePopover({
@@ -257,7 +219,6 @@ sap.ui.define([
                 oNotificationPopover._oTabTasks = oTabTasks;
                 oNotificationPopover._oTabReminders = oTabReminders;
                 oNotificationPopover._oNewList = oNewList;
-                oNotificationPopover._oPrevList = oPrevList;
             }
 
             updatePopoverUI();

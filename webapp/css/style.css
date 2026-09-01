@@ -2764,11 +2764,11 @@ div[id*="-text"] {
   right: 0px;
   background-color: #ef4444 !important;
   color: #ffffff !important;
-  font-size: 0.65rem !important;
+  font-size: 0.6rem !important;
   font-weight: 800 !important;
-  height: 18px !important;
-  min-width: 18px !important;
-  padding: 0 4px !important;
+  height: 15px !important;
+  min-width: 15px !important;
+  padding: 0 3px !important;
   border-radius: 9999px !important;
   display: flex !important;
   align-items: center !important;
@@ -2776,20 +2776,20 @@ div[id*="-text"] {
   line-height: 1 !important;
   pointer-events: none !important;
   box-shadow: 0 2px 5px rgba(239, 68, 68, 0.5) !important;
-  border: 1.5px solid #ffffff !important;
+  border: 1px solid #ffffff !important;
   z-index: 100 !important;
 }
 
+/* No default/placeholder badge - only actually-set, nonzero unread counts show.
+   A bell button that JS hasn't touched yet (no data-unread-count attribute) or
+   that's explicitly at 0 shows no badge at all. */
+.xyraNoUnreadBadge::after,
+.sapMBtn[data-unread-count="0"]::after,
 .sapMBtn[title="Notifications"]:not([data-unread-count])::after,
 .sapMBtn[title="Alert Notifications"]:not([data-unread-count])::after,
 .sapMBtn[aria-label="Notifications"]:not([data-unread-count])::after,
 .sapMBtn[tooltip="Notifications"]:not([data-unread-count])::after,
 .sapMBtn[tooltip="Alert Notifications"]:not([data-unread-count])::after {
-  content: "4" !important;
-}
-
-.xyraNoUnreadBadge::after,
-.sapMBtn[data-unread-count="0"]::after {
   display: none !important;
 }
 

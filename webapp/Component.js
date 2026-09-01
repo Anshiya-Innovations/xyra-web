@@ -32,6 +32,14 @@ sap.ui.define([
                         GlobalLoading.show(sActivity, 2000, true, true);
                     }
                 });
+                // Every page has its own bell button instance - a freshly
+                // rendered one starts with no data-unread-count attribute until
+                // JS touches it. Re-apply the current badge state after each
+                // navigation instead of waiting for the next poll (up to 20s -
+                // see NotificationService.js) to reach the new page's button.
+                oRouter.attachRouteMatched(() => {
+                    setTimeout(NotificationService.updateBadges, 100);
+                });
                 oRouter.initialize();
             }
         }
