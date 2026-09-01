@@ -2978,6 +2978,11 @@ div[id*="-text"] {
   color: #64748b !important;
 }
 
+.xyraNotifyIconRed {
+  background-color: #fee2e2 !important;
+  color: #dc2626 !important;
+}
+
 .xyraNotifyItemText {
   color: #1e293b !important;
   font-size: 0.85rem !important;
