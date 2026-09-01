@@ -352,7 +352,7 @@
                         </HBox>
 
                         <!-- SLIDE 1: SAP SYSTEM LANDSCAPE CONFIGURATION -->
-                        <VBox visible="{= ${configUiModel>/activeTab} === 'landscape' }" width="100%">
+                        <VBox id="vboxSystemLandscape" visible="true" width="100%">
 
                             <!-- TOP ACTION BUTTONS BAR -->
                             <HBox justifyContent="End" alignItems="Center" class="sapUiSmallMarginBottom">
@@ -410,7 +410,7 @@
                         </VBox>
 
                         <!-- SLIDE 2: SYSTEM HEALTH MONITORING -->
-                        <VBox visible="{= ${configUiModel>/activeTab} === 'systemHealth' }" width="100%">
+                        <VBox id="vboxSystemHealth" visible="false" width="100%">
 
                             <!-- HEADER ACTION CONTROLS BAR -->
                             <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
@@ -436,7 +436,7 @@
                             <!-- HEALTH KPI CARDS SUMMARY BAR -->
                             <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
                                 <!-- ONLINE SYSTEMS -->
-                                <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #10b981; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardOnline">
                                     <HBox justifyContent="SpaceBetween" alignItems="Center">
                                         <VBox>
                                             <Text text="Online Systems" class="textMuted fontSizeSmall fontWeightBold"/>
@@ -450,7 +450,7 @@
                                 </VBox>
 
                                 <!-- OFFLINE SYSTEMS -->
-                                <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #ef4444; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardOffline">
                                     <HBox justifyContent="SpaceBetween" alignItems="Center">
                                         <VBox>
                                             <Text text="Offline Systems" class="textMuted fontSizeSmall fontWeightBold"/>
@@ -464,7 +464,7 @@
                                 </VBox>
 
                                 <!-- DEGRADED SYSTEMS (reachable but slow) -->
-                                <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #f59e0b; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardDegraded">
                                     <HBox justifyContent="SpaceBetween" alignItems="Center">
                                         <VBox>
                                             <Text text="Degraded Systems" class="textMuted fontSizeSmall fontWeightBold"/>
@@ -478,7 +478,7 @@
                                 </VBox>
 
                                 <!-- UNTESTED SYSTEMS -->
-                                <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #3b82f6; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardUnknown">
                                     <HBox justifyContent="SpaceBetween" alignItems="Center">
                                         <VBox>
                                             <Text text="Untested Systems" class="textMuted fontSizeSmall fontWeightBold"/>

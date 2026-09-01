@@ -67,11 +67,35 @@ sap.ui.define([
         },
 
         onSelectLandscapeTab: function () {
-            this.getView().getModel("configUiModel").setProperty("/activeTab", "landscape");
+            var oLandscape = this.byId("vboxSystemLandscape");
+            var oHealth = this.byId("vboxSystemHealth");
+            if (oLandscape) { oLandscape.setVisible(true); }
+            if (oHealth) { oHealth.setVisible(false); }
+
+            var oBtnLandscape = this.byId("btnSystemLandscapeTab");
+            var oBtnHealth = this.byId("btnSystemHealthTab");
+            if (oBtnLandscape) { oBtnLandscape.setType("Emphasized"); }
+            if (oBtnHealth) { oBtnHealth.setType("Transparent"); }
         },
 
         onSelectSystemHealthTab: function () {
-            this.getView().getModel("configUiModel").setProperty("/activeTab", "systemHealth");
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            if (oRouter) {
+                oRouter.navTo("SystemHealth");
+                return;
+            }
+
+            var oLandscape = this.byId("vboxSystemLandscape");
+            var oHealth = this.byId("vboxSystemHealth");
+            if (oLandscape) { oLandscape.setVisible(false); }
+            if (oHealth) { oHealth.setVisible(true); }
+
+            var oBtnLandscape = this.byId("btnSystemLandscapeTab");
+            var oBtnHealth = this.byId("btnSystemHealthTab");
+            if (oBtnLandscape) { oBtnLandscape.setType("Transparent"); }
+            if (oBtnHealth) { oBtnHealth.setType("Emphasized"); }
+
+            this._syncHealthFromSystems();
         },
 
         _initHealthModel: function () {

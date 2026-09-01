@@ -3028,4 +3028,30 @@ div[id*="-text"] {
   color: #ffffff !important;
 }
 
+/* ==========================================================================
+   SYSTEM HEALTH KPI CARDS
+   ========================================================================== */
+.xyraKpiCardContainer {
+  background: #f8fafc !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+.xyraKpiCardOnline {
+  border-left: 4px solid #10b981 !important;
+}
+
+.xyraKpiCardOffline {
+  border-left: 4px solid #ef4444 !important;
+}
+
+.xyraKpiCardDegraded {
+  border-left: 4px solid #f59e0b !important;
+}
+
+.xyraKpiCardUnknown {
+  border-left: 4px solid #3b82f6 !important;
+}
+
 

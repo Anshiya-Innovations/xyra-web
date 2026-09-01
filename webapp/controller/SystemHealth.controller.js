@@ -239,9 +239,11 @@ sap.ui.define([
                     and: false
                 }));
             }
-            var oTable = this.byId("healthTable");
-            var oBinding = oTable.getBinding("items");
-            oBinding.filter(aFilters);
+            var oTable = this.byId("sh_healthTable");
+            if (oTable) {
+                var oBinding = oTable.getBinding("items");
+                if (oBinding) { oBinding.filter(aFilters); }
+            }
         },
 
         onFilterStatusChange: function (oEvent) {
@@ -250,9 +252,11 @@ sap.ui.define([
             if (sKey && sKey !== "All") {
                 aFilters.push(new Filter("status", FilterOperator.EQ, sKey));
             }
-            var oTable = this.byId("healthTable");
-            var oBinding = oTable.getBinding("items");
-            oBinding.filter(aFilters);
+            var oTable = this.byId("sh_healthTable");
+            if (oTable) {
+                var oBinding = oTable.getBinding("items");
+                if (oBinding) { oBinding.filter(aFilters); }
+            }
         },
 
         onTestSingleConnection: function (oEvent) {

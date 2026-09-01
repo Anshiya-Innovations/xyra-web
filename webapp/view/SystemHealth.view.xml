@@ -72,7 +72,7 @@
                         <!-- HEADER ACTION CONTROLS -->
                         <HBox alignItems="Center" class="sapUiMediumMarginEnd">
                             <Text text="Auto Refresh:" class="sapUiTinyMarginEnd fontWeightBold"/>
-                            <Switch id="autoRefreshSwitch" state="false" change="onAutoRefreshToggle" customTextOn="ON" customTextOff="OFF" class="sapUiSmallMarginEnd"/>
+                            <Switch id="sh_autoRefreshSwitch" state="false" change="onAutoRefreshToggle" customTextOn="ON" customTextOff="OFF" class="sapUiSmallMarginEnd"/>
                         </HBox>
                         <Button text="Refresh" icon="sap-icon://refresh" type="Emphasized" press="onRefreshHealth" class="sapUiSmallMarginEnd"/>
                         <Button icon="sap-icon://bell" tooltip="Alert Notifications" type="Transparent" press="onNotificationPress" class="sapUiTinyMarginEnd"/>
@@ -100,7 +100,7 @@
                         <!-- HEALTH KPI CARDS SUMMARY BAR -->
                         <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
                             <!-- ONLINE SYSTEMS -->
-                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #10b981; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardOnline">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center">
                                     <VBox>
                                         <Text text="Online Systems" class="textMuted fontSizeSmall fontWeightBold"/>
@@ -115,7 +115,7 @@
                             </VBox>
 
                             <!-- OFFLINE SYSTEMS -->
-                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #ef4444; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardOffline">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center">
                                     <VBox>
                                         <Text text="Offline Systems" class="textMuted fontSizeSmall fontWeightBold"/>
@@ -130,7 +130,7 @@
                             </VBox>
 
                             <!-- DEGRADED SYSTEMS -->
-                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #f59e0b; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardDegraded">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center">
                                     <VBox>
                                         <Text text="Degraded Systems" class="textMuted fontSizeSmall fontWeightBold"/>
@@ -145,7 +145,7 @@
                             </VBox>
 
                             <!-- MAINTENANCE SYSTEMS -->
-                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #3b82f6; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardUnknown">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center">
                                     <VBox>
                                         <Text text="Maintenance Systems" class="textMuted fontSizeSmall fontWeightBold"/>
@@ -163,9 +163,9 @@
                         <!-- CONTROLS & FILTER BAR -->
                         <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
                             <HBox alignItems="Center">
-                                <SearchField id="searchHealthSystemId" width="18rem" placeholder="Search System ID / Type..." liveChange="onSearchHealthSystems" search="onSearchHealthSystems" class="sapUiSmallMarginEnd"/>
+                                <SearchField id="sh_searchHealthSystemId" width="18rem" placeholder="Search System ID / Type..." liveChange="onSearchHealthSystems" search="onSearchHealthSystems" class="sapUiSmallMarginEnd"/>
                                 <Text text="Status Filter:" class="sapUiTinyMarginEnd fontWeightBold textMuted"/>
-                                <Select id="statusFilterSelect" width="12rem" change="onFilterStatusChange" selectedKey="All">
+                                <Select id="sh_statusFilterSelect" width="12rem" change="onFilterStatusChange" selectedKey="All">
                                     <core:Item key="All" text="All Statuses"/>
                                     <core:Item key="Online" text="🟢 Online"/>
                                     <core:Item key="Offline" text="🔴 Offline"/>
@@ -178,7 +178,7 @@
 
                         <!-- LIVE SYSTEM HEALTH MONITORING TABLE -->
                         <Panel expandable="false" headerText="SAP Landscape Runtime Health &amp; Availability Matrix" class="sapUiSmallMarginBottom">
-                            <Table id="healthTable" items="{healthModel>/systems}" mode="None" width="100%">
+                            <Table id="sh_healthTable" items="{healthModel>/systems}" mode="None" width="100%">
                                 <columns>
                                     <Column width="14%"><Text text="System ID" class="fontWeightBold"/></Column>
                                     <Column width="15%"><Text text="System Type"/></Column>
