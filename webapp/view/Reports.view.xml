@@ -246,6 +246,76 @@
                                 </f:Card>
                             </layout:Grid>
 
+                            <!-- SECTION 3: QUICK ACTIONS TOOLBAR -->
+                            <Panel expandable="false" class="sapUiSmallMarginBottom">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Quick Actions" level="H4"/>
+                                        <ToolbarSpacer/>
+                                        <Button text="Generate Report" icon="sap-icon://add" type="Emphasized" press="onGenerateReportDialog" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Schedule Report" icon="sap-icon://pending" type="Default" press="onScheduleReportDialog" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Export PDF" icon="sap-icon://pdf-attachment" type="Default" press="onExportPDF" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Export Excel" icon="sap-icon://excel-attachment" type="Default" press="onExportExcel" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Email Report" icon="sap-icon://email" type="Default" press="onEmailReport" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Refresh" icon="sap-icon://refresh" type="Ghost" press="onRefreshReports"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                            </Panel>
+
+                            <!-- SECTION 4: AVAILABLE STANDARD ENTERPRISE REPORTS TABLE -->
+                            <Panel expandable="false" class="sapUiSmallMarginBottom">
+                                <Table id="availableReportsTable" items="{reportsModel>/availableReports}" mode="None" width="100%">
+                                    <headerToolbar>
+                                        <OverflowToolbar>
+                                            <Title text="Available Standard Enterprise Reports" level="H3"/>
+                                            <ToolbarSpacer/>
+                                            <SearchField width="16rem" placeholder="Search available reports..." search="onSearchAvailableReports"/>
+                                            <Select selectedKey="All" change="onFilterAvailableCategory">
+                                                <core:Item key="All" text="All Categories"/>
+                                                <core:Item key="Reviewer 1" text="Reviewer 1"/>
+                                                <core:Item key="Reviewer 2" text="Reviewer 2"/>
+                                                <core:Item key="Escalation Manager" text="Escalation Manager"/>
+                                                <core:Item key="SOX Compliance" text="SOX Compliance"/>
+                                                <core:Item key="Role Change" text="Role Changes"/>
+                                                <core:Item key="User Access Review" text="User Access Review"/>
+                                                <core:Item key="SOD Conflict" text="SOD Conflicts"/>
+                                                <core:Item key="Elevated Access" text="Elevated Access Logs"/>
+                                                <core:Item key="Critical Auth" text="Critical Authorizations"/>
+                                                <core:Item key="Audit Log" text="Audit Logs"/>
+                                                <core:Item key="AI Risk Analysis" text="AI Risk Analysis"/>
+                                            </Select>
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+
+                                     <columns>
+                                         <Column width="28%"><Text text="Report Name"/></Column>
+                                         <Column width="15%"><Text text="Category / Type"/></Column>
+                                         <Column width="30%"><Text text="Description / Scope"/></Column>
+                                         <Column width="15%"><Text text="Last Generated"/></Column>
+                                         <Column width="12%" hAlign="Center"><Text text="Action"/></Column>
+                                     </columns>
+
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <ObjectIdentifier title="{reportsModel>name}" text="{reportsModel>subtitle}"/>
+                                                <ObjectStatus text="{reportsModel>type}" state="Information"/>
+                                                <Text text="{reportsModel>description}"/>
+                                                <Text text="{reportsModel>lastGenerated}"/>
+                                                <HBox justifyContent="Center" alignItems="Center">
+                                                    <Button text="Generate" type="Default" press="onGenerateRowReport"/>
+                                                </HBox>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </Panel>
+
+                        </VBox>
+
+                        <!-- SLIDE 2: EXECUTION HISTORY & EXPORT CENTER -->
+                        <VBox id="vboxExecutionHistory" visible="false" width="100%">
+
                             <!-- SECTION 2: SEARCH & FILTERS -->
                             <Panel expandable="true" expanded="true" class="sapUiTinyMarginTop sapUiTinyMarginBottom xyraCompactFilterPanel">
                                 <headerToolbar>
@@ -330,76 +400,6 @@
                                     </VBox>
                                 </content>
                             </Panel>
-
-                            <!-- SECTION 3: QUICK ACTIONS TOOLBAR -->
-                            <Panel expandable="false" class="sapUiSmallMarginBottom">
-                                <headerToolbar>
-                                    <OverflowToolbar>
-                                        <Title text="Quick Actions" level="H4"/>
-                                        <ToolbarSpacer/>
-                                        <Button text="Generate Report" icon="sap-icon://add" type="Emphasized" press="onGenerateReportDialog" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Schedule Report" icon="sap-icon://pending" type="Default" press="onScheduleReportDialog" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Export PDF" icon="sap-icon://pdf-attachment" type="Default" press="onExportPDF" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Export Excel" icon="sap-icon://excel-attachment" type="Default" press="onExportExcel" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Email Report" icon="sap-icon://email" type="Default" press="onEmailReport" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Refresh" icon="sap-icon://refresh" type="Ghost" press="onRefreshReports"/>
-                                    </OverflowToolbar>
-                                </headerToolbar>
-                            </Panel>
-
-                            <!-- SECTION 4: AVAILABLE STANDARD ENTERPRISE REPORTS TABLE -->
-                            <Panel expandable="false" class="sapUiSmallMarginBottom">
-                                <Table id="availableReportsTable" items="{reportsModel>/availableReports}" mode="None" width="100%">
-                                    <headerToolbar>
-                                        <OverflowToolbar>
-                                            <Title text="Available Standard Enterprise Reports" level="H3"/>
-                                            <ToolbarSpacer/>
-                                            <SearchField width="16rem" placeholder="Search available reports..." search="onSearchAvailableReports"/>
-                                            <Select selectedKey="All" change="onFilterAvailableCategory">
-                                                <core:Item key="All" text="All Categories"/>
-                                                <core:Item key="Reviewer 1" text="Reviewer 1"/>
-                                                <core:Item key="Reviewer 2" text="Reviewer 2"/>
-                                                <core:Item key="Escalation Manager" text="Escalation Manager"/>
-                                                <core:Item key="SOX Compliance" text="SOX Compliance"/>
-                                                <core:Item key="Role Change" text="Role Changes"/>
-                                                <core:Item key="User Access Review" text="User Access Review"/>
-                                                <core:Item key="SOD Conflict" text="SOD Conflicts"/>
-                                                <core:Item key="Elevated Access" text="Elevated Access Logs"/>
-                                                <core:Item key="Critical Auth" text="Critical Authorizations"/>
-                                                <core:Item key="Audit Log" text="Audit Logs"/>
-                                                <core:Item key="AI Risk Analysis" text="AI Risk Analysis"/>
-                                            </Select>
-                                        </OverflowToolbar>
-                                    </headerToolbar>
-
-                                     <columns>
-                                         <Column width="28%"><Text text="Report Name"/></Column>
-                                         <Column width="15%"><Text text="Category / Type"/></Column>
-                                         <Column width="30%"><Text text="Description / Scope"/></Column>
-                                         <Column width="15%"><Text text="Last Generated"/></Column>
-                                         <Column width="12%" hAlign="Center"><Text text="Action"/></Column>
-                                     </columns>
-
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells>
-                                                <ObjectIdentifier title="{reportsModel>name}" text="{reportsModel>subtitle}"/>
-                                                <ObjectStatus text="{reportsModel>type}" state="Information"/>
-                                                <Text text="{reportsModel>description}"/>
-                                                <Text text="{reportsModel>lastGenerated}"/>
-                                                <HBox justifyContent="Center" alignItems="Center">
-                                                    <Button text="Generate" type="Default" press="onGenerateRowReport"/>
-                                                </HBox>
-                                            </cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                            </Panel>
-
-                        </VBox>
-
-                        <!-- SLIDE 2: EXECUTION HISTORY & EXPORT CENTER -->
-                        <VBox id="vboxExecutionHistory" visible="false" width="100%">
 
                             <!-- SECTION 5: REPORT HISTORY TABLE -->
                             <Panel expandable="false" class="sapUiSmallMarginBottom">
