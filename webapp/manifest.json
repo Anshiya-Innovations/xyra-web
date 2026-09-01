@@ -247,7 +247,7 @@
         {
           "name": "SystemHealth",
           "pattern": "SystemHealth",
-          "target": "Configuration"
+          "target": "SystemHealth"
         },
         {
           "name": "SystemHealthDetails",

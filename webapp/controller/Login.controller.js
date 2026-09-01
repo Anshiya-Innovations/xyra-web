@@ -2,22 +2,26 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/UIComponent",
     "sap/m/MessageBox",
+    "sap/m/MessageToast",
     "sap/ui/core/BusyIndicator",
     "sap/ui/core/library",
     "xyraweb/model/config",
     "xyraweb/model/session",
     "xyraweb/model/focusRing",
-    "xyraweb/model/GlobalLoading"
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/mockData"
 ], function (
     Controller,
     UIComponent,
     MessageBox,
+    MessageToast,
     BusyIndicator,
     coreLibrary,
     Config,
     Session,
     killFocusRing,
-    GlobalLoading
+    GlobalLoading,
+    MockData
 ) {
     "use strict";
 
@@ -84,10 +88,12 @@ sap.ui.define([
         },
 
         // Email-only login, pending SSO integration — no password field at all.
-        // The backend is the actual gate: this only navigates on a real
-        // success from AuthService.login (an active user with this email in
-        // this tenant), it doesn't let anyone through on a failed/unreachable
-        // request the way an earlier "demo fallback" version of this used to.
+        // When xyra-core actually responds, it's the real gate: this only
+        // navigates on a genuine success from AuthService.login (an active user
+        // with this email in this tenant). Only when the request can't reach the
+        // server at all (xyra-core not running) does it fall back to a dummy
+        // session for the selected persona, same "offline" pattern as
+        // Configuration's MockData fallback — see onLogin's .catch below.
         onLogin: function () {
 
             var oRole = this.byId("role");
@@ -152,8 +158,35 @@ sap.ui.define([
                 }.bind(this))
                 .catch(function () {
                     BusyIndicator.hide();
-                    MessageBox.error("Could not reach the server. Is xyra-core running?");
-                });
+
+                    // xyra-core is unreachable, not just rejecting the login -
+                    // let the selected persona in anyway, backed by the same
+                    // dummy fixtures Configuration.controller.js falls back to,
+                    // so the rest of the app has something to show.
+                    var oExpected = ROLE_EXPECTATIONS[sRole];
+                    var oMockUser = MockData.users.filter(function (oCandidate) {
+                        return oExpected && oCandidate.role === oExpected.role &&
+                            (!oExpected.email || oCandidate.email === oExpected.email);
+                    })[0];
+
+                    if (!oMockUser) {
+                        MessageBox.error("Could not reach the server, and no dummy data is available for that persona.");
+                        return;
+                    }
+
+                    MockData.notice(MessageToast);
+
+                    Session.save({
+                        userId: oMockUser.id,
+                        tenantId: null,
+                        subdomain: Config.TEST_SUBDOMAIN,
+                        role: oMockUser.role,
+                        name: oMockUser.name,
+                        email: oMockUser.email
+                    });
+
+                    UIComponent.getRouterFor(this).navTo(sTargetRoute);
+                }.bind(this));
 
         },
 
