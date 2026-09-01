@@ -1268,6 +1268,14 @@ span.sapTntNLITagContainer {
   position: relative !important;
 }
 
+.sapMSF.sapUiSmallMarginEnd {
+  margin-right: 1rem !important;
+}
+
+.sapMSF.sapUiTinyMarginEnd {
+  margin-right: 0.5rem !important;
+}
+
 /* Deliberately not resetting margin here — the SearchField's own root is
    .sapMSF, so margin:0 would cancel the sapUiSmallMarginEnd utility class the
    view applies to space it from the next button (which it did, and made the
