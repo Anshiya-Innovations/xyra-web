@@ -211,7 +211,7 @@
                                                             <VBox class="xyraFormField">
                                                                 <Label text="Parameter" required="true" class="xyraFormLabel"/>
                                                                 <!-- Select for SET/GET Parameter -->
-                                                                <Select selectedKey="{ruleModel>parameter}" visible="{= ${ruleModel>parameterType} === 'SET/GET Parameter' }" width="100%">
+                                                                <Select selectedKey="{ruleModel>parameterSetGet}" change="onParameterSelectChange" visible="{= ${ruleModel>parameterType} === 'SET/GET Parameter' }" width="100%">
                                                                     <core:Item key="" text="-- Select SET/GET --"/>
                                                                     <core:Item key="BUK" text="BUK (Company Code)"/>
                                                                     <core:Item key="WRK" text="WRK (Plant)"/>
@@ -224,7 +224,7 @@
                                                                 </Select>
 
                                                                 <!-- Select for User Default Value -->
-                                                                <Select selectedKey="{ruleModel>parameter}" visible="{= ${ruleModel>parameterType} === 'User Default Value' }" width="100%">
+                                                                <Select selectedKey="{ruleModel>parameterUserDef}" change="onParameterSelectChange" visible="{= ${ruleModel>parameterType} === 'User Default Value' }" width="100%">
                                                                     <core:Item key="" text="-- Select Default --"/>
                                                                     <core:Item key="Decimal Notation" text="Decimal Notation"/>
                                                                     <core:Item key="Date Format" text="Date Format"/>
@@ -236,7 +236,7 @@
                                                                 </Select>
 
                                                                 <!-- Select for General / Default Parameters -->
-                                                                <Select selectedKey="{ruleModel>parameter}" visible="{= ${ruleModel>parameterType} !== 'SET/GET Parameter' &amp;&amp; ${ruleModel>parameterType} !== 'User Default Value' }" width="100%">
+                                                                <Select selectedKey="{ruleModel>parameterGeneral}" change="onParameterSelectChange" visible="{= ${ruleModel>parameterType} !== 'SET/GET Parameter' &amp;&amp; ${ruleModel>parameterType} !== 'User Default Value' }" width="100%">
                                                                     <core:Item key="" text="-- Select Parameter --"/>
                                                                     <core:Item key="Password Changed" text="Password Changed"/>
                                                                     <core:Item key="User Type" text="User Type"/>
@@ -496,7 +496,7 @@
                                                           <layout:Grid defaultSpan="XL4 L4 M12 S12" class="sapUiNoMargin sapUiTinyMarginTop">
                                                               <VBox class="xyraFormField">
                                                                   <Label text="Parameter" required="true" class="xyraFormLabel"/>
-                                                                  <Select selectedKey="{ruleModel>parameter}" visible="{= ${ruleModel>parameterType} === 'SET/GET Parameter' }" width="100%">
+                                                                  <Select selectedKey="{ruleModel>parameterSetGet}" change="onParameterSelectChange" visible="{= ${ruleModel>parameterType} === 'SET/GET Parameter' }" width="100%">
                                                                       <core:Item key="" text="-- Select SET/GET --"/>
                                                                       <core:Item key="BUK" text="BUK (Company Code)"/>
                                                                       <core:Item key="WRK" text="WRK (Plant)"/>
@@ -508,7 +508,7 @@
                                                                       <core:Item key="Custom" text="Custom"/>
                                                                   </Select>
 
-                                                                  <Select selectedKey="{ruleModel>parameter}" visible="{= ${ruleModel>parameterType} === 'User Default Value' }" width="100%">
+                                                                  <Select selectedKey="{ruleModel>parameterUserDef}" change="onParameterSelectChange" visible="{= ${ruleModel>parameterType} === 'User Default Value' }" width="100%">
                                                                       <core:Item key="" text="-- Select Default --"/>
                                                                       <core:Item key="Decimal Notation" text="Decimal Notation"/>
                                                                       <core:Item key="Date Format" text="Date Format"/>
@@ -519,7 +519,7 @@
                                                                       <core:Item key="Custom" text="Custom"/>
                                                                   </Select>
 
-                                                                  <Select selectedKey="{ruleModel>parameter}" visible="{= ${ruleModel>parameterType} !== 'SET/GET Parameter' &amp;&amp; ${ruleModel>parameterType} !== 'User Default Value' }" width="100%">
+                                                                  <Select selectedKey="{ruleModel>parameterGeneral}" change="onParameterSelectChange" visible="{= ${ruleModel>parameterType} !== 'SET/GET Parameter' &amp;&amp; ${ruleModel>parameterType} !== 'User Default Value' }" width="100%">
                                                                       <core:Item key="" text="-- Select Parameter --"/>
                                                                       <core:Item key="Password Changed" text="Password Changed"/>
                                                                       <core:Item key="User Type" text="User Type"/>

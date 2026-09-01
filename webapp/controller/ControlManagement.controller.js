@@ -151,12 +151,30 @@ sap.ui.define([
             return "Then: Rule " + iNum;
         },
 
+        onParameterSelectChange: function (oEvent) {
+            var oSelect = oEvent.getSource();
+            var sKey = oSelect.getSelectedKey();
+            var oContext = oSelect.getBindingContext("ruleModel");
+            if (oContext) {
+                var oRuleModel = this.getView().getModel("ruleModel");
+                var sPath = oContext.getPath();
+                oRuleModel.setProperty(sPath + "/parameter", sKey);
+                if (sKey !== "Custom") {
+                    oRuleModel.setProperty(sPath + "/customParameter", "");
+                }
+            }
+        },
+
         onParameterTypeChange: function (oEvent) {
             var oContext = oEvent.getSource().getBindingContext("ruleModel");
             if (oContext) {
                 var oRuleModel = this.getView().getModel("ruleModel");
-                oRuleModel.setProperty(oContext.getPath() + "/parameter", "");
-                oRuleModel.setProperty(oContext.getPath() + "/customParameter", "");
+                var sPath = oContext.getPath();
+                oRuleModel.setProperty(sPath + "/parameter", "");
+                oRuleModel.setProperty(sPath + "/parameterSetGet", "");
+                oRuleModel.setProperty(sPath + "/parameterUserDef", "");
+                oRuleModel.setProperty(sPath + "/parameterGeneral", "");
+                oRuleModel.setProperty(sPath + "/customParameter", "");
             }
         },
 
@@ -589,14 +607,21 @@ sap.ui.define([
             }
 
             // Load Rules into Rule Model
-            var aItemRules = oItem.rules;
+            var aItemRules = oItem.rules ? JSON.parse(JSON.stringify(oItem.rules)) : [];
             if (!aItemRules || aItemRules.length === 0) {
                 aItemRules = [
                     { id: 1, stepLabel: "Rule 1", parameter: "", operator: "", expectedValue: "" }
                 ];
             }
+            aItemRules.forEach(function (r) {
+                var sType = r.parameterType || "";
+                var sParam = r.parameter || "";
+                r.parameterSetGet = (sType === "SET/GET Parameter") ? sParam : "";
+                r.parameterUserDef = (sType === "User Default Value") ? sParam : "";
+                r.parameterGeneral = (sType !== "SET/GET Parameter" && sType !== "User Default Value") ? sParam : "";
+            });
             var oRuleModel = this.getView().getModel("ruleModel");
-            oRuleModel.setProperty("/editRules", JSON.parse(JSON.stringify(aItemRules)));
+            oRuleModel.setProperty("/editRules", aItemRules);
 
             var oDialog = this.byId("editControlDialog");
             if (oDialog) {
