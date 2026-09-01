@@ -1614,8 +1614,8 @@ td .sapMBtn:has(.sapMBtnContent),
   overflow: visible !important;
 }
 
-td .sapMBtnInner:has(.sapMBtnContent),
-.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent) {
+td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject),
+.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) {
   width: auto !important;
   min-width: auto !important;
   max-width: none !important;
@@ -1627,24 +1627,40 @@ td .sapMBtnInner:has(.sapMBtnContent),
   align-items: center !important;
   justify-content: center !important;
   white-space: nowrap !important;
-  background: transparent !important;
-  border: 1px solid transparent !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  transition: all 0.15s ease-in-out !important;
 }
 
-td .sapMBtnInner:has(.sapMBtnContent) .sapMBtnContent,
-.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent) .sapMBtnContent {
+td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) .sapMBtnContent,
+td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) .sapMBtnIcon,
+td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) bdi,
+.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) .sapMBtnContent,
+.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) .sapMBtnIcon,
+.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) bdi {
   font-size: 0.825rem !important;
   font-weight: 600 !important;
+  color: #475569 !important;
   line-height: normal !important;
   overflow: visible !important;
+  transition: color 0.15s ease !important;
 }
 
-td .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):hover,
-.sapMListTblCell .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):hover {
+td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover,
+.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover {
   border: 1px solid #533bff !important;
   background-color: rgba(83, 59, 255, 0.08) !important;
   background: rgba(83, 59, 255, 0.08) !important;
   box-shadow: none !important;
+}
+
+td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover .sapMBtnContent,
+td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover .sapMBtnIcon,
+td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover bdi,
+.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover .sapMBtnContent,
+.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover .sapMBtnIcon,
+.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover bdi {
+  color: #533bff !important;
 }
 
 /* Icon-only buttons (Edit/Delete row actions: no text) */
@@ -3057,6 +3073,19 @@ div[id*="-text"] {
 
 .xyraKpiCardUnknown {
   border-left: 4px solid #3b82f6 !important;
+}
+
+/* ==========================================================================
+   SUPPRESS NATIVE OLD SAP UI5 THREE-DOT BUSY INDICATOR POPUP
+   ========================================================================== */
+#sap-ui-busyindicator,
+.sapUiBusyBusyIndicator,
+.sapUiBusy,
+.sapUiLocalBusyIndicator {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 

@@ -179,22 +179,23 @@ sap.ui.define([
 
         _patchNativeBusyIndicator: function () {
             var self = this;
-            var fnOrigShow = BusyIndicator.show;
             var fnOrigHide = BusyIndicator.hide;
 
             BusyIndicator.show = function (iDelay, sText) {
                 var sHash = window.location.hash || "";
                 if (sHash.indexOf("Configuration") !== -1) {
-                    self.show("System Configuration", 3000, true, true);
+                    self.show("System Configuration", 2000, true, true);
                 } else if (sHash.indexOf("AccessManagement") !== -1) {
-                    self.show("Access Management", 3000, true, true);
+                    self.show("Access Management", 2000, true, true);
                 }
-                fnOrigShow.apply(BusyIndicator, arguments);
+                // Native SAP UI5 3-dot popup suppressed in favor of XYRA GlobalLoading
             };
 
             BusyIndicator.hide = function () {
                 self.hide();
-                fnOrigHide.apply(BusyIndicator, arguments);
+                try {
+                    fnOrigHide.apply(BusyIndicator, arguments);
+                } catch (e) {}
             };
         }
     };
