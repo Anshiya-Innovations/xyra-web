@@ -22,14 +22,16 @@ sap.ui.define([
             this.setModel(models.createDeviceModel(), "device");
             this.setModel(NotificationService.getModel(), "notifications");
 
-            // enable routing & handle ONLY allowed loading screens (System Configuration & Access Management)
+            // Show loading screen ONLY ONCE on initial page load / F5 refresh
+            var bInitialPageLoad = true;
             var oRouter = this.getRouter();
             if (oRouter) {
                 oRouter.attachBeforeRouteMatched((oEvent) => {
                     var sRouteName = oEvent.getParameter("name");
-                    if (GlobalLoading.isAllowedRoute(sRouteName)) {
+                    if (bInitialPageLoad && GlobalLoading.isAllowedRoute(sRouteName)) {
+                        bInitialPageLoad = false;
                         var sActivity = GlobalLoading.getActivityForRoute(sRouteName);
-                        GlobalLoading.show(sActivity, 2000, true, true);
+                        GlobalLoading.show(sActivity, 1500, true, true);
                     }
                 });
                 // Every page has its own bell button instance - a freshly

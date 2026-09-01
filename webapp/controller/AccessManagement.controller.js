@@ -29,7 +29,6 @@ sap.ui.define([
     return Controller.extend("xyraweb.controller.AccessManagement", {
 
         onInit: function () {
-            GlobalLoading.show("Access Management", 1500, true, true);
             var aInitialUsers = (MockData.users || []).map(function (oUser) {
                 return {
                     id: oUser.id,

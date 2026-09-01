@@ -181,14 +181,10 @@ sap.ui.define([
             var self = this;
             var fnOrigHide = BusyIndicator.hide;
 
+            // In-page actions (Add System, Create User, Test Connection) use silent BusyIndicator;
+            // GlobalLoading overlay is shown ONLY on initial page load / route navigation via Component.js.
             BusyIndicator.show = function (iDelay, sText) {
-                var sHash = window.location.hash || "";
-                if (sHash.indexOf("Configuration") !== -1) {
-                    self.show("System Configuration", 2000, true, true);
-                } else if (sHash.indexOf("AccessManagement") !== -1) {
-                    self.show("Access Management", 2000, true, true);
-                }
-                // Native SAP UI5 3-dot popup suppressed in favor of XYRA GlobalLoading
+                // Suppress native 3-dot overlay and do not re-trigger full page GlobalLoading overlay
             };
 
             BusyIndicator.hide = function () {
