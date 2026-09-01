@@ -5,11 +5,39 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/core/BusyIndicator",
     "xyraweb/model/sidebarState",
     "xyraweb/model/GlobalLoading",
-    "xyraweb/model/NotificationPopover"
-], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, SidebarState, GlobalLoading, NotificationPopover) {
+    "xyraweb/model/NotificationPopover",
+    "xyraweb/model/config",
+    "xyraweb/model/session",
+    "xyraweb/model/mockData"
+], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, BusyIndicator, SidebarState, GlobalLoading, NotificationPopover, Config, Session, MockData) {
     "use strict";
+
+    // Same UI label <-> backend enum table as ControlManagement.controller.js -
+    // duplicated rather than shared, not worth a module for 2 call sites.
+    var FREQ_BE_TO_UI = {
+        MONTHLY: "Monthly (Last day of month)", WEEKLY: "Weekly (Every Monday)",
+        DAILY: "Daily", REALTIME: "Realtime", CRON: "Cron Expression"
+    };
+
+    // A generic placeholder for the still-mock "Rule" dialog and the
+    // getControlLogs offline fallback - real controls won't match the old
+    // hardcoded per-id mock rows, so one reasonable generic row/line stands in.
+    var GENERIC_RULES = [
+        { parameter: "N/A", operator: "N/A", expectedValue: "N/A", actualValue: "N/A", statusText: "Not available in this view", statusState: "Information", statusIcon: "sap-icon://information" }
+    ];
+    var GENERIC_LOGS = [
+        { timestamp: "-", level: "INFO", levelState: "Information", message: "No execution log available." }
+    ];
+
+    function deriveDeviationBadge(sLastRunStatus) {
+        if (sLastRunStatus === "PASS") { return { deviationLabel: "No Deviation", deviationState: "None", deviationClass: "badgeWhite" }; }
+        if (sLastRunStatus === "FAIL") { return { deviationLabel: "Deviation", deviationState: "Error", deviationClass: "badgeRed" }; }
+        if (sLastRunStatus === "ERROR") { return { deviationLabel: "Run Error", deviationState: "Error", deviationClass: "badgeRed" }; }
+        return { deviationLabel: "Not Yet Run", deviationState: "None", deviationClass: "badgeWhite" };
+    }
 
     return Controller.extend("xyraweb.controller.AutomationMonitoring", {
 
@@ -29,121 +57,113 @@ sap.ui.define([
         },
 
         onInit: function () {
-            var oData = {
-                controls: [
-                    {
-                        id: "XYRA-08",
-                        description: "SAP Java Audit Log Filters & Security Event Monitoring",
-                        sysType1: "DEV",
-                        sysType2: "QAS",
-                        sysType3: "PRD",
-                        frequencyRun: "Daily",
-                        cronExpr: "",
-                        totalRun: "365",
-                        deviationLabel: "No Deviation",
-                        deviationState: "None",
-                        deviationClass: "badgeWhite",
-                        deviationCount: 0,
-                        rules: [
-                            { parameter: "Password Changed", operator: "Equals", expectedValue: "True", actualValue: "True", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" }
-                        ],
-                        logs: [
-                            { timestamp: "06-Aug-2026 08:00 IST", level: "INFO", levelState: "Information", message: "Automated daily monitoring job initiated." },
-                            { timestamp: "06-Aug-2026 08:01 IST", level: "INFO", levelState: "Information", message: "Connected to SAP S/4HANA PRD system node." },
-                            { timestamp: "06-Aug-2026 08:02 IST", level: "SUCCESS", levelState: "Success", message: "Rule evaluation completed: All parameters matched. 0 deviations detected." }
-                        ]
-                    },
-                    {
-                        id: "XYRA-28",
-                        description: "SAP HANA Security Audit Logging & Retention Check",
-                        sysType1: "PRD",
-                        sysType2: "QAS",
-                        sysType3: "None",
-                        frequencyRun: "Weekly (Every Monday)",
-                        cronExpr: "",
-                        totalRun: "52",
-                        deviationLabel: "Deviation High",
-                        deviationState: "Error",
-                        deviationClass: "badgeRed",
-                        deviationCount: 5,
-                        rules: [
-                            { parameter: "Roles Assigned", operator: "Equals", expectedValue: "True", actualValue: "False", statusText: "Deviation High (Critical)", statusState: "Error", statusIcon: "sap-icon://alert" }
-                        ],
-                        logs: [
-                            { timestamp: "04-Aug-2026 00:00 IST", level: "INFO", levelState: "Information", message: "Weekly scheduled audit log check started." },
-                            { timestamp: "04-Aug-2026 00:01 IST", level: "WARNING", levelState: "Warning", message: "Parameter 'Roles Assigned' evaluated to 'False' on 5 accounts." },
-                            { timestamp: "04-Aug-2026 00:02 IST", level: "ERROR", levelState: "Error", message: "Rule failure: 5 deviations identified on SAP HANA PRD system." }
-                        ]
-                    },
-                    {
-                        id: "XYRA-01",
-                        description: "Segregation of Duties (SoD) Conflict Scan & Privilege Escalation",
-                        sysType1: "DEV",
-                        sysType2: "QAS",
-                        sysType3: "None",
-                        frequencyRun: "Daily",
-                        cronExpr: "",
-                        totalRun: "365",
-                        deviationLabel: "No Deviation",
-                        deviationState: "None",
-                        deviationClass: "badgeWhite",
-                        deviationCount: 0,
-                        rules: [
-                            { parameter: "User Type", operator: "Equals", expectedValue: "B (System User)", actualValue: "B (System User)", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" },
-                            { parameter: "Super User", operator: "Equals", expectedValue: "SUPER", actualValue: "SUPER", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" }
-                        ],
-                        logs: [
-                            { timestamp: "06-Aug-2026 13:45 IST", level: "INFO", levelState: "Information", message: "Daily event hook scanner active." },
-                            { timestamp: "06-Aug-2026 13:46 IST", level: "SUCCESS", levelState: "Success", message: "Scanned 1,850 user assignments against rules. Clean." }
-                        ]
-                    },
-                    {
-                        id: "XYRA-002",
-                        description: "Financial Journal Entry Threshold Audit & PO Limit Verification",
-                        sysType1: "PRD",
-                        sysType2: "None",
-                        sysType3: "None",
-                        frequencyRun: "Monthly (Last day of month)",
-                        cronExpr: "",
-                        totalRun: "12",
-                        deviationLabel: "Deviation Low",
-                        deviationState: "Warning",
-                        deviationClass: "badgeYellow",
-                        deviationCount: 2,
-                        rules: [
-                            { parameter: "Security Policy", operator: "Equals", expectedValue: "True", actualValue: "False", statusText: "Deviation Low (Minor)", statusState: "Warning", statusIcon: "sap-icon://alert" }
-                        ],
-                        logs: [
-                            { timestamp: "31-Jul-2026 23:59 IST", level: "INFO", levelState: "Information", message: "Monthly financial threshold job triggered." },
-                            { timestamp: "31-Jul-2026 23:59 IST", level: "ERROR", levelState: "Error", message: "2 PO entries exceeded max approval threshold without dual authorization." }
-                        ]
-                    },
-                    {
-                        id: "XYRA-003",
-                        description: "Automated Kernel Audit Logging & Parameter Validation",
-                        sysType1: "DEV",
-                        sysType2: "QAS",
-                        sysType3: "PRD",
-                        frequencyRun: "Cron Expression",
-                        cronExpr: "0 0 1 * *",
-                        totalRun: "12",
-                        deviationLabel: "No Deviation",
-                        deviationState: "None",
-                        deviationClass: "badgeWhite",
-                        deviationCount: 0,
-                        rules: [
-                            { parameter: "SDMI_* Exists", operator: "Equals", expectedValue: "True", actualValue: "True", statusText: "No Deviation", statusState: "Success", statusIcon: "sap-icon://sys-enter-2" }
-                        ],
-                        logs: [
-                            { timestamp: "01-Aug-2026 00:00 IST", level: "INFO", levelState: "Information", message: "Cron engine executed rule validation." },
-                            { timestamp: "01-Aug-2026 00:01 IST", level: "SUCCESS", levelState: "Success", message: "Kernel audit parameters validated successfully. No deviations." }
-                        ]
-                    }
-                ]
-            };
+            this.getView().setModel(new JSONModel({ controls: [] }), "automationModel");
+            var that = this;
+            this._loadSystemsLookup().then(function () { that._loadControls(); });
+        },
 
-            var oModel = new JSONModel(oData);
-            this.getView().setModel(oModel, "automationModel");
+        _getSubdomain: function () {
+            var oSession = Session.get();
+            return (oSession && oSession.subdomain) || Config.TEST_SUBDOMAIN;
+        },
+
+        // Small local duplicate of ControlManagement's system-id -> sysId lookup -
+        // not worth a shared module for 2 call sites.
+        _loadSystemsLookup: function () {
+            var that = this;
+            return fetch(Config.AUTH_BASE_URL + "/api/system-config/listSystems", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: this._getSubdomain() })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "listSystems failed"); }
+                    that._systemsById = {};
+                    (oData.systems || []).forEach(function (s) { that._systemsById[s.id] = s.sysId; });
+                })
+                .catch(function () {
+                    that._systemsById = {};
+                    (MockData.systems || []).forEach(function (s) { that._systemsById[s.id] = s.sysId; });
+                });
+        },
+
+        _sysDisplay: function (sId) {
+            if (!sId) { return "None"; }
+            return (this._systemsById && this._systemsById[sId]) || sId;
+        },
+
+        // Duplicated from ControlManagement.controller.js (same reasoning as
+        // _loadSystemsLookup above).
+        _calculateCronRunCount: function (sCron) {
+            if (!sCron) { return "12"; }
+            var sClean = sCron.trim().replace(/\s+/g, " ");
+            if (sClean === "* * * * *" || sClean.indexOf("*/1 ") === 0) { return "Continuous"; }
+            var aParts = sClean.split(" ");
+            if (aParts.length < 5) { return "12"; }
+            var min = aParts[0], hour = aParts[1], dom = aParts[2], mon = aParts[3], dow = aParts[4];
+            if (min === "*" && hour === "*" && dom === "*" && mon === "*" && dow === "*") { return "Continuous"; }
+            if ((dom === "1" || dom === "L" || dom === "28" || dom === "30" || dom === "31") && mon === "*" && dow === "*") { return "12"; }
+            if (dom === "*" && (dow === "1" || dow === "MON" || dow === "mon")) { return "52"; }
+            if (min !== "*" && hour !== "*" && dom === "*" && mon === "*" && dow === "*") { return "365"; }
+            if (min !== "*" && hour === "*" && dom === "*") { return "8,760 Runs/Year"; }
+            if (min.indexOf("*/") === 0) {
+                var step = parseInt(min.replace("*/", ""), 10);
+                if (!isNaN(step) && step > 0) { return Math.round((24 * 60 / step) * 365).toLocaleString() + " Runs/Year"; }
+            }
+            return dom !== "*" ? "12" : "365";
+        },
+
+        _calculateTotalRun: function (sFrequency, sCron) {
+            switch (sFrequency) {
+                case "Monthly (Last day of month)": return "12";
+                case "Weekly (Every Monday)": return "52";
+                case "Daily": return "365";
+                case "Realtime": return "Continuous";
+                case "Cron Expression": return this._calculateCronRunCount(sCron);
+                default: return "365";
+            }
+        },
+
+        _mapControlEntryToRow: function (c) {
+            var aIds = c.systemIds || [];
+            var sFreqUi = FREQ_BE_TO_UI[c.frequency] || "Daily";
+            var oBadge = deriveDeviationBadge(c.lastRunStatus);
+            return Object.assign({
+                id: c.code,
+                description: c.description,
+                sysType1: this._sysDisplay(aIds[0]),
+                sysType2: this._sysDisplay(aIds[1]),
+                sysType3: this._sysDisplay(aIds[2]),
+                frequencyRun: sFreqUi,
+                cronExpr: c.cronExpression || "",
+                totalRun: this._calculateTotalRun(sFreqUi, c.cronExpression),
+                rules: GENERIC_RULES,
+                logs: GENERIC_LOGS
+            }, oBadge);
+        },
+
+        _loadControls: function () {
+            var that = this;
+            BusyIndicator.show(0);
+            return fetch(Config.AUTH_BASE_URL + "/api/control/listControls", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: this._getSubdomain() })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+                    if (!oData.success) { throw new Error(oData.message || "listControls failed"); }
+                    var aRows = (oData.controls || []).map(that._mapControlEntryToRow, that);
+                    that.getView().getModel("automationModel").setProperty("/controls", aRows);
+                })
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MockData.notice(MessageToast);
+                    var aRows = (MockData.controls || []).map(that._mapControlEntryToRow, that);
+                    that.getView().getModel("automationModel").setProperty("/controls", aRows);
+                });
         },
 
         onSideNavToggle: function () {
@@ -196,11 +216,14 @@ sap.ui.define([
                 if (oItem.deviationLabel === "No Deviation") {
                     oMessageStrip.setText("Rule Satisfied: No deviations detected across evaluated system targets.");
                     oMessageStrip.setType("Success");
-                } else if (oItem.deviationLabel === "Deviation Low") {
-                    oMessageStrip.setText("Deviation Low: Minor deviation detected (" + oItem.deviationCount + " non-critical parameters out of compliance).");
-                    oMessageStrip.setType("Warning");
+                } else if (oItem.deviationLabel === "Not Yet Run") {
+                    oMessageStrip.setText("This control has not run yet - no evaluation results available.");
+                    oMessageStrip.setType("Information");
+                } else if (oItem.deviationLabel === "Run Error") {
+                    oMessageStrip.setText("The last run could not complete - see the Deviation Report for details.");
+                    oMessageStrip.setType("Error");
                 } else {
-                    oMessageStrip.setText("Deviation High: Critical deviation detected (" + oItem.deviationCount + " high-risk security violations identified).");
+                    oMessageStrip.setText("Deviation detected on the most recent run - see the Deviation Report for the full detail.");
                     oMessageStrip.setType("Error");
                 }
             }
@@ -223,21 +246,37 @@ sap.ui.define([
         onViewLogs: function (oEvent) {
             var oItem = oEvent.getSource().getBindingContext("automationModel").getObject();
             var oDialog = this.byId("jobLogsDialog");
+            var that = this;
 
             if (this.byId("logJobIdTitle")) { this.byId("logJobIdTitle").setText("Control ID: " + oItem.id); }
             if (this.byId("logControlNameText")) { this.byId("logControlNameText").setText(oItem.description + " (" + oItem.frequencyRun + ")"); }
             if (this.byId("logJobStatus")) {
-                var bHasDev = (oItem.deviationCount > 0);
+                var bHasDev = (oItem.deviationLabel === "Deviation" || oItem.deviationLabel === "Run Error");
                 this.byId("logJobStatus").setText(bHasDev ? "DEVIATION" : "SUCCESS");
                 this.byId("logJobStatus").setState(bHasDev ? "Error" : "Success");
             }
 
-            var oLogsModel = new JSONModel({ logEntries: oItem.logs || [] });
-            this.getView().setModel(oLogsModel, "logsModel");
+            this.getView().setModel(new JSONModel({ logEntries: oItem.logs || [] }), "logsModel");
 
             if (oDialog) {
                 oDialog.open();
             }
+
+            var LEVEL_TO_STATE = { INFO: "Information", WARNING: "Warning", ERROR: "Error" };
+            fetch(Config.AUTH_BASE_URL + "/api/deviation/getControlLogs", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: this._getSubdomain(), controlId: oItem.id, limit: 50 })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "getControlLogs failed"); }
+                    var aLogs = (oData.logs || []).map(function (l) {
+                        return { timestamp: l.timestamp, level: l.level, levelState: LEVEL_TO_STATE[l.level] || "Information", message: l.message };
+                    });
+                    that.getView().getModel("logsModel").setProperty("/logEntries", aLogs.length ? aLogs : GENERIC_LOGS);
+                })
+                .catch(function () { /* dialog already opened with the oItem.logs fallback above */ });
         },
 
         onCloseLogsDialog: function () {

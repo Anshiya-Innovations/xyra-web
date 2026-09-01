@@ -2,9 +2,11 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
     "sap/ui/model/json/JSONModel",
-    "xyraweb/service/DeviationService",
-    "xyraweb/model/GlobalLoading"
-], function (Controller, MessageToast, JSONModel, DeviationService, GlobalLoading) {
+    "xyraweb/service/DeviationClient",
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/config",
+    "xyraweb/model/session"
+], function (Controller, MessageToast, JSONModel, DeviationService, GlobalLoading, Config, Session) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.AlertItem", {
@@ -21,14 +23,15 @@ sap.ui.define([
 
         _onPatternMatched: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments");
-            var sAlertId = oArgs.alertId;
-            var sControlId = oArgs.controlId;
+            this._sAlertId = oArgs.alertId;
+            this._sControlId = oArgs.controlId;
+            this._aCachedLogs = null; // new alert - drop any cached run logs from a previous one
 
-            var oDetails = DeviationService.getAlertDetails(sAlertId, sControlId);
             var oModel = this.getView().getModel("alertModel");
-
-            oModel.setProperty("/header", oDetails.header);
-            oModel.setProperty("/items", oDetails.items);
+            DeviationService.getAlertDetails(this._sAlertId, this._sControlId).then(function (oDetails) {
+                oModel.setProperty("/header", oDetails.header);
+                oModel.setProperty("/items", oDetails.items);
+            });
         },
 
         onNavBack: function () {
@@ -52,43 +55,25 @@ sap.ui.define([
             }
         },
 
+        // ControlRunLogs are scoped to a whole alert/run, not a single deviation
+        // line item - the log rows shown here are alert-wide regardless of which
+        // row's button was clicked (that's the truthful shape of the data), but
+        // the dialog header/status still reflects the clicked item for context.
         onOpenItemLogs: function (oEvent) {
             var oItemContext = oEvent.getSource().getBindingContext("alertModel");
             var oItem = oItemContext ? oItemContext.getObject() : {};
             var oHeader = this.getView().getModel("alertModel").getProperty("/header") || {};
+            var that = this;
 
-            var sControlId = oHeader.controlId || "NLG08";
-            var sControlName = oHeader.controlName || "Basis Kernel Audit Logging";
-            var sTimestamp = oItem.timestamp || "2026-08-10 14:32:05";
-
-            var aLogs = [
-                {
-                    timestamp: sTimestamp,
-                    level: "INFO",
-                    levelState: "Information",
-                    message: "Automated daily monitoring job initiated for " + sControlId + " (" + (oItem.itemId || "ITM-101") + ")."
-                },
-                {
-                    timestamp: sTimestamp,
-                    level: "INFO",
-                    levelState: "Information",
-                    message: "Connected to SAP S/4HANA target system node (" + (oHeader.system || "MY8") + " Client " + (oHeader.client || "100") + ")."
-                },
-                {
-                    timestamp: sTimestamp,
-                    level: oItem.status === "Critical" ? "ERROR" : "WARNING",
-                    levelState: oItem.status === "Critical" ? "Error" : "Warning",
-                    message: "Deviation detected for " + (oItem.sapObject || "SAP Object") + ": Expected '" + (oItem.expectedValue || "SUM") + "', Actual detected '" + (oItem.actualValue || "SWPM") + "'."
-                }
-            ];
+            var sControlId = oHeader.controlId || "";
+            var sControlName = oHeader.controlName || "";
 
             if (!this.getView().getModel("logsModel")) {
                 this.getView().setModel(new JSONModel({ logEntries: [] }), "logsModel");
             }
-            this.getView().getModel("logsModel").setProperty("/logEntries", aLogs);
 
             if (this.byId("logItemIdTitle")) {
-                this.byId("logItemIdTitle").setText("Control ID: " + sControlId + " (" + (oItem.itemId || "ITM-101") + ")");
+                this.byId("logItemIdTitle").setText("Control ID: " + sControlId + " (" + (oItem.itemId || "") + ")");
             }
             if (this.byId("logItemDescText")) {
                 this.byId("logItemDescText").setText(sControlName);
@@ -102,6 +87,38 @@ sap.ui.define([
             if (oDialog) {
                 oDialog.open();
             }
+
+            this._getRunLogs().then(function (aLogs) {
+                that.getView().getModel("logsModel").setProperty("/logEntries", aLogs);
+            });
+        },
+
+        // Cached per alertId (cleared in _onPatternMatched) so opening Logs on
+        // several rows for the same alert only fetches once.
+        _getRunLogs: function () {
+            if (this._aCachedLogs) {
+                return Promise.resolve(this._aCachedLogs);
+            }
+            var that = this;
+            var sSubdomain = (Session.get() && Session.get().subdomain) || Config.TEST_SUBDOMAIN;
+            var LEVEL_TO_STATE = { INFO: "Information", WARNING: "Warning", ERROR: "Error" };
+
+            return fetch(Config.AUTH_BASE_URL + "/api/deviation/getRunLogs", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: sSubdomain, alertId: this._sAlertId })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "getRunLogs failed"); }
+                    that._aCachedLogs = (oData.logs || []).map(function (l) {
+                        return { timestamp: l.timestamp, level: l.level, levelState: LEVEL_TO_STATE[l.level] || "Information", message: l.message };
+                    });
+                    return that._aCachedLogs;
+                })
+                .catch(function () {
+                    return [{ timestamp: new Date().toISOString(), level: "WARNING", levelState: "Warning", message: "Could not reach the server - showing no log data." }];
+                });
         },
 
         onCloseLogsDialog: function () {
@@ -116,7 +133,15 @@ sap.ui.define([
         },
 
         onRefresh: function () {
-            MessageToast.show("Alert line items refreshed.");
+            if (!this._sAlertId) { return; }
+            var that = this;
+            var oModel = this.getView().getModel("alertModel");
+            this._aCachedLogs = null;
+            DeviationService.getAlertDetails(this._sAlertId, this._sControlId).then(function (oDetails) {
+                oModel.setProperty("/header", oDetails.header);
+                oModel.setProperty("/items", oDetails.items);
+                MessageToast.show("Alert line items refreshed.");
+            });
         },
 
         onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },

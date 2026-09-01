@@ -24,6 +24,57 @@ sap.ui.define([], function () {
         organization: "Xyra Demo Tenant"
     };
 
+    // ponytail: shaped exactly like a backend ControlEntry (see xyra-core
+    // ControlService) so ControlManagement/AutomationMonitoring's offline
+    // fallback runs the same real->row mapping function unmodified.
+    var controls = [
+        {
+            id: "mock-nlg01",
+            code: "NLG01",
+            description: "SAP System Security Baseline & Parameter Enforcement",
+            category: "Security",
+            controlType: "SECURITY",
+            frequency: "DAILY",
+            cronExpression: null,
+            critical: true,
+            enabled: true,
+            systemIds: ["sys1", "sys2", "sys3"],
+            rules: [
+                { sapObject: "SAP*", client: "All", parameterType: "GENERAL", parameter: "Password Changed", operator: "EQUALS", expectedValue: "Yes" },
+                { sapObject: "SAP*", client: "All", parameterType: "GENERAL", parameter: "Roles Assigned", operator: "EQUALS", expectedValue: "None" }
+            ],
+            lastRunAt: null,
+            lastRunStatus: "",
+            nextRunAt: null,
+            createdBy: "ADMIN",
+            createdAt: "2026-08-10T00:00:00Z",
+            modifiedBy: "ADMIN",
+            modifiedAt: "2026-08-10T00:00:00Z"
+        },
+        {
+            id: "mock-xyra08",
+            code: "XYRA-08",
+            description: "SAP Java Audit Log Filters & Security Event Monitoring",
+            category: "Security",
+            controlType: "SECURITY",
+            frequency: "DAILY",
+            cronExpression: null,
+            critical: false,
+            enabled: true,
+            systemIds: ["sys1"],
+            rules: [
+                { sapObject: "SAP*", client: "000", parameterType: "GENERAL", parameter: "Password Changed", operator: "EQUALS", expectedValue: "Yes" }
+            ],
+            lastRunAt: null,
+            lastRunStatus: "",
+            nextRunAt: null,
+            createdBy: "ADMIN",
+            createdAt: "2026-08-10T00:00:00Z",
+            modifiedBy: "ADMIN",
+            modifiedAt: "2026-08-10T00:00:00Z"
+        }
+    ];
+
     var bNoticeShown = false;
 
     // Shows the "dummy data" disclaimer once per session, not once per failed
@@ -38,6 +89,7 @@ sap.ui.define([], function () {
         users: users,
         systems: systems,
         profile: profile,
+        controls: controls,
         notice: notice
     };
 });

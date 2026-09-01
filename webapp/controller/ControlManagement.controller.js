@@ -5,12 +5,117 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/core/BusyIndicator",
     "xyraweb/model/sidebarState",
     "xyraweb/model/auditLogService",
     "xyraweb/model/GlobalLoading",
-    "xyraweb/model/NotificationPopover"
-], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, SidebarState, AuditLogService, GlobalLoading, NotificationPopover) {
+    "xyraweb/model/NotificationPopover",
+    "xyraweb/model/config",
+    "xyraweb/model/session",
+    "xyraweb/model/mockData"
+], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, BusyIndicator, SidebarState, AuditLogService, GlobalLoading, NotificationPopover, Config, Session, MockData) {
     "use strict";
+
+    // Frequency: UI select label <-> backend Controls.frequency enum.
+    var FREQ_UI_TO_BE = {
+        "Monthly (Last day of month)": "MONTHLY",
+        "Weekly (Every Monday)": "WEEKLY",
+        "Daily": "DAILY",
+        "Realtime": "REALTIME",
+        "Cron Expression": "CRON"
+    };
+    var FREQ_BE_TO_UI = {
+        MONTHLY: "Monthly (Last day of month)",
+        WEEKLY: "Weekly (Every Monday)",
+        DAILY: "Daily",
+        REALTIME: "Realtime",
+        CRON: "Cron Expression"
+    };
+
+    // Validation/operator: UI select label <-> backend ControlRules.operator enum.
+    var OPERATOR_UI_TO_BE = {
+        "Equals": "EQUALS", "Not Equals": "NOT_EQUALS", "Contains": "CONTAINS", "Not Contains": "NOT_CONTAINS",
+        "Exists": "EXISTS", "Not Exists": "NOT_EXISTS", "Greater Than": "GT", "Less Than": "LT",
+        "Greater Than or Equal": "GTE", "Less Than or Equal": "LTE"
+    };
+    var OPERATOR_BE_TO_UI = {
+        EQUALS: "Equals", NOT_EQUALS: "Not Equals", CONTAINS: "Contains", NOT_CONTAINS: "Not Contains",
+        EXISTS: "Exists", NOT_EXISTS: "Not Exists", GT: "Greater Than", LT: "Less Than",
+        GTE: "Greater Than or Equal", LTE: "Less Than or Equal"
+    };
+
+    // Parameter Type: UI select key <-> backend ControlRules.parameterType enum
+    // (also byte-identical to xyra-s4's object_parameters.parameter_type).
+    var PARAM_TYPE_UI_TO_BE = { "SET/GET Parameter": "SETGET", "User Default Value": "DEFAULT", "General": "GENERAL", "": "GENERAL" };
+    var PARAM_TYPE_BE_TO_UI = { SETGET: "SET/GET Parameter", DEFAULT: "User Default Value", GENERAL: "General" };
+
+    // The exact preset option lists from the view XML - used to detect whether a
+    // resolved backend value matches a known preset (show it selected) or needs
+    // the "Custom"/"Other Clients" fallback (see unresolveRule).
+    var KNOWN_CLIENTS = ["All", "000", "001", "066", "100", "200", "300"];
+    var KNOWN_SETGET = ["BUK", "WRK", "VKO", "VTEG", "SPA", "KOK", "EKO"];
+    var KNOWN_USERDEF = ["Decimal Notation", "Date Format", "Time Zone", "Logon Language", "Spool Output (DEST)", "Output Device (PRINTER)"];
+    var KNOWN_GENERAL = ["Password Changed", "User Type", "Locked", "Failed Logins", "Roles Assigned", "Security Policy", "SDMI_* Exists", "Super User", "SAP_ALL", "S_A.TMSADM", "Update Tool"];
+    var KNOWN_EXPECTED = ["1000", "Yes", "No", "A (Dialog User)", "B (System User)", "C (Communication User)", "S (Service User)", "L (Reference User)", "G (Guest User)", "0", "1", "Z_NOEXPIRY", "SUPER", "SWPM (Software Provisioning Manager)", "SAPup (System Upgrade)", "SAPehpi (Enhancement Package Installer)", "STARTUP (Software Update Manager)", "SUM (SAP Upgrade Manager)", "None", "SAP delivered roles"];
+
+    // Save direction: one working rule row (with its preset+custom pairs) -> the
+    // single resolved-value-only shape the backend expects.
+    function resolveRule(r) {
+        return {
+            sapObject: (r.sapObject || "").trim(),
+            client: r.client === "Other Clients" ? (r.customClient || "").trim() : (r.client || "").trim(),
+            parameterType: PARAM_TYPE_UI_TO_BE[r.parameterType] || "GENERAL",
+            parameter: r.parameter === "Custom" ? (r.customParameter || "").trim() : (r.parameter || "").trim(),
+            operator: OPERATOR_UI_TO_BE[r.operator] || r.operator,
+            expectedValue: (r.parameter !== "Failed Logins" && r.expectedValue === "Custom")
+                ? (r.customExpectedValue || "").trim() : String(r.expectedValue || "").trim()
+        };
+    }
+
+    // Load-for-edit direction: a resolved backend rule -> a working rule row,
+    // reverse-detecting "Custom"/"Other Clients" for values that aren't a known
+    // preset. Called as aRules.map(unresolveRule, oController) so `this` inside is
+    // the controller (for this._getRuleLabel).
+    function unresolveRule(rule, index) {
+        var out = {
+            id: rule.id || (Date.now() + index),
+            stepLabel: this._getRuleLabel(index),
+            sapObject: rule.sapObject,
+            operator: OPERATOR_BE_TO_UI[rule.operator] || rule.operator,
+            parameterType: PARAM_TYPE_BE_TO_UI[rule.parameterType] || "General"
+        };
+
+        out.client = KNOWN_CLIENTS.indexOf(rule.client) !== -1 ? rule.client : "Other Clients";
+        out.customClient = out.client === "Other Clients" ? rule.client : "";
+
+        var presetList = out.parameterType === "SET/GET Parameter" ? KNOWN_SETGET
+            : out.parameterType === "User Default Value" ? KNOWN_USERDEF
+                : KNOWN_GENERAL;
+        out.parameter = presetList.indexOf(rule.parameter) !== -1 ? rule.parameter : "Custom";
+        out.customParameter = out.parameter === "Custom" ? rule.parameter : "";
+        // mirror into the 3 shadow selects the view actually binds to
+        out.parameterSetGet = out.parameterType === "SET/GET Parameter" ? out.parameter : "";
+        out.parameterUserDef = out.parameterType === "User Default Value" ? out.parameter : "";
+        out.parameterGeneral = (out.parameterType !== "SET/GET Parameter" && out.parameterType !== "User Default Value") ? out.parameter : "";
+
+        if (rule.parameter === "Failed Logins") {
+            out.expectedValue = rule.expectedValue;
+            out.customExpectedValue = "";
+        } else {
+            out.expectedValue = KNOWN_EXPECTED.indexOf(rule.expectedValue) !== -1 ? rule.expectedValue : "Custom";
+            out.customExpectedValue = out.expectedValue === "Custom" ? rule.expectedValue : "";
+        }
+        return out;
+    }
+
+    // Dedupe + drop empty/"None" slots from the 3 System Type selects.
+    function collectSystemIds(s1, s2, s3) {
+        var out = [];
+        [s1, s2, s3].forEach(function (id) {
+            if (id && id !== "None" && out.indexOf(id) === -1) { out.push(id); }
+        });
+        return out;
+    }
 
     return Controller.extend("xyraweb.controller.ControlManagement", {
 
@@ -30,108 +135,8 @@ sap.ui.define([
         },
 
         onInit: function () {
-            var oData = {
-                controls: [
-                    {
-                        id: "NLG01",
-                        description: "SAP System Security Baseline & Parameter Enforcement",
-                        sysType1: "DEV",
-                        sysType2: "QAS",
-                        sysType3: "PRD",
-                        frequencyRun: "Daily",
-                        cronExpr: "",
-                        totalRun: "365",
-                        category: "Security",
-                        createdBy: "ADMIN",
-                        createdDate: "2026-08-10",
-                        modifiedBy: "ADMIN",
-                        modifiedDate: "2026-08-10",
-                        rules: [
-                            { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "All", parameter: "Password Changed", operator: "Equals", expectedValue: "Yes" },
-                            { id: 2, stepLabel: "Rule 2", sapObject: "SAP*", client: "All", parameter: "Super User", operator: "Equals", expectedValue: "SUPER" },
-                            { id: 3, stepLabel: "Rule 3", sapObject: "SAP*", client: "All", parameter: "User Type", operator: "Equals", expectedValue: "B (System User)" },
-                            { id: 4, stepLabel: "Rule 4", sapObject: "SAP*", client: "All", parameter: "Locked", operator: "Equals", expectedValue: "Yes" },
-                            { id: 5, stepLabel: "Rule 5", sapObject: "SAP*", client: "All", parameter: "Roles Assigned", operator: "Equals", expectedValue: "None" },
-                            { id: 6, stepLabel: "Rule 6", sapObject: "SAP*", client: "All", parameter: "Security Policy", operator: "Equals", expectedValue: "Z_NOEXPIRY" },
-                            { id: 7, stepLabel: "Rule 7", sapObject: "SDMI_*", client: "All", parameter: "SDMI_* Exists", operator: "Equals", expectedValue: "No" }
-                        ]
-                    },
-                    {
-                        id: "XYRA-08",
-                        description: "SAP Java Audit Log Filters & Security Event Monitoring",
-                        sysType1: "DEV",
-                        sysType2: "QAS",
-                        sysType3: "PRD",
-                        frequencyRun: "Daily",
-                        cronExpr: "",
-                        totalRun: "365",
-                        category: "Security",
-                        rules: [
-                            { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "000", parameter: "Password Changed", operator: "Equals", expectedValue: "Yes" }
-                        ]
-                    },
-                    {
-                        id: "XYRA-28",
-                        description: "SAP HANA Security Audit Logging & Retention Check",
-                        sysType1: "PRD",
-                        sysType2: "QAS",
-                        sysType3: "None",
-                        frequencyRun: "Weekly (Every Monday)",
-                        cronExpr: "",
-                        totalRun: "52",
-                        category: "ITGC",
-                        rules: [
-                            { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "000", parameter: "Roles Assigned", operator: "Equals", expectedValue: "None" }
-                        ]
-                    },
-                    {
-                        id: "XYRA-01",
-                        description: "Segregation of Duties (SoD) Conflict Scan & Privilege Escalation",
-                        sysType1: "DEV",
-                        sysType2: "QAS",
-                        sysType3: "None",
-                        frequencyRun: "Daily",
-                        cronExpr: "",
-                        totalRun: "365",
-                        category: "Security",
-                        rules: [
-                            { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "000", parameter: "User Type", operator: "Equals", expectedValue: "B (System User)" },
-                            { id: 2, stepLabel: "Rule 2", sapObject: "SAP*", client: "000", parameter: "Super User", operator: "Equals", expectedValue: "SUPER" }
-                        ]
-                    },
-                    {
-                        id: "XYRA-002",
-                        description: "Financial Journal Entry Threshold Audit & PO Limit Verification",
-                        sysType1: "PRD",
-                        sysType2: "None",
-                        sysType3: "None",
-                        frequencyRun: "Monthly (Last day of month)",
-                        cronExpr: "",
-                        totalRun: "12",
-                        category: "Financial",
-                        rules: [
-                            { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "000", parameter: "Security Policy", operator: "Equals", expectedValue: "Z_NOEXPIRY" }
-                        ]
-                    },
-                    {
-                        id: "XYRA-003",
-                        description: "Automated Kernel Audit Logging & Parameter Validation",
-                        sysType1: "DEV",
-                        sysType2: "QAS",
-                        sysType3: "PRD",
-                        frequencyRun: "Cron Expression",
-                        cronExpr: "0 0 1 * *",
-                        totalRun: "12",
-                        category: "SOX",
-                        rules: [
-                            { id: 1, stepLabel: "Rule 1", sapObject: "SDMI_*", client: "All", parameter: "SDMI_* Exists", operator: "Equals", expectedValue: "No" }
-                        ]
-                    }
-                ]
-            };
-
-            var oModel = new JSONModel(oData);
-            this.getView().setModel(oModel, "controlsModel");
+            this.getView().setModel(new JSONModel({ controls: [] }), "controlsModel");
+            this.getView().setModel(new JSONModel({ systems: [], systemsWithNone: [] }), "systemsModel");
 
             // Initialize Rule Builder Model
             var oRuleData = {
@@ -142,6 +147,113 @@ sap.ui.define([
             };
             var oRuleModel = new JSONModel(oRuleData);
             this.getView().setModel(oRuleModel, "ruleModel");
+
+            var that = this;
+            this._loadSystemsForDialogs().then(function () { that._loadControls(); });
+        },
+
+        _getSubdomain: function () {
+            var oSession = Session.get();
+            return (oSession && oSession.subdomain) || Config.TEST_SUBDOMAIN;
+        },
+
+        // Real Systems, used to populate the 3 System Type selects (replacing the
+        // old hardcoded DEV/QAS/PRD strings) and to translate a Control's
+        // systemIds back into display text for the table.
+        _loadSystemsForDialogs: function () {
+            var that = this;
+            return fetch(Config.AUTH_BASE_URL + "/api/system-config/listSystems", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: this._getSubdomain() })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "listSystems failed"); }
+                    that._applySystemsList(oData.systems || []);
+                })
+                .catch(function () {
+                    MockData.notice(MessageToast);
+                    that._applySystemsList((MockData.systems || []).map(function (s) { return { id: s.id, sysId: s.sysId }; }));
+                });
+        },
+
+        _applySystemsList: function (aSystems) {
+            this._systemsById = {};
+            aSystems.forEach(function (s) { this._systemsById[s.id] = s.sysId; }.bind(this));
+            var oSystemsModel = this.getView().getModel("systemsModel");
+            oSystemsModel.setProperty("/systems", aSystems);
+            oSystemsModel.setProperty("/systemsWithNone", [{ id: "None", sysId: "-- None --" }].concat(aSystems));
+        },
+
+        _sysDisplay: function (sId) {
+            if (!sId) { return "None"; }
+            return (this._systemsById && this._systemsById[sId]) || sId;
+        },
+
+        // Bridges one backend ControlEntry to a table row - carries both the
+        // display-only fields the table renders (sysType1/2/3, frequencyRun,
+        // totalRun) and the raw fields edit/delete/run need (dbId, code as `id`
+        // for display continuity, systemIds, frequency, rules unresolved).
+        _mapControlEntryToRow: function (c) {
+            var aIds = c.systemIds || [];
+            var sFreqUi = FREQ_BE_TO_UI[c.frequency] || "Daily";
+            return {
+                id: c.code,
+                dbId: c.id,
+                description: c.description,
+                sysType1: this._sysDisplay(aIds[0]),
+                sysType2: this._sysDisplay(aIds[1]),
+                sysType3: this._sysDisplay(aIds[2]),
+                frequencyRun: sFreqUi,
+                cronExpr: c.cronExpression || "",
+                totalRun: this._calculateTotalRun(sFreqUi, c.cronExpression),
+                category: c.category,
+                controlType: c.controlType,
+                critical: c.critical,
+                enabled: c.enabled,
+                systemIds: aIds,
+                frequency: c.frequency,
+                rules: c.rules || [],
+                lastRunAt: c.lastRunAt,
+                lastRunStatus: c.lastRunStatus,
+                nextRunAt: c.nextRunAt,
+                createdBy: c.createdBy,
+                createdDate: c.createdAt,
+                modifiedBy: c.modifiedBy,
+                modifiedDate: c.modifiedAt
+            };
+        },
+
+        _loadControls: function () {
+            var that = this;
+            BusyIndicator.show(0);
+            return fetch(Config.AUTH_BASE_URL + "/api/control/listControls", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: this._getSubdomain() })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+                    if (!oData.success) { throw new Error(oData.message || "listControls failed"); }
+                    var aRows = (oData.controls || []).map(that._mapControlEntryToRow, that);
+                    that.getView().getModel("controlsModel").setProperty("/controls", aRows);
+                })
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MockData.notice(MessageToast);
+                    var aRows = (MockData.controls || []).map(that._mapControlEntryToRow, that);
+                    that.getView().getModel("controlsModel").setProperty("/controls", aRows);
+                });
+        },
+
+        _resetCreateForm: function () {
+            if (this.byId("createControlIdInput")) { this.byId("createControlIdInput").setValue(""); }
+            if (this.byId("createControlDescInput")) { this.byId("createControlDescInput").setValue(""); }
+            this.getView().getModel("ruleModel").setProperty("/createRules", [
+                { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "All", parameterType: "SET/GET Parameter", parameter: "", operator: "", expectedValue: "" }
+            ]);
         },
 
         _getRuleLabel: function (iIndex) {
@@ -500,6 +612,7 @@ sap.ui.define([
         },
 
         onCreateControl: function () {
+            this._loadSystemsForDialogs();
             var oDialog = this.byId("createControlDialog");
             if (oDialog) {
                 oDialog.open();
@@ -516,7 +629,7 @@ sap.ui.define([
         onSubmitCreateControl: function () {
             var sId = this.byId("createControlIdInput") ? this.byId("createControlIdInput").getValue().trim() : "";
             var sDesc = this.byId("createControlDescInput") ? this.byId("createControlDescInput").getValue().trim() : "";
-            var sSys1 = this.byId("createSysType1Select") ? this.byId("createSysType1Select").getSelectedKey() : "DEV";
+            var sSys1 = this.byId("createSysType1Select") ? this.byId("createSysType1Select").getSelectedKey() : "";
             var sSys2 = this.byId("createSysType2Select") ? this.byId("createSysType2Select").getSelectedKey() : "None";
             var sSys3 = this.byId("createSysType3Select") ? this.byId("createSysType3Select").getSelectedKey() : "None";
             var sFreq = this.byId("createFrequencySelect") ? this.byId("createFrequencySelect").getSelectedKey() : "Daily";
@@ -543,85 +656,116 @@ sap.ui.define([
                 return;
             }
 
-            var sTotalRun = this._calculateTotalRun(sFreq, sCron);
-            var aSavedRules = JSON.parse(JSON.stringify(aCreateRules));
+            var that = this;
+            var aSystemIds = collectSystemIds(sSys1, sSys2, sSys3);
+            var aRules = aCreateRules.map(resolveRule);
 
-            var oModel = this.getView().getModel("controlsModel");
-            var aControls = oModel.getProperty("/controls") || [];
-
-            aControls.unshift({
-                id: sId,
-                description: sDesc,
-                sysType1: sSys1,
-                sysType2: sSys2,
-                sysType3: sSys3,
-                frequencyRun: sFreq,
-                cronExpr: sCron,
-                totalRun: sTotalRun,
-                rules: aSavedRules,
-                category: "Security"
-            });
-
-            oModel.setProperty("/controls", aControls);
-            MessageToast.show("Security Control '" + sId + "' Created Successfully!");
-
-            // Automatically Record Admin Audit Log
-            AuditLogService.addLog({
-                action: "Create",
-                module: "Control Management",
-                objectId: sId,
-                description: "Created new Security Control Master rule '" + sId + "': " + sDesc,
-                previousValue: "None (New Record)",
-                newValue: "Desc: " + sDesc + " | Freq: " + sFreq + " | Envs: " + sSys1 + "/" + sSys2 + "/" + sSys3,
-                result: "Success"
-            });
-
-            // Reset inputs & rules
-            if (this.byId("createControlIdInput")) { this.byId("createControlIdInput").setValue(""); }
-            if (this.byId("createControlDescInput")) { this.byId("createControlDescInput").setValue(""); }
-            oRuleModel.setProperty("/createRules", [
-                { id: 1, stepLabel: "Rule 1", parameter: "", operator: "", expectedValue: "" }
-            ]);
-
-            this.onCloseCreateControlDialog();
+            BusyIndicator.show(0);
+            fetch(Config.AUTH_BASE_URL + "/api/control/createControl", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    subdomain: this._getSubdomain(),
+                    code: sId,
+                    description: sDesc,
+                    category: null,
+                    controlType: "SECURITY",
+                    frequency: FREQ_UI_TO_BE[sFreq] || "DAILY",
+                    cronExpression: sCron || null,
+                    critical: false,
+                    systemIds: aSystemIds,
+                    rules: aRules
+                })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Could not create control.");
+                        return;
+                    }
+                    MessageToast.show("Security Control '" + sId + "' Created Successfully!");
+                    AuditLogService.addLog({
+                        action: "Create",
+                        module: "Control Management",
+                        objectId: sId,
+                        description: "Created new Security Control Master rule '" + sId + "': " + sDesc,
+                        previousValue: "None (New Record)",
+                        newValue: "Desc: " + sDesc + " | Freq: " + sFreq + " | Envs: " + sSys1 + "/" + sSys2 + "/" + sSys3,
+                        result: "Success"
+                    });
+                    that._resetCreateForm();
+                    that.onCloseCreateControlDialog();
+                    that._loadControls();
+                })
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MockData.notice(MessageToast);
+                    var aMockControls = MockData.controls || [];
+                    aMockControls.unshift({
+                        id: "mock-" + Date.now(),
+                        code: sId,
+                        description: sDesc,
+                        category: null,
+                        controlType: "SECURITY",
+                        frequency: FREQ_UI_TO_BE[sFreq] || "DAILY",
+                        cronExpression: sCron || null,
+                        critical: false,
+                        enabled: true,
+                        systemIds: aSystemIds,
+                        rules: aRules,
+                        lastRunAt: null,
+                        lastRunStatus: "",
+                        nextRunAt: null,
+                        createdAt: new Date().toISOString(),
+                        createdBy: "offline",
+                        modifiedAt: new Date().toISOString(),
+                        modifiedBy: "offline"
+                    });
+                    that._resetCreateForm();
+                    that.onCloseCreateControlDialog();
+                    that._loadControls();
+                });
         },
 
         onEditControl: function (oEvent) {
+            this._loadSystemsForDialogs();
             var oContext = oEvent.getSource().getBindingContext("controlsModel");
-            this._sEditingPath = oContext.getPath();
             var oItem = oContext.getObject();
+            this._oEditingControl = oItem;
 
             if (this.byId("editControlIdInput")) { this.byId("editControlIdInput").setValue(oItem.id); }
             if (this.byId("editControlDescInput")) { this.byId("editControlDescInput").setValue(oItem.description); }
-            if (this.byId("editSysType1Select")) { this.byId("editSysType1Select").setSelectedKey(oItem.sysType1 || "DEV"); }
-            if (this.byId("editSysType2Select")) { this.byId("editSysType2Select").setSelectedKey(oItem.sysType2 || "None"); }
-            if (this.byId("editSysType3Select")) { this.byId("editSysType3Select").setSelectedKey(oItem.sysType3 || "None"); }
+
+            var aIds = (oItem.systemIds || []).slice();
+            if (aIds.length > 3) {
+                console.warn("Control " + oItem.id + " has " + aIds.length + " systemIds; ControlManagement UI only shows 3. Extra ids: " + aIds.slice(3).join(", "));
+                aIds = aIds.slice(0, 3);
+            }
+            if (this.byId("editSysType1Select")) { this.byId("editSysType1Select").setSelectedKey(aIds[0] || ""); }
+            if (this.byId("editSysType2Select")) { this.byId("editSysType2Select").setSelectedKey(aIds[1] || "None"); }
+            if (this.byId("editSysType3Select")) { this.byId("editSysType3Select").setSelectedKey(aIds[2] || "None"); }
+
             if (this.byId("editFrequencySelect")) { this.byId("editFrequencySelect").setSelectedKey(oItem.frequencyRun || "Daily"); }
             if (this.byId("editCronInput")) { this.byId("editCronInput").setValue(oItem.cronExpr || ""); }
 
             var bIsCron = (oItem.frequencyRun === "Cron Expression");
             if (this.byId("vboxEditCron")) { this.byId("vboxEditCron").setVisible(bIsCron); }
             if (this.byId("editTotalRunInput")) {
-                var sTotal = this._calculateTotalRun(oItem.frequencyRun, oItem.cronExpr);
-                this.byId("editTotalRunInput").setValue(sTotal);
+                this.byId("editTotalRunInput").setValue(oItem.totalRun || this._calculateTotalRun(oItem.frequencyRun, oItem.cronExpr));
             }
 
-            // Load Rules into Rule Model
-            var aItemRules = oItem.rules ? JSON.parse(JSON.stringify(oItem.rules)) : [];
-            if (!aItemRules || aItemRules.length === 0) {
-                aItemRules = [
-                    { id: 1, stepLabel: "Rule 1", parameter: "", operator: "", expectedValue: "" }
-                ];
-            }
-            aItemRules.forEach(function (r) {
-                var sType = r.parameterType || "";
-                var sParam = r.parameter || "";
-                r.parameterSetGet = (sType === "SET/GET Parameter") ? sParam : "";
-                r.parameterUserDef = (sType === "User Default Value") ? sParam : "";
-                r.parameterGeneral = (sType !== "SET/GET Parameter" && sType !== "User Default Value") ? sParam : "";
-            });
-            var oRuleModel = this.getView().getModel("ruleModel");
-            oRuleModel.setProperty("/editRules", aItemRules);
+            // Load Rules into Rule Model - reverse-mapped from resolved backend
+            // values back into preset-or-Custom working rows (see unresolveRule).
+            var aItemRules = oItem.rules && oItem.rules.length ? oItem.rules.map(unresolveRule, this) : [
+                {
+                    id: 1, stepLabel: "Rule 1", sapObject: "", client: "", customClient: "",
+                    parameterType: "General", parameter: "", customParameter: "",
+                    parameterSetGet: "", parameterUserDef: "", parameterGeneral: "",
+                    operator: "", expectedValue: "", customExpectedValue: ""
+                }
+            ];
+            this.getView().getModel("ruleModel").setProperty("/editRules", aItemRules);
 
             var oDialog = this.byId("editControlDialog");
             if (oDialog) {
@@ -637,7 +781,8 @@ sap.ui.define([
         },
 
         onSubmitEditControl: function () {
-            if (!this._sEditingPath) { return; }
+            var oEditing = this._oEditingControl;
+            if (!oEditing) { return; }
 
             var sDesc = this.byId("editControlDescInput").getValue().trim();
             var sSys1 = this.byId("editSysType1Select").getSelectedKey();
@@ -667,51 +812,90 @@ sap.ui.define([
                 return;
             }
 
-            var sTotalRun = this._calculateTotalRun(sFreq, sCron);
-            var oModel = this.getView().getModel("controlsModel");
+            var that = this;
+            var aSystemIds = collectSystemIds(sSys1, sSys2, sSys3);
+            var aRules = aEditRules.map(resolveRule);
 
-            var oOldItem = oModel.getProperty(this._sEditingPath) || {};
-
-            oModel.setProperty(this._sEditingPath + "/description", sDesc);
-            oModel.setProperty(this._sEditingPath + "/sysType1", sSys1);
-            oModel.setProperty(this._sEditingPath + "/sysType2", sSys2);
-            oModel.setProperty(this._sEditingPath + "/sysType3", sSys3);
-            oModel.setProperty(this._sEditingPath + "/frequencyRun", sFreq);
-            oModel.setProperty(this._sEditingPath + "/cronExpr", sCron);
-            oModel.setProperty(this._sEditingPath + "/totalRun", sTotalRun);
-            oModel.setProperty(this._sEditingPath + "/rules", JSON.parse(JSON.stringify(aEditRules)));
-
-            // Automatically Record Admin Audit Log
-            AuditLogService.addLog({
-                action: "Update",
-                module: "Control Management",
-                objectId: oOldItem.id || "Security Control",
-                description: "Updated Security Control Master rule '" + (oOldItem.id || "") + "'.",
-                previousValue: "Desc: " + (oOldItem.description || "") + " | Freq: " + (oOldItem.frequencyRun || ""),
-                newValue: "Desc: " + sDesc + " | Freq: " + sFreq + " | Envs: " + sSys1 + "/" + sSys2 + "/" + sSys3,
-                result: "Success"
-            });
-
-            MessageToast.show("Security Control Updated Successfully!");
-            this.onCloseEditControlDialog();
+            BusyIndicator.show(0);
+            fetch(Config.AUTH_BASE_URL + "/api/control/updateControl", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    subdomain: this._getSubdomain(),
+                    id: oEditing.dbId,
+                    description: sDesc,
+                    // No UI collects these - round-trip the control's own last-known
+                    // values so updateControl's overwrite-not-merge behavior doesn't
+                    // silently reset them.
+                    category: oEditing.category,
+                    controlType: oEditing.controlType,
+                    critical: oEditing.critical,
+                    enabled: oEditing.enabled,
+                    frequency: FREQ_UI_TO_BE[sFreq] || "DAILY",
+                    cronExpression: sCron || null,
+                    systemIds: aSystemIds,
+                    rules: aRules
+                })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Could not update control.");
+                        return;
+                    }
+                    AuditLogService.addLog({
+                        action: "Update",
+                        module: "Control Management",
+                        objectId: oEditing.id,
+                        description: "Updated Security Control Master rule '" + oEditing.id + "'.",
+                        previousValue: "Desc: " + oEditing.description + " | Freq: " + oEditing.frequencyRun,
+                        newValue: "Desc: " + sDesc + " | Freq: " + sFreq + " | Envs: " + sSys1 + "/" + sSys2 + "/" + sSys3,
+                        result: "Success"
+                    });
+                    MessageToast.show("Security Control Updated Successfully!");
+                    that.onCloseEditControlDialog();
+                    that._loadControls();
+                })
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MockData.notice(MessageToast);
+                    var oFound = (MockData.controls || []).filter(function (c) { return c.id === oEditing.dbId; })[0];
+                    if (oFound) {
+                        oFound.description = sDesc;
+                        oFound.frequency = FREQ_UI_TO_BE[sFreq] || "DAILY";
+                        oFound.cronExpression = sCron || null;
+                        oFound.systemIds = aSystemIds;
+                        oFound.rules = aRules;
+                    }
+                    that.onCloseEditControlDialog();
+                    that._loadControls();
+                });
         },
 
         onDeleteControl: function (oEvent) {
             var oContext = oEvent.getSource().getBindingContext("controlsModel");
             var oItem = oContext.getObject();
-            var oModel = this.getView().getModel("controlsModel");
+            var that = this;
 
             MessageBox.confirm("Are you sure you want to delete Security Control '" + oItem.id + "'?", {
                 onClose: function (oAction) {
-                    if (oAction === MessageBox.Action.OK) {
-                        var aControls = oModel.getProperty("/controls") || [];
-                        var iIndex = aControls.indexOf(oItem);
-                        if (iIndex !== -1) {
-                            aControls.splice(iIndex, 1);
-                            oModel.setProperty("/controls", aControls);
-                            MessageToast.show("Security Control '" + oItem.id + "' deleted.");
+                    if (oAction !== MessageBox.Action.OK) { return; }
 
-                            // Automatically Record Admin Audit Log
+                    BusyIndicator.show(0);
+                    fetch(Config.AUTH_BASE_URL + "/api/control/deleteControl", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ subdomain: that._getSubdomain(), id: oItem.dbId })
+                    })
+                        .then(function (r) { return r.json(); })
+                        .then(function (oData) {
+                            BusyIndicator.hide();
+                            if (!oData.success) {
+                                MessageBox.error(oData.message || "Could not delete control.");
+                                return;
+                            }
+                            MessageToast.show("Security Control '" + oItem.id + "' deleted.");
                             AuditLogService.addLog({
                                 action: "Delete",
                                 module: "Control Management",
@@ -721,10 +905,46 @@ sap.ui.define([
                                 newValue: "Record Deleted",
                                 result: "Success"
                             });
-                        }
-                    }
+                            that._loadControls();
+                        })
+                        .catch(function () {
+                            BusyIndicator.hide();
+                            MockData.notice(MessageToast);
+                            var aMockControls = MockData.controls || [];
+                            var iIndex = -1;
+                            aMockControls.forEach(function (c, idx) { if (c.id === oItem.dbId) { iIndex = idx; } });
+                            if (iIndex !== -1) { aMockControls.splice(iIndex, 1); }
+                            that._loadControls();
+                        });
                 }
             });
+        },
+
+        onRunControlNow: function (oEvent) {
+            var oContext = oEvent.getSource().getBindingContext("controlsModel");
+            var oItem = oContext.getObject();
+            var that = this;
+
+            BusyIndicator.show(0);
+            fetch(Config.AUTH_BASE_URL + "/api/control/runControlNow", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: this._getSubdomain(), id: oItem.dbId })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    BusyIndicator.hide();
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Run failed.");
+                        return;
+                    }
+                    MessageToast.show("Run complete: " + oData.deviationsFound + " deviation(s) found, " + oData.alertsCreated + " alert(s) created.");
+                    that._loadControls();
+                })
+                .catch(function () {
+                    BusyIndicator.hide();
+                    MessageBox.error("Could not reach the server to run this control.");
+                });
         },
 
         onSearchControls: function (oEvent) {

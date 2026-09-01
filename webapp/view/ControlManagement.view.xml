@@ -74,20 +74,15 @@
 
                                         <VBox class="xyraFormField">
                                             <Label text="System Type (Primary)" required="true" class="xyraFormLabel"/>
-                                            <Select id="createSysType1Select" selectedKey="DEV" width="100%" change="onSysTypeChange">
-                                                <core:Item key="DEV" text="DEV"/>
-                                                <core:Item key="QAS" text="QAS"/>
-                                                <core:Item key="PRD" text="PRD"/>
+                                            <Select id="createSysType1Select" width="100%" change="onSysTypeChange" items="{systemsModel>/systems}">
+                                                <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
                                             </Select>
                                         </VBox>
 
                                         <VBox class="xyraFormField">
                                             <Label text="System Type (Secondary)" class="xyraFormLabel"/>
-                                            <Select id="createSysType2Select" selectedKey="None" width="100%" change="onSysTypeChange">
-                                                <core:Item key="None" text="-- None --"/>
-                                                <core:Item key="DEV" text="DEV"/>
-                                                <core:Item key="QAS" text="QAS"/>
-                                                <core:Item key="PRD" text="PRD"/>
+                                            <Select id="createSysType2Select" selectedKey="None" width="100%" change="onSysTypeChange" items="{systemsModel>/systemsWithNone}">
+                                                <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
                                             </Select>
                                         </VBox>
                                     </VBox>
@@ -120,11 +115,8 @@
 
                                         <VBox class="xyraFormField">
                                             <Label text="System Type (Tertiary)" class="xyraFormLabel"/>
-                                            <Select id="createSysType3Select" selectedKey="None" width="100%" change="onSysTypeChange">
-                                                <core:Item key="None" text="-- None --"/>
-                                                <core:Item key="DEV" text="DEV"/>
-                                                <core:Item key="QAS" text="QAS"/>
-                                                <core:Item key="PRD" text="PRD"/>
+                                            <Select id="createSysType3Select" selectedKey="None" width="100%" change="onSysTypeChange" items="{systemsModel>/systemsWithNone}">
+                                                <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
                                             </Select>
                                         </VBox>
                                     </VBox>
@@ -361,20 +353,15 @@
 
                                         <VBox class="xyraFormField">
                                             <Label text="System Type (Primary)" required="true" class="xyraFormLabel"/>
-                                            <Select id="editSysType1Select" change="onSysTypeChange" width="100%">
-                                                <core:Item key="DEV" text="DEV"/>
-                                                <core:Item key="QAS" text="QAS"/>
-                                                <core:Item key="PRD" text="PRD"/>
+                                            <Select id="editSysType1Select" change="onSysTypeChange" width="100%" items="{systemsModel>/systems}">
+                                                <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
                                             </Select>
                                         </VBox>
 
                                         <VBox class="xyraFormField">
                                             <Label text="System Type (Secondary)" class="xyraFormLabel"/>
-                                            <Select id="editSysType2Select" change="onSysTypeChange" width="100%">
-                                                <core:Item key="None" text="-- None --"/>
-                                                <core:Item key="DEV" text="DEV"/>
-                                                <core:Item key="QAS" text="QAS"/>
-                                                <core:Item key="PRD" text="PRD"/>
+                                            <Select id="editSysType2Select" change="onSysTypeChange" width="100%" items="{systemsModel>/systemsWithNone}">
+                                                <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
                                             </Select>
                                         </VBox>
                                     </VBox>
@@ -407,11 +394,8 @@
 
                                         <VBox class="xyraFormField">
                                             <Label text="System Type (Tertiary)" class="xyraFormLabel"/>
-                                            <Select id="editSysType3Select" change="onSysTypeChange" width="100%">
-                                                <core:Item key="None" text="-- None --"/>
-                                                <core:Item key="DEV" text="DEV"/>
-                                                <core:Item key="QAS" text="QAS"/>
-                                                <core:Item key="PRD" text="PRD"/>
+                                            <Select id="editSysType3Select" change="onSysTypeChange" width="100%" items="{systemsModel>/systemsWithNone}">
+                                                <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
                                             </Select>
                                         </VBox>
                                     </VBox>
@@ -706,6 +690,7 @@
 
                                             <ObjectStatus text="{controlsModel>totalRun}" state="Success"/>
                                             <HBox justifyContent="End" style="gap: 0.5rem;">
+                                                <Button icon="sap-icon://play" type="Transparent" press="onRunControlNow" tooltip="Run Now"/>
                                                 <Button icon="sap-icon://edit" type="Emphasized" press="onEditControl" tooltip="Edit Security Control"/>
                                                 <Button icon="sap-icon://delete" type="Reject" press="onDeleteControl" tooltip="Delete Security Control"/>
                                             </HBox>

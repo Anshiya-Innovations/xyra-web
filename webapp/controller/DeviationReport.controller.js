@@ -3,10 +3,12 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "sap/ui/model/json/JSONModel",
-    "xyraweb/service/DeviationService",
+    "xyraweb/service/DeviationClient",
     "xyraweb/model/GlobalLoading",
-    "xyraweb/model/NotificationPopover"
-], function (Controller, MessageToast, MessageBox, JSONModel, DeviationService, GlobalLoading, NotificationPopover) {
+    "xyraweb/model/NotificationPopover",
+    "xyraweb/model/config",
+    "xyraweb/model/session"
+], function (Controller, MessageToast, MessageBox, JSONModel, DeviationService, GlobalLoading, NotificationPopover, Config, Session) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.DeviationReport", {
@@ -93,7 +95,46 @@ sap.ui.define([
             var oModel = new JSONModel(oInitialData);
             this.getView().setModel(oModel, "reportModel");
 
+            this._loadFilterOptions();
             this._runQuery();
+        },
+
+        // Populates the System/Control filter dropdowns from real data - on
+        // failure, the hardcoded lists already seeded in onInit's oInitialData
+        // stay in place as the fallback. Sector/Region/Platform/Client stay
+        // hardcoded/decorative either way (known cosmetic mismatch, not real
+        // System associations - out of scope for this pass).
+        _loadFilterOptions: function () {
+            var oModel = this.getView().getModel("reportModel");
+            var sSubdomain = (Session.get() && Session.get().subdomain) || Config.TEST_SUBDOMAIN;
+
+            fetch(Config.AUTH_BASE_URL + "/api/system-config/listSystems", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: sSubdomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "listSystems failed"); }
+                    oModel.setProperty("/options/systems", [{ key: "All", text: "All Systems" }].concat(
+                        (oData.systems || []).map(function (s) { return { key: s.sysId, text: s.sysId }; })
+                    ));
+                })
+                .catch(function () { /* keep the hardcoded fallback already in the model */ });
+
+            fetch(Config.AUTH_BASE_URL + "/api/control/listControls", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: sSubdomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "listControls failed"); }
+                    oModel.setProperty("/options/controls", [{ key: "All", text: "All Controls" }].concat(
+                        (oData.controls || []).map(function (c) { return { key: c.code, text: c.code + " - " + c.description }; })
+                    ));
+                })
+                .catch(function () { /* keep the hardcoded fallback already in the model */ });
         },
 
         onSideNavToggle: function () {
@@ -254,22 +295,21 @@ sap.ui.define([
         },
 
         _runQuery: function () {
+            var that = this;
             var oModel = this.getView().getModel("reportModel");
             var oFilters = oModel.getProperty("/filters");
 
-            var oResult = DeviationService.queryDeviations(oFilters);
+            return DeviationService.queryDeviations(oFilters).then(function (oResult) {
+                oModel.setProperty("/headers", oResult.headers);
+                oModel.setProperty("/totalRecords", oResult.totalRecords);
+                oModel.setProperty("/kpi", oResult.kpi);
+                oModel.setProperty("/severitySummary", oResult.severitySummary);
+                oModel.setProperty("/statusSummary", oResult.statusSummary);
 
-            oModel.setProperty("/headers", oResult.headers);
-            oModel.setProperty("/totalRecords", oResult.totalRecords);
-            oModel.setProperty("/kpi", oResult.kpi);
-            oModel.setProperty("/severitySummary", oResult.severitySummary);
-
-            var iPending = Math.max(0, oResult.kpi.totalIncidents - oResult.kpi.openItems - oResult.kpi.resolvedItems);
-            oModel.setProperty("/statusSummary", { pending: iPending });
-
-            // Generate SVG Donut Chart HTML
-            var sSvg = this._generatePieChartSvg(oResult.kpi.openItems, oResult.kpi.resolvedItems, iPending);
-            oModel.setProperty("/statusSvgHtml", sSvg);
+                // Generate SVG Donut Chart HTML
+                var sSvg = that._generatePieChartSvg(oResult.kpi.openItems, oResult.kpi.resolvedItems, oResult.statusSummary.pending);
+                oModel.setProperty("/statusSvgHtml", sSvg);
+            });
         },
 
         _generatePieChartSvg: function (iOpen, iResolved, iPending) {

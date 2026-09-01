@@ -1,6 +1,10 @@
-sap.ui.define([], function () {
+sap.ui.define(["xyraweb/model/config", "xyraweb/model/session"], function (Config, Session) {
     "use strict";
 
+    // ponytail: offline-fallback fixtures only, used from the .catch() branches
+    // below when xyra-core can't be reached - unchanged from the pre-wiring
+    // version of this module (renamed from DeviationService.js to avoid a name
+    // collision with the real backend CAP service of the same name).
     var MOCK_ALERT_HEADERS = [
         {
             alertId: "ALT-1001",
@@ -236,104 +240,143 @@ sap.ui.define([], function () {
         ]
     };
 
+    function getSubdomain() {
+        var oSession = Session.get();
+        return (oSession && oSession.subdomain) || Config.TEST_SUBDOMAIN;
+    }
+
+    function legacyMockQuery(oFilters) {
+        oFilters = oFilters || {};
+
+        var aFiltered = MOCK_ALERT_HEADERS.filter(function (item) {
+            if (oFilters.sector && oFilters.sector !== "All" && item.sector !== oFilters.sector) { return false; }
+            if (oFilters.region && oFilters.region !== "All" && item.region !== oFilters.region) { return false; }
+            if (oFilters.platform && oFilters.platform !== "All" && item.platform !== oFilters.platform) { return false; }
+            if (oFilters.system && oFilters.system !== "All" && item.system !== oFilters.system) { return false; }
+            if (oFilters.client && oFilters.client !== "All" && item.client !== oFilters.client) { return false; }
+            if (oFilters.control && oFilters.control !== "All" && item.controlId !== oFilters.control) { return false; }
+            if (oFilters.status && oFilters.status !== "All" && item.status !== oFilters.status) { return false; }
+            if (oFilters.startDate && item.alertDate < oFilters.startDate) { return false; }
+            if (oFilters.endDate && item.alertDate > oFilters.endDate) { return false; }
+            return true;
+        });
+
+        var iTotalIncidents = 0, iOpenItems = 0, iResolvedItems = 0;
+        var iCriticalCount = 0, iHighCount = 0, iMediumCount = 0, iLowCount = 0;
+        var mControlSet = {};
+
+        aFiltered.forEach(function (h) {
+            iTotalIncidents += h.deviationCount;
+            mControlSet[h.controlId] = true;
+            if (h.status === "Open" || h.status === "In Progress") { iOpenItems += h.deviationCount; }
+            else if (h.status === "Resolved") { iResolvedItems += h.deviationCount; }
+            if (h.severity === "Critical") { iCriticalCount += h.deviationCount; }
+            else if (h.severity === "High") { iHighCount += h.deviationCount; }
+            else if (h.severity === "Medium") { iMediumCount += h.deviationCount; }
+            else if (h.severity === "Low") { iLowCount += h.deviationCount; }
+        });
+
+        return {
+            headers: aFiltered,
+            totalRecords: aFiltered.length,
+            kpi: {
+                totalIncidents: iTotalIncidents,
+                openItems: iOpenItems,
+                resolvedItems: iResolvedItems,
+                auditedControls: Object.keys(mControlSet).length,
+                complianceRate: iTotalIncidents > 0 ? Math.round((iResolvedItems / iTotalIncidents) * 100) + "%" : "100%"
+            },
+            statusSummary: { pending: Math.max(0, iTotalIncidents - iResolvedItems) },
+            severitySummary: { critical: iCriticalCount, high: iHighCount, medium: iMediumCount, low: iLowCount }
+        };
+    }
+
+    // Bridges backend field names to what DeviationReport.view.xml/AlertItem.view.xml already bind to.
+    function mapHeaderForUi(h) {
+        return {
+            alertId: h.id,
+            controlId: h.controlId,
+            controlName: h.controlDescription,
+            system: h.systemId,
+            client: h.client,
+            sector: h.sector,
+            region: h.region,
+            platform: h.platform,
+            status: h.status,
+            severity: h.severity,
+            deviationCount: h.deviationCount,
+            alertDate: h.alertDate,
+            description: h.description
+        };
+    }
+
+    function mapItemForUi(it) {
+        return {
+            itemId: it.id,
+            sapObject: it.sapObject,
+            parameter: it.parameter,
+            operator: it.operator,
+            expectedValue: it.expectedValue,
+            actualValue: it.actualValue,
+            status: it.status,
+            timestamp: it.timestamp,
+            details: it.message
+        };
+    }
+
     return {
         queryDeviations: function (oFilters) {
             oFilters = oFilters || {};
-
-            var aFiltered = MOCK_ALERT_HEADERS.filter(function (item) {
-                if (oFilters.sector && oFilters.sector !== "All" && item.sector !== oFilters.sector) {
-                    return false;
-                }
-                if (oFilters.region && oFilters.region !== "All" && item.region !== oFilters.region) {
-                    return false;
-                }
-                if (oFilters.platform && oFilters.platform !== "All" && item.platform !== oFilters.platform) {
-                    return false;
-                }
-                if (oFilters.system && oFilters.system !== "All" && item.system !== oFilters.system) {
-                    return false;
-                }
-                if (oFilters.client && oFilters.client !== "All" && item.client !== oFilters.client) {
-                    return false;
-                }
-                if (oFilters.control && oFilters.control !== "All" && item.controlId !== oFilters.control) {
-                    return false;
-                }
-                if (oFilters.status && oFilters.status !== "All" && item.status !== oFilters.status) {
-                    return false;
-                }
-                if (oFilters.startDate && item.alertDate < oFilters.startDate) {
-                    return false;
-                }
-                if (oFilters.endDate && item.alertDate > oFilters.endDate) {
-                    return false;
-                }
-                return true;
-            });
-
-            var iTotalIncidents = 0;
-            var iOpenItems = 0;
-            var iResolvedItems = 0;
-            var iCriticalCount = 0;
-            var iHighCount = 0;
-            var iMediumCount = 0;
-            var iLowCount = 0;
-
-            var mControlSet = {};
-
-            aFiltered.forEach(function (h) {
-                iTotalIncidents += h.deviationCount;
-                mControlSet[h.controlId] = true;
-
-                if (h.status === "Open" || h.status === "In Progress") {
-                    iOpenItems += h.deviationCount;
-                } else if (h.status === "Resolved") {
-                    iResolvedItems += h.deviationCount;
-                }
-
-                if (h.severity === "Critical") { iCriticalCount += h.deviationCount; }
-                else if (h.severity === "High") { iHighCount += h.deviationCount; }
-                else if (h.severity === "Medium") { iMediumCount += h.deviationCount; }
-                else if (h.severity === "Low") { iLowCount += h.deviationCount; }
-            });
-
-            var iAuditedControls = Object.keys(mControlSet).length;
-
-            return {
-                headers: aFiltered,
-                totalRecords: aFiltered.length,
-                kpi: {
-                    totalIncidents: iTotalIncidents,
-                    openItems: iOpenItems,
-                    resolvedItems: iResolvedItems,
-                    auditedControls: iAuditedControls,
-                    complianceRate: iTotalIncidents > 0 ? Math.round((iResolvedItems / iTotalIncidents) * 100) + "%" : "100%"
-                },
-                statusDistribution: [
-                    { status: "Open", count: iOpenItems },
-                    { status: "Resolved", count: iResolvedItems },
-                    { status: "Pending", count: Math.max(0, iTotalIncidents - iOpenItems - iResolvedItems) }
-                ],
-                severitySummary: {
-                    critical: iCriticalCount,
-                    high: iHighCount,
-                    medium: iMediumCount,
-                    low: iLowCount
-                }
-            };
+            return fetch(Config.AUTH_BASE_URL + "/api/deviation/listDeviations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    subdomain: getSubdomain(),
+                    sector: oFilters.sector, region: oFilters.region, platform: oFilters.platform,
+                    systemId: oFilters.system, client: oFilters.client, controlId: oFilters.control,
+                    status: oFilters.status, startDate: oFilters.startDate || undefined, endDate: oFilters.endDate || undefined
+                })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "listDeviations failed"); }
+                    var aHeaders = (oData.headers || []).map(mapHeaderForUi);
+                    var iPending = aHeaders.filter(function (h) { return h.status !== "Resolved"; }).length;
+                    var mSeverity = { critical: 0, high: 0, medium: 0, low: 0 };
+                    aHeaders.forEach(function (h) {
+                        var sKey = (h.severity || "").toLowerCase();
+                        if (mSeverity[sKey] !== undefined) { mSeverity[sKey] += 1; }
+                    });
+                    return {
+                        headers: aHeaders,
+                        totalRecords: aHeaders.length,
+                        kpi: oData.kpi, // backend is the source of truth for KPIs, not recomputed
+                        statusSummary: { pending: iPending },
+                        severitySummary: mSeverity
+                    };
+                })
+                .catch(function () {
+                    return legacyMockQuery(oFilters);
+                });
         },
 
         getAlertDetails: function (sAlertId, sControlId) {
-            var oHeader = MOCK_ALERT_HEADERS.find(function (h) {
-                return h.alertId === sAlertId || h.controlId === sControlId;
-            }) || MOCK_ALERT_HEADERS[0];
-
-            var aItems = MOCK_ALERT_ITEMS[oHeader.alertId] || MOCK_ALERT_ITEMS["ALT-1001"];
-
-            return {
-                header: oHeader,
-                items: aItems
-            };
+            return fetch(Config.AUTH_BASE_URL + "/api/deviation/getDeviationDetail", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: getSubdomain(), alertId: sAlertId })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "getDeviationDetail failed"); }
+                    return { header: mapHeaderForUi(oData.header), items: (oData.items || []).map(mapItemForUi) };
+                })
+                .catch(function () {
+                    var oHeader = MOCK_ALERT_HEADERS.filter(function (h) {
+                        return h.alertId === sAlertId || h.controlId === sControlId;
+                    })[0] || MOCK_ALERT_HEADERS[0];
+                    return { header: oHeader, items: MOCK_ALERT_ITEMS[oHeader.alertId] || MOCK_ALERT_ITEMS["ALT-1001"] };
+                });
         }
     };
 });
