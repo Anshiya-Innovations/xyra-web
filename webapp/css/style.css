@@ -3147,6 +3147,15 @@ div[id*="-text"] {
   overflow: hidden !important;
 }
 
+.xyraSingleDateWrapper {
+  width: 100% !important;
+  display: block !important;
+}
+
+.xyraSingleDateInput {
+  width: 100% !important;
+}
+
 .xyraCompactDateRangePopover .sapMPopoverCont,
 .xyraCompactDateRangePopover .sapMPopoverContent {
   padding: 0 !important;

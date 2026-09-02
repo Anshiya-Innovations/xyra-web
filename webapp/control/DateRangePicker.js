@@ -6,8 +6,9 @@ sap.ui.define([
     "sap/m/HBox",
     "sap/m/Text",
     "sap/m/Button",
+    "sap/m/MessageToast",
     "sap/ui/core/HTML"
-], function (Control, Input, Popover, VBox, HBox, Text, Button, HTML) {
+], function (Control, Input, Popover, VBox, HBox, Text, Button, MessageToast, HTML) {
     "use strict";
 
     var MONTH_NAMES = [
@@ -15,20 +16,21 @@ sap.ui.define([
         "July", "August", "September", "October", "November", "December"
     ];
 
-    var WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    var WEEKDAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
     return Control.extend("xyraweb.control.DateRangePicker", {
         metadata: {
             properties: {
                 value: { type: "string", defaultValue: "" },
-                placeholder: { type: "string", defaultValue: "Select Date Range" },
+                placeholder: { type: "string", defaultValue: "Select Date" },
                 startDate: { type: "string", defaultValue: "" },
                 endDate: { type: "string", defaultValue: "" },
+                field: { type: "string", defaultValue: "start" },
                 width: { type: "string", defaultValue: "100%" },
                 enabled: { type: "boolean", defaultValue: true }
             },
             aggregations: {
-                _input: { type: "sap.m.Input", multiple: false, visibility: "hidden" }
+                _input: { type: "sap.m.Input", multiple: false, visibility: "public" }
             },
             events: {
                 change: {
@@ -46,50 +48,28 @@ sap.ui.define([
             this._dCurrentDisplayMonth = new Date();
             this._dStart = null;
             this._dEnd = null;
-            this._dTentativeStart = null;
-            this._dTentativeEnd = null;
             this._sViewMode = "DAYS";
 
-            var oInput = new Input({
-                placeholder: this.getPlaceholder(),
+            this._oInput = new Input({
+                placeholder: this.getPlaceholder() || "Select Date",
                 width: "100%",
                 valueHelpOnly: true,
                 showValueHelp: true,
                 valueHelpIconSrc: "sap-icon://appointment-2",
                 valueHelpRequest: function (oEvent) {
+                    if (oEvent && oEvent.stopPropagation) { oEvent.stopPropagation(); }
                     that._togglePopover();
                 }
-            }).addStyleClass("xyraDateRangeInput");
+            }).addStyleClass("xyraSingleDateInput");
 
-            this.setAggregation("_input", oInput);
-        },
-
-        onclick: function (oEvent) {
-            if (oEvent) {
-                oEvent.stopPropagation();
-                if (oEvent.preventDefault) {
-                    oEvent.preventDefault();
-                }
-            }
-            this._togglePopover();
-        },
-
-        ontap: function (oEvent) {
-            if (oEvent) {
-                oEvent.stopPropagation();
-                if (oEvent.preventDefault) {
-                    oEvent.preventDefault();
-                }
-            }
-            this._togglePopover();
+            this.setAggregation("_input", this._oInput);
         },
 
         onBeforeRendering: function () {
-            var oInput = this.getAggregation("_input");
-            if (oInput) {
-                oInput.setPlaceholder(this.getPlaceholder());
-                oInput.setWidth(this.getWidth());
-                oInput.setEnabled(this.getEnabled());
+            if (this._oInput) {
+                this._oInput.setPlaceholder(this.getPlaceholder() || "Select Date");
+                this._oInput.setWidth(this.getWidth());
+                this._oInput.setEnabled(this.getEnabled());
             }
 
             var sStart = this.getStartDate();
@@ -107,8 +87,8 @@ sap.ui.define([
             apiVersion: 2,
             render: function (oRm, oControl) {
                 oRm.openStart("div", oControl);
-                oRm.style("width", oControl.getWidth());
-                oRm.class("xyraDateRangePickerWrapper");
+                oRm.style("width", oControl.getWidth() || "100%");
+                oRm.class("xyraSingleDateWrapper");
                 oRm.openEnd();
                 oRm.renderControl(oControl.getAggregation("_input"));
                 oRm.close("div");
@@ -116,31 +96,28 @@ sap.ui.define([
         },
 
         getStartDate: function () {
-            return this._dStart;
+            return this._dStart || this._dEnd;
         },
 
         getEndDate: function () {
-            return this._dEnd;
+            return this._dEnd || this._dStart;
         },
 
         getStartDateString: function () {
-            return this._formatISO(this._dStart);
+            return this._formatISO(this._dStart || this._dEnd);
         },
 
         getEndDateString: function () {
-            return this._formatISO(this._dEnd);
+            return this._formatISO(this._dEnd || this._dStart);
         },
 
         getDateValue: function () {
-            return this._dStart;
-        },
-
-        getSecondDateValue: function () {
-            return this._dEnd;
+            return this._dStart || this._dEnd;
         },
 
         getValue: function () {
-            return this._formatDisplayRange(this._dStart, this._dEnd);
+            var d = (this.getField() === "end") ? (this._dEnd || this._dStart) : (this._dStart || this._dEnd);
+            return d ? this._formatDisplayDate(d) : "";
         },
 
         setValue: function (sVal) {
@@ -148,10 +125,13 @@ sap.ui.define([
             if (!sVal) {
                 this.reset();
             } else {
-                var oInput = this.getAggregation("_input");
-                if (oInput) {
-                    oInput.setValue(sVal);
+                var d = this._parseDateStr(sVal);
+                if (this.getField() === "end") {
+                    this._dEnd = d;
+                } else {
+                    this._dStart = d;
                 }
+                this._updateInputValue();
             }
             return this;
         },
@@ -173,14 +153,11 @@ sap.ui.define([
         reset: function () {
             this._dStart = null;
             this._dEnd = null;
-            this._dTentativeStart = null;
-            this._dTentativeEnd = null;
             this.setProperty("startDate", "", true);
             this.setProperty("endDate", "", true);
             this.setProperty("value", "", true);
-            var oInput = this.getAggregation("_input");
-            if (oInput) {
-                oInput.setValue("");
+            if (this._oInput) {
+                this._oInput.setValue("");
             }
             this.fireChange({
                 value: "",
@@ -197,6 +174,17 @@ sap.ui.define([
         _parseDateStr: function (vVal) {
             if (!vVal) { return null; }
             if (vVal instanceof Date) { return new Date(vVal.getFullYear(), vVal.getMonth(), vVal.getDate()); }
+            if (typeof vVal === "string") {
+                var sTrimmed = vVal.trim();
+                if (sTrimmed.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+                    var p = sTrimmed.split("/");
+                    return new Date(parseInt(p[2], 10), parseInt(p[1], 10) - 1, parseInt(p[0], 10));
+                }
+                if (sTrimmed.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                    var p2 = sTrimmed.split("-");
+                    return new Date(parseInt(p2[0], 10), parseInt(p2[1], 10) - 1, parseInt(p2[2], 10));
+                }
+            }
             var d = new Date(vVal);
             if (isNaN(d.getTime())) { return null; }
             return new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -213,34 +201,29 @@ sap.ui.define([
         _formatDisplayDate: function (d) {
             if (!d) { return ""; }
             var day = String(d.getDate()).padStart(2, "0");
-            var monthStr = MONTH_NAMES[d.getMonth()].substring(0, 3);
-            var year = d.getFullYear();
-            return day + " " + monthStr + " " + year;
-        },
-
-        _formatDisplayRange: function (d1, d2) {
-            if (!d1 && !d2) { return ""; }
-            if (d1 && !d2) { return this._formatDisplayDate(d1); }
-            if (!d1 && d2) { return this._formatDisplayDate(d2); }
-            return this._formatDisplayDate(d1) + " – " + this._formatDisplayDate(d2);
+            var m = String(d.getMonth() + 1).padStart(2, "0");
+            var y = d.getFullYear();
+            return day + "/" + m + "/" + y;
         },
 
         _updateInputValue: function () {
-            var sFormatted = this._formatDisplayRange(this._dStart, this._dEnd);
+            var d = (this.getField() === "end") ? (this._dEnd || this._dStart) : (this._dStart || this._dEnd);
+            var sFormatted = d ? this._formatDisplayDate(d) : "";
+            var sIso = d ? this._formatISO(d) : "";
+
+            if (this.getField() === "end") {
+                this.setProperty("endDate", sIso, true);
+            } else {
+                this.setProperty("startDate", sIso, true);
+            }
             this.setProperty("value", sFormatted, true);
-            var oInput = this.getAggregation("_input");
-            if (oInput) {
-                oInput.setValue(sFormatted);
+
+            if (this._oInput) {
+                this._oInput.setValue(sFormatted);
             }
         },
 
         _togglePopover: function () {
-            var iNow = Date.now();
-            if (this._iLastToggle && (iNow - this._iLastToggle < 250)) {
-                return;
-            }
-            this._iLastToggle = iNow;
-
             if (this._oPopover && this._oPopover.isOpen()) {
                 this._oPopover.close();
             } else {
@@ -249,18 +232,14 @@ sap.ui.define([
         },
 
         _openPopover: function () {
-            var oInput = this.getAggregation("_input");
-
+            var oTargetDom = (this._oInput && this._oInput.getDomRef()) ? this._oInput : this;
             this._sViewMode = "DAYS";
-            if (this._dStart) {
-                this._dTentativeStart = new Date(this._dStart.getTime());
-                this._dTentativeEnd = this._dEnd ? new Date(this._dEnd.getTime()) : null;
-                this._dCurrentDisplayMonth = new Date(this._dStart.getFullYear(), this._dStart.getMonth(), 1);
+
+            var dTarget = (this.getField() === "end") ? this._dEnd : this._dStart;
+            if (dTarget) {
+                this._dCurrentDisplayMonth = new Date(dTarget.getFullYear(), dTarget.getMonth(), 1);
             } else {
-                var dToday = new Date();
-                this._dTentativeStart = new Date(dToday.getFullYear(), dToday.getMonth(), dToday.getDate());
-                this._dTentativeEnd = null;
-                this._dCurrentDisplayMonth = new Date(dToday.getFullYear(), dToday.getMonth(), 1);
+                this._dCurrentDisplayMonth = new Date();
             }
 
             if (!this._oPopover) {
@@ -270,8 +249,7 @@ sap.ui.define([
             }
 
             if (this._oPopover && !this._oPopover.isOpen()) {
-                var oTarget = (oInput && oInput.getDomRef()) ? oInput : this;
-                this._oPopover.openBy(oTarget);
+                this._oPopover.openBy(oTargetDom);
             }
         },
 
@@ -293,31 +271,17 @@ sap.ui.define([
                 }
             }).addStyleClass("xyraCalNavBtn");
 
-            this._oMonthText = new Text({
-                text: ""
-            }).addStyleClass("xyraCalHeaderTitleText xyraCalHeaderMonthText");
-
+            this._oMonthText = new Text({ text: "" }).addStyleClass("xyraCalHeaderTitleText xyraCalHeaderMonthText");
             this._oMonthText.attachBrowserEvent("click", function (oEvent) {
                 oEvent.stopPropagation();
-                if (that._sViewMode === "MONTHS") {
-                    that._sViewMode = "DAYS";
-                } else {
-                    that._sViewMode = "MONTHS";
-                }
+                that._sViewMode = (that._sViewMode === "MONTHS") ? "DAYS" : "MONTHS";
                 that._updatePopoverContent();
             });
 
-            this._oYearText = new Text({
-                text: ""
-            }).addStyleClass("xyraCalHeaderTitleText xyraCalHeaderYearText");
-
+            this._oYearText = new Text({ text: "" }).addStyleClass("xyraCalHeaderTitleText xyraCalHeaderYearText");
             this._oYearText.attachBrowserEvent("click", function (oEvent) {
                 oEvent.stopPropagation();
-                if (that._sViewMode === "YEARS") {
-                    that._sViewMode = "DAYS";
-                } else {
-                    that._sViewMode = "YEARS";
-                }
+                that._sViewMode = (that._sViewMode === "YEARS") ? "DAYS" : "YEARS";
                 that._updatePopoverContent();
             });
 
@@ -407,7 +371,6 @@ sap.ui.define([
             }).addStyleClass("xyraCompactDateRangePopover");
 
             this.addDependent(this._oPopover);
-
             this._updatePopoverContent();
         },
 
@@ -442,7 +405,6 @@ sap.ui.define([
 
             if (this._sViewMode === "MONTHS") {
                 if (this._oWeekdayRow) { this._oWeekdayRow.setVisible(false); }
-
                 var sHtml = "<div class='xyraCalPickerGrid xyraCalMonthGrid'>";
                 for (var m = 0; m < 12; m++) {
                     var sMName = MONTH_NAMES[m].substring(0, 3);
@@ -450,26 +412,19 @@ sap.ui.define([
                     sHtml += "<div class='xyraCalPickerCell " + (bSelected ? "xyraCalPickerCellActive" : "") + "' data-month='" + m + "'>" + sMName + "</div>";
                 }
                 sHtml += "</div>";
-
-                if (this._oGridHTML) {
-                    this._oGridHTML.setContent(sHtml);
-                }
+                if (this._oGridHTML) { this._oGridHTML.setContent(sHtml); }
 
             } else if (this._sViewMode === "YEARS") {
                 if (this._oWeekdayRow) { this._oWeekdayRow.setVisible(false); }
                 var startDecade = year - (year % 12);
                 var endDecade = startDecade + 11;
-
                 var sHtml = "<div class='xyraCalPickerGrid xyraCalYearGrid'>";
                 for (var y = startDecade; y <= endDecade; y++) {
                     var bSelected = (y === year);
                     sHtml += "<div class='xyraCalPickerCell " + (bSelected ? "xyraCalPickerCellActive" : "") + "' data-year='" + y + "'>" + y + "</div>";
                 }
                 sHtml += "</div>";
-
-                if (this._oGridHTML) {
-                    this._oGridHTML.setContent(sHtml);
-                }
+                if (this._oGridHTML) { this._oGridHTML.setContent(sHtml); }
 
             } else {
                 // DAYS mode
@@ -480,39 +435,31 @@ sap.ui.define([
                 var dToday = new Date();
 
                 var sHtml = "<div class='xyraCalGrid'>";
-
                 for (var i = 0; i < firstDayIndex; i++) {
                     sHtml += "<div class='xyraCalDayEmpty'></div>";
                 }
 
+                var dSel = (this.getField() === "end") ? this._dEnd : this._dStart;
+                var tSel = dSel ? dSel.getTime() : 0;
+
                 for (var day = 1; day <= daysInMonth; day++) {
                     var dCell = new Date(year, month, day);
+                    var tCell = dCell.getTime();
                     var sDateAttr = this._formatISO(dCell);
 
-                    var bIsStart = this._dTentativeStart && this._isSameDate(dCell, this._dTentativeStart);
-                    var bIsEnd = this._dTentativeEnd && this._isSameDate(dCell, this._dTentativeEnd);
-                    var bIsInRange = this._dTentativeStart && this._dTentativeEnd &&
-                        dCell > this._dTentativeStart && dCell < this._dTentativeEnd;
+                    var bIsSelected = tSel > 0 && tCell === tSel;
                     var bIsToday = this._isSameDate(dCell, dToday);
 
                     var aClasses = ["xyraCalDay"];
-                    if (bIsStart && bIsEnd) {
+                    if (bIsSelected) {
                         aClasses.push("xyraCalDayStart", "xyraCalDayEnd");
-                    } else if (bIsStart) {
-                        aClasses.push("xyraCalDayStart");
-                    } else if (bIsEnd) {
-                        aClasses.push("xyraCalDayEnd");
-                    } else if (bIsInRange) {
-                        aClasses.push("xyraCalDayInRange");
                     }
-
                     if (bIsToday) {
                         aClasses.push("xyraCalDayToday");
                     }
 
                     sHtml += "<div class='" + aClasses.join(" ") + "' data-date='" + sDateAttr + "'>" + day + "</div>";
                 }
-
                 sHtml += "</div>";
 
                 if (this._oGridHTML) {
@@ -531,55 +478,22 @@ sap.ui.define([
         _onDayClick: function (dClicked) {
             if (!dClicked) { return; }
 
-            if (!this._dTentativeStart || (this._dTentativeStart && this._dTentativeEnd)) {
-                this._dTentativeStart = dClicked;
-                this._dTentativeEnd = null;
-                this._updatePopoverContent();
-            } else if (this._dTentativeStart && !this._dTentativeEnd) {
-                if (this._isSameDate(dClicked, this._dTentativeStart)) {
-                    this._dTentativeEnd = new Date(dClicked.getTime());
-                } else if (dClicked < this._dTentativeStart) {
-                    this._dTentativeEnd = new Date(this._dTentativeStart.getTime());
-                    this._dTentativeStart = dClicked;
-                } else {
-                    this._dTentativeEnd = dClicked;
-                }
-                this._updatePopoverContent();
-                var that = this;
-                setTimeout(function () {
-                    that._applyTentativeSelection();
-                }, 200);
-            }
-        },
-
-        _applyTentativeSelection: function () {
-            if (this._dTentativeStart && !this._dTentativeEnd) {
-                this._dTentativeEnd = new Date(this._dTentativeStart.getTime());
+            if (this.getField() === "end") {
+                this._dEnd = dClicked;
+            } else {
+                this._dStart = dClicked;
             }
 
-            this._dStart = this._dTentativeStart;
-            this._dEnd = this._dTentativeEnd;
+            this._updateInputValue();
 
-            var sFormatted = this._formatDisplayRange(this._dStart, this._dEnd);
-            var sStartIso = this._formatISO(this._dStart);
-            var sEndIso = this._formatISO(this._dEnd);
-
-            this.setProperty("value", sFormatted, true);
-            this.setProperty("startDate", sStartIso, true);
-            this.setProperty("endDate", sEndIso, true);
-
-            var oInput = this.getAggregation("_input");
-            if (oInput) {
-                oInput.setValue(sFormatted);
-            }
-
+            var d = (this.getField() === "end") ? this._dEnd : this._dStart;
             this.fireChange({
-                value: sFormatted,
-                startDate: sStartIso,
-                endDate: sEndIso
+                value: this._formatDisplayDate(d),
+                startDate: this._formatISO(this._dStart || d),
+                endDate: this._formatISO(this._dEnd || d)
             });
 
-            if (this._oPopover) {
+            if (this._oPopover && this._oPopover.isOpen()) {
                 this._oPopover.close();
             }
         },

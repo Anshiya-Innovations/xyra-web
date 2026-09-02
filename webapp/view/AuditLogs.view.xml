@@ -227,15 +227,27 @@
                                              </Select>
                                          </VBox>
 
-                                          <!-- Date Range Filter -->
-                                          <VBox width="28%" class="xyraFieldGroup">
-                                              <Label text="Date Range" class="xyraLoginLabel"/>
-                                              <xyra:DateRangePicker
-                                                  id="filterDateRange"
-                                                  placeholder="Select Date Range"
-                                                  change="onApplyFilters"
-                                                  width="100%"/>
-                                          </VBox>
+                                           <!-- Starting Date Filter -->
+                                           <VBox class="xyraFieldGroup">
+                                               <Label text="Starting Date" class="xyraLoginLabel"/>
+                                               <xyra:DateRangePicker
+                                                   id="filterStartingDate"
+                                                   field="start"
+                                                   placeholder="Select Starting Date"
+                                                   change="onApplyFilters"
+                                                   width="100%"/>
+                                           </VBox>
+
+                                           <!-- Ending Date Filter -->
+                                           <VBox class="xyraFieldGroup">
+                                               <Label text="Ending Date" class="xyraLoginLabel"/>
+                                               <xyra:DateRangePicker
+                                                   id="filterEndingDate"
+                                                   field="end"
+                                                   placeholder="Select Ending Date"
+                                                   change="onApplyFilters"
+                                                   width="100%"/>
+                                           </VBox>
                                      </HBox>
                                  </content>
                             </Panel>

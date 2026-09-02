@@ -624,7 +624,14 @@
                                         <core:Item key="Action Required" text="Action Required"/>
                                         <core:Item key="Pending" text="Pending"/>
                                     </Select>
-                                    <xyra:DateRangePicker id="dpHistoryDate2" placeholder="Select Date Range" change="onSearchHistory"/>
+                                     <VBox class="xyraFieldGroup">
+                                         <Label text="Starting Date" class="xyraLoginLabel"/>
+                                         <xyra:DateRangePicker id="dpHistoryStartDate2" field="start" placeholder="Select Starting Date" change="onSearchHistory"/>
+                                     </VBox>
+                                     <VBox class="xyraFieldGroup">
+                                         <Label text="Ending Date" class="xyraLoginLabel"/>
+                                         <xyra:DateRangePicker id="dpHistoryEndDate2" field="end" placeholder="Select Ending Date" change="onSearchHistory"/>
+                                     </VBox>
                                 </layout:Grid>
                                 <OverflowToolbar class="sapUiTinyMarginTop">
                                     <ToolbarSpacer/>

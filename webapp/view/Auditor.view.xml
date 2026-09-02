@@ -362,11 +362,15 @@
                                             </Select>
                                         </VBox>
 
-                                        <!-- Date Range Filter -->
-                                        <VBox width="22%" class="xyraFieldGroup">
-                                            <Label text="Date Range" class="xyraLoginLabel"/>
-                                            <xyra:DateRangePicker id="filterDateRangeAuditor" placeholder="Select Date Range" change="onSearchAuditor" width="100%"/>
-                                        </VBox>
+                                         <VBox class="xyraFieldGroup">
+                                             <Label text="Starting Date" class="xyraLoginLabel"/>
+                                             <xyra:DateRangePicker id="filterStartingDateAuditor" field="start" placeholder="Select Starting Date" change="onSearchAuditor" width="100%"/>
+                                         </VBox>
+
+                                         <VBox class="xyraFieldGroup">
+                                             <Label text="Ending Date" class="xyraLoginLabel"/>
+                                             <xyra:DateRangePicker id="filterEndingDateAuditor" field="end" placeholder="Select Ending Date" change="onSearchAuditor" width="100%"/>
+                                         </VBox>
                                     </HBox>
                                 </content>
                             </Panel>
@@ -735,11 +739,15 @@
                                             </Select>
                                         </VBox>
 
-                                        <!-- Date Range Filter -->
-                                        <VBox width="25%" class="xyraFieldGroup">
-                                            <Label text="Date Range" class="xyraLoginLabel"/>
-                                            <xyra:DateRangePicker id="dpHistoryDateAud" placeholder="Select Date Range" change="onSearchAuditHistory" width="100%"/>
-                                        </VBox>
+                                         <VBox class="xyraFieldGroup">
+                                             <Label text="Starting Date" class="xyraLoginLabel"/>
+                                             <xyra:DateRangePicker id="dpHistoryStartDateAud" field="start" placeholder="Select Starting Date" change="onSearchAuditHistory" width="100%"/>
+                                         </VBox>
+
+                                         <VBox class="xyraFieldGroup">
+                                             <Label text="Ending Date" class="xyraLoginLabel"/>
+                                             <xyra:DateRangePicker id="dpHistoryEndDateAud" field="end" placeholder="Select Ending Date" change="onSearchAuditHistory" width="100%"/>
+                                         </VBox>
                                     </HBox>
                                 </content>
                             </Panel>

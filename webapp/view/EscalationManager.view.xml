@@ -439,7 +439,14 @@
                                         <core:Item key="Pending Signoff" text="Pending Signoff"/>
                                         <core:Item key="Action Required" text="Action Required"/>
                                     </Select>
-                                    <xyra:DateRangePicker id="dpHistoryDateEsc" placeholder="Select Date Range" change="onSearchHistory"/>
+                                     <VBox class="xyraFieldGroup">
+                                         <Label text="Starting Date" class="xyraLoginLabel"/>
+                                         <xyra:DateRangePicker id="dpHistoryStartDateEsc" field="start" placeholder="Select Starting Date" change="onSearchHistory"/>
+                                     </VBox>
+                                     <VBox class="xyraFieldGroup">
+                                         <Label text="Ending Date" class="xyraLoginLabel"/>
+                                         <xyra:DateRangePicker id="dpHistoryEndDateEsc" field="end" placeholder="Select Ending Date" change="onSearchHistory"/>
+                                     </VBox>
                                 </layout:Grid>
                                 <OverflowToolbar class="sapUiTinyMarginTop">
                                     <ToolbarSpacer/>

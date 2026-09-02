@@ -306,14 +306,20 @@
                                         </Select>
                                     </VBox>
 
-                                    <!-- Date Range -->
-                                    <VBox width="37%" class="xyraFieldGroup">
-                                        <Label text="Date Range" class="xyraLoginLabel"/>
-                                        <xyra:DateRangePicker id="filterDateRange" startDate="{reportModel>/filters/startDate}" endDate="{reportModel>/filters/endDate}" placeholder="Select Date Range" change="onSearch" width="100%"/>
-                                    </VBox>
+                                     <!-- Starting Date Filter -->
+                                     <VBox width="18.5%" class="xyraFieldGroup">
+                                         <Label text="Starting Date" class="xyraLoginLabel"/>
+                                         <xyra:DateRangePicker id="filterStartingDate" field="start" startDate="{reportModel>/filters/startDate}" placeholder="Select Starting Date" change="onSearch" width="100%"/>
+                                     </VBox>
 
-                                    <!-- Empty Spacer Column for 5-Column Alignment -->
-                                    <VBox width="18.5%"/>
+                                     <!-- Ending Date Filter -->
+                                     <VBox width="18.5%" class="xyraFieldGroup">
+                                         <Label text="Ending Date" class="xyraLoginLabel"/>
+                                         <xyra:DateRangePicker id="filterEndingDate" field="end" endDate="{reportModel>/filters/endDate}" placeholder="Select Ending Date" change="onSearch" width="100%"/>
+                                     </VBox>
+
+                                     <!-- Empty Spacer Column for 5-Column Alignment -->
+                                     <VBox width="18.5%"/>
                                 </HBox>
                             </content>
                         </Panel>
