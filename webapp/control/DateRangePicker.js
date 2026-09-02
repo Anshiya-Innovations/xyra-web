@@ -252,13 +252,15 @@ sap.ui.define([
             var oInput = this.getAggregation("_input");
 
             this._sViewMode = "DAYS";
-            this._dTentativeStart = this._dStart ? new Date(this._dStart.getTime()) : null;
-            this._dTentativeEnd = this._dEnd ? new Date(this._dEnd.getTime()) : null;
-
             if (this._dStart) {
+                this._dTentativeStart = new Date(this._dStart.getTime());
+                this._dTentativeEnd = this._dEnd ? new Date(this._dEnd.getTime()) : null;
                 this._dCurrentDisplayMonth = new Date(this._dStart.getFullYear(), this._dStart.getMonth(), 1);
             } else {
-                this._dCurrentDisplayMonth = new Date();
+                var dToday = new Date();
+                this._dTentativeStart = new Date(dToday.getFullYear(), dToday.getMonth(), dToday.getDate());
+                this._dTentativeEnd = null;
+                this._dCurrentDisplayMonth = new Date(dToday.getFullYear(), dToday.getMonth(), 1);
             }
 
             if (!this._oPopover) {
@@ -389,30 +391,8 @@ sap.ui.define([
                 }
             });
 
-            this._oCancelBtn = new Button({
-                text: "Cancel",
-                type: "Transparent",
-                press: function () {
-                    that._oPopover.close();
-                }
-            }).addStyleClass("xyraCalCancelBtn");
-
-            this._oApplyBtn = new Button({
-                text: "Apply",
-                type: "Emphasized",
-                press: function () {
-                    that._applyTentativeSelection();
-                }
-            }).addStyleClass("xyraCalApplyBtn");
-
-            var oFooterRow = new HBox({
-                justifyContent: "SpaceBetween",
-                alignItems: "Center",
-                items: [this._oCancelBtn, this._oApplyBtn]
-            }).addStyleClass("xyraCalFooter");
-
             var oMainContainer = new VBox({
-                items: [oHeaderRow, this._oWeekdayRow, this._oGridHTML, oFooterRow]
+                items: [oHeaderRow, this._oWeekdayRow, this._oGridHTML]
             }).addStyleClass("xyraCalPopupContainer");
 
             this._oPopover = new Popover({
@@ -554,16 +534,22 @@ sap.ui.define([
             if (!this._dTentativeStart || (this._dTentativeStart && this._dTentativeEnd)) {
                 this._dTentativeStart = dClicked;
                 this._dTentativeEnd = null;
+                this._updatePopoverContent();
             } else if (this._dTentativeStart && !this._dTentativeEnd) {
-                if (dClicked < this._dTentativeStart) {
+                if (this._isSameDate(dClicked, this._dTentativeStart)) {
+                    this._dTentativeEnd = new Date(dClicked.getTime());
+                } else if (dClicked < this._dTentativeStart) {
                     this._dTentativeEnd = new Date(this._dTentativeStart.getTime());
                     this._dTentativeStart = dClicked;
                 } else {
                     this._dTentativeEnd = dClicked;
                 }
+                this._updatePopoverContent();
+                var that = this;
+                setTimeout(function () {
+                    that._applyTentativeSelection();
+                }, 200);
             }
-
-            this._updatePopoverContent();
         },
 
         _applyTentativeSelection: function () {
