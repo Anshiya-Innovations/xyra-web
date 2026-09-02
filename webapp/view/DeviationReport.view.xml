@@ -6,6 +6,7 @@
     xmlns:f="sap.f"
     xmlns:card="sap.f.cards"
     xmlns:tnt="sap.tnt"
+    xmlns:xyra="xyraweb.control"
     height="100%">
 
     <tnt:ToolPage id="deviationToolPage" sideExpanded="true">
@@ -305,16 +306,10 @@
                                         </Select>
                                     </VBox>
 
-                                    <!-- Start Date -->
-                                    <VBox width="18.5%" class="xyraFieldGroup">
-                                        <Label text="Start Date" class="xyraLoginLabel"/>
-                                        <DatePicker id="filterStartDate" value="{reportModel>/filters/startDate}" displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" width="100%"/>
-                                    </VBox>
-
-                                    <!-- End Date -->
-                                    <VBox width="18.5%" class="xyraFieldGroup">
-                                        <Label text="End Date" class="xyraLoginLabel"/>
-                                        <DatePicker id="filterEndDate" value="{reportModel>/filters/endDate}" displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" width="100%"/>
+                                    <!-- Date Range -->
+                                    <VBox width="37%" class="xyraFieldGroup">
+                                        <Label text="Date Range" class="xyraLoginLabel"/>
+                                        <xyra:DateRangePicker id="filterDateRange" startDate="{reportModel>/filters/startDate}" endDate="{reportModel>/filters/endDate}" placeholder="Select Date Range" change="onSearch" width="100%"/>
                                     </VBox>
 
                                     <!-- Empty Spacer Column for 5-Column Alignment -->

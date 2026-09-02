@@ -5,6 +5,7 @@
     xmlns:core="sap.ui.core"
     xmlns:layout="sap.ui.layout"
     xmlns:tnt="sap.tnt"
+    xmlns:xyra="xyraweb.control"
     height="100%">
 
     <tnt:ToolPage id="auditLogsToolPage" sideExpanded="true">
@@ -226,24 +227,15 @@
                                              </Select>
                                          </VBox>
 
-                                         <!-- Date Range Filters -->
-                                         <VBox width="15%" class="xyraFieldGroup">
-                                             <Label text="Start Date" class="xyraLoginLabel"/>
-                                             <DatePicker
-                                                 id="filterStartDate"
-                                                 placeholder="Start Date"
-                                                 change="onApplyFilters"
-                                                 width="100%"/>
-                                         </VBox>
-
-                                         <VBox width="15%" class="xyraFieldGroup">
-                                             <Label text="End Date" class="xyraLoginLabel"/>
-                                             <DatePicker
-                                                 id="filterEndDate"
-                                                 placeholder="End Date"
-                                                 change="onApplyFilters"
-                                                 width="100%"/>
-                                         </VBox>
+                                          <!-- Date Range Filter -->
+                                          <VBox width="28%" class="xyraFieldGroup">
+                                              <Label text="Date Range" class="xyraLoginLabel"/>
+                                              <xyra:DateRangePicker
+                                                  id="filterDateRange"
+                                                  placeholder="Select Date Range"
+                                                  change="onApplyFilters"
+                                                  width="100%"/>
+                                          </VBox>
                                      </HBox>
                                  </content>
                             </Panel>

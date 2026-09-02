@@ -566,7 +566,7 @@ sap.ui.define([
             if (this.byId("selectHistorySystem2")) { this.byId("selectHistorySystem2").setSelectedKey("All"); }
             if (this.byId("selectHistoryDecision2")) { this.byId("selectHistoryDecision2").setSelectedKey("All"); }
             if (this.byId("selectHistoryStatus2")) { this.byId("selectHistoryStatus2").setSelectedKey("All"); }
-            if (this.byId("dpHistoryDate2")) { this.byId("dpHistoryDate2").setValue(""); }
+            if (this.byId("dpHistoryDate2")) { this.byId("dpHistoryDate2").reset(); }
             this.onSearchHistory();
             MessageToast.show("Reviewer 2 History Filters Reset.");
         },

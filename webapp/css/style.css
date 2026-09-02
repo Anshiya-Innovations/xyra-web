@@ -3096,4 +3096,293 @@ div[id*="-text"] {
   pointer-events: none !important;
 }
 
+/* ==========================================================================
+   XYRA COMPACT DATE RANGE PICKER & CALENDAR POPUP STYLING
+   ========================================================================== */
+
+.xyraDateRangePickerWrapper {
+  display: inline-block;
+  width: 100%;
+}
+
+.xyraDateRangeInput .sapMInputBaseInner {
+  border-radius: 8px !important;
+  font-size: 0.875rem !important;
+  color: #1e293b !important;
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  padding-left: 0.75rem !important;
+  cursor: pointer !important;
+}
+
+.xyraDateRangeInput .sapMInputBaseInner:focus {
+  border-color: #533bff !important;
+  box-shadow: 0 0 0 2px rgba(83, 59, 255, 0.2) !important;
+}
+
+.xyraDateRangeInput .sapMInputBaseIconContainer,
+.xyraDateRangeInput .sapMInputBaseIcon {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.xyraCompactDateRangePopover {
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden !important;
+  border: 1px solid #e2e8f0 !important;
+  z-index: 99999 !important;
+}
+
+.xyraCompactDateRangePopover .sapMPopoverHeader,
+.xyraCompactDateRangePopover header.sapMPopoverHeader,
+.xyraCompactDateRangePopover .sapMSubHeader {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+}
+
+.xyraCompactDateRangePopover .sapMPopoverCont,
+.xyraCompactDateRangePopover .sapMPopoverContent {
+  padding: 0 !important;
+  background-color: #ffffff !important;
+  border-radius: 12px !important;
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+.xyraCalPopupContainer {
+  padding: 12px 14px 14px 14px !important;
+  background: #ffffff !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* Calendar Header */
+.xyraCalHeader {
+  margin-bottom: 8px !important;
+  padding: 0 4px !important;
+}
+
+.xyraCalMonthTitle {
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  color: #0f172a !important;
+  text-align: center !important;
+}
+
+.xyraCalNavBtn {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+}
+
+.xyraCalNavBtn .sapMBtnInner {
+  border: none !important;
+  background: transparent !important;
+  border-radius: 50% !important;
+  color: #64748b !important;
+}
+
+.xyraCalNavBtn:hover .sapMBtnInner {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Weekday Header */
+.xyraCalWeekdayHeader {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  margin-bottom: 6px !important;
+  text-align: center !important;
+}
+
+.xyraCalWeekdayCell {
+  font-size: 0.725rem !important;
+  font-weight: 600 !important;
+  color: #94a3b8 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  text-align: center !important;
+}
+
+/* Date Grid */
+.xyraCalGrid {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 3px 0 !important;
+  margin-bottom: 8px !important;
+}
+
+.xyraCalDayEmpty {
+  height: 30px !important;
+}
+
+.xyraCalDay {
+  height: 30px !important;
+  width: 30px !important;
+  line-height: 30px !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  color: #1e293b !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: all 0.15s ease !important;
+  box-sizing: border-box !important;
+}
+
+.xyraCalDay:hover {
+  background-color: rgba(83, 59, 255, 0.1) !important;
+  color: #533bff !important;
+}
+
+.xyraCalDayToday {
+  border: 1px solid #533bff !important;
+}
+
+.xyraCalDayStart,
+.xyraCalDayEnd {
+  background-color: #533bff !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 6px rgba(83, 59, 255, 0.35) !important;
+}
+
+.xyraCalDayStart:hover,
+.xyraCalDayEnd:hover {
+  background-color: #432bdf !important;
+  color: #ffffff !important;
+}
+
+.xyraCalDayInRange {
+  background-color: #eef2ff !important;
+  color: #4338ca !important;
+  border-radius: 4px !important;
+}
+
+/* Footer Buttons */
+.xyraCalFooter {
+  border-top: 1px solid #f1f5f9 !important;
+  padding-top: 8px !important;
+  margin-top: 4px !important;
+  flex-shrink: 0 !important;
+  width: 100% !important;
+}
+
+.xyraCalCancelBtn .sapMBtnInner {
+  border: none !important;
+  color: #64748b !important;
+  font-weight: 600 !important;
+  height: 32px !important;
+  line-height: 32px !important;
+}
+
+.xyraCalCancelBtn:hover .sapMBtnInner {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+.xyraCalApplyBtn .sapMBtnInner {
+  background: #533bff !important;
+  border: 1px solid #533bff !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 0 1rem !important;
+  height: 32px !important;
+  line-height: 30px !important;
+}
+
+.xyraCalApplyBtn:hover .sapMBtnInner {
+  background: #432bdf !important;
+  border-color: #432bdf !important;
+}
+
+/* Month and Year Quick Picker Grid */
+.xyraCalTitleBox {
+  gap: 4px !important;
+}
+
+.xyraCalHeaderTitleText {
+  font-weight: 700 !important;
+  font-size: 0.925rem !important;
+  color: #0f172a !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  padding: 3px 7px !important;
+  border-radius: 6px !important;
+  transition: all 0.15s ease !important;
+}
+
+.xyraCalHeaderTitleText:hover {
+  background-color: #eef2ff !important;
+  color: #533bff !important;
+}
+
+.xyraCalHeaderTitleActive {
+  background-color: #533bff !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 5px rgba(83, 59, 255, 0.3) !important;
+}
+
+.xyraCalHeaderTitleActive:hover {
+  background-color: #432bdf !important;
+  color: #ffffff !important;
+}
+
+.xyraCalPickerGrid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  padding: 6px 0 10px 0 !important;
+  min-height: 190px !important;
+  box-sizing: border-box !important;
+}
+
+.xyraCalPickerCell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  background-color: #f8fafc !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: all 0.15s ease !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.xyraCalPickerCell:hover {
+  background-color: rgba(83, 59, 255, 0.1) !important;
+  color: #533bff !important;
+  border-color: #533bff !important;
+}
+
+.xyraCalPickerCellActive {
+  background-color: #533bff !important;
+  color: #ffffff !important;
+  border-color: #533bff !important;
+  box-shadow: 0 2px 6px rgba(83, 59, 255, 0.35) !important;
+}
+
+.xyraCalPickerCellActive:hover {
+  background-color: #432bdf !important;
+  color: #ffffff !important;
+}
+
+
 

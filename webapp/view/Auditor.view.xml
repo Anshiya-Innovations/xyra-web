@@ -7,6 +7,7 @@
     xmlns:f="sap.f"
     xmlns:card="sap.f.cards"
     xmlns:tnt="sap.tnt"
+    xmlns:xyra="xyraweb.control"
     height="100%">
 
     <tnt:ToolPage id="auditorToolPage" sideExpanded="true">
@@ -361,16 +362,10 @@
                                             </Select>
                                         </VBox>
 
-                                        <!-- Start Date Filter -->
-                                        <VBox width="11%" class="xyraFieldGroup">
-                                            <Label text="Start Date" class="xyraLoginLabel"/>
-                                            <DatePicker id="filterStartDateAuditor" placeholder="Start Date" change="onSearchAuditor" width="100%"/>
-                                        </VBox>
-
-                                        <!-- End Date Filter -->
-                                        <VBox width="11%" class="xyraFieldGroup">
-                                            <Label text="End Date" class="xyraLoginLabel"/>
-                                            <DatePicker id="filterEndDateAuditor" placeholder="End Date" change="onSearchAuditor" width="100%"/>
+                                        <!-- Date Range Filter -->
+                                        <VBox width="22%" class="xyraFieldGroup">
+                                            <Label text="Date Range" class="xyraLoginLabel"/>
+                                            <xyra:DateRangePicker id="filterDateRangeAuditor" placeholder="Select Date Range" change="onSearchAuditor" width="100%"/>
                                         </VBox>
                                     </HBox>
                                 </content>
@@ -740,10 +735,10 @@
                                             </Select>
                                         </VBox>
 
-                                        <!-- Completion Date Filter -->
-                                        <VBox width="18%" class="xyraFieldGroup">
-                                            <Label text="Completion Date" class="xyraLoginLabel"/>
-                                            <DatePicker id="dpHistoryDateAud" placeholder="Completion Date" change="onSearchAuditHistory" width="100%"/>
+                                        <!-- Date Range Filter -->
+                                        <VBox width="25%" class="xyraFieldGroup">
+                                            <Label text="Date Range" class="xyraLoginLabel"/>
+                                            <xyra:DateRangePicker id="dpHistoryDateAud" placeholder="Select Date Range" change="onSearchAuditHistory" width="100%"/>
                                         </VBox>
                                     </HBox>
                                 </content>

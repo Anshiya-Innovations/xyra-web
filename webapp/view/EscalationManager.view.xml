@@ -7,6 +7,7 @@
     xmlns:core="sap.ui.core"
     xmlns:layout="sap.ui.layout"
     xmlns:tnt="sap.tnt"
+    xmlns:xyra="xyraweb.control"
     height="100%">
 
     <tnt:ToolPage id="escManagerToolPage" sideExpanded="true">
@@ -438,7 +439,7 @@
                                         <core:Item key="Pending Signoff" text="Pending Signoff"/>
                                         <core:Item key="Action Required" text="Action Required"/>
                                     </Select>
-                                    <DatePicker id="dpHistoryDateEsc" placeholder="Reviewed Date" change="onSearchHistory"/>
+                                    <xyra:DateRangePicker id="dpHistoryDateEsc" placeholder="Select Date Range" change="onSearchHistory"/>
                                 </layout:Grid>
                                 <OverflowToolbar class="sapUiTinyMarginTop">
                                     <ToolbarSpacer/>

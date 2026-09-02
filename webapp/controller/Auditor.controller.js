@@ -532,8 +532,7 @@ sap.ui.define([
             if (this.byId("filterActionAuditor")) { this.byId("filterActionAuditor").setSelectedKey("All"); }
             if (this.byId("filterModuleAuditor")) { this.byId("filterModuleAuditor").setSelectedKey("All"); }
             if (this.byId("filterUserAuditor")) { this.byId("filterUserAuditor").setSelectedKey("All"); }
-            if (this.byId("filterStartDateAuditor")) { this.byId("filterStartDateAuditor").setValue(""); }
-            if (this.byId("filterEndDateAuditor")) { this.byId("filterEndDateAuditor").setValue(""); }
+            if (this.byId("filterDateRangeAuditor")) { this.byId("filterDateRangeAuditor").reset(); }
             this.onSearchAuditor();
             MessageToast.show("Audit filters reset.");
         },
@@ -650,8 +649,7 @@ sap.ui.define([
             if (this.byId("selectHistoryActionAud")) { this.byId("selectHistoryActionAud").setSelectedKey("All"); }
             if (this.byId("selectHistoryModuleAud")) { this.byId("selectHistoryModuleAud").setSelectedKey("All"); }
             if (this.byId("selectHistoryUserAud")) { this.byId("selectHistoryUserAud").setSelectedKey("All"); }
-            if (this.byId("dpHistoryStartDateAud")) { this.byId("dpHistoryStartDateAud").setValue(""); }
-            if (this.byId("dpHistoryEndDateAud")) { this.byId("dpHistoryEndDateAud").setValue(""); }
+            if (this.byId("dpHistoryDateAud")) { this.byId("dpHistoryDateAud").reset(); }
             this.onSearchAuditHistory();
             MessageToast.show("Audit History filters reset.");
         },

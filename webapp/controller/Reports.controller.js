@@ -363,9 +363,7 @@ sap.ui.define([
             if (this.byId("filterModule")) { this.byId("filterModule").setSelectedKey("All"); }
             if (this.byId("filterDateRange")) { 
                 var oDateRange = this.byId("filterDateRange");
-                oDateRange.setValue("");
-                if (oDateRange.setDateValue) { oDateRange.setDateValue(null); }
-                if (oDateRange.setSecondDateValue) { oDateRange.setSecondDateValue(null); }
+                if (oDateRange.reset) { oDateRange.reset(); } else { oDateRange.setValue(""); }
             }
             if (this.byId("filterGeneratedBy")) { this.byId("filterGeneratedBy").setSelectedKey("All"); }
             if (this.byId("filterStatus")) { this.byId("filterStatus").setSelectedKey("All"); }

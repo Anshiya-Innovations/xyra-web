@@ -266,6 +266,7 @@ sap.ui.define([
                 startDate: "",
                 endDate: ""
             });
+            if (this.byId("filterDateRange")) { this.byId("filterDateRange").reset(); }
             this._runQuery();
             MessageToast.show("Filter criteria reset.");
         },

@@ -97,10 +97,9 @@ sap.ui.define([
             var sModule = oModel.getProperty("/filters/module");
             var sAdmin = oModel.getProperty("/filters/adminUser");
 
-            var oStartDatePicker = this.byId("filterStartDate");
-            var oEndDatePicker = this.byId("filterEndDate");
-            var dStart = oStartDatePicker ? oStartDatePicker.getDateValue() : null;
-            var dEnd = oEndDatePicker ? oEndDatePicker.getDateValue() : null;
+            var oDateRangePicker = this.byId("filterDateRange");
+            var dStart = oDateRangePicker ? oDateRangePicker.getStartDate() : null;
+            var dEnd = oDateRangePicker ? oDateRangePicker.getEndDate() : null;
 
             var aFiltered = aAllLogs.filter(function (oLog) {
                 // Search query matching
@@ -157,10 +156,8 @@ sap.ui.define([
             oModel.setProperty("/filters/module", "All");
             oModel.setProperty("/filters/adminUser", "All");
 
-            var oStartDatePicker = this.byId("filterStartDate");
-            var oEndDatePicker = this.byId("filterEndDate");
-            if (oStartDatePicker) { oStartDatePicker.setValue(""); }
-            if (oEndDatePicker) { oEndDatePicker.setValue(""); }
+            var oDateRangePicker = this.byId("filterDateRange");
+            if (oDateRangePicker) { oDateRangePicker.reset(); }
 
             var aAllLogs = oModel.getProperty("/allLogs") || [];
             oModel.setProperty("/logs", aAllLogs.slice());

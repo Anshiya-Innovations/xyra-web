@@ -442,7 +442,7 @@ sap.ui.define([
             if (this.byId("selectHistorySystemEsc")) { this.byId("selectHistorySystemEsc").setSelectedKey("All"); }
             if (this.byId("selectHistoryDecisionEsc")) { this.byId("selectHistoryDecisionEsc").setSelectedKey("All"); }
             if (this.byId("selectHistoryStatusEsc")) { this.byId("selectHistoryStatusEsc").setSelectedKey("All"); }
-            if (this.byId("dpHistoryDateEsc")) { this.byId("dpHistoryDateEsc").setValue(""); }
+            if (this.byId("dpHistoryDateEsc")) { this.byId("dpHistoryDateEsc").reset(); }
             this.onSearchHistory();
             MessageToast.show("Reviewer History Filters Reset.");
         },

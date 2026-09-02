@@ -7,6 +7,7 @@
     xmlns:core="sap.ui.core"
     xmlns:layout="sap.ui.layout"
     xmlns:tnt="sap.tnt"
+    xmlns:xyra="xyraweb.control"
     height="100%">
 
     <tnt:ToolPage id="reviewer1ToolPage" sideExpanded="true">
@@ -636,7 +637,7 @@
                                         <core:Item key="Remediation Required" text="Remediation Required"/>
                                         <core:Item key="Closed" text="Closed"/>
                                     </Select>
-                                    <DatePicker id="dpHistoryDate" placeholder="Reviewed Date" change="onSearchHistory"/>
+                                    <xyra:DateRangePicker id="dpHistoryDate" placeholder="Select Date Range" change="onSearchHistory"/>
                                 </layout:Grid>
                                 <OverflowToolbar class="sapUiTinyMarginTop">
                                     <ToolbarSpacer/>
