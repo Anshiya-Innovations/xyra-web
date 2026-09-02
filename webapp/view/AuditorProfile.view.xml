@@ -44,7 +44,6 @@
                             type="Transparent"
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
-                        <Avatar initials="AO" displaySize="S" backgroundColor="Accent5" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="XYRA – Auditor Profile &amp; Account Settings" level="H4" class="sapUiNoMargin"/>
                             <Text text="Manage your user details, security credentials, and internal auditor account information." class="textMuted sapUiNoMargin"/>

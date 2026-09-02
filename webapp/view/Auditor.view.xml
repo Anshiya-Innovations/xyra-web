@@ -235,8 +235,6 @@
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
 
-                        <Avatar initials="AO" displaySize="S" backgroundColor="Accent5" class="sapUiTinyMarginEnd"/>
-
                         <VBox justifyContent="Center">
                             <Title text="XYRA – Auditor Dashboard" level="H4" class="sapUiNoMargin"/>
                             <Text text="Internal Audit &amp; Compliance Portal - AI Powered Security Audit Platform" class="textMuted sapUiNoMargin"/>

@@ -68,7 +68,6 @@
                             type="Transparent"
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
-                        <Avatar initials="SA" displaySize="S" backgroundColor="Accent6" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="XYRA – User Profile &amp; Account Settings" level="H4" class="sapUiNoMargin"/>
                             <Text text="Manage user details, security credentials, and enterprise permissions." class="textMuted sapUiNoMargin"/>

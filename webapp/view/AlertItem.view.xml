@@ -86,7 +86,6 @@
                 <customHeader>
                     <OverflowToolbar height="4.5rem">
                         <Button icon="sap-icon://nav-back" text="Back" type="Emphasized" press="onNavBack" class="sapUiTinyMarginBegin sapUiTinyMarginEnd"/>
-                        <Avatar src="sap-icon://detail-view" displaySize="S" type="Icon" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="XYRA – Alert Item Details" level="H4" class="sapUiNoMargin"/>
                             <Text text="{= 'Control ' + ${alertModel>/header/controlId} + ' Line Item Analysis' }" class="textMuted sapUiNoMargin"/>

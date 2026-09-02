@@ -253,7 +253,6 @@
                             press="onNavBack"
                             class="sapUiTinyMarginBegin"/>
                         <ToolbarSeparator/>
-                        <Avatar src="sap-icon://building" displaySize="S" type="Icon" backgroundColor="Accent3" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="{orgDetailsModel>/currentOrg/companyName} ({orgDetailsModel>/currentOrg/orgId})" level="H4" class="sapUiNoMargin"/>
                             <Text text="Enterprise Governance &amp; Configuration Sub-Page" class="textMuted sapUiNoMargin"/>

@@ -57,7 +57,6 @@
                             press="onNavBack"
                             tooltip="Back to System Health"
                             class="sapUiTinyMarginBegin xyraBoldBtn fontWeightBold"/>
-                        <Avatar src="sap-icon://sys-monitor" displaySize="S" class="sapUiTinyMarginBegin sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="{= 'XYRA – System Health Details (' + ${detailsModel>/sysId} + ')' }" level="H4" class="sapUiNoMargin"/>
                             <Text text="Detailed runtime diagnostics, availability trends &amp; RFC health events" class="textMuted sapUiNoMargin"/>

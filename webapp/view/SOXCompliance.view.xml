@@ -135,7 +135,6 @@
                             type="Transparent"
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
-                        <Avatar initials="SX" displaySize="S" backgroundColor="Accent3" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="XYRA – SOX Compliance" level="H4" class="sapUiNoMargin"/>
                             <Text text="Sarbanes-Oxley Control &amp; Compliance Governance" class="textMuted sapUiNoMargin"/>

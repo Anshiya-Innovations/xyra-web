@@ -69,7 +69,6 @@
                             type="Transparent"
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
-                        <Avatar initials="RR" displaySize="S" backgroundColor="Accent4" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="XYRA – Role Review" level="H4" class="sapUiNoMargin"/>
                             <Text text="Automated monthly review of manual role changes extracted from production systems and validated against SCS Standards." class="textMuted sapUiNoMargin"/>

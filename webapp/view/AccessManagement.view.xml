@@ -150,7 +150,6 @@
                             type="Transparent"
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
-                        <Avatar src="sap-icon://key-user-settings" displaySize="S" type="Icon" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="XYRA - Access Management" level="H4" class="sapUiNoMargin"/>
                             <Text text="User Access Provisioning &amp; Persona Management" class="textMuted sapUiNoMargin"/>

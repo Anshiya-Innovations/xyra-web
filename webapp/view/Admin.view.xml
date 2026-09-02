@@ -110,10 +110,7 @@
                         </VBox>
                         <ToolbarSpacer/>
                         <Button id="_IDGenButton2" icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
-                        <Button icon="sap-icon://search" tooltip="Search" type="Transparent" press="onSearchPress"/>
-                        <Button icon="sap-icon://action-settings" tooltip="Settings" type="Transparent" press="onConfiguration"/>
-                        <Button icon="sap-icon://sys-help" tooltip="Help" type="Transparent" press="onHelpPress"/>
-                        <Button id="_IDGenButton3" icon="sap-icon://employee" text="Admin" type="Transparent" press="onAdminProfilePress"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
                     </OverflowToolbar>
                 </customHeader>
 

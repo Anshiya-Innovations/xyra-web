@@ -179,7 +179,6 @@
                             type="Transparent"
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
-                        <Avatar initials="RP" displaySize="S" backgroundColor="Accent5" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="XYRA – Reports" level="H4" class="sapUiNoMargin"/>
                             <Text text="Enterprise Reporting &amp; Compliance Dashboard" class="textMuted sapUiNoMargin"/>

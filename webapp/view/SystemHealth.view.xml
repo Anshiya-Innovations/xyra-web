@@ -62,7 +62,6 @@
                             type="Transparent"
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
-                        <Avatar src="sap-icon://action-settings" displaySize="S" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="XYRA – System Configuration" level="H4" class="sapUiNoMargin"/>
                             <Text text="Manage &amp; monitor SAP S/4HANA &amp; ERP System Landscape telemetry" class="textMuted sapUiNoMargin"/>

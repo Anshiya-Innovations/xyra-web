@@ -45,7 +45,6 @@
                 <customHeader>
                     <OverflowToolbar height="4.5rem">
                         <Button tooltip="Toggle Navigation" icon="sap-icon://menu2" type="Transparent" press="onSideNavToggle" class="sapUiTinyMarginBegin"/>
-                        <Avatar src="sap-icon://alert" displaySize="S" type="Icon" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="XYRA – Deviation Report" level="H4" class="sapUiNoMargin"/>
                             <Text text="Detailed analysis of Basis control deviations" class="textMuted sapUiNoMargin"/>

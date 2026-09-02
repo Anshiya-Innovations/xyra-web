@@ -329,8 +329,6 @@
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
 
-                        <Avatar initials="R1" displaySize="S" backgroundColor="Accent1" class="sapUiTinyMarginEnd"/>
-
                         <VBox justifyContent="Center">
                             <Title text="XYRA – Reviewer 1 Dashboard" level="H4" class="sapUiNoMargin"/>
                             <Text text="SAP Basis Team – Primary Automated Report Verification &amp; Deviation Validation" class="textMuted sapUiNoMargin"/>

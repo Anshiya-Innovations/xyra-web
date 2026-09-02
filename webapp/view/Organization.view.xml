@@ -160,7 +160,6 @@
                             type="Transparent"
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
-                        <Avatar src="sap-icon://building" displaySize="S" type="Icon" backgroundColor="Accent3" class="sapUiTinyMarginEnd"/>
                         <VBox justifyContent="Center">
                             <Title text="Organization Management" level="H4" class="sapUiNoMargin"/>
                             <Text text="Manage organizations, company access and organization-specific configurations." class="textMuted sapUiNoMargin"/>

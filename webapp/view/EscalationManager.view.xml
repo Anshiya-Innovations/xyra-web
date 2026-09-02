@@ -250,8 +250,6 @@
                             press="onSideNavToggle"
                             class="sapUiTinyMarginBegin"/>
 
-                        <Avatar initials="EM" displaySize="S" backgroundColor="Accent6" class="sapUiTinyMarginEnd"/>
-
                         <VBox justifyContent="Center">
                             <Title text="XYRA – Escalation Manager Dashboard" level="H4" class="sapUiNoMargin"/>
                             <Text text="Security Team Lead – Final Audit Review, Discrepancy Resolution &amp; Sign-off" class="textMuted sapUiNoMargin"/>
