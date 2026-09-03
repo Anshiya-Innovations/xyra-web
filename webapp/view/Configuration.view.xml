@@ -355,7 +355,7 @@
 
                             <!-- TOP ACTION BUTTONS BAR -->
                             <HBox justifyContent="End" alignItems="Center" class="sapUiSmallMarginBottom">
-                                <SearchField id="searchSystemId" width="16rem" placeholder="Search System ID / Host..." search="onSearchSystems" liveChange="onSearchSystems" class="sapUiSmallMarginEnd"/>
+                                <SearchField id="searchSystemId" width="16rem" placeholder="Search System ID / Host..." search="onSearchSystems" liveChange="onSearchSystems" class="xyraConfigSearchField sapUiSmallMarginEnd"/>
                                 <Button text="System History" icon="sap-icon://history" press="onOpenSystemHistory" class="xyraBtnSecondary sapUiSmallMarginEnd"/>
                                 <Button text="Add New System" icon="sap-icon://add" type="Emphasized" press="onOpenAddSystemDialog"/>
                             </HBox>
@@ -493,7 +493,7 @@
 
                             <!-- FILTER BAR -->
                             <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
-                                <SearchField id="searchHealthSystemId" width="18rem" placeholder="Search System ID / Type..." liveChange="onSearchHealthSystems" search="onSearchHealthSystems" class="sapUiSmallMarginEnd"/>
+                                <SearchField id="searchHealthSystemId" width="18rem" placeholder="Search System ID / Type..." liveChange="onSearchHealthSystems" search="onSearchHealthSystems" class="xyraConfigSearchField sapUiSmallMarginEnd"/>
                                 <Text text="Status Filter:" class="sapUiTinyMarginEnd fontWeightBold textMuted"/>
                                 <Select id="statusFilterSelect" width="12rem" change="onFilterStatusChange" selectedKey="All">
                                     <core:Item key="All" text="All Statuses"/>

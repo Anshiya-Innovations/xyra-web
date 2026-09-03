@@ -4078,4 +4078,105 @@ span.sapMColumnHeaderContent,
   box-shadow: none !important;
 }
 
+/* ==========================================================================
+   SYSTEM CONFIGURATION TABLE SEARCH BARS (Landscape & Health Tables)
+   ========================================================================== */
+.xyraConfigSearchField.sapMSF,
+.xyraConfigSearchField,
+[id*="searchSystemId"].sapMSF,
+[id*="searchHealthSystemId"].sapMSF {
+  height: 46px !important;
+  max-height: 46px !important;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.xyraConfigSearchField .sapMSFF,
+[id*="searchSystemId"] .sapMSFF,
+[id*="searchHealthSystemId"] .sapMSFF {
+  height: 46px !important;
+  max-height: 46px !important;
+  border-radius: 10px !important;
+  border: 1px solid #cbd5e1 !important;
+  background-color: #f8fafc !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease !important;
+}
+
+/* Hover state: slight purple border */
+.xyraConfigSearchField:hover .sapMSFF,
+.xyraConfigSearchField .sapMSFF:hover,
+[id*="searchSystemId"]:hover .sapMSFF,
+[id*="searchHealthSystemId"]:hover .sapMSFF {
+  border: 1px solid #533bff !important;
+  border-color: #533bff !important;
+}
+
+/* Click / Focus state: slightly purple border */
+.xyraConfigSearchField:has(input:focus) .sapMSFF,
+.xyraConfigSearchField .sapMSFF:has(input:focus),
+.xyraConfigSearchField.sapMFocus .sapMSFF,
+.xyraConfigSearchField.sapMFocus > .sapMSFF,
+.xyraConfigSearchField:focus-within .sapMSFF,
+.xyraConfigSearchField .sapMSFF:focus,
+.xyraConfigSearchField .sapMSFF:focus-within,
+[id*="searchSystemId"]:has(input:focus) .sapMSFF,
+[id*="searchSystemId"] .sapMSFF:has(input:focus),
+[id*="searchHealthSystemId"]:has(input:focus) .sapMSFF,
+[id*="searchHealthSystemId"] .sapMSFF:has(input:focus),
+[id*="searchSystemId"].sapMFocus .sapMSFF,
+[id*="searchSystemId"].sapMFocus > .sapMSFF,
+[id*="searchHealthSystemId"].sapMFocus .sapMSFF,
+[id*="searchHealthSystemId"].sapMFocus > .sapMSFF,
+[id*="searchSystemId"]:focus-within .sapMSFF,
+[id*="searchHealthSystemId"]:focus-within .sapMSFF,
+[id*="searchSystemId"] .sapMSFF:focus,
+[id*="searchHealthSystemId"] .sapMSFF:focus,
+[id*="searchSystemId"] .sapMSFF:focus-within,
+[id*="searchHealthSystemId"] .sapMSFF:focus-within {
+  border: 1px solid #533bff !important;
+  border-color: #533bff !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Input text inside System Configuration search bar */
+[id*="searchSystemId"] .sapMSFI,
+[id*="searchHealthSystemId"] .sapMSFI {
+  height: 44px !important;
+  line-height: 44px !important;
+  font-size: 0.925rem !important;
+  padding-left: 0.85rem !important;
+  padding-right: 2.75rem !important;
+  background: transparent !important;
+  color: #0f172a !important;
+  border: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Icons inside System Configuration search bar */
+[id*="searchSystemId"] .sapMSFS,
+[id*="searchSystemId"] .sapMSFB,
+[id*="searchHealthSystemId"] .sapMSFS,
+[id*="searchHealthSystemId"] .sapMSFB {
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #64748b !important;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
 

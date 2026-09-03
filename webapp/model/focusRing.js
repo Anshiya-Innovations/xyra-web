@@ -15,11 +15,31 @@ sap.ui.define([], function () {
         oDomRef.dataset.focusRingKilled = "true";
         oDomRef.addEventListener("focusin", function (oEvent) {
             var el = oEvent.target;
+            var bInSearchField = !!(el && el.closest && el.closest(".sapMSF, .sapMSFF"));
             while (el && el !== oDomRef) {
                 el.style.setProperty("outline", "none", "important");
                 el.style.setProperty("box-shadow", "none", "important");
-                el.style.setProperty("border-color", "#E2E8F0", "important");
+                if (bInSearchField) {
+                    if (el.classList.contains("sapMSFF")) {
+                        el.style.setProperty("border-color", "#533bff", "important");
+                        el.style.setProperty("border-width", "1px", "important");
+                        el.style.setProperty("border-style", "solid", "important");
+                    }
+                } else {
+                    el.style.setProperty("border-color", "#E2E8F0", "important");
+                }
                 el = el.parentElement;
+            }
+        }, true);
+
+        oDomRef.addEventListener("focusout", function (oEvent) {
+            var el = oEvent.target;
+            var oSearchWrapper = el && el.closest && el.closest(".sapMSF");
+            if (oSearchWrapper) {
+                var oForm = oSearchWrapper.querySelector(".sapMSFF");
+                if (oForm) {
+                    oForm.style.setProperty("border-color", "#cbd5e1", "important");
+                }
             }
         }, true);
     };
