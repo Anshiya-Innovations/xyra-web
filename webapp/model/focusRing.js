@@ -25,8 +25,6 @@ sap.ui.define([], function () {
                         el.style.setProperty("border-width", "1px", "important");
                         el.style.setProperty("border-style", "solid", "important");
                     }
-                } else {
-                    el.style.setProperty("border-color", "#E2E8F0", "important");
                 }
                 el = el.parentElement;
             }

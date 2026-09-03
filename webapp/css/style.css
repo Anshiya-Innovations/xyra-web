@@ -1116,17 +1116,26 @@ span.sapTntNLITagContainer {
 }
 
 .sapMInputBaseContentWrapper:hover,
-.sapMSlt:hover {
+.sapMSlt:hover,
+.sapMSelect:hover,
+.sapMSlt:focus:hover,
+.sapMSlt:focus-within:hover,
+.sapMSltFocused:hover,
+.sapMSltPressed:hover,
+.sapMSelect:focus-within:hover,
+.sapMSelectFocused:hover,
+.sapMSelect:hover .sapMSlt,
+.sapMSltHoverable:hover,
+.sapMSelect.sapMSltHoverable:hover,
+.sapMSlt[aria-expanded="true"]:hover,
+.sapMSlt[aria-expanded="false"]:hover {
   border-color: #533bff !important;
 }
 
-/* No distinct focus-state border by design — see Login.controller.js
-   onAfterRendering for the actual enforcement (inline style beats any
-   stylesheet rule regardless of specificity, CSS alone kept losing to
-   whatever the theme hangs its focus ring off). This is just the resting
-   fallback for pages that don't wire that listener up yet. */
-.sapMInputBaseContentWrapper:focus-within,
-.sapMSlt:focus-within {
+.sapMInputBaseContentWrapper:focus-within:not(:hover),
+.sapMSlt:focus-within:not(:hover),
+.sapMSltFocused:not(:hover),
+.sapMSelect:focus-within:not(:hover) {
   border-color: #e2e8f0 !important;
   box-shadow: none !important;
   outline: none !important;

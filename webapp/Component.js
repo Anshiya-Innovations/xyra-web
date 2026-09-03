@@ -44,6 +44,21 @@ sap.ui.define([
                 });
                 oRouter.initialize();
             }
+
+            // Global dropdown / select hover border highlight (works before and after click/focus)
+            document.addEventListener("mouseover", function (oEvent) {
+                var oSelect = oEvent.target && oEvent.target.closest && oEvent.target.closest(".sapMSlt, .sapMSelect");
+                if (oSelect) {
+                    oSelect.style.setProperty("border-color", "#533bff", "important");
+                }
+            }, true);
+
+            document.addEventListener("mouseout", function (oEvent) {
+                var oSelect = oEvent.target && oEvent.target.closest && oEvent.target.closest(".sapMSlt, .sapMSelect");
+                if (oSelect) {
+                    oSelect.style.removeProperty("border-color");
+                }
+            }, true);
         }
     });
 });
