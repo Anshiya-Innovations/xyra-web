@@ -45,7 +45,8 @@ sap.ui.define([
 
         init: function () {
             var that = this;
-            this._dCurrentDisplayMonth = new Date();
+            var dNow = new Date();
+            this._dCurrentDisplayMonth = new Date(dNow.getFullYear(), dNow.getMonth(), 1);
             this._dStart = null;
             this._dEnd = null;
             this._sViewMode = "DAYS";
@@ -238,8 +239,11 @@ sap.ui.define([
             var dTarget = (this.getField() === "end") ? this._dEnd : this._dStart;
             if (dTarget) {
                 this._dCurrentDisplayMonth = new Date(dTarget.getFullYear(), dTarget.getMonth(), 1);
+            } else if (this.getField() === "end" && this._dStart) {
+                this._dCurrentDisplayMonth = new Date(this._dStart.getFullYear(), this._dStart.getMonth(), 1);
             } else {
-                this._dCurrentDisplayMonth = new Date();
+                var dNow = new Date();
+                this._dCurrentDisplayMonth = new Date(dNow.getFullYear(), dNow.getMonth(), 1);
             }
 
             if (!this._oPopover) {
@@ -259,48 +263,60 @@ sap.ui.define([
             this._oPrevBtn = new Button({
                 icon: "sap-icon://slim-arrow-left",
                 type: "Transparent",
+                tooltip: "Previous",
                 press: function () {
+                    var y = that._dCurrentDisplayMonth.getFullYear();
+                    var m = that._dCurrentDisplayMonth.getMonth();
                     if (that._sViewMode === "MONTHS") {
-                        that._dCurrentDisplayMonth.setFullYear(that._dCurrentDisplayMonth.getFullYear() - 1);
+                        that._dCurrentDisplayMonth = new Date(y - 1, m, 1);
                     } else if (that._sViewMode === "YEARS") {
-                        that._dCurrentDisplayMonth.setFullYear(that._dCurrentDisplayMonth.getFullYear() - 12);
+                        that._dCurrentDisplayMonth = new Date(y - 12, m, 1);
                     } else {
-                        that._dCurrentDisplayMonth.setMonth(that._dCurrentDisplayMonth.getMonth() - 1);
+                        that._dCurrentDisplayMonth = new Date(y, m - 1, 1);
                     }
                     that._updatePopoverContent();
                 }
             }).addStyleClass("xyraCalNavBtn");
 
-            this._oMonthText = new Text({ text: "" }).addStyleClass("xyraCalHeaderTitleText xyraCalHeaderMonthText");
-            this._oMonthText.attachBrowserEvent("click", function (oEvent) {
-                oEvent.stopPropagation();
-                that._sViewMode = (that._sViewMode === "MONTHS") ? "DAYS" : "MONTHS";
-                that._updatePopoverContent();
-            });
+            this._oMonthBtn = new Button({
+                text: "",
+                type: "Transparent",
+                tooltip: "Select Month",
+                press: function () {
+                    that._sViewMode = (that._sViewMode === "MONTHS") ? "DAYS" : "MONTHS";
+                    that._updatePopoverContent();
+                }
+            }).addStyleClass("xyraCalHeaderBtn xyraCalHeaderMonthBtn");
 
-            this._oYearText = new Text({ text: "" }).addStyleClass("xyraCalHeaderTitleText xyraCalHeaderYearText");
-            this._oYearText.attachBrowserEvent("click", function (oEvent) {
-                oEvent.stopPropagation();
-                that._sViewMode = (that._sViewMode === "YEARS") ? "DAYS" : "YEARS";
-                that._updatePopoverContent();
-            });
+            this._oYearBtn = new Button({
+                text: "",
+                type: "Transparent",
+                tooltip: "Select Year",
+                press: function () {
+                    that._sViewMode = (that._sViewMode === "YEARS") ? "DAYS" : "YEARS";
+                    that._updatePopoverContent();
+                }
+            }).addStyleClass("xyraCalHeaderBtn xyraCalHeaderYearBtn");
 
             var oTitleBox = new HBox({
                 alignItems: "Center",
                 justifyContent: "Center",
-                items: [this._oMonthText, this._oYearText]
+                items: [this._oMonthBtn, this._oYearBtn]
             }).addStyleClass("xyraCalTitleBox");
 
             this._oNextBtn = new Button({
                 icon: "sap-icon://slim-arrow-right",
                 type: "Transparent",
+                tooltip: "Next",
                 press: function () {
+                    var y = that._dCurrentDisplayMonth.getFullYear();
+                    var m = that._dCurrentDisplayMonth.getMonth();
                     if (that._sViewMode === "MONTHS") {
-                        that._dCurrentDisplayMonth.setFullYear(that._dCurrentDisplayMonth.getFullYear() + 1);
+                        that._dCurrentDisplayMonth = new Date(y + 1, m, 1);
                     } else if (that._sViewMode === "YEARS") {
-                        that._dCurrentDisplayMonth.setFullYear(that._dCurrentDisplayMonth.getFullYear() + 12);
+                        that._dCurrentDisplayMonth = new Date(y + 12, m, 1);
                     } else {
-                        that._dCurrentDisplayMonth.setMonth(that._dCurrentDisplayMonth.getMonth() + 1);
+                        that._dCurrentDisplayMonth = new Date(y, m + 1, 1);
                     }
                     that._updatePopoverContent();
                 }
@@ -323,15 +339,21 @@ sap.ui.define([
             }).addStyleClass("xyraCalWeekdayHeader");
 
             this._oGridHTML = new HTML({
+                preferDOM: false,
                 content: "<div class='xyraCalGrid'></div>"
             });
 
-            this._oGridHTML.attachBrowserEvent("click", function (oEvent) {
-                oEvent.stopPropagation();
+            var oMainContainer = new VBox({
+                items: [oHeaderRow, this._oWeekdayRow, this._oGridHTML]
+            }).addStyleClass("xyraCalPopupContainer");
+
+            // Event delegation on the stable main container
+            oMainContainer.attachBrowserEvent("click", function (oEvent) {
                 var $target = $(oEvent.target);
 
                 var $day = $target.hasClass("xyraCalDay") ? $target : $target.closest(".xyraCalDay");
                 if ($day.length) {
+                    oEvent.stopPropagation();
                     var sDate = $day.attr("data-date");
                     if (sDate) {
                         that._onDayClick(that._parseDateStr(sDate));
@@ -341,34 +363,36 @@ sap.ui.define([
 
                 var $cell = $target.hasClass("xyraCalPickerCell") ? $target : $target.closest(".xyraCalPickerCell");
                 if ($cell.length) {
+                    oEvent.stopPropagation();
                     if ($cell.attr("data-month") !== undefined) {
                         var iM = parseInt($cell.attr("data-month"), 10);
-                        that._dCurrentDisplayMonth.setMonth(iM);
+                        var iY = that._dCurrentDisplayMonth.getFullYear();
+                        that._dCurrentDisplayMonth = new Date(iY, iM, 1);
                         that._sViewMode = "DAYS";
                         that._updatePopoverContent();
                     } else if ($cell.attr("data-year") !== undefined) {
                         var iY = parseInt($cell.attr("data-year"), 10);
-                        that._dCurrentDisplayMonth.setFullYear(iY);
+                        var iM = that._dCurrentDisplayMonth.getMonth();
+                        that._dCurrentDisplayMonth = new Date(iY, iM, 1);
                         that._sViewMode = "MONTHS";
                         that._updatePopoverContent();
                     }
+                    return;
                 }
             });
 
-            var oMainContainer = new VBox({
-                items: [oHeaderRow, this._oWeekdayRow, this._oGridHTML]
-            }).addStyleClass("xyraCalPopupContainer");
-
             this._oPopover = new Popover({
-                placement: "Bottom",
-                showCloseButton: false,
+                showArrow: false,
                 showHeader: false,
+                placement: "VerticalPreferredBottom",
+                offsetX: 0,
+                offsetY: 4,
                 contentWidth: "310px",
-                contentHeight: "auto",
+                contentHeight: "285px",
                 verticalScrolling: false,
                 horizontalScrolling: false,
                 content: [oMainContainer]
-            }).addStyleClass("xyraCompactDateRangePopover");
+            }).addStyleClass("sapUiNoContentPadding xyraCompactDateRangePopover");
 
             this.addDependent(this._oPopover);
             this._updatePopoverContent();
@@ -378,34 +402,32 @@ sap.ui.define([
             var year = this._dCurrentDisplayMonth.getFullYear();
             var month = this._dCurrentDisplayMonth.getMonth();
 
-            if (this._oMonthText) {
-                this._oMonthText.setText(MONTH_NAMES[month]);
+            if (this._oMonthBtn) {
+                this._oMonthBtn.setText(MONTH_NAMES[month]);
+                if (this._sViewMode === "MONTHS") {
+                    this._oMonthBtn.addStyleClass("xyraCalHeaderBtnActive");
+                } else {
+                    this._oMonthBtn.removeStyleClass("xyraCalHeaderBtnActive");
+                }
             }
 
-            if (this._oYearText) {
+            if (this._oYearBtn) {
                 if (this._sViewMode === "YEARS") {
                     var startDecade = year - (year % 12);
                     var endDecade = startDecade + 11;
-                    this._oYearText.setText(startDecade + " - " + endDecade);
+                    this._oYearBtn.setText(startDecade + " - " + endDecade);
+                    this._oYearBtn.addStyleClass("xyraCalHeaderBtnActive");
                 } else {
-                    this._oYearText.setText(year.toString());
+                    this._oYearBtn.setText(year.toString());
+                    this._oYearBtn.removeStyleClass("xyraCalHeaderBtnActive");
                 }
             }
 
-            if (this._oMonthText && this._oYearText) {
-                this._oMonthText.removeStyleClass("xyraCalHeaderTitleActive");
-                this._oYearText.removeStyleClass("xyraCalHeaderTitleActive");
-
-                if (this._sViewMode === "MONTHS") {
-                    this._oMonthText.addStyleClass("xyraCalHeaderTitleActive");
-                } else if (this._sViewMode === "YEARS") {
-                    this._oYearText.addStyleClass("xyraCalHeaderTitleActive");
-                }
-            }
+            var sHtmlId = this._oGridHTML ? this._oGridHTML.getId() : "";
 
             if (this._sViewMode === "MONTHS") {
                 if (this._oWeekdayRow) { this._oWeekdayRow.setVisible(false); }
-                var sHtml = "<div class='xyraCalPickerGrid xyraCalMonthGrid'>";
+                var sHtml = "<div id='" + sHtmlId + "' class='xyraCalPickerGrid xyraCalMonthGrid'>";
                 for (var m = 0; m < 12; m++) {
                     var sMName = MONTH_NAMES[m].substring(0, 3);
                     var bSelected = (m === month);
@@ -418,7 +440,7 @@ sap.ui.define([
                 if (this._oWeekdayRow) { this._oWeekdayRow.setVisible(false); }
                 var startDecade = year - (year % 12);
                 var endDecade = startDecade + 11;
-                var sHtml = "<div class='xyraCalPickerGrid xyraCalYearGrid'>";
+                var sHtml = "<div id='" + sHtmlId + "' class='xyraCalPickerGrid xyraCalYearGrid'>";
                 for (var y = startDecade; y <= endDecade; y++) {
                     var bSelected = (y === year);
                     sHtml += "<div class='xyraCalPickerCell " + (bSelected ? "xyraCalPickerCellActive" : "") + "' data-year='" + y + "'>" + y + "</div>";
@@ -434,9 +456,11 @@ sap.ui.define([
                 var daysInMonth = new Date(year, month + 1, 0).getDate();
                 var dToday = new Date();
 
-                var sHtml = "<div class='xyraCalGrid'>";
+                var sHtml = "<div id='" + sHtmlId + "' class='xyraCalGrid'>";
+                var iCellCount = 0;
                 for (var i = 0; i < firstDayIndex; i++) {
                     sHtml += "<div class='xyraCalDayEmpty'></div>";
+                    iCellCount++;
                 }
 
                 var dSel = (this.getField() === "end") ? this._dEnd : this._dStart;
@@ -459,7 +483,14 @@ sap.ui.define([
                     }
 
                     sHtml += "<div class='" + aClasses.join(" ") + "' data-date='" + sDateAttr + "'>" + day + "</div>";
+                    iCellCount++;
                 }
+
+                while (iCellCount < 42) {
+                    sHtml += "<div class='xyraCalDayEmpty'></div>";
+                    iCellCount++;
+                }
+
                 sHtml += "</div>";
 
                 if (this._oGridHTML) {

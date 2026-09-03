@@ -3321,7 +3321,7 @@ div[id*="-text"] {
 .xyraCompactDateRangePopover {
   border-radius: 12px !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   border: 1px solid #e2e8f0 !important;
   z-index: 99999 !important;
 }
@@ -3358,12 +3358,19 @@ div[id*="-text"] {
   height: auto !important;
 }
 
+.xyraCompactDateRangePopover .sapMPopoverScroll {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
 .xyraCalPopupContainer {
   padding: 12px 14px 14px 14px !important;
   background: #ffffff !important;
   box-sizing: border-box !important;
   width: 100% !important;
   height: auto !important;
+  min-height: 285px !important;
 }
 
 /* Calendar Header */
@@ -3418,12 +3425,15 @@ div[id*="-text"] {
 .xyraCalGrid {
   display: grid !important;
   grid-template-columns: repeat(7, 1fr) !important;
+  grid-template-rows: repeat(6, 30px) !important;
   gap: 3px 0 !important;
+  height: 195px !important;
   margin-bottom: 8px !important;
 }
 
 .xyraCalDayEmpty {
   height: 30px !important;
+  width: 30px !important;
 }
 
 .xyraCalDay {
@@ -3513,6 +3523,42 @@ div[id*="-text"] {
 /* Month and Year Quick Picker Grid */
 .xyraCalTitleBox {
   gap: 4px !important;
+}
+
+.xyraCalHeaderBtn {
+  height: 32px !important;
+  margin: 0 2px !important;
+}
+
+.xyraCalHeaderBtn .sapMBtnInner {
+  border: none !important;
+  background: transparent !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  color: #0f172a !important;
+  padding: 0 8px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  border-radius: 6px !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+}
+
+.xyraCalHeaderBtn:hover .sapMBtnInner {
+  background-color: #eef2ff !important;
+  color: #533bff !important;
+}
+
+.xyraCalHeaderBtnActive .sapMBtnInner {
+  background-color: #533bff !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 5px rgba(83, 59, 255, 0.3) !important;
+}
+
+.xyraCalHeaderBtnActive:hover .sapMBtnInner {
+  background-color: #432bdf !important;
+  color: #ffffff !important;
 }
 
 .xyraCalHeaderTitleText {

@@ -394,7 +394,7 @@ sap.ui.define([
                 this.getView().getModel("healthModel").refresh(true);
                 this._recalculateHealthKpis();
                 if (oData.success) {
-                    var sLatency = " (2s)";
+                    var sLatency = oData.latencyMs != null ? " (" + oData.latencyMs + "ms)" : " (2ms)";
                     MessageToast.show("Connection to " + oRow.sysId + " succeeded" + sLatency + ".", {
                         duration: 2500,
                         animationDuration: 150
@@ -694,7 +694,7 @@ sap.ui.define([
                     if (oButton && oButton.setBusy) {
                         oButton.setBusy(false);
                     }
-                    var sLatency = " (2s)";
+                    var sLatency = oData.latencyMs != null ? " (" + oData.latencyMs + "ms)" : " (2ms)";
                     if (oData.success) {
                         MessageToast.show("Connection to " + oItem.sysId + " succeeded" + sLatency + ".", {
                             duration: 2500,
