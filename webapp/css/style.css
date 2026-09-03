@@ -1170,12 +1170,20 @@ span.sapTntNLITagContainer {
   box-shadow: none !important;
 }
 
+.sapMSelect,
+.sapMSlt {
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
 .sapMSlt .sapMSltLabel {
   height: 44px !important;
   line-height: 44px !important;
-  font-size: 0.95rem !important;
-  padding-left: 0.9rem !important;
-  padding-right: 2.4rem !important;
+  font-size: 0.925rem !important;
+  padding-left: 0.65rem !important;
+  padding-right: 1.8rem !important;
   color: #0f172a !important;
   outline: none !important;
   box-shadow: none !important;
@@ -1188,12 +1196,12 @@ span.sapTntNLITagContainer {
   position: absolute !important;
   top: 0 !important;
   bottom: 0 !important;
-  right: 0.75rem !important;
+  right: 0.55rem !important;
   height: auto !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  color: #0f172a !important;
+  color: #64748b !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
@@ -1213,38 +1221,122 @@ span.sapTntNLITagContainer {
   border-color: #16a34a !important;
 }
 
-/* The option list opens in its own popover, detached from the select box in
-   the DOM. Verified against sap.m.Select source: the popover carries
-   .sapMSelectPicker, the selected item is .sapMSelectListItemBaseSelected. */
-.sapMSelectPicker {
-  border-radius: 10px !important;
-  border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.12) !important;
-}
-
-.sapMSelectList {
-  background-color: #ffffff !important;
-  padding: 0.35rem !important;
-}
-
-.sapMSelectListItem {
+/* Dropdown Popup / Popover Container: clean frame, smooth shadow, zero protrusion */
+.sapMSelectPicker,
+.sapMSltPicker,
+.sapMSelect-Picker {
   border-radius: 8px !important;
-  color: #0f172a !important;
-  font-size: 0.9rem !important;
-  padding: 0 0.9rem !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.1) !important;
+  background-color: #ffffff !important;
+  overflow: hidden !important;
+}
+
+/* Remove popover arrow and protruding side frames completely */
+.sapMSelectPicker .sapMPopoverArr,
+.sapMSltPicker .sapMPopoverArr,
+.sapMPopoverArr,
+.sapMPopoverArrRight,
+.sapMPopoverArrLeft,
+.sapMPopoverArrUp,
+.sapMPopoverArrDown,
+.sapMPopoverArr::before,
+.sapMPopoverArr::after {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Inner popover scroll wrapper - no extra margins/borders */
+.sapMSelectPicker .sapMPopoverCont,
+.sapMSltPicker .sapMPopoverCont,
+.sapMSelectPicker .sapMPopoverScroll,
+.sapMSltPicker .sapMPopoverScroll,
+.sapMSelectPicker .sapUiSimpleFixFlexFlexContent,
+.sapMSltPicker .sapUiSimpleFixFlexFlexContent {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow-x: hidden !important;
+}
+
+/* Dropdown List: remove horizontal padding so items extend edge-to-edge */
+.sapMSelectList,
+.sapMSltList-CTX {
+  background-color: #ffffff !important;
+  padding: 0.25rem 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
 }
 
-.sapMSelectListItem:hover {
-  background-color: #f8fafc !important;
+/* Dropdown List Items: reduced left/right padding, no borders or outlines */
+.sapMSelectListItem,
+.sapMSelectListItemBase {
+  border-radius: 0 !important;
+  color: #0f172a !important;
+  font-size: 0.875rem !important;
+  padding: 0.45rem 0.65rem !important;
+  margin: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  line-height: normal !important;
+  min-height: 2.2rem !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
-.sapMSelectListItemBaseSelected {
+.sapMSelectListItem:hover,
+.sapMSelectListItemBaseHoverable:hover,
+.sapMSelectListItemBase:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Selected List Item: soft tint, NO blue focus border or frame */
+.sapMSelectListItemBaseSelected,
+.sapMSelectListItemBaseSelected:focus,
+.sapMSelectListItemBaseSelected:hover,
+.sapMSelectListItem:focus,
+.sapMSelectListItemBase:focus,
+.sapMSelectListItemBaseHoverable:focus {
   background-color: #eef0ff !important;
-  color: #533bff !important;
+  color: #4338ca !important;
   font-weight: 600 !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove all pseudo-element frames and focus rectangles */
+.sapMSelectListItem::before,
+.sapMSelectListItem::after,
+.sapMSelectListItemBase::before,
+.sapMSelectListItemBase::after,
+.sapMSelectListItemBaseSelected::before,
+.sapMSelectListItemBaseSelected::after,
+.sapMSelectListItem:focus::before,
+.sapMSelectListItem:focus::after,
+.sapMSelectListItemBase:focus::before,
+.sapMSelectListItemBase:focus::after,
+.sapMSelectListItemBaseSelected:focus::before,
+.sapMSelectListItemBaseSelected:focus::after {
+  display: none !important;
+  content: none !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
@@ -1257,15 +1349,29 @@ span.sapTntNLITagContainer {
    giving the outer .sapMSF a border too was what created the double-border
    look. Chrome lives on the inner box only now; outer is just a transparent
    sizing wrapper. */
-.sapMSF,
-.sapMSFF {
+.sapMSF {
   border: none !important;
-  background: none !important;
+  background: transparent !important;
   box-shadow: none !important;
   outline: none !important;
   padding: 0 !important;
   height: 46px !important;
   position: relative !important;
+}
+
+.sapMSFF {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background-color: #f8fafc !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  height: 46px !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: border-color 0.15s ease !important;
 }
 
 .sapMSF.sapUiSmallMarginEnd {
@@ -1276,43 +1382,35 @@ span.sapTntNLITagContainer {
   margin-right: 0.5rem !important;
 }
 
-/* Deliberately not resetting margin here — the SearchField's own root is
-   .sapMSF, so margin:0 would cancel the sapUiSmallMarginEnd utility class the
-   view applies to space it from the next button (which it did, and made the
-   two sit flush with no gap). */
-
-/* Never ruled out the outer wrapper/form itself getting its own focus ring —
-   only the inner input was covered. If the theme hangs one on .sapMSF or
-   .sapMSFF (a div/form, not the actual focused element, but a focus-within
-   target), it'd sit slightly offset from the inner box's border — exactly a
-   second, misaligned ring around the first. */
 .sapMSF:focus-within,
-.sapMSFF:focus-within {
+.sapMSFF:focus-within,
+.sapMSF:focus,
+.sapMSFF:focus,
+.sapMSFFocused {
   outline: none !important;
   box-shadow: none !important;
   border: none !important;
 }
 
+.sapMSF:hover .sapMSFF,
+.sapMSF:focus-within .sapMSFF {
+  border-color: #533bff !important;
+}
+
 .sapMSFI {
   width: 100% !important;
-  height: 46px !important;
-  line-height: 46px !important;
-  padding-left: 1rem !important;
-  padding-right: 2.75rem !important;
+  height: 44px !important;
+  line-height: 44px !important;
+  padding-left: 0.85rem !important;
+  padding-right: 2.5rem !important;
   box-sizing: border-box !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 10px !important;
-  background-color: #f8fafc !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
   color: #0f172a !important;
   outline: none !important;
   box-shadow: none !important;
-  /* it's a real <input type="search"> — appearance:textfield keeps the
-       browser rendering it as a native form control, including its OWN
-       native focus glow that plain outline:none can't touch (it's not a CSS
-       outline, it's browser-painted chrome). That's what came back as a
-       second border on focus. appearance:none strips native rendering
-       entirely instead; the resting-state double border was actually fixed
-       by .sapMSFF's own border:none above, not by this value. */
   -webkit-appearance: none !important;
   appearance: none !important;
 }
@@ -1327,7 +1425,9 @@ span.sapTntNLITagContainer {
 
 .sapMSF:hover .sapMSFI,
 .sapMSF:focus-within .sapMSFI {
-  border-color: #533bff !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .sapMSFB {
@@ -1927,9 +2027,10 @@ td .sapMBtnInner.sapMBtnReject:active,
   line-height: 38px !important;
 }
 
-/* ===== SearchField Container & Focus Border Reset (Eliminate Double Blue Borders & Bottom Overlap) ===== */
-
-.sapMSF {
+/* ===== SearchField in Toolbars (OverflowToolbar) ===== */
+.sapMOverflowToolbar .sapMSF,
+.sapMTB .sapMSF,
+.sapMHeaderToolbar .sapMSF {
   height: 38px !important;
   max-height: 38px !important;
   box-sizing: border-box !important;
@@ -1942,7 +2043,9 @@ td .sapMBtnInner.sapMBtnReject:active,
   overflow: hidden !important;
 }
 
-.sapMSFF {
+.sapMOverflowToolbar .sapMSFF,
+.sapMTB .sapMSFF,
+.sapMHeaderToolbar .sapMSFF {
   height: 38px !important;
   max-height: 38px !important;
   margin-top: 0 !important;
@@ -1954,7 +2057,7 @@ td .sapMBtnInner.sapMBtnReject:active,
   border-radius: 8px !important;
   outline: none !important;
   box-shadow: none !important;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+  transition: border-color 0.15s ease !important;
 }
 
 .sapMSF:focus,
@@ -1971,7 +2074,7 @@ td .sapMBtnInner.sapMBtnReject:active,
 .sapMSFFocused .sapMSFF,
 .sapMSF:focus-within .sapMSFF {
   border-color: #533bff !important;
-  box-shadow: 0 0 0 3px rgba(83, 59, 255, 0.15) !important;
+  box-shadow: none !important;
   outline: none !important;
 }
 
@@ -3788,3 +3891,136 @@ span.sapMColumnHeaderContent,
   font-size: 0.875rem !important;
   letter-spacing: 0.015em !important;
 }
+
+/* ==========================================================================
+   GLOBAL DROPDOWN SPACING & BORDER REMOVAL (ALL PAGES)
+   ========================================================================== */
+.sapMSelect,
+.sapMSlt {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.sapUiRespGrid .sapMVBox .sapMSelect,
+.sapUiRespGrid .sapMVBox .sapMSlt,
+.xyraFieldGroup .sapMSelect,
+.xyraFieldGroup .sapMSlt {
+  width: 100% !important;
+}
+
+/* Dropdown list items & picker overrides */
+.sapMSelectPicker .sapMPopoverArr,
+.sapMSltPicker .sapMPopoverArr,
+.sapMPopoverArr,
+.sapMPopoverArrRight,
+.sapMPopoverArrLeft,
+.sapMPopoverArrUp,
+.sapMPopoverArrDown {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  border: none !important;
+}
+
+.sapMSelectListItemBaseSelected,
+.sapMSelectListItemBase:focus,
+.sapMSelectListItem:focus,
+.sapMSelectListItemBaseSelected:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sapMSelectListItemBase::before,
+.sapMSelectListItemBase::after,
+.sapMSelectListItemBaseSelected::before,
+.sapMSelectListItemBaseSelected::after {
+  display: none !important;
+  content: none !important;
+  border: none !important;
+}
+
+/* ==========================================================================
+   FILTER BAR HORIZONTAL EQUAL ALIGNMENT (AUDIT LOGS & AUDITOR PAGES)
+   ========================================================================== */
+.xyraFieldGroup .sapMSF {
+  height: 46px !important;
+  max-height: 46px !important;
+  margin: 0 !important;
+  align-self: stretch !important;
+  width: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.xyraFieldGroup .sapMSFF {
+  height: 46px !important;
+  max-height: 46px !important;
+  margin: 0 !important;
+  border-radius: 10px !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: #f8fafc !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: border-color 0.15s ease !important;
+}
+
+.xyraFieldGroup .sapMSF:hover .sapMSFF,
+.xyraFieldGroup .sapMSF:focus-within .sapMSFF {
+  border-color: #533bff !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.xyraFieldGroup .sapMSF .sapMSFI,
+.xyraFieldGroup .sapMSFF .sapMSFI,
+.sapMSF .sapMSFI,
+.sapMSFF .sapMSFI {
+  height: 44px !important;
+  line-height: 44px !important;
+  font-size: 0.925rem !important;
+  padding-left: 0.85rem !important;
+  padding-right: 2.4rem !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  box-sizing: border-box !important;
+  color: #0f172a !important;
+  border: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.xyraFieldGroup .sapMSF .sapMSFS,
+.xyraFieldGroup .sapMSF .sapMSFB {
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #64748b !important;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Eliminate all UI5 focus rings / pseudo-element inner frames */
+.sapMSF::after,
+.sapMSF::before,
+.sapMSFF::after,
+.sapMSFF::before,
+.sapMSF.sapMFocus::after,
+.sapMSF.sapMFocus::before,
+.sapMSFI::after,
+.sapMSFI::before {
+  display: none !important;
+  content: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+

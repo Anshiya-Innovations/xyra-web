@@ -167,7 +167,7 @@
                                 <content>
                                      <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="End">
                                          <!-- Search Field -->
-                                         <VBox width="15%" class="xyraFieldGroup">
+                                         <VBox width="15.8%" class="xyraFieldGroup">
                                              <Label text="Search" class="xyraLoginLabel"/>
                                              <SearchField
                                                  id="searchAuditLog"
@@ -179,7 +179,7 @@
                                          </VBox>
 
                                          <!-- Action Filter -->
-                                         <VBox width="15%" class="xyraFieldGroup">
+                                         <VBox width="15.8%" class="xyraFieldGroup">
                                              <Label text="Action" class="xyraLoginLabel"/>
                                              <Select
                                                  id="filterAction"
@@ -196,7 +196,7 @@
                                          </VBox>
 
                                          <!-- Module Filter -->
-                                         <VBox width="15%" class="xyraFieldGroup">
+                                         <VBox width="15.8%" class="xyraFieldGroup">
                                              <Label text="Module" class="xyraLoginLabel"/>
                                              <Select
                                                  id="filterModule"
@@ -212,7 +212,7 @@
                                          </VBox>
 
                                          <!-- Admin User Filter -->
-                                         <VBox width="15%" class="xyraFieldGroup">
+                                         <VBox width="15.8%" class="xyraFieldGroup">
                                              <Label text="Admin User" class="xyraLoginLabel"/>
                                              <Select
                                                  id="filterAdmin"
@@ -226,27 +226,27 @@
                                              </Select>
                                          </VBox>
 
-                                           <!-- Starting Date Filter -->
-                                           <VBox class="xyraFieldGroup">
-                                               <Label text="Starting Date" class="xyraLoginLabel"/>
-                                               <xyra:DateRangePicker
-                                                   id="filterStartingDate"
-                                                   field="start"
-                                                   placeholder="Select Starting Date"
-                                                   change="onApplyFilters"
-                                                   width="100%"/>
-                                           </VBox>
+                                         <!-- Starting Date Filter -->
+                                         <VBox width="15.8%" class="xyraFieldGroup">
+                                             <Label text="Starting Date" class="xyraLoginLabel"/>
+                                             <xyra:DateRangePicker
+                                                 id="filterStartingDate"
+                                                 field="start"
+                                                 placeholder="Select Starting Date"
+                                                 change="onApplyFilters"
+                                                 width="100%"/>
+                                         </VBox>
 
-                                           <!-- Ending Date Filter -->
-                                           <VBox class="xyraFieldGroup">
-                                               <Label text="Ending Date" class="xyraLoginLabel"/>
-                                               <xyra:DateRangePicker
-                                                   id="filterEndingDate"
-                                                   field="end"
-                                                   placeholder="Select Ending Date"
-                                                   change="onApplyFilters"
-                                                   width="100%"/>
-                                           </VBox>
+                                         <!-- Ending Date Filter -->
+                                         <VBox width="15.8%" class="xyraFieldGroup">
+                                             <Label text="Ending Date" class="xyraLoginLabel"/>
+                                             <xyra:DateRangePicker
+                                                 id="filterEndingDate"
+                                                 field="end"
+                                                 placeholder="Select Ending Date"
+                                                 change="onApplyFilters"
+                                                 width="100%"/>
+                                         </VBox>
                                      </HBox>
                                  </content>
                             </Panel>
