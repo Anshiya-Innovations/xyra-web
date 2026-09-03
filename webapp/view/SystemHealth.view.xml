@@ -214,7 +214,7 @@
                     <OverflowToolbar>
                         <Text text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer/>
-                        <Text text="System Health Monitoring Service v2.4 | RFC Telemetry Engine: Active"/>
+                        <ObjectStatus text="July 30, 2026" icon="sap-icon://appointment-2" state="Information"/>
                     </OverflowToolbar>
                 </footer>
 

@@ -305,7 +305,7 @@
                     <OverflowToolbar>
                         <Text text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer/>
-                        <Text text="XYRA Admin Audit Logs v1.0 | Access Level: Administrative Only"/>
+                        <ObjectStatus text="July 30, 2026" icon="sap-icon://appointment-2" state="Information"/>
                     </OverflowToolbar>
                 </footer>
 

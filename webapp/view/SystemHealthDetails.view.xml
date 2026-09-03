@@ -152,12 +152,7 @@
                     <OverflowToolbar>
                         <Text text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer/>
-                        <Button
-                            text="Back to System Health"
-                            icon="sap-icon://nav-back"
-                            type="Emphasized"
-                            press="onNavBack"
-                            class="xyraBoldBtn fontWeightBold sapUiSmallMarginEnd"/>
+                        <ObjectStatus text="July 30, 2026" icon="sap-icon://appointment-2" state="Information"/>
                     </OverflowToolbar>
                 </footer>
 

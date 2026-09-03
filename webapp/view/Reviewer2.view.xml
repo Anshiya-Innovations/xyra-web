@@ -679,7 +679,7 @@
                     <OverflowToolbar>
                         <Text text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer/>
-                        <Text text="XYRA Internal Control Platform | Reviewer 2 (Manager Exception Reviewer) Portal v1.0"/>
+                        <ObjectStatus text="July 30, 2026" icon="sap-icon://appointment-2" state="Information"/>
                     </OverflowToolbar>
                 </footer>
 
