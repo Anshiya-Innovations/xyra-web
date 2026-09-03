@@ -395,7 +395,7 @@
                                                 <ObjectNumber number="{soxModel>deviationCount}" state="{= ${soxModel>deviationCount} > 0 ? 'Error' : 'None' }"/>
                                                 <ObjectStatus text="{soxModel>risk}" state="{soxModel>riskState}"/>
                                                 <Text text="{soxModel>lastRun}"/>
-                                                <Button text="View Details →" type="Default" press="onViewDetailsPress"/>
+                                                <Button text="View Details &gt;" type="Default" press="onViewDetailsPress"/>
                                             </cells>
                                         </ColumnListItem>
                                     </items>

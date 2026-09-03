@@ -235,7 +235,7 @@
                                             <ObjectStatus text="{orgModel>status}" state="{orgModel>statusState}"/>
                                             <Text text="{orgModel>createdDate}"/>
                                             <Button
-                                                text="View Details →"
+                                                text="View Details &gt;"
                                                 type="Default"
                                                 press="onViewDetails"/>
                                         </cells>

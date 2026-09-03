@@ -300,14 +300,81 @@ sap.ui.define([
             this._addReportToHistory(oItem.name, oItem.type);
         },
 
-        onSearchAvailableReports: function (oEvent) {
-            var sQuery = oEvent.getParameter("query");
-            MessageToast.show("Filtering available reports by query: " + sQuery);
+        onApplyAvailableFilters: function () {
+            var oTable = this.byId("availableReportsTable");
+            if (!oTable) { return; }
+            var oBinding = oTable.getBinding("items");
+            if (!oBinding) { return; }
+
+            var sReportName = this.byId("filterAvailableReportName") ? this.byId("filterAvailableReportName").getValue().trim().toLowerCase() : "";
+            var sCategory = this.byId("filterAvailableCategory") ? this.byId("filterAvailableCategory").getSelectedKey() : "All";
+
+            var oStartDatePicker = this.byId("filterAvailableStartDate");
+            var oEndDatePicker = this.byId("filterAvailableEndDate");
+            var dStart = oStartDatePicker && oStartDatePicker.getStartDate ? oStartDatePicker.getStartDate() : null;
+            var dEnd = oEndDatePicker && oEndDatePicker.getEndDate ? oEndDatePicker.getEndDate() : null;
+
+            var aFilters = [];
+
+            if (sReportName) {
+                aFilters.push(new Filter({
+                    filters: [
+                        new Filter("name", FilterOperator.Contains, sReportName),
+                        new Filter("subtitle", FilterOperator.Contains, sReportName),
+                        new Filter("description", FilterOperator.Contains, sReportName)
+                    ],
+                    and: false
+                }));
+            }
+
+            if (sCategory && sCategory !== "All") {
+                aFilters.push(new Filter("type", FilterOperator.EQ, sCategory));
+            }
+
+            if (dStart || dEnd) {
+                var dStartDay = dStart ? new Date(dStart.getFullYear(), dStart.getMonth(), dStart.getDate(), 0, 0, 0, 0) : null;
+                var dEndDay = dEnd ? new Date(dEnd.getFullYear(), dEnd.getMonth(), dEnd.getDate(), 23, 59, 59, 999) : null;
+
+                aFilters.push(new Filter({
+                    path: "lastGenerated",
+                    test: function (sDateStr) {
+                        if (!sDateStr) { return true; }
+                        var d = new Date(sDateStr.replace(" IST", ""));
+                        if (isNaN(d.getTime())) { return true; }
+                        if (dStartDay && d < dStartDay) { return false; }
+                        if (dEndDay && d > dEndDay) { return false; }
+                        return true;
+                    }
+                }));
+            }
+
+            oBinding.filter(aFilters);
         },
 
-        onFilterAvailableCategory: function (oEvent) {
-            var sKey = oEvent.getParameter("selectedItem").getKey();
-            MessageToast.show("Filtering available reports by category: " + sKey);
+        onResetAvailableFilters: function () {
+            if (this.byId("filterAvailableReportName")) {
+                this.byId("filterAvailableReportName").setValue("");
+            }
+            if (this.byId("filterAvailableCategory")) {
+                this.byId("filterAvailableCategory").setSelectedKey("All");
+            }
+            if (this.byId("filterAvailableStartDate")) {
+                this.byId("filterAvailableStartDate").reset();
+            }
+            if (this.byId("filterAvailableEndDate")) {
+                this.byId("filterAvailableEndDate").reset();
+            }
+
+            this.onApplyAvailableFilters();
+            MessageToast.show("Available reports filters reset.");
+        },
+
+        onSearchAvailableReports: function () {
+            this.onApplyAvailableFilters();
+        },
+
+        onFilterAvailableCategory: function () {
+            this.onApplyAvailableFilters();
         },
 
         onScheduleReportDialog: function () {

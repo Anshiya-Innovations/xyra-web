@@ -219,28 +219,62 @@
                                 </headerToolbar>
                             </Panel>
 
+                            <!-- SECTION 3.5: AVAILABLE REPORTS FILTER CRITERIA -->
+                            <Panel expandable="false" class="sapUiTinyMarginBottom xyraEqualPaddingFilterPanel">
+                                <headerToolbar>
+                                    <OverflowToolbar height="3rem">
+                                        <Title text="Filter Criteria" level="H5"/>
+                                        <ToolbarSpacer/>
+                                        <Button text="Reset" type="Transparent" icon="sap-icon://reset" press="onResetAvailableFilters"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <content>
+                                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="End" class="sapUiSmallMarginBottom">
+                                        <!-- 1. Report Name -->
+                                        <VBox width="28%" class="xyraFieldGroup">
+                                            <Label text="Report Name" class="xyraLoginLabel"/>
+                                            <SearchField id="filterAvailableReportName" placeholder="Search Report Name..." search="onApplyAvailableFilters" liveChange="onApplyAvailableFilters" width="100%"/>
+                                        </VBox>
+
+                                        <!-- 2. Category / Type -->
+                                        <VBox width="28%" class="xyraFieldGroup">
+                                            <Label text="Category / Type" class="xyraLoginLabel"/>
+                                            <Select id="filterAvailableCategory" selectedKey="All" width="100%" change="onApplyAvailableFilters">
+                                                <core:Item key="All" text="All Categories / Types"/>
+                                                <core:Item key="Reviewer 1" text="Reviewer 1"/>
+                                                <core:Item key="Reviewer 2" text="Reviewer 2"/>
+                                                <core:Item key="Escalation Manager" text="Escalation Manager"/>
+                                                <core:Item key="SOX Compliance" text="SOX Compliance"/>
+                                                <core:Item key="Role Change" text="Role Change"/>
+                                                <core:Item key="User Access Review" text="User Access Review"/>
+                                                <core:Item key="SOD Conflict" text="SOD Conflict"/>
+                                                <core:Item key="Elevated Access" text="Elevated Access"/>
+                                                <core:Item key="Critical Auth" text="Critical Auth"/>
+                                                <core:Item key="Audit Log" text="Audit Log"/>
+                                                <core:Item key="AI Risk Analysis" text="AI Risk Analysis"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <!-- 3. Starting Date & Ending Date -->
+                                        <VBox width="19%" class="xyraFieldGroup">
+                                            <Label text="Starting Date" class="xyraLoginLabel"/>
+                                            <xyra:DateRangePicker id="filterAvailableStartDate" field="start" placeholder="Select Starting Date" width="100%" change="onApplyAvailableFilters"/>
+                                        </VBox>
+
+                                        <VBox width="19%" class="xyraFieldGroup">
+                                            <Label text="Ending Date" class="xyraLoginLabel"/>
+                                            <xyra:DateRangePicker id="filterAvailableEndDate" field="end" placeholder="Select Ending Date" width="100%" change="onApplyAvailableFilters"/>
+                                        </VBox>
+                                    </HBox>
+                                </content>
+                            </Panel>
+
                             <!-- SECTION 4: AVAILABLE STANDARD ENTERPRISE REPORTS TABLE -->
                             <Panel expandable="false" class="sapUiSmallMarginBottom">
                                 <Table id="availableReportsTable" items="{reportsModel>/availableReports}" mode="None" width="100%">
                                     <headerToolbar>
                                         <OverflowToolbar>
                                             <Title text="Available Standard Enterprise Reports" level="H3"/>
-                                            <ToolbarSpacer/>
-                                            <SearchField width="16rem" placeholder="Search available reports..." search="onSearchAvailableReports"/>
-                                            <Select selectedKey="All" change="onFilterAvailableCategory">
-                                                <core:Item key="All" text="All Categories"/>
-                                                <core:Item key="Reviewer 1" text="Reviewer 1"/>
-                                                <core:Item key="Reviewer 2" text="Reviewer 2"/>
-                                                <core:Item key="Escalation Manager" text="Escalation Manager"/>
-                                                <core:Item key="SOX Compliance" text="SOX Compliance"/>
-                                                <core:Item key="Role Change" text="Role Changes"/>
-                                                <core:Item key="User Access Review" text="User Access Review"/>
-                                                <core:Item key="SOD Conflict" text="SOD Conflicts"/>
-                                                <core:Item key="Elevated Access" text="Elevated Access Logs"/>
-                                                <core:Item key="Critical Auth" text="Critical Authorizations"/>
-                                                <core:Item key="Audit Log" text="Audit Logs"/>
-                                                <core:Item key="AI Risk Analysis" text="AI Risk Analysis"/>
-                                            </Select>
                                         </OverflowToolbar>
                                     </headerToolbar>
 
@@ -367,7 +401,6 @@
                                         <OverflowToolbar>
                                             <Title text="Report Execution &amp; Download History" level="H3"/>
                                             <ToolbarSpacer/>
-                                            <SearchField width="16rem" placeholder="Search execution history..." search="onSearchHistory"/>
                                             <Select selectedKey="All" change="onFilterHistoryStatus">
                                                 <core:Item key="All" text="All Statuses"/>
                                                 <core:Item key="Completed" text="Completed"/>
