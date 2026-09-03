@@ -203,49 +203,6 @@
                         <!-- SLIDE 1: AVAILABLE REPORTS & CATALOG -->
                         <VBox id="vboxAvailableReports" visible="true" width="100%">
 
-                            <!-- SECTION 1: KPI SUMMARY CARDS (4 CARDS) -->
-                            <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiNoMargin">
-                                <f:Card class="sapUiTinyMarginBottom">
-                                    <f:header>
-                                        <card:Header
-                                            title="1,420"
-                                            subtitle="Total Reports"
-                                            iconSrc="sap-icon://excel-attachment"
-                                            statusText="System Total"/>
-                                    </f:header>
-                                </f:Card>
-
-                                <f:Card class="sapUiTinyMarginBottom">
-                                    <f:header>
-                                        <card:Header
-                                            title="24"
-                                            subtitle="Generated Today"
-                                            iconSrc="sap-icon://history"
-                                            statusText="Daily Executions"/>
-                                    </f:header>
-                                </f:Card>
-
-                                <f:Card class="sapUiTinyMarginBottom">
-                                    <f:header>
-                                        <card:Header
-                                            title="12"
-                                            subtitle="Scheduled Reports"
-                                            iconSrc="sap-icon://pending"
-                                            statusText="Automated Jobs"/>
-                                    </f:header>
-                                </f:Card>
-
-                                <f:Card class="sapUiTinyMarginBottom">
-                                    <f:header>
-                                        <card:Header
-                                            title="3"
-                                            subtitle="Pending Exports"
-                                            iconSrc="sap-icon://download"
-                                            statusText="In Queue"/>
-                                    </f:header>
-                                </f:Card>
-                            </layout:Grid>
-
                             <!-- SECTION 3: QUICK ACTIONS TOOLBAR -->
                             <Panel expandable="false" class="sapUiSmallMarginBottom">
                                 <headerToolbar>

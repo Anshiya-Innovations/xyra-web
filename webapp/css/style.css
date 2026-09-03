@@ -1539,10 +1539,19 @@ td .sapMObjectIdentifierText .sapMText {
 }
 
 .sapMListTblHeaderCell .sapMText,
-.sapMListTblHeaderCell .sapMLabel {
-  font-weight: 600 !important;
-  color: #475569 !important;
-  font-size: 0.85rem !important;
+.sapMListTblHeaderCell .sapMLabel,
+.sapMListTblHeaderCell .sapMColumnHeaderContent,
+.sapMColumnHeaderContent,
+.sapMTable th,
+.sapMListTbl th,
+.sapMTable th .sapMText,
+.sapMTable th .sapMLabel,
+.sapMListTblHeader .sapMText,
+.sapMListTblHeader .sapMLabel {
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.01em !important;
 }
 
 .sapMListTblCell .sapMHBox,
@@ -3393,5 +3402,389 @@ div[id*="-text"] {
   color: #ffffff !important;
 }
 
+/* ==========================================================================
+   Table Styling: Remove Blue Border & Add Light Gray Row Hover
+   ========================================================================== */
 
+/* 1. Eliminate any blue border / focus outline / box-shadow on all tables, rows, and cells */
+.sapMTable,
+.sapMListTbl,
+.sapMTable table,
+.sapMListTbl table {
+  outline: none !important;
+  box-shadow: none !important;
+}
 
+.sapMTable tr,
+.sapMListTbl tr,
+.sapMTable .sapMLIB,
+.sapMListTbl .sapMLIB,
+.sapMTable .sapMListTblRow,
+.sapMListTbl .sapMListTblRow,
+.sapMTable tbody tr,
+.sapMListTbl tbody tr {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-color: transparent !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* Remove focus / active / selected blue borders and outlines */
+.sapMTable .sapMLIB:focus,
+.sapMTable .sapMLIB:focus-visible,
+.sapMTable .sapMLIB:focus-within,
+.sapMTable .sapMLIBFocused,
+.sapMTable .sapMLIBSelected,
+.sapMTable .sapMLIBActive,
+.sapMTable .sapMListTblRow:focus,
+.sapMTable .sapMListTblRow:focus-visible,
+.sapMTable .sapMListTblRow:focus-within,
+.sapMTable .sapMListTblRow.sapMLIBFocused,
+.sapMTable .sapMListTblRow.sapMLIBSelected,
+.sapMTable .sapMListTblRow.sapMLIBActive,
+.sapMListTbl .sapMLIB:focus,
+.sapMListTbl .sapMLIB:focus-visible,
+.sapMListTbl .sapMLIB:focus-within,
+.sapMListTbl .sapMLIBFocused,
+.sapMListTbl .sapMLIBSelected,
+.sapMListTbl .sapMLIBActive,
+.sapMListTbl .sapMListTblRow:focus,
+.sapMListTbl .sapMListTblRow:focus-visible,
+.sapMListTbl .sapMListTblRow:focus-within,
+.sapMListTbl .sapMListTblRow.sapMLIBFocused,
+.sapMListTbl .sapMListTblRow.sapMLIBSelected,
+.sapMListTbl .sapMListTblRow.sapMLIBActive {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-color: transparent !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* Strip any pseudo-element focus rings (SAP Horizon / Quartz border rings) */
+.sapMTable .sapMLIB::before,
+.sapMTable .sapMLIB::after,
+.sapMTable .sapMListTblRow::before,
+.sapMTable .sapMListTblRow::after,
+.sapMListTbl .sapMLIB::before,
+.sapMListTbl .sapMLIB::after,
+.sapMListTbl .sapMListTblRow::before,
+.sapMListTbl .sapMListTblRow::after,
+.sapMTable .sapMLIBFocused::before,
+.sapMTable .sapMLIBFocused::after,
+.sapMTable .sapMLIBSelected::before,
+.sapMTable .sapMLIBSelected::after,
+.sapMListTbl .sapMLIBFocused::before,
+.sapMListTbl .sapMLIBFocused::after,
+.sapMListTbl .sapMLIBSelected::before,
+.sapMListTbl .sapMLIBSelected::after,
+.sapMTable .sapMLIB:focus::before,
+.sapMTable .sapMLIB:focus::after,
+.sapMListTbl .sapMLIB:focus::before,
+.sapMListTbl .sapMLIB:focus::after {
+  display: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  content: none !important;
+}
+
+/* Strip focus rings on cells */
+.sapMTable td,
+.sapMTable th,
+.sapMListTbl td,
+.sapMListTbl th,
+.sapMListTblCell,
+.sapMListTblHeaderCell {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sapMTable td:focus,
+.sapMTable th:focus,
+.sapMListTbl td:focus,
+.sapMListTbl th:focus,
+.sapMListTblCell:focus,
+.sapMListTblHeaderCell:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 2. Light Gray Background on Table Row Hover across all tables */
+.sapMTable tbody tr.sapMListTblRow,
+.sapMTable tbody tr.sapMLIB,
+.sapMListTbl tbody tr.sapMListTblRow,
+.sapMListTbl tbody tr.sapMLIB,
+.sapMTable tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader),
+.sapMListTbl tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader) {
+  transition: background-color 0.15s ease-in-out !important;
+}
+
+.sapMTable tbody tr.sapMListTblRow:hover,
+.sapMTable tbody tr.sapMLIB:hover,
+.sapMListTbl tbody tr.sapMListTblRow:hover,
+.sapMListTbl tbody tr.sapMLIB:hover,
+.sapMTable tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover,
+.sapMListTbl tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* Ensure all cells inside hovered row show the light gray background */
+.sapMTable tbody tr.sapMListTblRow:hover > td,
+.sapMTable tbody tr.sapMLIB:hover > td,
+.sapMListTbl tbody tr.sapMListTblRow:hover > td,
+.sapMListTbl tbody tr.sapMLIB:hover > td,
+.sapMTable tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover > td,
+.sapMListTbl tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover > td {
+  background-color: #f1f5f9 !important;
+}
+
+/* Selected or active row styling (clean neutral instead of blue highlight) */
+.sapMTable .sapMLIBSelected,
+.sapMListTbl .sapMLIBSelected,
+.sapMTable .sapMLIBActive,
+.sapMListTbl .sapMLIBActive {
+  background-color: #f8fafc !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  padding: 6px 0 10px 0 !important;
+  min-height: 190px !important;
+  box-sizing: border-box !important;
+}
+
+.xyraCalPickerCell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  background-color: #f8fafc !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: all 0.15s ease !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.xyraCalPickerCell:hover {
+  background-color: rgba(83, 59, 255, 0.1) !important;
+  color: #533bff !important;
+  border-color: #533bff !important;
+}
+
+.xyraCalPickerCellActive {
+  background-color: #533bff !important;
+  color: #ffffff !important;
+  border-color: #533bff !important;
+  box-shadow: 0 2px 6px rgba(83, 59, 255, 0.35) !important;
+}
+
+.xyraCalPickerCellActive:hover {
+  background-color: #432bdf !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   Table Styling: Remove Blue Border & Add Light Gray Row Hover
+   ========================================================================== */
+
+/* 1. Eliminate any blue border / focus outline / box-shadow on all tables, rows, and cells */
+.sapMTable,
+.sapMListTbl,
+.sapMTable table,
+.sapMListTbl table {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sapMTable tr,
+.sapMListTbl tr,
+.sapMTable .sapMLIB,
+.sapMListTbl .sapMLIB,
+.sapMTable .sapMListTblRow,
+.sapMListTbl .sapMListTblRow,
+.sapMTable tbody tr,
+.sapMListTbl tbody tr {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-color: transparent !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* Remove focus / active / selected blue borders and outlines */
+.sapMTable .sapMLIB:focus,
+.sapMTable .sapMLIB:focus-visible,
+.sapMTable .sapMLIB:focus-within,
+.sapMTable .sapMLIBFocused,
+.sapMTable .sapMLIBSelected,
+.sapMTable .sapMLIBActive,
+.sapMTable .sapMListTblRow:focus,
+.sapMTable .sapMListTblRow:focus-visible,
+.sapMTable .sapMListTblRow:focus-within,
+.sapMTable .sapMListTblRow.sapMLIBFocused,
+.sapMTable .sapMListTblRow.sapMLIBSelected,
+.sapMTable .sapMListTblRow.sapMLIBActive,
+.sapMListTbl .sapMLIB:focus,
+.sapMListTbl .sapMLIB:focus-visible,
+.sapMListTbl .sapMLIB:focus-within,
+.sapMListTbl .sapMLIBFocused,
+.sapMListTbl .sapMLIBSelected,
+.sapMListTbl .sapMLIBActive,
+.sapMListTbl .sapMListTblRow:focus,
+.sapMListTbl .sapMListTblRow:focus-visible,
+.sapMListTbl .sapMListTblRow:focus-within,
+.sapMListTbl .sapMListTblRow.sapMLIBFocused,
+.sapMListTbl .sapMListTblRow.sapMLIBSelected,
+.sapMListTbl .sapMListTblRow.sapMLIBActive {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-color: transparent !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* Strip any pseudo-element focus rings (SAP Horizon / Quartz border rings) */
+.sapMTable .sapMLIB::before,
+.sapMTable .sapMLIB::after,
+.sapMTable .sapMListTblRow::before,
+.sapMTable .sapMListTblRow::after,
+.sapMListTbl .sapMLIB::before,
+.sapMListTbl .sapMLIB::after,
+.sapMListTbl .sapMListTblRow::before,
+.sapMListTbl .sapMListTblRow::after,
+.sapMTable .sapMLIBFocused::before,
+.sapMTable .sapMLIBFocused::after,
+.sapMTable .sapMLIBSelected::before,
+.sapMTable .sapMLIBSelected::after,
+.sapMListTbl .sapMLIBFocused::before,
+.sapMListTbl .sapMLIBFocused::after,
+.sapMListTbl .sapMLIBSelected::before,
+.sapMListTbl .sapMLIBSelected::after,
+.sapMTable .sapMLIB:focus::before,
+.sapMTable .sapMLIB:focus::after,
+.sapMListTbl .sapMLIB:focus::before,
+.sapMListTbl .sapMLIB:focus::after {
+  display: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  content: none !important;
+}
+
+/* Strip focus rings on cells */
+.sapMTable td,
+.sapMTable th,
+.sapMListTbl td,
+.sapMListTbl th,
+.sapMListTblCell,
+.sapMListTblHeaderCell {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sapMTable td:focus,
+.sapMTable th:focus,
+.sapMListTbl td:focus,
+.sapMListTbl th:focus,
+.sapMListTblCell:focus,
+.sapMListTblHeaderCell:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 2. Light Gray Background on Table Row Hover across all tables */
+.sapMTable tbody tr.sapMListTblRow,
+.sapMTable tbody tr.sapMLIB,
+.sapMListTbl tbody tr.sapMListTblRow,
+.sapMListTbl tbody tr.sapMLIB,
+.sapMTable tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader),
+.sapMListTbl tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader) {
+  transition: background-color 0.15s ease-in-out !important;
+}
+
+.sapMTable tbody tr.sapMListTblRow:hover,
+.sapMTable tbody tr.sapMLIB:hover,
+.sapMListTbl tbody tr.sapMListTblRow:hover,
+.sapMListTbl tbody tr.sapMLIB:hover,
+.sapMTable tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover,
+.sapMListTbl tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* Ensure all cells inside hovered row show the light gray background */
+.sapMTable tbody tr.sapMListTblRow:hover > td,
+.sapMTable tbody tr.sapMLIB:hover > td,
+.sapMListTbl tbody tr.sapMListTblRow:hover > td,
+.sapMListTbl tbody tr.sapMLIB:hover > td,
+.sapMTable tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover > td,
+.sapMListTbl tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover > td {
+  background-color: #f1f5f9 !important;
+}
+
+/* Selected or active row styling (clean neutral instead of blue highlight) */
+.sapMTable .sapMLIBSelected,
+.sapMListTbl .sapMLIBSelected,
+.sapMTable .sapMLIBActive,
+.sapMListTbl .sapMLIBActive {
+  background-color: #f8fafc !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.sapMTable .sapMLIBSelected > td,
+.sapMListTbl .sapMLIBSelected > td,
+.sapMTable .sapMLIBActive > td,
+.sapMListTbl .sapMLIBActive > td {
+  background-color: #f8fafc !important;
+}
+
+.sapMTable .sapMLIBSelected:hover,
+.sapMListTbl .sapMLIBSelected:hover,
+.sapMTable .sapMLIBSelected:hover > td,
+.sapMListTbl .sapMLIBSelected:hover > td {
+  background-color: #f1f5f9 !important;
+}
+
+/* ==========================================================================
+   All Table Column Headers Bold Letters
+   ========================================================================== */
+.sapMTable th,
+.sapMListTbl th,
+.sapMTable th *,
+.sapMListTbl th *,
+.sapMTable thead tr th,
+.sapMListTbl thead tr th,
+.sapMListTblHeaderCell,
+.sapMListTblHeaderCell *,
+.sapMColumnHeader,
+.sapMColumnHeader *,
+.sapMColumnHeaderContent,
+span.sapMColumnHeaderContent,
+.sapMTable .sapMListTblHeaderCell .sapMText,
+.sapMListTbl .sapMListTblHeaderCell .sapMText {
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.015em !important;
+}
