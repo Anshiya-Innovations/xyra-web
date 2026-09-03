@@ -278,7 +278,7 @@
                                     <!-- Client -->
                                     <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="Client" class="xyraLoginLabel"/>
-                                        <Select id="filterClient" selectedKey="{reportModel>/filters/client}" width="100%" items="{reportModel>/options/clients}">
+                                        <Select id="filterClient" selectedKey="{reportModel>/filters/client}" width="100%" change="onClientChange" items="{reportModel>/options/clients}">
                                             <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
                                         </Select>
                                     </VBox>
@@ -289,7 +289,7 @@
                                     <!-- Control -->
                                     <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="Control" class="xyraLoginLabel"/>
-                                        <Select id="filterControl" selectedKey="{reportModel>/filters/control}" width="100%" items="{reportModel>/options/controls}">
+                                        <Select id="filterControl" selectedKey="{reportModel>/filters/control}" width="100%" change="onControlChange" items="{reportModel>/options/controls}">
                                             <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
                                         </Select>
                                     </VBox>
@@ -297,7 +297,7 @@
                                     <!-- Incident Status -->
                                     <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="Incident Status" class="xyraLoginLabel"/>
-                                        <Select id="filterStatus" selectedKey="{reportModel>/filters/status}" width="100%">
+                                        <Select id="filterStatus" selectedKey="{reportModel>/filters/status}" width="100%" change="onStatusChange">
                                             <core:Item key="All" text="All Statuses"/>
                                             <core:Item key="Open" text="Open"/>
                                             <core:Item key="Resolved" text="Resolved"/>

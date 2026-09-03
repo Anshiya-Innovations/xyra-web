@@ -97,9 +97,18 @@ sap.ui.define([
             var sModule = oModel.getProperty("/filters/module");
             var sAdmin = oModel.getProperty("/filters/adminUser");
 
-            var oDateRangePicker = this.byId("filterDateRange");
-            var dStart = oDateRangePicker ? oDateRangePicker.getStartDate() : null;
-            var dEnd = oDateRangePicker ? oDateRangePicker.getEndDate() : null;
+            var oStartDatePicker = this.byId("filterStartingDate");
+            var oEndDatePicker = this.byId("filterEndingDate");
+            var dStart = oStartDatePicker && oStartDatePicker.getStartDate ? oStartDatePicker.getStartDate() : null;
+            var dEnd = oEndDatePicker && oEndDatePicker.getEndDate ? oEndDatePicker.getEndDate() : null;
+
+            if (!dStart && !dEnd) {
+                var oDateRangePicker = this.byId("filterDateRange");
+                if (oDateRangePicker) {
+                    dStart = oDateRangePicker.getStartDate ? oDateRangePicker.getStartDate() : null;
+                    dEnd = oDateRangePicker.getEndDate ? oDateRangePicker.getEndDate() : null;
+                }
+            }
 
             var aFiltered = aAllLogs.filter(function (oLog) {
                 // Search query matching
@@ -121,24 +130,27 @@ sap.ui.define([
                 }
 
                 // Admin user matching
-                if (sAdmin && sAdmin !== "All" && oLog.adminUser.indexOf(sAdmin) === -1 && sAdmin.indexOf(oLog.adminUser) === -1) {
-                    return false;
+                if (sAdmin && sAdmin !== "All") {
+                    var sCleanAdmin = (sAdmin.indexOf("@") !== -1) ? sAdmin.split(" ")[0].toLowerCase() : sAdmin.toLowerCase();
+                    var sLogAdmin = (oLog.adminUser || "").toLowerCase();
+                    if (sLogAdmin.indexOf(sCleanAdmin) === -1 && sCleanAdmin.indexOf(sLogAdmin) === -1) {
+                        return false;
+                    }
                 }
 
                 // Date range matching
                 if (dStart || dEnd) {
                     var dLogDate = new Date(oLog.timestamp);
-                    if (isNaN(dLogDate.getTime())) {
-                        dLogDate = new Date();
-                    }
-                    if (dStart && dLogDate < dStart) {
-                        return false;
-                    }
-                    if (dEnd) {
-                        var dEndDay = new Date(dEnd.getTime());
-                        dEndDay.setHours(23, 59, 59, 999);
-                        if (dLogDate > dEndDay) {
+                    if (!isNaN(dLogDate.getTime())) {
+                        if (dStart && dLogDate < dStart) {
                             return false;
+                        }
+                        if (dEnd) {
+                            var dEndDay = new Date(dEnd.getTime());
+                            dEndDay.setHours(23, 59, 59, 999);
+                            if (dLogDate > dEndDay) {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -156,6 +168,8 @@ sap.ui.define([
             oModel.setProperty("/filters/module", "All");
             oModel.setProperty("/filters/adminUser", "All");
 
+            if (this.byId("filterStartingDate")) { this.byId("filterStartingDate").reset(); }
+            if (this.byId("filterEndingDate")) { this.byId("filterEndingDate").reset(); }
             var oDateRangePicker = this.byId("filterDateRange");
             if (oDateRangePicker) { oDateRangePicker.reset(); }
 

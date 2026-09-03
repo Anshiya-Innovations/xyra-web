@@ -202,14 +202,15 @@ sap.ui.define([
                     { key: "GLOBAL", text: "GLOBAL" }
                 ]);
             }
+            this.onSearch();
         },
 
         onRegionChange: function () {
-            // Cascading hook for Region
+            this.onSearch();
         },
 
         onPlatformChange: function () {
-            // Cascading hook for Platform
+            this.onSearch();
         },
 
         onSystemChange: function (oEvent) {
@@ -237,6 +238,19 @@ sap.ui.define([
                     { key: "300", text: "300" }
                 ]);
             }
+            this.onSearch();
+        },
+
+        onClientChange: function () {
+            this.onSearch();
+        },
+
+        onControlChange: function () {
+            this.onSearch();
+        },
+
+        onStatusChange: function () {
+            this.onSearch();
         },
 
         onSearch: function () {
