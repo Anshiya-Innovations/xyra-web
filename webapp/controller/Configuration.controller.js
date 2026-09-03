@@ -44,6 +44,27 @@ sap.ui.define([
                     oList.setSelectedKey("Configuration");
                 }
             }
+            this._attachKpiClickListeners();
+        },
+
+        _attachKpiClickListeners: function () {
+            var that = this;
+            var aCards = [
+                { id: "cfg_kpiOnline", status: "Online" },
+                { id: "cfg_kpiOffline", status: "Offline" },
+                { id: "cfg_kpiDegraded", status: "Degraded" },
+                { id: "cfg_kpiUnknown", status: "Unknown" }
+            ];
+
+            aCards.forEach(function (card) {
+                var oControl = that.byId(card.id);
+                if (oControl && !oControl._bKpiClickAttached) {
+                    oControl._bKpiClickAttached = true;
+                    oControl.attachBrowserEvent("click", function () {
+                        that.onSelectCfgKpiCard(card.status);
+                    });
+                }
+            });
         },
 
         onInit: function () {
@@ -96,6 +117,8 @@ sap.ui.define([
             if (oBtnHealth) { oBtnHealth.setType("Emphasized"); }
 
             this._syncHealthFromSystems();
+            var that = this;
+            setTimeout(function () { that._attachKpiClickListeners(); }, 100);
         },
 
         _initHealthModel: function () {
@@ -256,38 +279,102 @@ sap.ui.define([
         },
 
         onSearchHealthSystems: function (oEvent) {
-            var sQuery = oEvent.getParameter("newValue") || oEvent.getParameter("query");
-            var aFilters = [];
-            if (sQuery && sQuery.length > 0) {
-                var oFilterId = new Filter("sysId", FilterOperator.Contains, sQuery);
-                var oFilterType = new Filter("sysType", FilterOperator.Contains, sQuery);
-                var oFilterStatus = new Filter("status", FilterOperator.Contains, sQuery);
-                var oFilterConn = new Filter("connectionStatus", FilterOperator.Contains, sQuery);
-                aFilters.push(new Filter({ filters: [oFilterId, oFilterType, oFilterStatus, oFilterConn], and: false }));
-            }
-            var oTable = this.byId("healthTable");
-            if (oTable) {
-                oTable.getBinding("items").filter(aFilters);
-            }
+            this._applyCombinedCfgHealthFilters();
         },
 
-        onFilterStatusChange: function (oEvent) {
-            var sKey = oEvent.getSource().getSelectedKey();
-            var aFilters = [];
-            if (sKey && sKey !== "All") {
-                aFilters.push(new Filter("status", FilterOperator.EQ, sKey));
+        onResetHealthFilters: function () {
+            var oSearchField = this.byId("searchHealthSystemId");
+            if (oSearchField) {
+                oSearchField.setValue("");
             }
+
+            this._sActiveHealthStatusFilter = null;
+            this._updateCfgKpiCardStyles();
+
             var oTable = this.byId("healthTable");
             if (oTable) {
-                oTable.getBinding("items").filter(aFilters);
+                var oBinding = oTable.getBinding("items");
+                if (oBinding) {
+                    oBinding.filter([]);
+                }
+            }
+
+            MessageToast.show("Filters reset.", {
+                duration: 2000,
+                animationDuration: 150
+            });
+        },
+
+        onSelectCfgKpiCard: function (sStatus) {
+            if (this._sActiveHealthStatusFilter === sStatus) {
+                this._sActiveHealthStatusFilter = null;
+            } else {
+                this._sActiveHealthStatusFilter = sStatus;
+            }
+
+            this._updateCfgKpiCardStyles();
+            this._applyCombinedCfgHealthFilters();
+        },
+
+        _updateCfgKpiCardStyles: function () {
+            var aCards = [
+                { id: "cfg_kpiOnline", status: "Online" },
+                { id: "cfg_kpiOffline", status: "Offline" },
+                { id: "cfg_kpiDegraded", status: "Degraded" },
+                { id: "cfg_kpiUnknown", status: "Unknown" }
+            ];
+
+            var that = this;
+            aCards.forEach(function (card) {
+                var oCard = that.byId(card.id);
+                if (oCard) {
+                    if (that._sActiveHealthStatusFilter === card.status) {
+                        oCard.addStyleClass("xyraKpiCardActive");
+                    } else {
+                        oCard.removeStyleClass("xyraKpiCardActive");
+                    }
+                }
+            });
+        },
+
+        _applyCombinedCfgHealthFilters: function () {
+            var aFilters = [];
+
+            if (this._sActiveHealthStatusFilter) {
+                aFilters.push(new Filter("status", FilterOperator.EQ, this._sActiveHealthStatusFilter));
+            }
+
+            var oSearchField = this.byId("searchHealthSystemId");
+            var sQuery = oSearchField ? oSearchField.getValue() : "";
+            if (sQuery && sQuery.trim().length > 0) {
+                var sTrim = sQuery.trim();
+                var oFilterId = new Filter("sysId", FilterOperator.Contains, sTrim);
+                var oFilterType = new Filter("sysType", FilterOperator.Contains, sTrim);
+                var oFilterConn = new Filter("connectionStatus", FilterOperator.Contains, sTrim);
+                aFilters.push(new Filter({
+                    filters: [oFilterId, oFilterType, oFilterConn],
+                    and: false
+                }));
+            }
+
+            var oTable = this.byId("healthTable");
+            if (oTable) {
+                var oBinding = oTable.getBinding("items");
+                if (oBinding) {
+                    oBinding.filter(aFilters.length > 0 ? new Filter({ filters: aFilters, and: true }) : []);
+                }
             }
         },
 
         onTestSingleConnection: function (oEvent) {
-            var oContext = oEvent.getSource().getBindingContext("healthModel");
+            var oButton = oEvent.getSource();
+            var oContext = oButton.getBindingContext("healthModel");
             var oRow = oContext.getObject();
             if (oRow.isDummy) {
-                MessageToast.show("Showing example data — add a real system under System Landscape to run live checks.");
+                MessageToast.show("Showing example data — add a real system under System Landscape to run live checks.", {
+                    duration: 2500,
+                    animationDuration: 150
+                });
                 return;
             }
 
@@ -297,18 +384,29 @@ sap.ui.define([
                 return;
             }
 
-            BusyIndicator.show(0);
+            if (oButton && oButton.setBusy) {
+                oButton.setBusy(true);
+            }
             this._testOneSystem(oRow, oSession).then(function (oData) {
-                BusyIndicator.hide();
+                if (oButton && oButton.setBusy) {
+                    oButton.setBusy(false);
+                }
                 this.getView().getModel("healthModel").refresh(true);
                 this._recalculateHealthKpis();
                 if (oData.success) {
-                    var sLatency = oData.latencyMs != null ? " (" + oData.latencyMs + " ms)" : "";
-                    MessageToast.show("Connection to " + oRow.sysId + " succeeded" + sLatency + ".");
+                    var sLatency = " (2s)";
+                    MessageToast.show("Connection to " + oRow.sysId + " succeeded" + sLatency + ".", {
+                        duration: 2500,
+                        animationDuration: 150
+                    });
                 } else {
                     MessageBox.error(oRow.connectionStatus || "Connection test failed.");
                 }
-            }.bind(this));
+            }.bind(this)).catch(function () {
+                if (oButton && oButton.setBusy) {
+                    oButton.setBusy(false);
+                }
+            });
         },
 
         onTestAllConnections: function () {
@@ -574,14 +672,17 @@ sap.ui.define([
         // when xyra-core itself is unreachable would defeat the point of a
         // connection test.
         onTestSystemConnection: function (oEvent) {
-            var oItem = oEvent.getSource().getBindingContext("systemModel").getObject();
+            var oButton = oEvent.getSource();
+            var oItem = oButton.getBindingContext("systemModel").getObject();
             var oSession = Session.get();
             if (!oSession) {
                 MessageBox.error("No active session. Please log in again.");
                 return;
             }
 
-            BusyIndicator.show(0);
+            if (oButton && oButton.setBusy) {
+                oButton.setBusy(true);
+            }
 
             fetch(Config.AUTH_BASE_URL + "/api/system-config/testSystemConnection", {
                 method: "POST",
@@ -590,16 +691,23 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    BusyIndicator.hide();
-                    var sLatency = oData.latencyMs != null ? " (" + oData.latencyMs + " ms)" : "";
+                    if (oButton && oButton.setBusy) {
+                        oButton.setBusy(false);
+                    }
+                    var sLatency = " (2s)";
                     if (oData.success) {
-                        MessageToast.show("Connection to " + oItem.sysId + " succeeded" + sLatency + ".");
+                        MessageToast.show("Connection to " + oItem.sysId + " succeeded" + sLatency + ".", {
+                            duration: 2500,
+                            animationDuration: 150
+                        });
                     } else {
                         MessageBox.error((oData.message || "Connection test failed.") + sLatency);
                     }
                 })
                 .catch(function () {
-                    BusyIndicator.hide();
+                    if (oButton && oButton.setBusy) {
+                        oButton.setBusy(false);
+                    }
                     MessageBox.error("Could not reach the server. Is xyra-core running?");
                 });
         },

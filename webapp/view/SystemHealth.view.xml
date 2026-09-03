@@ -99,7 +99,7 @@
                         <!-- HEALTH KPI CARDS SUMMARY BAR -->
                         <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
                             <!-- ONLINE SYSTEMS -->
-                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardOnline">
+                            <VBox id="sh_kpiOnline" width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardOnline" tooltip="Click to filter by Online systems">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center">
                                     <VBox>
                                         <Text text="Online Systems" class="textMuted fontSizeSmall fontWeightBold"/>
@@ -114,7 +114,7 @@
                             </VBox>
 
                             <!-- OFFLINE SYSTEMS -->
-                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardOffline">
+                            <VBox id="sh_kpiOffline" width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardOffline" tooltip="Click to filter by Offline systems">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center">
                                     <VBox>
                                         <Text text="Offline Systems" class="textMuted fontSizeSmall fontWeightBold"/>
@@ -129,7 +129,7 @@
                             </VBox>
 
                             <!-- DEGRADED SYSTEMS -->
-                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardDegraded">
+                            <VBox id="sh_kpiDegraded" width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardDegraded" tooltip="Click to filter by Degraded systems">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center">
                                     <VBox>
                                         <Text text="Degraded Systems" class="textMuted fontSizeSmall fontWeightBold"/>
@@ -144,7 +144,7 @@
                             </VBox>
 
                             <!-- MAINTENANCE SYSTEMS -->
-                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardUnknown">
+                            <VBox id="sh_kpiMaintenance" width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer xyraKpiCardUnknown" tooltip="Click to filter by Maintenance systems">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center">
                                     <VBox>
                                         <Text text="Maintenance Systems" class="textMuted fontSizeSmall fontWeightBold"/>
@@ -162,17 +162,12 @@
                         <!-- CONTROLS & FILTER BAR -->
                         <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
                             <HBox alignItems="Center">
-                                <SearchField id="sh_searchHealthSystemId" width="18rem" placeholder="Search System ID / Type..." liveChange="onSearchHealthSystems" search="onSearchHealthSystems" class="sapUiSmallMarginEnd"/>
-                                <Text text="Status Filter:" class="sapUiTinyMarginEnd fontWeightBold textMuted"/>
-                                <Select id="sh_statusFilterSelect" width="12rem" change="onFilterStatusChange" selectedKey="All">
-                                    <core:Item key="All" text="All Statuses"/>
-                                    <core:Item key="Online" text="🟢 Online"/>
-                                    <core:Item key="Offline" text="🔴 Offline"/>
-                                    <core:Item key="Degraded" text="🟠 Degraded"/>
-                                    <core:Item key="Maintenance" text="⚙ Maintenance"/>
-                                </Select>
+                                <SearchField id="sh_searchHealthSystemId" width="18rem" placeholder="Search System ID / Type..." liveChange="onSearchHealthSystems" search="onSearchHealthSystems"/>
                             </HBox>
-                            <Button text="Test All Connections" icon="sap-icon://connected" type="Default" press="onTestAllConnections"/>
+                            <HBox alignItems="Center">
+                                <Button text="Reset" icon="sap-icon://reset" type="Default" press="onResetFilters" class="sapUiTinyMarginEnd"/>
+                                <Button text="Test All Connections" icon="sap-icon://connected" type="Default" press="onTestAllConnections"/>
+                            </HBox>
                         </HBox>
 
                         <!-- LIVE SYSTEM HEALTH MONITORING TABLE -->

@@ -76,11 +76,10 @@ sap.ui.define([
         onTestConnection: function () {
             var oModel = this.getView().getModel("detailsModel");
             var sSysId = oModel.getProperty("/sysId");
-            BusyIndicator.show(0);
-            setTimeout(function () {
-                BusyIndicator.hide();
-                MessageToast.show("RFC Ping Successful for " + sSysId + ". Latency: 24 ms.");
-            }, 800);
+            MessageToast.show("RFC Ping Successful for " + sSysId + ". Latency: 24 ms.", {
+                duration: 2500,
+                animationDuration: 150
+            });
         },
 
         onNavBack: function () {

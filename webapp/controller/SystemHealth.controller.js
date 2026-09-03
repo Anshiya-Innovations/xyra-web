@@ -16,6 +16,27 @@ sap.ui.define([
         onInit: function () {
             this._initHealthModel();
             this._autoRefreshInterval = null;
+            this._sActiveStatusFilter = null;
+        },
+
+        onAfterRendering: function () {
+            var that = this;
+            var aCards = [
+                { id: "sh_kpiOnline", status: "Online" },
+                { id: "sh_kpiOffline", status: "Offline" },
+                { id: "sh_kpiDegraded", status: "Degraded" },
+                { id: "sh_kpiMaintenance", status: "Maintenance" }
+            ];
+
+            aCards.forEach(function (card) {
+                var oControl = that.byId(card.id);
+                if (oControl && !oControl._bKpiClickAttached) {
+                    oControl._bKpiClickAttached = true;
+                    oControl.attachBrowserEvent("click", function () {
+                        that.onSelectKpiCard(card.status);
+                    });
+                }
+            });
         },
 
         _initHealthModel: function () {
@@ -227,35 +248,94 @@ sap.ui.define([
         },
 
         onSearchHealthSystems: function (oEvent) {
-            var sQuery = oEvent.getParameter("newValue") || oEvent.getParameter("query");
+            this._applyCombinedHealthFilters();
+        },
+
+        onResetFilters: function () {
+            var oSearchField = this.byId("sh_searchHealthSystemId");
+            if (oSearchField) {
+                oSearchField.setValue("");
+            }
+
+            this._sActiveStatusFilter = null;
+            this._updateKpiCardStyles();
+
+            var oTable = this.byId("sh_healthTable");
+            if (oTable) {
+                var oBinding = oTable.getBinding("items");
+                if (oBinding) {
+                    oBinding.filter([]);
+                }
+            }
+
+            MessageToast.show("Filters reset.", {
+                duration: 2000,
+                animationDuration: 150
+            });
+        },
+
+        onSelectKpiCard: function (sStatus) {
+            // Toggle selection: if clicked again, clear filter
+            if (this._sActiveStatusFilter === sStatus) {
+                this._sActiveStatusFilter = null;
+            } else {
+                this._sActiveStatusFilter = sStatus;
+            }
+
+            this._updateKpiCardStyles();
+            this._applyCombinedHealthFilters();
+        },
+
+        _updateKpiCardStyles: function () {
+            var aCards = [
+                { id: "sh_kpiOnline", status: "Online" },
+                { id: "sh_kpiOffline", status: "Offline" },
+                { id: "sh_kpiDegraded", status: "Degraded" },
+                { id: "sh_kpiMaintenance", status: "Maintenance" }
+            ];
+
+            var that = this;
+            aCards.forEach(function (card) {
+                var oCard = that.byId(card.id);
+                if (oCard) {
+                    if (that._sActiveStatusFilter === card.status) {
+                        oCard.addStyleClass("xyraKpiCardActive");
+                    } else {
+                        oCard.removeStyleClass("xyraKpiCardActive");
+                    }
+                }
+            });
+        },
+
+        _applyCombinedHealthFilters: function () {
             var aFilters = [];
-            if (sQuery && sQuery.length > 0) {
-                var oFilterId = new Filter("sysId", FilterOperator.Contains, sQuery);
-                var oFilterType = new Filter("sysType", FilterOperator.Contains, sQuery);
-                var oFilterStatus = new Filter("status", FilterOperator.Contains, sQuery);
-                var oFilterConn = new Filter("connectionStatus", FilterOperator.Contains, sQuery);
+
+            // 1. Status filter from selected KPI card
+            if (this._sActiveStatusFilter) {
+                aFilters.push(new Filter("status", FilterOperator.EQ, this._sActiveStatusFilter));
+            }
+
+            // 2. Search query filter
+            var oSearchField = this.byId("sh_searchHealthSystemId");
+            var sQuery = oSearchField ? oSearchField.getValue() : "";
+            if (sQuery && sQuery.trim().length > 0) {
+                var sTrim = sQuery.trim();
+                var oFilterId = new Filter("sysId", FilterOperator.Contains, sTrim);
+                var oFilterType = new Filter("sysType", FilterOperator.Contains, sTrim);
+                var oFilterStatus = new Filter("status", FilterOperator.Contains, sTrim);
+                var oFilterConn = new Filter("connectionStatus", FilterOperator.Contains, sTrim);
                 aFilters.push(new Filter({
                     filters: [oFilterId, oFilterType, oFilterStatus, oFilterConn],
                     and: false
                 }));
             }
-            var oTable = this.byId("sh_healthTable");
-            if (oTable) {
-                var oBinding = oTable.getBinding("items");
-                if (oBinding) { oBinding.filter(aFilters); }
-            }
-        },
 
-        onFilterStatusChange: function (oEvent) {
-            var sKey = oEvent.getSource().getSelectedKey();
-            var aFilters = [];
-            if (sKey && sKey !== "All") {
-                aFilters.push(new Filter("status", FilterOperator.EQ, sKey));
-            }
             var oTable = this.byId("sh_healthTable");
             if (oTable) {
                 var oBinding = oTable.getBinding("items");
-                if (oBinding) { oBinding.filter(aFilters); }
+                if (oBinding) {
+                    oBinding.filter(aFilters.length > 0 ? new Filter({ filters: aFilters, and: true }) : []);
+                }
             }
         },
 
