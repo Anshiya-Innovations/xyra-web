@@ -294,7 +294,7 @@
                                                 <Text text="{reportsModel>description}"/>
                                                 <Text text="{reportsModel>lastGenerated}"/>
                                                 <HBox justifyContent="Center" alignItems="Center">
-                                                    <Button text="Generate" type="Default" press="onGenerateRowReport"/>
+                                                    <Button text="Generate" icon="sap-icon://create" type="Default" press="onGenerateRowReport"/>
                                                 </HBox>
                                             </cells>
                                         </ColumnListItem>

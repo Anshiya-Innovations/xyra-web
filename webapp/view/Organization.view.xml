@@ -165,7 +165,6 @@
                             <Text text="Manage organizations, company access and organization-specific configurations." class="textMuted sapUiNoMargin"/>
                         </VBox>
                         <ToolbarSpacer/>
-                        <Button text="Add Organization" icon="sap-icon://add" type="Emphasized" press="onOpenAddOrgDialog" class="sapUiSmallMarginEnd"/>
                         <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
                     </OverflowToolbar>
                 </customHeader>
@@ -183,13 +182,30 @@
                                     <!-- SEARCH ORGANIZATIONS -->
                                     <SearchField
                                         id="searchOrgInput"
-                                        width="18rem"
+                                        width="16rem"
                                         placeholder="Search Organization / Company ID..."
                                         liveChange="onSearchOrg"
-                                        search="onSearchOrg"/>
+                                        search="onSearchOrg">
+                                        <layoutData>
+                                            <OverflowToolbarLayoutData priority="NeverOverflow"/>
+                                        </layoutData>
+                                    </SearchField>
+
+                                    <!-- ADD ORGANIZATION BUTTON -->
+                                    <Button
+                                        id="btnAddOrg"
+                                        text="Add Organization"
+                                        icon="sap-icon://add"
+                                        type="Emphasized"
+                                        press="onOpenAddOrgDialog"
+                                        class="sapUiTinyMarginBegin sapUiSmallMarginEnd">
+                                        <layoutData>
+                                            <OverflowToolbarLayoutData priority="NeverOverflow"/>
+                                        </layoutData>
+                                    </Button>
 
                                     <!-- STATUS FILTER -->
-                                    <Select id="statusFilterSelect" selectedKey="All" change="onFilterOrg" width="11rem" class="sapUiTinyMarginBegin">
+                                    <Select id="statusFilterSelect" selectedKey="All" change="onFilterOrg" width="9.5rem" class="sapUiTinyMarginBegin">
                                         <core:Item key="All" text="All Statuses"/>
                                         <core:Item key="Active" text="Active"/>
                                         <core:Item key="Pending Setup" text="Pending Setup"/>
@@ -198,7 +214,7 @@
                                     </Select>
 
                                     <!-- REGION FILTER -->
-                                    <Select id="regionFilterSelect" selectedKey="All" change="onFilterOrg" width="11rem" class="sapUiTinyMarginBegin sapUiSmallMarginEnd">
+                                    <Select id="regionFilterSelect" selectedKey="All" change="onFilterOrg" width="9.5rem" class="sapUiTinyMarginBegin">
                                         <core:Item key="All" text="All Regions"/>
                                         <core:Item key="Asia Pacific" text="Asia Pacific"/>
                                         <core:Item key="North America" text="North America"/>
