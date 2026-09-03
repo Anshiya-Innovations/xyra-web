@@ -2906,9 +2906,25 @@ div[id*="-text"] {
 .sapMBtn[aria-label="Notifications"],
 .sapMBtn[tooltip="Notifications"],
 .sapMBtn[tooltip="Alert Notifications"],
-.xyraNotificationBtn {
+.xyraNotificationBtn,
+.sapMBtn[title="Admin Dashboard"],
+.sapMBtn[tooltip="Admin Dashboard"],
+.sapMBtn[title="Home"],
+.sapMBtn[tooltip="Home"],
+.sapMBtn[title="Navigate Home"],
+.sapMBtn[tooltip="Navigate Home"],
+.sapMBtn[title="Back to Dashboard"],
+.sapMBtn[tooltip="Back to Dashboard"],
+.sapMBtn[title="Back to Queue"],
+.sapMBtn[tooltip="Back to Queue"],
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]),
+.xyraHomeBtn {
   position: relative !important;
   overflow: visible !important;
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+  padding: 0 !important;
 }
 
 .sapMBtn[title="Notifications"] .sapMBtnInner,
@@ -2916,9 +2932,98 @@ div[id*="-text"] {
 .sapMBtn[aria-label="Notifications"] .sapMBtnInner,
 .sapMBtn[tooltip="Notifications"] .sapMBtnInner,
 .sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner,
-.xyraNotificationBtn .sapMBtnInner {
+.xyraNotificationBtn .sapMBtnInner,
+.sapMBtn[title="Admin Dashboard"] .sapMBtnInner,
+.sapMBtn[tooltip="Admin Dashboard"] .sapMBtnInner,
+.sapMBtn[title="Home"] .sapMBtnInner,
+.sapMBtn[tooltip="Home"] .sapMBtnInner,
+.sapMBtn[title="Navigate Home"] .sapMBtnInner,
+.sapMBtn[tooltip="Navigate Home"] .sapMBtnInner,
+.sapMBtn[title="Back to Dashboard"] .sapMBtnInner,
+.sapMBtn[tooltip="Back to Dashboard"] .sapMBtnInner,
+.sapMBtn[title="Back to Queue"] .sapMBtnInner,
+.sapMBtn[tooltip="Back to Queue"] .sapMBtnInner,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner,
+.xyraHomeBtn .sapMBtnInner {
   position: relative !important;
   overflow: visible !important;
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+.sapMBtn[title="Notifications"] .sapUiIcon,
+.sapMBtn[title="Alert Notifications"] .sapUiIcon,
+.sapMBtn[aria-label="Notifications"] .sapUiIcon,
+.sapMBtn[tooltip="Notifications"] .sapUiIcon,
+.sapMBtn[tooltip="Alert Notifications"] .sapUiIcon,
+.xyraNotificationBtn .sapUiIcon,
+.sapMBtn[title="Admin Dashboard"] .sapUiIcon,
+.sapMBtn[tooltip="Admin Dashboard"] .sapUiIcon,
+.sapMBtn[title="Home"] .sapUiIcon,
+.sapMBtn[tooltip="Home"] .sapUiIcon,
+.sapMBtn[title="Navigate Home"] .sapUiIcon,
+.sapMBtn[tooltip="Navigate Home"] .sapUiIcon,
+.sapMBtn[title="Back to Dashboard"] .sapUiIcon,
+.sapMBtn[tooltip="Back to Dashboard"] .sapUiIcon,
+.sapMBtn[title="Back to Queue"] .sapUiIcon,
+.sapMBtn[tooltip="Back to Queue"] .sapUiIcon,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapUiIcon,
+.xyraHomeBtn .sapUiIcon {
+  font-size: 1.25rem !important;
+  color: #533bff !important;
+  line-height: normal !important;
+  display: inline-block !important;
+  transition: all 0.15s ease !important;
+}
+
+.sapMBtn[title="Notifications"]:hover .sapUiIcon,
+.sapMBtn[title="Alert Notifications"]:hover .sapUiIcon,
+.sapMBtn[aria-label="Notifications"]:hover .sapUiIcon,
+.sapMBtn[tooltip="Notifications"]:hover .sapUiIcon,
+.sapMBtn[tooltip="Alert Notifications"]:hover .sapUiIcon,
+.xyraNotificationBtn:hover .sapUiIcon,
+.sapMBtn[title="Admin Dashboard"]:hover .sapUiIcon,
+.sapMBtn[tooltip="Admin Dashboard"]:hover .sapUiIcon,
+.sapMBtn[title="Home"]:hover .sapUiIcon,
+.sapMBtn[tooltip="Home"]:hover .sapUiIcon,
+.sapMBtn[title="Navigate Home"]:hover .sapUiIcon,
+.sapMBtn[tooltip="Navigate Home"]:hover .sapUiIcon,
+.sapMBtn[title="Back to Dashboard"]:hover .sapUiIcon,
+.sapMBtn[tooltip="Back to Dashboard"]:hover .sapUiIcon,
+.sapMBtn[title="Back to Queue"]:hover .sapUiIcon,
+.sapMBtn[tooltip="Back to Queue"]:hover .sapUiIcon,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):hover .sapUiIcon,
+.xyraHomeBtn:hover .sapUiIcon {
+  color: #432bdf !important;
+  transform: scale(1.05);
+}
+
+.sapMBtn[title="Notifications"]:hover .sapMBtnInner,
+.sapMBtn[title="Alert Notifications"]:hover .sapMBtnInner,
+.sapMBtn[aria-label="Notifications"]:hover .sapMBtnInner,
+.sapMBtn[tooltip="Notifications"]:hover .sapMBtnInner,
+.sapMBtn[tooltip="Alert Notifications"]:hover .sapMBtnInner,
+.xyraNotificationBtn:hover .sapMBtnInner,
+.sapMBtn[title="Admin Dashboard"]:hover .sapMBtnInner,
+.sapMBtn[tooltip="Admin Dashboard"]:hover .sapMBtnInner,
+.sapMBtn[title="Home"]:hover .sapMBtnInner,
+.sapMBtn[tooltip="Home"]:hover .sapMBtnInner,
+.sapMBtn[title="Navigate Home"]:hover .sapMBtnInner,
+.sapMBtn[tooltip="Navigate Home"]:hover .sapMBtnInner,
+.sapMBtn[title="Back to Dashboard"]:hover .sapMBtnInner,
+.sapMBtn[tooltip="Back to Dashboard"]:hover .sapMBtnInner,
+.sapMBtn[title="Back to Queue"]:hover .sapMBtnInner,
+.sapMBtn[tooltip="Back to Queue"]:hover .sapMBtnInner,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):hover .sapMBtnInner,
+.xyraHomeBtn:hover .sapMBtnInner {
+  background-color: #eef2ff !important;
 }
 
 .sapMBtn[title="Notifications"]::after,
@@ -2928,25 +3033,26 @@ div[id*="-text"] {
 .sapMBtn[tooltip="Alert Notifications"]::after,
 .xyraNotificationBtn::after {
   content: attr(data-unread-count);
-  position: absolute;
-  top: 0px;
-  right: 0px;
+  position: absolute !important;
+  top: -1px !important;
+  right: -1px !important;
   background-color: #ef4444 !important;
   color: #ffffff !important;
-  font-size: 0.6rem !important;
+  font-size: 0.65rem !important;
   font-weight: 800 !important;
-  height: 15px !important;
-  min-width: 15px !important;
-  padding: 0 3px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  padding: 0 4px !important;
   border-radius: 9999px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   line-height: 1 !important;
   pointer-events: none !important;
-  box-shadow: 0 2px 5px rgba(239, 68, 68, 0.5) !important;
-  border: 1px solid #ffffff !important;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.45) !important;
+  border: 2px solid #ffffff !important;
   z-index: 100 !important;
+  box-sizing: border-box !important;
 }
 
 /* No default/placeholder badge - only actually-set, nonzero unread counts show.
