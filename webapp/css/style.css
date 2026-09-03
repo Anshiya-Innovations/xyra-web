@@ -1383,17 +1383,28 @@ span.sapTntNLITagContainer {
 }
 
 .sapMSF:focus-within,
-.sapMSFF:focus-within,
 .sapMSF:focus,
-.sapMSFF:focus,
-.sapMSFFocused {
+.sapMSF.sapMFocus {
   outline: none !important;
   box-shadow: none !important;
   border: none !important;
 }
 
-.sapMSF:hover .sapMSFF,
+.sapMSFF:focus,
+.sapMSFF:focus-within,
+.sapMSFFocused .sapMSFF,
+.sapMSF.sapMFocus .sapMSFF,
+.sapMSF.sapMFocus > .sapMSFF,
+.sapMFocus > .sapMSFF,
 .sapMSF:focus-within .sapMSFF {
+  outline: none !important;
+  box-shadow: none !important;
+  border: 1px solid #533bff !important;
+  border-color: #533bff !important;
+}
+
+.sapMSF:hover .sapMSFF {
+  border: 1px solid #533bff !important;
   border-color: #533bff !important;
 }
 
@@ -2027,8 +2038,9 @@ td .sapMBtnInner.sapMBtnReject:active,
   line-height: 38px !important;
 }
 
-/* ===== SearchField in Toolbars (OverflowToolbar) ===== */
+/* ===== SearchField in Table Toolbars (OverflowToolbar / Table Header) ===== */
 .sapMOverflowToolbar .sapMSF,
+.sapMOTB .sapMSF,
 .sapMTB .sapMSF,
 .sapMHeaderToolbar .sapMSF {
   height: 38px !important;
@@ -2040,10 +2052,11 @@ td .sapMBtnInner.sapMBtnReject:active,
   outline: none !important;
   box-shadow: none !important;
   background: transparent !important;
-  overflow: hidden !important;
+  overflow: visible !important;
 }
 
 .sapMOverflowToolbar .sapMSFF,
+.sapMOTB .sapMSFF,
 .sapMTB .sapMSFF,
 .sapMHeaderToolbar .sapMSFF {
   height: 38px !important;
@@ -2057,36 +2070,80 @@ td .sapMBtnInner.sapMBtnReject:active,
   border-radius: 8px !important;
   outline: none !important;
   box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
   transition: border-color 0.15s ease !important;
 }
 
-.sapMSF:focus,
-.sapMSFF:focus,
-.sapMSFFocused,
-.sapMSF:focus-within,
-.sapMSFF:focus-within {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.sapMSFF:focus-within,
-.sapMSFFocused .sapMSFF,
-.sapMSF:focus-within .sapMSFF {
+.sapMOverflowToolbar .sapMSF:hover .sapMSFF,
+.sapMOTB .sapMSF:hover .sapMSFF,
+.sapMTB .sapMSF:hover .sapMSFF,
+.sapMHeaderToolbar .sapMSF:hover .sapMSFF {
+  border: 1px solid #533bff !important;
   border-color: #533bff !important;
-  box-shadow: none !important;
-  outline: none !important;
 }
 
-.sapMSF .sapMSFI,
-.sapMSFF .sapMSFI {
+.sapMSF.sapMFocus .sapMSFF,
+.sapMSF.sapMFocus > .sapMSFF,
+.sapMFocus > .sapMSFF,
+.sapMOverflowToolbar .sapMSF.sapMFocus .sapMSFF,
+.sapMOTB .sapMSF.sapMFocus .sapMSFF,
+.sapMTB .sapMSF.sapMFocus .sapMSFF,
+.sapMHeaderToolbar .sapMSF.sapMFocus .sapMSFF,
+.sapMOverflowToolbar .sapMSF:focus-within .sapMSFF,
+.sapMOTB .sapMSF:focus-within .sapMSFF,
+.sapMTB .sapMSF:focus-within .sapMSFF,
+.sapMHeaderToolbar .sapMSF:focus-within .sapMSFF,
+.sapMOverflowToolbar .sapMSFF:focus,
+.sapMOverflowToolbar .sapMSFF:focus-within,
+.sapMOTB .sapMSFF:focus,
+.sapMOTB .sapMSFF:focus-within,
+.sapMTB .sapMSFF:focus,
+.sapMTB .sapMSFF:focus-within,
+.sapMHeaderToolbar .sapMSFF:focus,
+.sapMHeaderToolbar .sapMSFF:focus-within {
+  border: 1px solid #533bff !important;
+  border-color: #533bff !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sapMOverflowToolbar .sapMSF .sapMSFI,
+.sapMOTB .sapMSF .sapMSFI,
+.sapMTB .sapMSF .sapMSFI,
+.sapMHeaderToolbar .sapMSF .sapMSFI,
+.sapMOverflowToolbar .sapMSFF .sapMSFI,
+.sapMOTB .sapMSFF .sapMSFI,
+.sapMTB .sapMSFF .sapMSFI,
+.sapMHeaderToolbar .sapMSFF .sapMSFI {
   border: none !important;
+  border-radius: 0 !important;
   outline: none !important;
   box-shadow: none !important;
   background: transparent !important;
   height: 36px !important;
   line-height: 36px !important;
   box-sizing: border-box !important;
+  padding-left: 0.75rem !important;
+  padding-right: 4.5rem !important;
+  color: #0f172a !important;
+}
+
+.sapMOverflowToolbar .sapMSF .sapMSFS,
+.sapMOverflowToolbar .sapMSF .sapMSFB,
+.sapMOTB .sapMSF .sapMSFS,
+.sapMOTB .sapMSF .sapMSFB,
+.sapMTB .sapMSF .sapMSFS,
+.sapMTB .sapMSF .sapMSFB {
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #64748b !important;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .sapMSF .sapMSFBtn,
@@ -3976,9 +4033,7 @@ span.sapMColumnHeaderContent,
 }
 
 .xyraFieldGroup .sapMSF .sapMSFI,
-.xyraFieldGroup .sapMSFF .sapMSFI,
-.sapMSF .sapMSFI,
-.sapMSFF .sapMSFI {
+.xyraFieldGroup .sapMSFF .sapMSFI {
   height: 44px !important;
   line-height: 44px !important;
   font-size: 0.925rem !important;

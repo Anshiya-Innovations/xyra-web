@@ -232,7 +232,6 @@
                                 <OverflowToolbar height="3rem">
                                     <Title text="Filter Criteria" level="H5"/>
                                     <ToolbarSpacer/>
-                                    <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearch" class="sapUiTinyMarginEnd"/>
                                     <Button text="Reset" type="Transparent" icon="sap-icon://reset" press="onReset"/>
                                 </OverflowToolbar>
                             </headerToolbar>
