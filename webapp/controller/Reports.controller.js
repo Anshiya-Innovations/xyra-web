@@ -5,8 +5,10 @@ sap.ui.define([
     "sap/m/MessageBox",
     "xyraweb/model/sidebarState",
     "xyraweb/model/GlobalLoading",
-    "xyraweb/model/NotificationPopover"
-], function (Controller, JSONModel, MessageToast, MessageBox, SidebarState, GlobalLoading, NotificationPopover) {
+    "xyraweb/model/NotificationPopover",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
+], function (Controller, JSONModel, MessageToast, MessageBox, SidebarState, GlobalLoading, NotificationPopover, Filter, FilterOperator) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Reports", {
@@ -113,6 +115,7 @@ sap.ui.define([
                         name: "Reviewer 1 Evidence Review Log",
                         type: "Reviewer 1",
                         system: "PRD-100",
+                        module: "Security",
                         generatedBy: "Jane Smith (Reviewer 1)",
                         generatedDate: "03-Aug-2026 10:15 IST",
                         status: "Completed",
@@ -122,6 +125,7 @@ sap.ui.define([
                         name: "Reviewer 2 SOD Assessment Report",
                         type: "Reviewer 2",
                         system: "PRD-100",
+                        module: "Security",
                         generatedBy: "Robert Chen (Reviewer 2)",
                         generatedDate: "03-Aug-2026 11:45 IST",
                         status: "Completed",
@@ -131,6 +135,7 @@ sap.ui.define([
                         name: "Escalation Incident & SLA Violation Summary",
                         type: "Escalation Manager",
                         system: "PRD-100",
+                        module: "Security",
                         generatedBy: "Marcus Vance (Escalation Lead)",
                         generatedDate: "03-Aug-2026 12:00 IST",
                         status: "Completed",
@@ -140,6 +145,7 @@ sap.ui.define([
                         name: "Q3 SOX Compliance Audit Evidence",
                         type: "SOX Compliance",
                         system: "PRD-100",
+                        module: "FI",
                         generatedBy: "Sarah Jenkins (Finance Lead)",
                         generatedDate: "03-Aug-2026 09:00 IST",
                         status: "Completed",
@@ -149,6 +155,7 @@ sap.ui.define([
                         name: "Monthly Manual Role Modification Log",
                         type: "Role Change",
                         system: "PRD-100",
+                        module: "Basis",
                         generatedBy: "Automated Engine",
                         generatedDate: "03-Aug-2026 11:15 IST",
                         status: "Completed",
@@ -158,6 +165,7 @@ sap.ui.define([
                         name: "User Access Privilege Certification",
                         type: "User Access Review",
                         system: "PRD-100",
+                        module: "Security",
                         generatedBy: "Alex Rivera (Security Admin)",
                         generatedDate: "02-Aug-2026 18:00 IST",
                         status: "Completed",
@@ -167,6 +175,7 @@ sap.ui.define([
                         name: "Financial SOD Conflict Scan Report",
                         type: "SOD Conflict",
                         system: "PRD-100",
+                        module: "FI",
                         generatedBy: "Michael Chang (GRC Officer)",
                         generatedDate: "03-Aug-2026 12:30 IST",
                         status: "Processing",
@@ -176,6 +185,7 @@ sap.ui.define([
                         name: "Superuser Emergency Access Trace",
                         type: "Elevated Access",
                         system: "PRD-100",
+                        module: "Basis",
                         generatedBy: "Automated Engine",
                         generatedDate: "01-Aug-2026 22:00 IST",
                         status: "Completed",
@@ -185,6 +195,7 @@ sap.ui.define([
                         name: "Critical Authorization Objects Scan (S_TABU_DIS)",
                         type: "Critical Auth",
                         system: "QAS-200",
+                        module: "Security",
                         generatedBy: "Alex Rivera (Security Admin)",
                         generatedDate: "03-Aug-2026 10:45 IST",
                         status: "Scheduled",
@@ -194,6 +205,7 @@ sap.ui.define([
                         name: "GenAI Anomaly Detection Report",
                         type: "AI Risk Analysis",
                         system: "PRD-100",
+                        module: "Security",
                         generatedBy: "Automated Engine",
                         generatedDate: "03-Aug-2026 13:00 IST",
                         status: "Completed",
@@ -361,6 +373,8 @@ sap.ui.define([
             if (this.byId("filterReportType")) { this.byId("filterReportType").setSelectedKey("All"); }
             if (this.byId("filterSystem")) { this.byId("filterSystem").setSelectedKey("All"); }
             if (this.byId("filterModule")) { this.byId("filterModule").setSelectedKey("All"); }
+            if (this.byId("filterStartingDate")) { this.byId("filterStartingDate").reset(); }
+            if (this.byId("filterEndingDate")) { this.byId("filterEndingDate").reset(); }
             if (this.byId("filterDateRange")) { 
                 var oDateRange = this.byId("filterDateRange");
                 if (oDateRange.reset) { oDateRange.reset(); } else { oDateRange.setValue(""); }
@@ -368,6 +382,7 @@ sap.ui.define([
             if (this.byId("filterGeneratedBy")) { this.byId("filterGeneratedBy").setSelectedKey("All"); }
             if (this.byId("filterStatus")) { this.byId("filterStatus").setSelectedKey("All"); }
             if (this.byId("filterSearchField")) { this.byId("filterSearchField").setValue(""); }
+            this.onApplyFilters();
         },
 
         onRefreshReports: function () {
@@ -397,6 +412,7 @@ sap.ui.define([
                 name: sName,
                 type: sType,
                 system: "PRD-100",
+                module: "Security",
                 generatedBy: "Current User",
                 generatedDate: "03-Aug-2026 13:35 IST",
                 status: "Completed",
@@ -404,6 +420,7 @@ sap.ui.define([
             });
 
             oModel.setProperty("/history", aHistory);
+            this.onApplyFilters();
             MessageToast.show("Report '" + sName + "' generated successfully!");
         },
 
@@ -416,26 +433,99 @@ sap.ui.define([
         },
 
         onApplyFilters: function () {
-            MessageToast.show("Report filters applied.");
-        },
+            var oTable = this.byId("reportsHistoryTable");
+            if (!oTable) { return; }
+            var oBinding = oTable.getBinding("items");
+            if (!oBinding) { return; }
 
-        onClearFilters: function () {
-            if (this.byId("filterReportType")) { this.byId("filterReportType").setSelectedKey("All"); }
-            if (this.byId("filterSystem")) { this.byId("filterSystem").setSelectedKey("All"); }
-            if (this.byId("filterModule")) { this.byId("filterModule").setSelectedKey("All"); }
-            if (this.byId("filterGeneratedBy")) { this.byId("filterGeneratedBy").setSelectedKey("All"); }
-            if (this.byId("filterStatus")) { this.byId("filterStatus").setSelectedKey("All"); }
-            MessageToast.show("Filters cleared.");
+            var sReportType = this.byId("filterReportType") ? this.byId("filterReportType").getSelectedKey() : "All";
+            var sSystem = this.byId("filterSystem") ? this.byId("filterSystem").getSelectedKey() : "All";
+            var sModule = this.byId("filterModule") ? this.byId("filterModule").getSelectedKey() : "All";
+            var sGeneratedBy = this.byId("filterGeneratedBy") ? this.byId("filterGeneratedBy").getSelectedKey() : "All";
+            var sStatus = this.byId("filterStatus") ? this.byId("filterStatus").getSelectedKey() : "All";
+
+            var oStartDatePicker = this.byId("filterStartingDate");
+            var oEndDatePicker = this.byId("filterEndingDate");
+            var dStart = oStartDatePicker && oStartDatePicker.getStartDate ? oStartDatePicker.getStartDate() : null;
+            var dEnd = oEndDatePicker && oEndDatePicker.getEndDate ? oEndDatePicker.getEndDate() : null;
+
+            var aFilters = [];
+
+            if (sReportType && sReportType !== "All") {
+                aFilters.push(new Filter("type", FilterOperator.Contains, sReportType));
+            }
+
+            if (sSystem && sSystem !== "All") {
+                aFilters.push(new Filter("system", FilterOperator.Contains, sSystem));
+            }
+
+            if (sModule && sModule !== "All") {
+                aFilters.push(new Filter("module", FilterOperator.Contains, sModule));
+            }
+
+            if (sGeneratedBy && sGeneratedBy !== "All") {
+                aFilters.push(new Filter("generatedBy", FilterOperator.Contains, sGeneratedBy));
+            }
+
+            if (sStatus && sStatus !== "All") {
+                aFilters.push(new Filter("status", FilterOperator.EQ, sStatus));
+            }
+
+            if (dStart || dEnd) {
+                aFilters.push(new Filter({
+                    path: "generatedDate",
+                    test: function (sDateStr) {
+                        if (!sDateStr) { return true; }
+                        var d = new Date(sDateStr.replace(" IST", ""));
+                        if (isNaN(d.getTime())) { return true; }
+                        if (dStart && d < dStart) { return false; }
+                        if (dEnd) {
+                            var dEndDay = new Date(dEnd.getTime());
+                            dEndDay.setHours(23, 59, 59, 999);
+                            if (d > dEndDay) { return false; }
+                        }
+                        return true;
+                    }
+                }));
+            }
+
+            oBinding.filter(aFilters);
         },
 
         onSearchHistory: function (oEvent) {
-            var sQuery = oEvent.getParameter("query");
-            MessageToast.show("Filtering history by query: " + sQuery);
+            var sQuery = (oEvent.getParameter("query") || oEvent.getParameter("newValue") || "").toLowerCase().trim();
+            var oTable = this.byId("reportsHistoryTable");
+            if (!oTable) { return; }
+            var oBinding = oTable.getBinding("items");
+            if (!oBinding) { return; }
+
+            if (!sQuery) {
+                this.onApplyFilters();
+                return;
+            }
+
+            var aSubFilters = [
+                new Filter("name", FilterOperator.Contains, sQuery),
+                new Filter("type", FilterOperator.Contains, sQuery),
+                new Filter("system", FilterOperator.Contains, sQuery),
+                new Filter("generatedBy", FilterOperator.Contains, sQuery),
+                new Filter("status", FilterOperator.Contains, sQuery)
+            ];
+            oBinding.filter(new Filter({ filters: aSubFilters, and: false }));
         },
 
         onFilterHistoryStatus: function (oEvent) {
-            var sKey = oEvent.getParameter("selectedItem").getKey();
-            MessageToast.show("Filtered history by status: " + sKey);
+            var sKey = oEvent.getParameter("selectedItem") ? oEvent.getParameter("selectedItem").getKey() : "All";
+            var oTable = this.byId("reportsHistoryTable");
+            if (!oTable) { return; }
+            var oBinding = oTable.getBinding("items");
+            if (!oBinding) { return; }
+
+            if (sKey === "All") {
+                this.onApplyFilters();
+            } else {
+                oBinding.filter(new Filter("status", FilterOperator.EQ, sKey));
+            }
         },
 
         onExportHistory: function () {
