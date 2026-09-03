@@ -3375,6 +3375,10 @@ div[id*="-text"] {
 
 /* Calendar Header */
 .xyraCalHeader {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
   margin-bottom: 8px !important;
   padding: 0 4px !important;
 }
@@ -3387,21 +3391,31 @@ div[id*="-text"] {
 }
 
 .xyraCalNavBtn {
+  font-size: 1.05rem !important;
+  color: #64748b !important;
   width: 32px !important;
   height: 32px !important;
-  min-width: 32px !important;
-}
-
-.xyraCalNavBtn .sapMBtnInner {
-  border: none !important;
-  background: transparent !important;
+  line-height: 32px !important;
+  text-align: center !important;
   border-radius: 50% !important;
-  color: #64748b !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: all 0.15s ease !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-.xyraCalNavBtn:hover .sapMBtnInner {
-  background-color: #f1f5f9 !important;
-  color: #0f172a !important;
+.xyraCalNavBtn:hover {
+  background-color: #eef2ff !important;
+  color: #533bff !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Weekday Header */
@@ -3522,62 +3536,45 @@ div[id*="-text"] {
 
 /* Month and Year Quick Picker Grid */
 .xyraCalTitleBox {
-  gap: 4px !important;
-}
-
-.xyraCalHeaderBtn {
-  height: 32px !important;
-  margin: 0 2px !important;
-}
-
-.xyraCalHeaderBtn .sapMBtnInner {
   border: none !important;
-  background: transparent !important;
-  font-weight: 700 !important;
-  font-size: 0.95rem !important;
-  color: #0f172a !important;
-  padding: 0 8px !important;
-  height: 32px !important;
-  line-height: 32px !important;
-  border-radius: 6px !important;
-  transition: all 0.15s ease !important;
-  cursor: pointer !important;
+  outline: none !important;
   box-shadow: none !important;
-}
-
-.xyraCalHeaderBtn:hover .sapMBtnInner {
-  background-color: #eef2ff !important;
-  color: #533bff !important;
-}
-
-.xyraCalHeaderBtnActive .sapMBtnInner {
-  background-color: #533bff !important;
-  color: #ffffff !important;
-  box-shadow: 0 2px 5px rgba(83, 59, 255, 0.3) !important;
-}
-
-.xyraCalHeaderBtnActive:hover .sapMBtnInner {
-  background-color: #432bdf !important;
-  color: #ffffff !important;
+  background: transparent !important;
+  gap: 4px !important;
 }
 
 .xyraCalHeaderTitleText {
   font-weight: 700 !important;
-  font-size: 0.925rem !important;
+  font-size: 0.95rem !important;
   color: #0f172a !important;
   cursor: pointer !important;
   user-select: none !important;
-  padding: 3px 7px !important;
+  padding: 4px 8px !important;
   border-radius: 6px !important;
   transition: all 0.15s ease !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  display: inline-block !important;
+  line-height: normal !important;
 }
 
 .xyraCalHeaderTitleText:hover {
   background-color: #eef2ff !important;
   color: #533bff !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .xyraCalHeaderTitleActive {
+  background-color: #eef2ff !important;
+  color: #533bff !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
   background-color: #533bff !important;
   color: #ffffff !important;
   box-shadow: 0 2px 5px rgba(83, 59, 255, 0.3) !important;
