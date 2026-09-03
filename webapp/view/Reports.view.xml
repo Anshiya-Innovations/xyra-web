@@ -229,15 +229,15 @@
                                     </OverflowToolbar>
                                 </headerToolbar>
                                 <content>
-                                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="End" class="sapUiSmallMarginBottom">
+                                    <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBottom">
                                         <!-- 1. Report Name -->
-                                        <VBox width="28%" class="xyraFieldGroup">
+                                        <VBox width="100%" class="xyraFieldGroup">
                                             <Label text="Report Name" class="xyraLoginLabel"/>
                                             <SearchField id="filterAvailableReportName" placeholder="Search Report Name..." search="onApplyAvailableFilters" liveChange="onApplyAvailableFilters" width="100%"/>
                                         </VBox>
 
                                         <!-- 2. Category / Type -->
-                                        <VBox width="28%" class="xyraFieldGroup">
+                                        <VBox width="100%" class="xyraFieldGroup">
                                             <Label text="Category / Type" class="xyraLoginLabel"/>
                                             <Select id="filterAvailableCategory" selectedKey="All" width="100%" change="onApplyAvailableFilters">
                                                 <core:Item key="All" text="All Categories / Types"/>
@@ -255,17 +255,18 @@
                                             </Select>
                                         </VBox>
 
-                                        <!-- 3. Starting Date & Ending Date -->
-                                        <VBox width="19%" class="xyraFieldGroup">
+                                        <!-- 3. Starting Date -->
+                                        <VBox width="100%" class="xyraFieldGroup">
                                             <Label text="Starting Date" class="xyraLoginLabel"/>
                                             <xyra:DateRangePicker id="filterAvailableStartDate" field="start" placeholder="Select Starting Date" width="100%" change="onApplyAvailableFilters"/>
                                         </VBox>
 
-                                        <VBox width="19%" class="xyraFieldGroup">
+                                        <!-- 4. Ending Date -->
+                                        <VBox width="100%" class="xyraFieldGroup">
                                             <Label text="Ending Date" class="xyraLoginLabel"/>
                                             <xyra:DateRangePicker id="filterAvailableEndDate" field="end" placeholder="Select Ending Date" width="100%" change="onApplyAvailableFilters"/>
                                         </VBox>
-                                    </HBox>
+                                    </layout:Grid>
                                 </content>
                             </Panel>
 

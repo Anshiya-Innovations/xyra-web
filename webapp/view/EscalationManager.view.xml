@@ -278,26 +278,45 @@
 
                             <!-- FILTER BAR (WITH REAL-TIME AUTOMATIC LIVE FILTERING) -->
                             <Panel headerText="Filter Escalation Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
-                                <layout:Grid defaultSpan="XL3 L3 M6 S12">
-                                    <SearchField id="searchEscalation" placeholder="Search final reports..." search="onSearchReports" liveChange="onSearchReports"/>
-                                    <Input id="inputReportIdFilterEsc" placeholder="Report ID (e.g. REP-101)" liveChange="onSearchReports" change="onSearchReports"/>
-                                    <Select id="selectSystemFilterEsc" width="100%" change="onFilterSystem">
-                                        <core:Item key="All" text="All Systems"/>
-                                        <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
-                                        <core:Item key="HDB-10 (HANA)" text="HDB-10 (HANA)"/>
-                                        <core:Item key="QAS-200 (Java)" text="QAS-200 (Java)"/>
-                                    </Select>
-                                    <Select id="selectStatusFilterEsc" width="100%" change="onFilterStatus">
-                                        <core:Item key="All" text="All Workflow Statuses"/>
-                                        <core:Item key="Pending Final Approval" text="Pending Final Approval"/>
-                                        <core:Item key="Approved &amp; Closed" text="Approved &amp; Closed"/>
-                                        <core:Item key="Correction Requested" text="Correction Requested"/>
-                                        <core:Item key="Rejected" text="Rejected"/>
-                                    </Select>
+                                <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiTinyMarginBottom">
+                                    <!-- 1. Search Reports -->
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Search Reports" class="xyraLoginLabel"/>
+                                        <SearchField id="searchEscalation" placeholder="Search final reports..." search="onSearchReports" liveChange="onSearchReports" width="100%"/>
+                                    </VBox>
+
+                                    <!-- 2. Report ID -->
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Report ID" class="xyraLoginLabel"/>
+                                        <Input id="inputReportIdFilterEsc" placeholder="Report ID (e.g. REP-101)" liveChange="onSearchReports" change="onSearchReports" width="100%"/>
+                                    </VBox>
+
+                                    <!-- 3. Target System -->
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Target System" class="xyraLoginLabel"/>
+                                        <Select id="selectSystemFilterEsc" width="100%" change="onFilterSystem">
+                                            <core:Item key="All" text="All Systems"/>
+                                            <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
+                                            <core:Item key="HDB-10 (HANA)" text="HDB-10 (HANA)"/>
+                                            <core:Item key="QAS-200 (Java)" text="QAS-200 (Java)"/>
+                                        </Select>
+                                    </VBox>
+
+                                    <!-- 4. Workflow Status -->
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Workflow Status" class="xyraLoginLabel"/>
+                                        <Select id="selectStatusFilterEsc" width="100%" change="onFilterStatus">
+                                            <core:Item key="All" text="All Workflow Statuses"/>
+                                            <core:Item key="Pending Final Approval" text="Pending Final Approval"/>
+                                            <core:Item key="Approved &amp; Closed" text="Approved &amp; Closed"/>
+                                            <core:Item key="Correction Requested" text="Correction Requested"/>
+                                            <core:Item key="Rejected" text="Rejected"/>
+                                        </Select>
+                                    </VBox>
                                 </layout:Grid>
                                 <OverflowToolbar class="sapUiTinyMarginTop">
                                     <ToolbarSpacer/>
-                                    <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchReports"/>
+                                    <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchReports" class="sapUiTinyMarginEnd"/>
                                     <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetFilters"/>
                                 </OverflowToolbar>
                             </Panel>
@@ -415,36 +434,51 @@
 
                             <!-- FILTER BAR (WITH LIVE AUTOMATIC FILTERING) -->
                             <Panel headerText="Filter Reviewer History" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
-                                <layout:Grid defaultSpan="XL3 L3 M6 S12">
-                                    <SearchField id="searchHistoryEsc" placeholder="Search Report ID / Name / Ticket..." search="onSearchHistory" liveChange="onSearchHistory"/>
-                                    <Input id="inputHistoryControlIdEsc" placeholder="Control ID (e.g. LOG08)" liveChange="onSearchHistory" change="onSearchHistory"/>
-                                    <Select id="selectHistorySystemEsc" width="100%" change="onSearchHistory">
-                                        <core:Item key="All" text="All Systems"/>
-                                        <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
-                                        <core:Item key="HDB-10 (HANA)" text="HDB-10 (HANA)"/>
-                                        <core:Item key="QAS-200 (Java)" text="QAS-200 (Java)"/>
-                                    </Select>
-                                    <Select id="selectHistoryDecisionEsc" width="100%" change="onSearchHistory">
-                                        <core:Item key="All" text="All Decisions"/>
-                                        <core:Item key="Approved" text="Approved"/>
-                                        <core:Item key="Rejected" text="Rejected"/>
-                                        <core:Item key="Correction Requested" text="Correction Requested"/>
-                                    </Select>
-                                    <Select id="selectHistoryStatusEsc" width="100%" change="onSearchHistory">
-                                        <core:Item key="All" text="All Ticket Statuses"/>
-                                        <core:Item key="Closed" text="Closed"/>
-                                        <core:Item key="In Review" text="In Review"/>
-                                        <core:Item key="Pending Signoff" text="Pending Signoff"/>
-                                        <core:Item key="Action Required" text="Action Required"/>
-                                    </Select>
-                                     <VBox class="xyraFieldGroup">
-                                         <Label text="Starting Date" class="xyraLoginLabel"/>
-                                         <xyra:DateRangePicker id="dpHistoryStartDateEsc" field="start" placeholder="Select Starting Date" change="onSearchHistory"/>
-                                     </VBox>
-                                     <VBox class="xyraFieldGroup">
-                                         <Label text="Ending Date" class="xyraLoginLabel"/>
-                                         <xyra:DateRangePicker id="dpHistoryEndDateEsc" field="end" placeholder="Select Ending Date" change="onSearchHistory"/>
-                                     </VBox>
+                                <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiTinyMarginBottom">
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Search History" class="xyraLoginLabel"/>
+                                        <SearchField id="searchHistoryEsc" placeholder="Search Report ID / Name / Ticket..." search="onSearchHistory" liveChange="onSearchHistory" width="100%"/>
+                                    </VBox>
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Control ID" class="xyraLoginLabel"/>
+                                        <Input id="inputHistoryControlIdEsc" placeholder="Control ID (e.g. LOG08)" liveChange="onSearchHistory" change="onSearchHistory" width="100%"/>
+                                    </VBox>
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Target System" class="xyraLoginLabel"/>
+                                        <Select id="selectHistorySystemEsc" width="100%" change="onSearchHistory">
+                                            <core:Item key="All" text="All Systems"/>
+                                            <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
+                                            <core:Item key="HDB-10 (HANA)" text="HDB-10 (HANA)"/>
+                                            <core:Item key="QAS-200 (Java)" text="QAS-200 (Java)"/>
+                                        </Select>
+                                    </VBox>
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Decision" class="xyraLoginLabel"/>
+                                        <Select id="selectHistoryDecisionEsc" width="100%" change="onSearchHistory">
+                                            <core:Item key="All" text="All Decisions"/>
+                                            <core:Item key="Approved" text="Approved"/>
+                                            <core:Item key="Rejected" text="Rejected"/>
+                                            <core:Item key="Correction Requested" text="Correction Requested"/>
+                                        </Select>
+                                    </VBox>
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Ticket Status" class="xyraLoginLabel"/>
+                                        <Select id="selectHistoryStatusEsc" width="100%" change="onSearchHistory">
+                                            <core:Item key="All" text="All Ticket Statuses"/>
+                                            <core:Item key="Closed" text="Closed"/>
+                                            <core:Item key="In Review" text="In Review"/>
+                                            <core:Item key="Pending Signoff" text="Pending Signoff"/>
+                                            <core:Item key="Action Required" text="Action Required"/>
+                                        </Select>
+                                    </VBox>
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Starting Date" class="xyraLoginLabel"/>
+                                        <xyra:DateRangePicker id="dpHistoryStartDateEsc" field="start" placeholder="Select Starting Date" change="onSearchHistory"/>
+                                    </VBox>
+                                    <VBox width="100%" class="xyraFieldGroup">
+                                        <Label text="Ending Date" class="xyraLoginLabel"/>
+                                        <xyra:DateRangePicker id="dpHistoryEndDateEsc" field="end" placeholder="Select Ending Date" change="onSearchHistory"/>
+                                    </VBox>
                                 </layout:Grid>
                                 <OverflowToolbar class="sapUiTinyMarginTop">
                                     <ToolbarSpacer/>

@@ -4243,6 +4243,89 @@ span.sapMColumnHeaderContent,
   box-shadow: none !important;
 }
 
+.xyraFieldGroup .sapMInput,
+.xyraFieldGroup .sapMInputBase {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.xyraFieldGroup .sapMInputBaseContentWrapper {
+  height: 46px !important;
+  max-height: 46px !important;
+  margin: 0 !important;
+  border-radius: 10px !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: #f8fafc !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: border-color 0.15s ease !important;
+}
+
+.xyraFieldGroup .sapMInputBaseContentWrapper:hover,
+.xyraFieldGroup .sapMInputBaseContentWrapper:focus-within {
+  border-color: #533bff !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.xyraFieldGroup .sapMInputBaseInner {
+  height: 44px !important;
+  line-height: 44px !important;
+  font-size: 0.925rem !important;
+  padding-left: 0.85rem !important;
+  padding-right: 0.85rem !important;
+  background: transparent !important;
+  color: #0f172a !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.xyraFieldGroup .xyraSingleDateWrapper,
+.xyraFieldGroup .xyraSingleDateInput {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.xyraFieldGroup .xyraSingleDateInput .sapMInputBaseContentWrapper {
+  height: 46px !important;
+  max-height: 46px !important;
+  margin: 0 !important;
+  border-radius: 10px !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: #f8fafc !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: border-color 0.15s ease !important;
+}
+
+.xyraFieldGroup .xyraSingleDateInput .sapMInputBaseContentWrapper:hover,
+.xyraFieldGroup .xyraSingleDateInput .sapMInputBaseContentWrapper:focus-within {
+  border-color: #533bff !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.xyraFieldGroup .xyraSingleDateInput .sapMInputBaseInner {
+  height: 44px !important;
+  line-height: 44px !important;
+  font-size: 0.925rem !important;
+  padding-left: 0.85rem !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  color: #0f172a !important;
+}
+
+.xyraFieldGroup .xyraSingleDateInput .sapMInputBaseIcon {
+  height: 44px !important;
+  line-height: 44px !important;
+  width: 40px !important;
+  color: #64748b !important;
+}
+
 /* Eliminate all UI5 focus rings / pseudo-element inner frames */
 .sapMSF::after,
 .sapMSF::before,
