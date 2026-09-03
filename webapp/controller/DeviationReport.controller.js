@@ -7,13 +7,43 @@ sap.ui.define([
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationPopover",
     "xyraweb/model/config",
-    "xyraweb/model/session"
-], function (Controller, MessageToast, MessageBox, JSONModel, DeviationService, GlobalLoading, NotificationPopover, Config, Session) {
+    "xyraweb/model/session",
+    "xyraweb/model/sidebarState"
+], function (Controller, MessageToast, MessageBox, JSONModel, DeviationService, GlobalLoading, NotificationPopover, Config, Session, SidebarState) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.DeviationReport", {
 
+        onAfterRendering: function () {
+            this._updateSidebar();
+        },
+
+        _onRouteMatched: function () {
+            this._updateSidebar();
+        },
+
+        _updateSidebar: function () {
+            var oToolPage = this.byId("deviationToolPage");
+            if (oToolPage && SidebarState) {
+                oToolPage.setSideExpanded(SidebarState.get());
+            }
+            var oNav = this.byId("sideNavigation");
+            if (oNav) {
+                oNav.setSelectedKey("ControlManagement");
+                var oList = oNav.getItem();
+                if (oList && oList.setSelectedKey) {
+                    oList.setSelectedKey("ControlManagement");
+                }
+            }
+        },
+
         onInit: function () {
+            if (this.getOwnerComponent() && this.getOwnerComponent().getRouter()) {
+                var oRoute = this.getOwnerComponent().getRouter().getRoute("DeviationReport");
+                if (oRoute) {
+                    oRoute.attachPatternMatched(this._onRouteMatched, this);
+                }
+            }
             var oInitialData = {
                 filters: {
                     sector: "All",
