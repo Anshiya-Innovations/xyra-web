@@ -1165,16 +1165,122 @@ textarea.sapMTextAreaInner {
   width: 55% !important;
   height: 100% !important;
   background-color: #ffffff !important;
-  background-image: url('../img/login-hero.png') !important;
-  background-repeat: no-repeat !important;
-  background-position: center center !important;
-  background-size: contain !important;
-  display: block !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
   padding: 0 !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
   position: relative !important;
   z-index: 1 !important;
+}
+
+/* Slides Wrapper - holds stacked slides */
+.xyraHeroSlidesWrapper {
+  width: 100% !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: relative !important;
+  min-height: 0 !important;
+}
+
+/* Individual Slide */
+.xyraHeroSlide {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: scale(0.98) !important;
+  transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1), transform 0.55s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.55s ease !important;
+  pointer-events: none !important;
+}
+
+.xyraHeroSlide.xyraHeroSlideActive {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: scale(1) !important;
+  pointer-events: auto !important;
+  z-index: 2 !important;
+}
+
+/* Showcase Card & Image - Slightly increased in size to fill slide nicely */
+.xyraHeroShowcase {
+  width: 100% !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 1.5rem 2rem 2.5rem 2rem !important;
+  box-sizing: border-box !important;
+  min-height: 0 !important;
+}
+
+.xyraHeroImg {
+  max-width: 98% !important;
+  max-height: 92% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  filter: drop-shadow(0 15px 35px rgba(15, 23, 42, 0.08)) !important;
+  transition: transform 0.4s ease !important;
+}
+
+/* Bottom Center Animated Slide Indicator Bar - Exact slim pill size matching screenshot */
+.xyraHeroIndicators {
+  position: absolute !important;
+  bottom: 1.25rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  z-index: 20 !important;
+  cursor: pointer !important;
+  padding: 4px 8px !important;
+}
+
+.xyraHeroBar {
+  display: inline-block !important;
+  width: 8px !important;
+  height: 4px !important;
+  min-width: 8px !important;
+  border-radius: 9999px !important;
+  background-color: #cbd5e1 !important;
+  cursor: pointer !important;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.xyraHeroBar:hover {
+  background-color: #94a3b8 !important;
+}
+
+.xyraHeroBarActive {
+  width: 28px !important;
+  min-width: 28px !important;
+  background-color: #533bff !important;
+  box-shadow: 0 1px 4px rgba(83, 59, 255, 0.35) !important;
 }
 
 .xyraLoginHero {
@@ -1191,9 +1297,16 @@ textarea.sapMTextAreaInner {
   .xyraLoginHeroPane {
     flex: 0 0 50% !important;
     width: 50% !important;
-    padding: 0 !important;
-    background-size: contain !important;
-    background-position: center center !important;
+    padding: 2rem 1.5rem !important;
+  }
+  .xyraHeroTitle {
+    font-size: 1.5rem !important;
+  }
+  .xyraHeroSubtitle {
+    font-size: 0.9rem !important;
+  }
+  .xyraHeroImg {
+    max-height: 400px !important;
   }
 }
 

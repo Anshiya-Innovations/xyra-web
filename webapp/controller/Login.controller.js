@@ -68,11 +68,109 @@ sap.ui.define([
     return Controller.extend("xyraweb.controller.Login", {
 
         onInit: function () {
-
+            this._iCurrentSlide = 1;
+            this._startSlideTimer();
         },
 
         onAfterRendering: function () {
             killFocusRing(this.getView());
+            if (!this._iSlideInterval) {
+                this._startSlideTimer();
+            }
+            this._bindIndicatorEvents();
+        },
+
+        _bindIndicatorEvents: function () {
+            var bar1 = document.getElementById("xyraHeroBar1");
+            var bar2 = document.getElementById("xyraHeroBar2");
+            var bar3 = document.getElementById("xyraHeroBar3");
+            if (bar1) {
+                bar1.onclick = function () {
+                    this.onSlideSelect(1);
+                }.bind(this);
+            }
+            if (bar2) {
+                bar2.onclick = function () {
+                    this.onSlideSelect(2);
+                }.bind(this);
+            }
+            if (bar3) {
+                bar3.onclick = function () {
+                    this.onSlideSelect(3);
+                }.bind(this);
+            }
+        },
+
+        onExit: function () {
+            this._stopSlideTimer();
+        },
+
+        _startSlideTimer: function () {
+            this._stopSlideTimer();
+            this._iSlideInterval = setInterval(function () {
+                this._toggleSlide();
+            }.bind(this), 5000);
+        },
+
+        _stopSlideTimer: function () {
+            if (this._iSlideInterval) {
+                clearInterval(this._iSlideInterval);
+                this._iSlideInterval = null;
+            }
+        },
+
+        _toggleSlide: function () {
+            var iNext = (this._iCurrentSlide % 3) + 1;
+            this._goToSlide(iNext);
+        },
+
+        _goToSlide: function (iIndex) {
+            this._iCurrentSlide = iIndex;
+            var aSlides = [
+                this.byId("xyraSlide1"),
+                this.byId("xyraSlide2"),
+                this.byId("xyraSlide3")
+            ];
+            var aBars = [
+                document.getElementById("xyraHeroBar1"),
+                document.getElementById("xyraHeroBar2"),
+                document.getElementById("xyraHeroBar3")
+            ];
+
+            for (var i = 0; i < 3; i++) {
+                var iSlideNum = i + 1;
+                if (aSlides[i]) {
+                    if (iSlideNum === iIndex) {
+                        aSlides[i].addStyleClass("xyraHeroSlideActive");
+                    } else {
+                        aSlides[i].removeStyleClass("xyraHeroSlideActive");
+                    }
+                }
+                if (aBars[i]) {
+                    if (iSlideNum === iIndex) {
+                        aBars[i].className = "xyraHeroBar xyraHeroBarActive";
+                    } else {
+                        aBars[i].className = "xyraHeroBar";
+                    }
+                }
+            }
+        },
+
+        onSlideSelect: function (iIndex) {
+            this._goToSlide(iIndex);
+            this._startSlideTimer();
+        },
+
+        onSlideSelect1: function () {
+            this.onSlideSelect(1);
+        },
+
+        onSlideSelect2: function () {
+            this.onSlideSelect(2);
+        },
+
+        onSlideSelect3: function () {
+            this.onSlideSelect(3);
         },
 
         onRoleChange: function (oEvent) {
@@ -154,6 +252,7 @@ sap.ui.define([
                         email: oData.email
                     });
 
+                    this._stopSlideTimer();
                     UIComponent.getRouterFor(this).navTo(sTargetRoute);
                 }.bind(this))
                 .catch(function () {
@@ -185,6 +284,7 @@ sap.ui.define([
                         email: oMockUser.email
                     });
 
+                    this._stopSlideTimer();
                     UIComponent.getRouterFor(this).navTo(sTargetRoute);
                 }.bind(this));
 
