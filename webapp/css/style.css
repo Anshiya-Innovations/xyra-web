@@ -1164,7 +1164,7 @@ textarea.sapMTextAreaInner {
   flex: 0 0 55% !important;
   width: 55% !important;
   height: 100% !important;
-  background: linear-gradient(135deg, #f0e5fc 0%, #ebe0fa 50%, #e3d2f7 100%) !important;
+  background: linear-gradient(135deg, #f0e5fc 0%, #ebe0fa 50%, #f8f2fe 100%) !important;
   background-color: #ede2fc !important;
   display: flex !important;
   flex-direction: column !important;
@@ -1217,27 +1217,28 @@ textarea.sapMTextAreaInner {
   z-index: 2 !important;
 }
 
-/* Showcase Card & Image - Slightly increased in size to fill slide nicely */
+/* Showcase Card & Image - Zero padding and flush bottom-right anchor (no gap) */
 .xyraHeroShowcase {
   width: 100% !important;
   height: 100% !important;
   flex: 1 1 auto !important;
   display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  padding: 1.5rem 2rem 2.5rem 2rem !important;
+  justify-content: flex-end !important;
+  align-items: flex-end !important;
+  padding: 0 !important;
+  margin: 0 !important;
   box-sizing: border-box !important;
   min-height: 0 !important;
+  overflow: hidden !important;
 }
 
 .xyraHeroImg {
-  max-width: 98% !important;
-  max-height: 92% !important;
-  width: auto !important;
-  height: auto !important;
-  object-fit: contain !important;
-  object-position: center center !important;
-  filter: drop-shadow(0 15px 35px rgba(15, 23, 42, 0.08)) !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover !important;
+  object-position: right bottom !important;
   transition: transform 0.4s ease !important;
 }
 

@@ -83,7 +83,6 @@ sap.ui.define([
         _bindIndicatorEvents: function () {
             var bar1 = document.getElementById("xyraHeroBar1");
             var bar2 = document.getElementById("xyraHeroBar2");
-            var bar3 = document.getElementById("xyraHeroBar3");
             if (bar1) {
                 bar1.onclick = function () {
                     this.onSlideSelect(1);
@@ -92,11 +91,6 @@ sap.ui.define([
             if (bar2) {
                 bar2.onclick = function () {
                     this.onSlideSelect(2);
-                }.bind(this);
-            }
-            if (bar3) {
-                bar3.onclick = function () {
-                    this.onSlideSelect(3);
                 }.bind(this);
             }
         },
@@ -120,7 +114,7 @@ sap.ui.define([
         },
 
         _toggleSlide: function () {
-            var iNext = (this._iCurrentSlide % 3) + 1;
+            var iNext = (this._iCurrentSlide % 2) + 1;
             this._goToSlide(iNext);
         },
 
@@ -128,16 +122,14 @@ sap.ui.define([
             this._iCurrentSlide = iIndex;
             var aSlides = [
                 this.byId("xyraSlide1"),
-                this.byId("xyraSlide2"),
-                this.byId("xyraSlide3")
+                this.byId("xyraSlide2")
             ];
             var aBars = [
                 document.getElementById("xyraHeroBar1"),
-                document.getElementById("xyraHeroBar2"),
-                document.getElementById("xyraHeroBar3")
+                document.getElementById("xyraHeroBar2")
             ];
 
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < 2; i++) {
                 var iSlideNum = i + 1;
                 if (aSlides[i]) {
                     if (iSlideNum === iIndex) {
@@ -167,10 +159,6 @@ sap.ui.define([
 
         onSlideSelect2: function () {
             this.onSlideSelect(2);
-        },
-
-        onSlideSelect3: function () {
-            this.onSlideSelect(3);
         },
 
         onRoleChange: function (oEvent) {

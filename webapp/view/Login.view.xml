@@ -128,30 +128,23 @@
                     <!-- Slide 1: Overview & Trend -->
                     <VBox id="xyraSlide1" class="xyraHeroSlide xyraHeroSlideActive" width="100%" alignItems="Center">
                         <FlexBox class="xyraHeroShowcase" justifyContent="Center" alignItems="Center" width="100%">
-                            <Image src="img/login-slide1.png?v=20260904_27" alt="Xyra Overview Dashboard" class="xyraHeroImg" densityAware="false"/>
+                            <Image src="img/login-slide1.png?v=20260904_30" alt="Xyra Overview Dashboard" class="xyraHeroImg" densityAware="false"/>
                         </FlexBox>
                     </VBox>
 
-                    <!-- Slide 2: Control Management -->
+                    <!-- Slide 2: SOX Compliance -->
                     <VBox id="xyraSlide2" class="xyraHeroSlide" width="100%" alignItems="Center">
                         <FlexBox class="xyraHeroShowcase" justifyContent="Center" alignItems="Center" width="100%">
-                            <Image src="img/login-slide2.png?v=20260904_27" alt="Xyra Control Management" class="xyraHeroImg" densityAware="false"/>
-                        </FlexBox>
-                    </VBox>
-
-                    <!-- Slide 3: SOX Compliance -->
-                    <VBox id="xyraSlide3" class="xyraHeroSlide" width="100%" alignItems="Center">
-                        <FlexBox class="xyraHeroShowcase" justifyContent="Center" alignItems="Center" width="100%">
-                            <Image src="img/login-slide3.png?v=20260904_27" alt="Xyra SOX Compliance" class="xyraHeroImg" densityAware="false"/>
+                            <Image src="img/login-slide2.png?v=20260904_30" alt="Xyra SOX Compliance" class="xyraHeroImg" densityAware="false"/>
                         </FlexBox>
                     </VBox>
 
                 </FlexBox>
 
-                <!-- Bottom Center Animated Slide Indicator Bar -->
+                <!-- Top Right Circular Slide Indicator Dots -->
                 <core:HTML
                     id="xyraSlideIndicatorsHtml"
-                    content='&lt;div class="xyraHeroIndicators" id="xyraHeroIndicators"&gt;&lt;div class="xyraHeroBar xyraHeroBarActive" id="xyraHeroBar1" title="Slide 1: Overview"&gt;&lt;/div&gt;&lt;div class="xyraHeroBar" id="xyraHeroBar2" title="Slide 2: Control Management"&gt;&lt;/div&gt;&lt;div class="xyraHeroBar" id="xyraHeroBar3" title="Slide 3: SOX Compliance"&gt;&lt;/div&gt;&lt;/div&gt;' />
+                    content='&lt;div class="xyraHeroIndicators" id="xyraHeroIndicators"&gt;&lt;div class="xyraHeroBar xyraHeroBarActive" id="xyraHeroBar1" title="Slide 1: Overview"&gt;&lt;/div&gt;&lt;div class="xyraHeroBar" id="xyraHeroBar2" title="Slide 2: SOX Compliance"&gt;&lt;/div&gt;&lt;/div&gt;' />
 
             </FlexBox>
 
