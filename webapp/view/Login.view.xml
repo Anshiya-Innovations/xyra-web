@@ -81,10 +81,6 @@
                         submit="onLogin"
                         class="xyraLoginField"/>
 
-                    <CheckBox id="_IDGenCheckBox"
-                        text="Remember Me"
-                        class="xyraLoginCheckbox"/>
-
                     <Button id="_IDGenButton"
                         text="Sign In"
                         type="Emphasized"

@@ -329,7 +329,7 @@
                             <Panel headerText="Filter Reviewer 2 Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
                                 <layout:Grid defaultSpan="XL3 L3 M6 S12">
                                     <SearchField id="searchReviewer2" placeholder="Search technical reports..." search="onSearchReports" liveChange="onSearchReports"/>
-                                    <Input id="inputReportIdFilter2" placeholder="Report ID (e.g. REP-101)" liveChange="onSearchReports" change="onSearchReports"/>
+                                    <SearchField id="inputReportIdFilter2" placeholder="Report ID (e.g. REP-101)" search="onSearchReports" liveChange="onSearchReports"/>
                                     <Select id="selectSystemFilter2" width="100%" change="onFilterSystem">
                                         <core:Item key="All" text="All Systems"/>
                                         <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
@@ -600,7 +600,7 @@
                             <Panel headerText="Filter Reviewer 2 History" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
                                 <layout:Grid defaultSpan="XL3 L3 M6 S12">
                                     <SearchField id="searchHistory2" placeholder="Search Report ID / Name..." search="onSearchHistory" liveChange="onSearchHistory"/>
-                                    <Input id="inputHistoryControlId2" placeholder="Control ID (e.g. LOG28)" liveChange="onSearchHistory" change="onSearchHistory"/>
+                                    <SearchField id="inputHistoryControlId2" placeholder="Control ID (e.g. LOG28)" search="onSearchHistory" liveChange="onSearchHistory"/>
                                     <Select id="selectHistorySystem2" width="100%" change="onSearchHistory">
                                         <core:Item key="All" text="All Systems"/>
                                         <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>

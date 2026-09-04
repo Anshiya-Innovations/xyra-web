@@ -288,7 +288,7 @@
                                     <!-- 2. Report ID -->
                                     <VBox width="100%" class="xyraFieldGroup">
                                         <Label text="Report ID" class="xyraLoginLabel"/>
-                                        <Input id="inputReportIdFilterEsc" placeholder="Report ID (e.g. REP-101)" liveChange="onSearchReports" change="onSearchReports" width="100%"/>
+                                        <SearchField id="inputReportIdFilterEsc" placeholder="Report ID (e.g. REP-101)" search="onSearchReports" liveChange="onSearchReports" width="100%"/>
                                     </VBox>
 
                                     <!-- 3. Target System -->
@@ -440,7 +440,7 @@
                                     </VBox>
                                     <VBox width="100%" class="xyraFieldGroup">
                                         <Label text="Control ID" class="xyraLoginLabel"/>
-                                        <Input id="inputHistoryControlIdEsc" placeholder="Control ID (e.g. LOG08)" liveChange="onSearchHistory" change="onSearchHistory" width="100%"/>
+                                        <SearchField id="inputHistoryControlIdEsc" placeholder="Control ID (e.g. LOG08)" search="onSearchHistory" liveChange="onSearchHistory" width="100%"/>
                                     </VBox>
                                     <VBox width="100%" class="xyraFieldGroup">
                                         <Label text="Target System" class="xyraLoginLabel"/>

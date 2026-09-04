@@ -629,6 +629,125 @@ span.sapTntNLITagContainer {
 .sapMDialog {
   border-radius: 16px !important;
   overflow: hidden !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* ==========================================================================
+   REMOVE BLUE FOCUS BORDER / OUTLINE FROM ALL DIALOGS & POPOVERS
+   ========================================================================== */
+.sapMDialog,
+.sapMDialog:focus,
+.sapMDialog:focus-visible,
+.sapMDialog:focus-within,
+.sapMDialog.sapMFocus,
+.sapMDialog-CTX,
+.sapMPopup-CTX,
+.sapMDialogSection,
+.sapMDialogSection:focus,
+.sapMDialogSection:focus-visible,
+.sapMDialogSection:focus-within,
+.sapMDialogSection.sapMFocus,
+.sapMDialogScrollCont,
+.sapMDialogScrollCont:focus,
+.sapMDialogScrollCont:focus-visible,
+.sapMDialogScrollCont.sapMFocus,
+.sapMDialogContent,
+.sapMDialogContent:focus,
+.sapMDialogContent:focus-visible,
+.sapMDialogContent.sapMFocus,
+.sapUiScrollDelegate,
+.sapUiScrollDelegate:focus,
+.sapUiScrollDelegate:focus-visible,
+.sapUiScrollDelegate.sapMFocus,
+.sapMPopover,
+.sapMPopover:focus,
+.sapMPopover:focus-visible,
+.sapMPopover:focus-within,
+.sapMPopover.sapMFocus,
+.sapMPopoverCont,
+.sapMPopoverCont:focus,
+.sapMPopoverCont:focus-visible,
+.sapMPopoverCont.sapMFocus,
+.sapMPopoverScroll,
+.sapMPopoverScroll:focus,
+.sapMPopoverScroll:focus-visible,
+.sapMPopoverScroll.sapMFocus,
+.sapMPopoverContent,
+.sapMPopoverContent:focus,
+.sapMPopoverContent:focus-visible,
+.sapMPopoverContent.sapMFocus,
+#sap-ui-static .sapMDialog,
+#sap-ui-static .sapMDialogSection,
+#sap-ui-static .sapMDialogScrollCont,
+#sap-ui-static .sapUiScrollDelegate,
+#sap-ui-static .sapMPopover,
+#sap-ui-static .sapMPopoverCont,
+#sap-ui-static .sapMPopoverScroll,
+div[id*="Dialog"] .sapMDialogSection,
+div[id*="Dialog"] .sapUiScrollDelegate,
+div[id*="Popover"] .sapMPopoverCont,
+div[id*="Popover"] .sapUiScrollDelegate {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-color: transparent !important;
+  outline-offset: 0 !important;
+  border: none !important;
+}
+
+/* Ensure inner scroll containers have zero focus shadow or inset border */
+.sapMDialogSection,
+.sapMDialogSection:focus,
+.sapMDialogScrollCont,
+.sapMDialogScrollCont:focus,
+.sapMDialogContent,
+.sapMDialogContent:focus,
+.sapUiScrollDelegate,
+.sapUiScrollDelegate:focus,
+.sapMPopoverCont,
+.sapMPopoverCont:focus,
+.sapMPopoverScroll,
+.sapMPopoverScroll:focus,
+.sapMPopoverContent,
+.sapMPopoverContent:focus {
+  box-shadow: none !important;
+}
+
+/* Eliminate pseudo-element focus rings on Dialogs & Popovers */
+.sapMDialog::before,
+.sapMDialog::after,
+.sapMDialog:focus::before,
+.sapMDialog:focus::after,
+.sapMDialogSection::before,
+.sapMDialogSection::after,
+.sapMDialogSection:focus::before,
+.sapMDialogSection:focus::after,
+.sapMDialogScrollCont::before,
+.sapMDialogScrollCont::after,
+.sapMDialogScrollCont:focus::before,
+.sapMDialogScrollCont:focus::after,
+.sapMDialogContent::before,
+.sapMDialogContent::after,
+.sapUiScrollDelegate::before,
+.sapUiScrollDelegate::after,
+.sapUiScrollDelegate:focus::before,
+.sapUiScrollDelegate:focus::after,
+.sapMPopover::before,
+.sapMPopover::after,
+.sapMPopover:focus::before,
+.sapMPopover:focus::after,
+.sapMPopoverCont::before,
+.sapMPopoverCont::after,
+.sapMPopoverCont:focus::before,
+.sapMPopoverCont:focus::after,
+.sapMPopoverScroll::before,
+.sapMPopoverScroll::after {
+  outline: none !important;
+  outline-width: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  display: none !important;
+  content: none !important;
 }
 
 /* ===== Rule Configuration & Dialog List Items - Remove Blue Outer Frame / Border ===== */
@@ -1131,23 +1250,55 @@ textarea.sapMTextAreaInner {
   margin-bottom: 1rem !important;
 }
 
-/* Email Input Container: 0 bottom margin */
+/* Email Input Container: Clean spacing above Sign In button */
 .xyraLoginCard > .sapMFlexItem:has(> #username) {
-  margin-bottom: 0 !important;
+  margin-bottom: 1.5rem !important;
 }
 
-/* Remember Me Checkbox Container: 16px top margin below Email input box, 26px bottom margin above Sign In button */
-.xyraLoginCard > .sapMFlexItem:has(> #_IDGenCheckBox),
-.xyraLoginCard > .sapMFlexItem:has(> .xyraLoginCheckbox) {
-  margin-top: 1rem !important;
-  margin-bottom: 1.65rem !important;
-  display: block !important;
-}
-
-.xyraLoginCheckbox {
+.xyraLoginCheckbox,
+.sapMCb.sapMCbHasLabel {
   margin: 0 !important;
-  display: inline-block !important;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
   vertical-align: middle !important;
+  cursor: pointer !important;
+  gap: 0.65rem !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 1.5rem !important;
+}
+
+.xyraLoginCheckbox .sapMCbBg,
+.sapMCb.sapMCbHasLabel .sapMCbBg {
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.xyraLoginCheckbox .sapMCbLabel,
+.sapMCb.sapMCbHasLabel .sapMCbLabel,
+.xyraLoginCheckbox span.sapMLabel,
+.sapMCb.sapMCbHasLabel span.sapMLabel {
+  display: inline-block !important;
+  padding: 0 !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  line-height: 1.25 !important;
+  vertical-align: middle !important;
+  cursor: pointer !important;
+  color: #334155 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  width: auto !important;
+  max-width: none !important;
 }
 
 /* ===== Login Page Sign In Button Full-Width Sizing & Inner Span Stretch ===== */
@@ -1664,9 +1815,9 @@ textarea.sapMTextAreaInner {
 .sapMBtnTransparent:not(.sapMOverflowToolbar .sapMBtnTransparent):not(.sapMTB .sapMBtnTransparent):not(.sapMHeaderToolbar .sapMBtnTransparent):not(.sapMBar .sapMBtnTransparent):hover,
 .sapMBtnDefault:not(.sapMOverflowToolbar .sapMBtnDefault):not(.sapMTB .sapMBtnDefault):not(.sapMHeaderToolbar .sapMBtnDefault):not(.sapMBar .sapMBtnDefault):hover,
 .sapMBtnGhost:not(.sapMOverflowToolbar .sapMBtnGhost):not(.sapMTB .sapMBtnGhost):not(.sapMHeaderToolbar .sapMBtnGhost):not(.sapMBar .sapMBtnGhost):hover,
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover {
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):hover,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):hover,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):hover {
   background-color: rgba(83, 59, 255, 0.08) !important;
   border: 1px solid #533bff !important;
   border-color: #533bff !important;
@@ -1678,12 +1829,12 @@ textarea.sapMTextAreaInner {
 .sapMBtnTransparent:not(.sapMOverflowToolbar .sapMBtnTransparent):not(.sapMTB .sapMBtnTransparent):not(.sapMHeaderToolbar .sapMBtnTransparent):not(.sapMBar .sapMBtnTransparent):active,
 .sapMBtnDefault:not(.sapMOverflowToolbar .sapMBtnDefault):not(.sapMTB .sapMBtnDefault):not(.sapMHeaderToolbar .sapMBtnDefault):not(.sapMBar .sapMBtnDefault):active,
 .sapMBtnGhost:not(.sapMOverflowToolbar .sapMBtnGhost):not(.sapMTB .sapMBtnGhost):not(.sapMHeaderToolbar .sapMBtnGhost):not(.sapMBar .sapMBtnGhost):active,
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized).sapMBtnActive,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized).sapMBtnActive,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized).sapMBtnActive {
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):active,
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *).sapMBtnActive,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):active,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *).sapMBtnActive,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):active,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *).sapMBtnActive {
   background-color: rgba(83, 59, 255, 0.16) !important;
   border: 1px solid #533bff !important;
   border-color: #533bff !important;
@@ -2997,13 +3148,365 @@ div[id*="-text"] {
 
 /* ==========================================================================
    NOTIFICATION BELL DYNAMIC BADGE COUNTER & POPOVER STYLING
+/* ==========================================================================
+   NOTIFICATION BELL & HOME BUTTONS - SQUARE/ROUNDED-SQUARE PRODUCT DESIGN
    ========================================================================== */
 .sapMBtn[title="Notifications"],
 .sapMBtn[title="Alert Notifications"],
 .sapMBtn[aria-label="Notifications"],
+.sapMBtn[aria-label="Alert Notifications"],
 .sapMBtn[tooltip="Notifications"],
 .sapMBtn[tooltip="Alert Notifications"],
-.xyraNotificationBtn,
+.sapMBtn[data-unread-count],
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]),
+.xyraNotificationBtn {
+  position: relative !important;
+  overflow: visible !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.sapMBtn[title="Notifications"]:hover,
+.sapMBtn[title="Alert Notifications"]:hover,
+.sapMBtn[aria-label="Notifications"]:hover,
+.sapMBtn[aria-label="Alert Notifications"]:hover,
+.sapMBtn[tooltip="Notifications"]:hover,
+.sapMBtn[tooltip="Alert Notifications"]:hover,
+.sapMBtn[data-unread-count]:hover,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):hover,
+.xyraNotificationBtn:hover,
+.sapMBtn[title="Notifications"]:active,
+.sapMBtn[title="Alert Notifications"]:active,
+.sapMBtn[aria-label="Notifications"]:active,
+.sapMBtn[aria-label="Alert Notifications"]:active,
+.sapMBtn[tooltip="Notifications"]:active,
+.sapMBtn[tooltip="Alert Notifications"]:active,
+.sapMBtn[data-unread-count]:active,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):active,
+.xyraNotificationBtn:active,
+.sapMBtn[title="Notifications"]:focus,
+.sapMBtn[title="Alert Notifications"]:focus,
+.sapMBtn[aria-label="Notifications"]:focus,
+.sapMBtn[aria-label="Alert Notifications"]:focus,
+.sapMBtn[tooltip="Notifications"]:focus,
+.sapMBtn[tooltip="Alert Notifications"]:focus,
+.sapMBtn[data-unread-count]:focus,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):focus,
+.xyraNotificationBtn:focus,
+.sapMBtn[title="Notifications"]:focus-visible,
+.sapMBtn[title="Alert Notifications"]:focus-visible,
+.sapMBtn[aria-label="Notifications"]:focus-visible,
+.sapMBtn[aria-label="Alert Notifications"]:focus-visible,
+.sapMBtn[tooltip="Notifications"]:focus-visible,
+.sapMBtn[tooltip="Alert Notifications"]:focus-visible,
+.sapMBtn[data-unread-count]:focus-visible,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):focus-visible,
+.xyraNotificationBtn:focus-visible,
+.sapMBtn[title="Notifications"]:focus-within,
+.sapMBtn[title="Alert Notifications"]:focus-within,
+.sapMBtn[aria-label="Notifications"]:focus-within,
+.sapMBtn[aria-label="Alert Notifications"]:focus-within,
+.sapMBtn[tooltip="Notifications"]:focus-within,
+.sapMBtn[tooltip="Alert Notifications"]:focus-within,
+.sapMBtn[data-unread-count]:focus-within,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):focus-within,
+.xyraNotificationBtn:focus-within {
+  border-radius: 8px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Eliminate all outer pseudo-elements in every state */
+.sapMBtn[title="Notifications"]::before,
+.sapMBtn[title="Alert Notifications"]::before,
+.sapMBtn[aria-label="Notifications"]::before,
+.sapMBtn[aria-label="Alert Notifications"]::before,
+.sapMBtn[tooltip="Notifications"]::before,
+.sapMBtn[tooltip="Alert Notifications"]::before,
+.sapMBtn[data-unread-count]::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""])::before,
+.xyraNotificationBtn::before,
+.sapMBtn[title="Notifications"]:hover::before,
+.sapMBtn[title="Notifications"]:active::before,
+.sapMBtn[title="Notifications"]:focus::before,
+.sapMBtn[title="Notifications"]:focus-visible::before,
+.sapMBtn[data-unread-count]:hover::before,
+.sapMBtn[data-unread-count]:active::before,
+.sapMBtn[data-unread-count]:focus::before,
+.sapMBtn[data-unread-count]:focus-visible::before {
+  display: none !important;
+  content: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+}
+
+/* Inner Container (Normal State: No Border, Transparent Background) */
+.sapMBtn[title="Notifications"] .sapMBtnInner,
+.sapMBtn[title="Alert Notifications"] .sapMBtnInner,
+.sapMBtn[aria-label="Notifications"] .sapMBtnInner,
+.sapMBtn[aria-label="Alert Notifications"] .sapMBtnInner,
+.sapMBtn[tooltip="Notifications"] .sapMBtnInner,
+.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner,
+.sapMBtn[data-unread-count] .sapMBtnInner,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner,
+.xyraNotificationBtn .sapMBtnInner {
+  position: relative !important;
+  overflow: visible !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  line-height: 38px !important;
+  border-radius: 8px !important;
+  border: 1.5px solid transparent !important;
+  background-color: transparent !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: all 0.18s ease-in-out !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Hover State - Square Border & Soft Highlight (Product Design Shape) */
+.sapMBtn[title="Notifications"]:hover .sapMBtnInner,
+.sapMBtn[title="Alert Notifications"]:hover .sapMBtnInner,
+.sapMBtn[aria-label="Notifications"]:hover .sapMBtnInner,
+.sapMBtn[aria-label="Alert Notifications"]:hover .sapMBtnInner,
+.sapMBtn[tooltip="Notifications"]:hover .sapMBtnInner,
+.sapMBtn[tooltip="Alert Notifications"]:hover .sapMBtnInner,
+.sapMBtn[data-unread-count]:hover .sapMBtnInner,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):hover .sapMBtnInner,
+.xyraNotificationBtn:hover .sapMBtnInner,
+.sapMBtn[title="Notifications"] .sapMBtnInner:hover,
+.sapMBtn[title="Alert Notifications"] .sapMBtnInner:hover,
+.sapMBtn[aria-label="Notifications"] .sapMBtnInner:hover,
+.sapMBtn[aria-label="Alert Notifications"] .sapMBtnInner:hover,
+.sapMBtn[tooltip="Notifications"] .sapMBtnInner:hover,
+.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner:hover,
+.sapMBtn[data-unread-count] .sapMBtnInner:hover,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner:hover,
+.xyraNotificationBtn .sapMBtnInner:hover,
+.sapMBtn[title="Notifications"] .sapMBtnInner.sapMBtnHoverable:hover,
+.sapMBtn[title="Alert Notifications"] .sapMBtnInner.sapMBtnHoverable:hover,
+.sapMBtn[aria-label="Notifications"] .sapMBtnInner.sapMBtnHoverable:hover,
+.sapMBtn[aria-label="Alert Notifications"] .sapMBtnInner.sapMBtnHoverable:hover,
+.sapMBtn[tooltip="Notifications"] .sapMBtnInner.sapMBtnHoverable:hover,
+.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner.sapMBtnHoverable:hover,
+.sapMBtn[data-unread-count] .sapMBtnInner.sapMBtnHoverable:hover,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner.sapMBtnHoverable:hover,
+.xyraNotificationBtn .sapMBtnInner.sapMBtnHoverable:hover {
+  border-radius: 8px !important;
+  border: 1.5px solid #533bff !important;
+  border-color: #533bff !important;
+  background-color: #eef2ff !important;
+  box-shadow: 0 2px 6px rgba(83, 59, 255, 0.16) !important;
+  outline: none !important;
+}
+
+/* Click / Active / Pressed State - Square Shape */
+.sapMBtn[title="Notifications"]:active .sapMBtnInner,
+.sapMBtn[title="Alert Notifications"]:active .sapMBtnInner,
+.sapMBtn[aria-label="Notifications"]:active .sapMBtnInner,
+.sapMBtn[aria-label="Alert Notifications"]:active .sapMBtnInner,
+.sapMBtn[tooltip="Notifications"]:active .sapMBtnInner,
+.sapMBtn[tooltip="Alert Notifications"]:active .sapMBtnInner,
+.sapMBtn[data-unread-count]:active .sapMBtnInner,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):active .sapMBtnInner,
+.xyraNotificationBtn:active .sapMBtnInner,
+.sapMBtn[title="Notifications"] .sapMBtnInner:active,
+.sapMBtn[title="Alert Notifications"] .sapMBtnInner:active,
+.sapMBtn[aria-label="Notifications"] .sapMBtnInner:active,
+.sapMBtn[aria-label="Alert Notifications"] .sapMBtnInner:active,
+.sapMBtn[tooltip="Notifications"] .sapMBtnInner:active,
+.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner:active,
+.sapMBtn[data-unread-count] .sapMBtnInner:active,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner:active,
+.xyraNotificationBtn .sapMBtnInner:active,
+.sapMBtn[title="Notifications"] .sapMBtnInner.sapMBtnActive,
+.sapMBtn[title="Alert Notifications"] .sapMBtnInner.sapMBtnActive,
+.sapMBtn[aria-label="Notifications"] .sapMBtnInner.sapMBtnActive,
+.sapMBtn[aria-label="Alert Notifications"] .sapMBtnInner.sapMBtnActive,
+.sapMBtn[tooltip="Notifications"] .sapMBtnInner.sapMBtnActive,
+.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner.sapMBtnActive,
+.sapMBtn[data-unread-count] .sapMBtnInner.sapMBtnActive,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner.sapMBtnActive,
+.xyraNotificationBtn .sapMBtnInner.sapMBtnActive {
+  border-radius: 8px !important;
+  border: 1.5px solid #3724b8 !important;
+  border-color: #3724b8 !important;
+  background-color: #e0e7ff !important;
+  box-shadow: 0 1px 3px rgba(83, 59, 255, 0.2) !important;
+  outline: none !important;
+  transform: scale(0.96) !important;
+}
+
+/* Focus State - Clean Square Focus, No Ugly Overlays */
+.sapMBtn[title="Notifications"]:focus .sapMBtnInner,
+.sapMBtn[title="Alert Notifications"]:focus .sapMBtnInner,
+.sapMBtn[aria-label="Notifications"]:focus .sapMBtnInner,
+.sapMBtn[aria-label="Alert Notifications"]:focus .sapMBtnInner,
+.sapMBtn[tooltip="Notifications"]:focus .sapMBtnInner,
+.sapMBtn[tooltip="Alert Notifications"]:focus .sapMBtnInner,
+.sapMBtn[data-unread-count]:focus .sapMBtnInner,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):focus .sapMBtnInner,
+.xyraNotificationBtn:focus .sapMBtnInner,
+.sapMBtn[title="Notifications"] .sapMBtnInner:focus,
+.sapMBtn[title="Alert Notifications"] .sapMBtnInner:focus,
+.sapMBtn[aria-label="Notifications"] .sapMBtnInner:focus,
+.sapMBtn[aria-label="Alert Notifications"] .sapMBtnInner:focus,
+.sapMBtn[tooltip="Notifications"] .sapMBtnInner:focus,
+.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner:focus,
+.sapMBtn[data-unread-count] .sapMBtnInner:focus,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner:focus,
+.xyraNotificationBtn .sapMBtnInner:focus,
+.sapMBtn[title="Notifications"] .sapMBtnInner:focus-visible,
+.sapMBtn[title="Alert Notifications"] .sapMBtnInner:focus-visible,
+.sapMBtn[aria-label="Notifications"] .sapMBtnInner:focus-visible,
+.sapMBtn[aria-label="Alert Notifications"] .sapMBtnInner:focus-visible,
+.sapMBtn[tooltip="Notifications"] .sapMBtnInner:focus-visible,
+.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner:focus-visible,
+.sapMBtn[data-unread-count] .sapMBtnInner:focus-visible,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner:focus-visible,
+.xyraNotificationBtn .sapMBtnInner:focus-visible,
+.sapMBtn[title="Notifications"] .sapMBtnInner.sapMFocusable:focus,
+.sapMBtn[title="Alert Notifications"] .sapMBtnInner.sapMFocusable:focus,
+.sapMBtn[aria-label="Notifications"] .sapMBtnInner.sapMFocusable:focus,
+.sapMBtn[aria-label="Alert Notifications"] .sapMBtnInner.sapMFocusable:focus,
+.sapMBtn[tooltip="Notifications"] .sapMBtnInner.sapMFocusable:focus,
+.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner.sapMFocusable:focus,
+.sapMBtn[data-unread-count] .sapMBtnInner.sapMFocusable:focus,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner.sapMFocusable:focus,
+.xyraNotificationBtn .sapMBtnInner.sapMFocusable:focus {
+  border-radius: 8px !important;
+  outline: none !important;
+  border: 1.5px solid transparent !important;
+  box-shadow: none !important;
+}
+
+/* Eliminate UI5 Focus Ring Pseudo-elements on .sapMBtnInner */
+.sapMBtn[title="Notifications"] .sapMBtnInner::before,
+.sapMBtn[title="Alert Notifications"] .sapMBtnInner::before,
+.sapMBtn[aria-label="Notifications"] .sapMBtnInner::before,
+.sapMBtn[aria-label="Alert Notifications"] .sapMBtnInner::before,
+.sapMBtn[tooltip="Notifications"] .sapMBtnInner::before,
+.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner::before,
+.sapMBtn[data-unread-count] .sapMBtnInner::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner::before,
+.xyraNotificationBtn .sapMBtnInner::before,
+.sapMBtn[title="Notifications"] .sapMBtnInner::after,
+.sapMBtn[title="Alert Notifications"] .sapMBtnInner::after,
+.sapMBtn[aria-label="Notifications"] .sapMBtnInner::after,
+.sapMBtn[aria-label="Alert Notifications"] .sapMBtnInner::after,
+.sapMBtn[tooltip="Notifications"] .sapMBtnInner::after,
+.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner::after,
+.sapMBtn[data-unread-count] .sapMBtnInner::after,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner::after,
+.xyraNotificationBtn .sapMBtnInner::after,
+.sapMBtn[title="Notifications"]:hover .sapMBtnInner::before,
+.sapMBtn[title="Notifications"]:active .sapMBtnInner::before,
+.sapMBtn[title="Notifications"]:focus .sapMBtnInner::before,
+.sapMBtn[title="Notifications"] .sapMBtnInner:hover::before,
+.sapMBtn[title="Notifications"] .sapMBtnInner:active::before,
+.sapMBtn[title="Notifications"] .sapMBtnInner:focus::before,
+.sapMBtn[title="Notifications"] .sapMBtnInner.sapMBtnHoverable:hover::before,
+.sapMBtn[title="Notifications"] .sapMBtnInner.sapMBtnActive::before,
+.sapMBtn[title="Notifications"] .sapMBtnInner.sapMFocusable:focus::before,
+.sapMBtn[data-unread-count]:hover .sapMBtnInner::before,
+.sapMBtn[data-unread-count]:active .sapMBtnInner::before,
+.sapMBtn[data-unread-count]:focus .sapMBtnInner::before,
+.sapMBtn[data-unread-count] .sapMBtnInner:hover::before,
+.sapMBtn[data-unread-count] .sapMBtnInner:active::before,
+.sapMBtn[data-unread-count] .sapMBtnInner:focus::before,
+.sapMBtn[data-unread-count] .sapMBtnInner.sapMBtnHoverable:hover::before,
+.sapMBtn[data-unread-count] .sapMBtnInner.sapMBtnActive::before,
+.sapMBtn[data-unread-count] .sapMBtnInner.sapMFocusable:focus::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner:focus::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner:active::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner:hover::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner.sapMFocusable:focus::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner.sapMBtnActive::before {
+  display: none !important;
+  content: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+  border-radius: 8px !important;
+}
+
+/* Centered Bell Icon */
+.sapMBtn[title="Notifications"] .sapUiIcon,
+.sapMBtn[title="Alert Notifications"] .sapUiIcon,
+.sapMBtn[aria-label="Notifications"] .sapUiIcon,
+.sapMBtn[aria-label="Alert Notifications"] .sapUiIcon,
+.sapMBtn[tooltip="Notifications"] .sapUiIcon,
+.sapMBtn[tooltip="Alert Notifications"] .sapUiIcon,
+.sapMBtn[data-unread-count] .sapUiIcon,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapUiIcon,
+.xyraNotificationBtn .sapUiIcon {
+  font-size: 1.25rem !important;
+  color: #533bff !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transition: all 0.15s ease !important;
+}
+
+.sapMBtn[title="Notifications"]:hover .sapUiIcon,
+.sapMBtn[title="Alert Notifications"]:hover .sapUiIcon,
+.sapMBtn[aria-label="Notifications"]:hover .sapUiIcon,
+.sapMBtn[aria-label="Alert Notifications"]:hover .sapUiIcon,
+.sapMBtn[tooltip="Notifications"]:hover .sapUiIcon,
+.sapMBtn[tooltip="Alert Notifications"]:hover .sapUiIcon,
+.sapMBtn[data-unread-count]:hover .sapUiIcon,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):hover .sapUiIcon,
+.xyraNotificationBtn:hover .sapUiIcon {
+  color: #432bdf !important;
+  transform: scale(1.08) !important;
+}
+
+.sapMBtn[title="Notifications"]:active .sapUiIcon,
+.sapMBtn[title="Alert Notifications"]:active .sapUiIcon,
+.sapMBtn[aria-label="Notifications"]:active .sapUiIcon,
+.sapMBtn[aria-label="Alert Notifications"]:active .sapUiIcon,
+.sapMBtn[tooltip="Notifications"]:active .sapUiIcon,
+.sapMBtn[tooltip="Alert Notifications"]:active .sapUiIcon,
+.sapMBtn[data-unread-count]:active .sapUiIcon,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):active .sapUiIcon,
+.xyraNotificationBtn:active .sapUiIcon {
+  color: #3724b8 !important;
+  transform: scale(1.02) !important;
+}
+
+/* Home / Navigation Icon Buttons - Square/Rounded-Square Product Design */
 .sapMBtn[title="Admin Dashboard"],
 .sapMBtn[tooltip="Admin Dashboard"],
 .sapMBtn[title="Home"],
@@ -3018,18 +3521,80 @@ div[id*="-text"] {
 .xyraHomeBtn {
   position: relative !important;
   overflow: visible !important;
-  width: 38px !important;
-  min-width: 38px !important;
-  height: 38px !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
   padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-.sapMBtn[title="Notifications"] .sapMBtnInner,
-.sapMBtn[title="Alert Notifications"] .sapMBtnInner,
-.sapMBtn[aria-label="Notifications"] .sapMBtnInner,
-.sapMBtn[tooltip="Notifications"] .sapMBtnInner,
-.sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner,
-.xyraNotificationBtn .sapMBtnInner,
+.sapMBtn[title="Admin Dashboard"]:hover,
+.sapMBtn[tooltip="Admin Dashboard"]:hover,
+.sapMBtn[title="Home"]:hover,
+.sapMBtn[tooltip="Home"]:hover,
+.sapMBtn[title="Navigate Home"]:hover,
+.sapMBtn[tooltip="Navigate Home"]:hover,
+.sapMBtn[title="Back to Dashboard"]:hover,
+.sapMBtn[tooltip="Back to Dashboard"]:hover,
+.sapMBtn[title="Back to Queue"]:hover,
+.sapMBtn[tooltip="Back to Queue"]:hover,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):hover,
+.xyraHomeBtn:hover,
+.sapMBtn[title="Admin Dashboard"]:active,
+.sapMBtn[tooltip="Admin Dashboard"]:active,
+.sapMBtn[title="Home"]:active,
+.sapMBtn[tooltip="Home"]:active,
+.sapMBtn[title="Navigate Home"]:active,
+.sapMBtn[tooltip="Navigate Home"]:active,
+.sapMBtn[title="Back to Dashboard"]:active,
+.sapMBtn[tooltip="Back to Dashboard"]:active,
+.sapMBtn[title="Back to Queue"]:active,
+.sapMBtn[tooltip="Back to Queue"]:active,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):active,
+.xyraHomeBtn:active,
+.sapMBtn[title="Admin Dashboard"]:focus,
+.sapMBtn[tooltip="Admin Dashboard"]:focus,
+.sapMBtn[title="Home"]:focus,
+.sapMBtn[tooltip="Home"]:focus,
+.sapMBtn[title="Navigate Home"]:focus,
+.sapMBtn[tooltip="Navigate Home"]:focus,
+.sapMBtn[title="Back to Dashboard"]:focus,
+.sapMBtn[tooltip="Back to Dashboard"]:focus,
+.sapMBtn[title="Back to Queue"]:focus,
+.sapMBtn[tooltip="Back to Queue"]:focus,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):focus,
+.xyraHomeBtn:focus {
+  border-radius: 8px !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sapMBtn[title="Admin Dashboard"]::before,
+.sapMBtn[tooltip="Admin Dashboard"]::before,
+.sapMBtn[title="Home"]::before,
+.sapMBtn[tooltip="Home"]::before,
+.sapMBtn[title="Navigate Home"]::before,
+.sapMBtn[tooltip="Navigate Home"]::before,
+.sapMBtn[title="Back to Dashboard"]::before,
+.sapMBtn[tooltip="Back to Dashboard"]::before,
+.sapMBtn[title="Back to Queue"]::before,
+.sapMBtn[tooltip="Back to Queue"]::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""])::before,
+.xyraHomeBtn::before {
+  display: none !important;
+  content: none !important;
+}
+
 .sapMBtn[title="Admin Dashboard"] .sapMBtnInner,
 .sapMBtn[tooltip="Admin Dashboard"] .sapMBtnInner,
 .sapMBtn[title="Home"] .sapMBtnInner,
@@ -3044,23 +3609,42 @@ div[id*="-text"] {
 .xyraHomeBtn .sapMBtnInner {
   position: relative !important;
   overflow: visible !important;
-  width: 38px !important;
-  min-width: 38px !important;
-  height: 38px !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
   line-height: 38px !important;
-  border-radius: 50% !important;
+  border-radius: 8px !important;
+  border: 1.5px solid transparent !important;
+  background-color: transparent !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   padding: 0 !important;
+  margin: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: all 0.18s ease-in-out !important;
 }
 
-.sapMBtn[title="Notifications"] .sapUiIcon,
-.sapMBtn[title="Alert Notifications"] .sapUiIcon,
-.sapMBtn[aria-label="Notifications"] .sapUiIcon,
-.sapMBtn[tooltip="Notifications"] .sapUiIcon,
-.sapMBtn[tooltip="Alert Notifications"] .sapUiIcon,
-.xyraNotificationBtn .sapUiIcon,
+.sapMBtn[title="Admin Dashboard"] .sapMBtnInner::before,
+.sapMBtn[tooltip="Admin Dashboard"] .sapMBtnInner::before,
+.sapMBtn[title="Home"] .sapMBtnInner::before,
+.sapMBtn[tooltip="Home"] .sapMBtnInner::before,
+.sapMBtn[title="Navigate Home"] .sapMBtnInner::before,
+.sapMBtn[tooltip="Navigate Home"] .sapMBtnInner::before,
+.sapMBtn[title="Back to Dashboard"] .sapMBtnInner::before,
+.sapMBtn[tooltip="Back to Dashboard"] .sapMBtnInner::before,
+.sapMBtn[title="Back to Queue"] .sapMBtnInner::before,
+.sapMBtn[tooltip="Back to Queue"] .sapMBtnInner::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner::before,
+.xyraHomeBtn .sapMBtnInner::before {
+  display: none !important;
+  content: none !important;
+}
+
 .sapMBtn[title="Admin Dashboard"] .sapUiIcon,
 .sapMBtn[tooltip="Admin Dashboard"] .sapUiIcon,
 .sapMBtn[title="Home"] .sapUiIcon,
@@ -3080,12 +3664,6 @@ div[id*="-text"] {
   transition: all 0.15s ease !important;
 }
 
-.sapMBtn[title="Notifications"]:hover .sapUiIcon,
-.sapMBtn[title="Alert Notifications"]:hover .sapUiIcon,
-.sapMBtn[aria-label="Notifications"]:hover .sapUiIcon,
-.sapMBtn[tooltip="Notifications"]:hover .sapUiIcon,
-.sapMBtn[tooltip="Alert Notifications"]:hover .sapUiIcon,
-.xyraNotificationBtn:hover .sapUiIcon,
 .sapMBtn[title="Admin Dashboard"]:hover .sapUiIcon,
 .sapMBtn[tooltip="Admin Dashboard"]:hover .sapUiIcon,
 .sapMBtn[title="Home"]:hover .sapUiIcon,
@@ -3102,12 +3680,6 @@ div[id*="-text"] {
   transform: scale(1.05);
 }
 
-.sapMBtn[title="Notifications"]:hover .sapMBtnInner,
-.sapMBtn[title="Alert Notifications"]:hover .sapMBtnInner,
-.sapMBtn[aria-label="Notifications"]:hover .sapMBtnInner,
-.sapMBtn[tooltip="Notifications"]:hover .sapMBtnInner,
-.sapMBtn[tooltip="Alert Notifications"]:hover .sapMBtnInner,
-.xyraNotificationBtn:hover .sapMBtnInner,
 .sapMBtn[title="Admin Dashboard"]:hover .sapMBtnInner,
 .sapMBtn[tooltip="Admin Dashboard"]:hover .sapMBtnInner,
 .sapMBtn[title="Home"]:hover .sapMBtnInner,
@@ -3120,36 +3692,65 @@ div[id*="-text"] {
 .sapMBtn[tooltip="Back to Queue"]:hover .sapMBtnInner,
 .sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):hover .sapMBtnInner,
 .xyraHomeBtn:hover .sapMBtnInner {
+  border-radius: 8px !important;
+  border: 1.5px solid #533bff !important;
+  border-color: #533bff !important;
   background-color: #eef2ff !important;
+  box-shadow: 0 2px 6px rgba(83, 59, 255, 0.16) !important;
+  outline: none !important;
 }
 
+.sapMBtn[title="Admin Dashboard"]:active .sapMBtnInner,
+.sapMBtn[tooltip="Admin Dashboard"]:active .sapMBtnInner,
+.sapMBtn[title="Home"]:active .sapMBtnInner,
+.sapMBtn[tooltip="Home"]:active .sapMBtnInner,
+.sapMBtn[title="Navigate Home"]:active .sapMBtnInner,
+.sapMBtn[tooltip="Navigate Home"]:active .sapMBtnInner,
+.sapMBtn[title="Back to Dashboard"]:active .sapMBtnInner,
+.sapMBtn[tooltip="Back to Dashboard"]:active .sapMBtnInner,
+.sapMBtn[title="Back to Queue"]:active .sapMBtnInner,
+.sapMBtn[tooltip="Back to Queue"]:active .sapMBtnInner,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]):active .sapMBtnInner,
+.xyraHomeBtn:active .sapMBtnInner {
+  border-radius: 8px !important;
+  border: 1.5px solid #3724b8 !important;
+  border-color: #3724b8 !important;
+  background-color: #e0e7ff !important;
+  outline: none !important;
+  transform: scale(0.96) !important;
+}
+
+/* Badge Counter: Clean pill shape placed at top-right corner with 0 occlusion of bell */
 .sapMBtn[title="Notifications"]::after,
 .sapMBtn[title="Alert Notifications"]::after,
 .sapMBtn[aria-label="Notifications"]::after,
 .sapMBtn[tooltip="Notifications"]::after,
 .sapMBtn[tooltip="Alert Notifications"]::after,
 .xyraNotificationBtn::after {
-  content: attr(data-unread-count);
+  content: attr(data-unread-count) !important;
   position: absolute !important;
-  top: -1px !important;
-  right: -1px !important;
+  top: -6px !important;
+  right: -8px !important;
   background-color: #ef4444 !important;
   color: #ffffff !important;
-  font-size: 0.65rem !important;
+  font-size: 0.725rem !important;
   font-weight: 800 !important;
-  height: 18px !important;
-  min-width: 18px !important;
-  padding: 0 4px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  height: 20px !important;
+  min-width: 22px !important;
+  padding: 0 6px !important;
   border-radius: 9999px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   line-height: 1 !important;
+  letter-spacing: -0.01em !important;
   pointer-events: none !important;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.45) !important;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.45) !important;
   border: 2px solid #ffffff !important;
   z-index: 100 !important;
   box-sizing: border-box !important;
+  white-space: nowrap !important;
 }
 
 /* No default/placeholder badge - only actually-set, nonzero unread counts show.
