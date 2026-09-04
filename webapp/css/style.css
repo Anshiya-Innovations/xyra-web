@@ -813,7 +813,8 @@ span.sapTntNLITagContainer {
   overflow: hidden !important;
 }
 
-.sapMDialogContent .sapMInputBaseInner,
+.sapMDialogContent .sapMInput:not(.sapMTextArea) .sapMInputBaseInner,
+.sapMDialogContent input.sapMInputBaseInner,
 .sapMDialogContent .sapMSelectListItem,
 .sapMDialogContent .sapMSelectSelectElement,
 .sapMDialogContent .sapMSltLabel {
@@ -828,15 +829,102 @@ span.sapTntNLITagContainer {
   color: #0f172a !important;
 }
 
-.sapMDialogContent .sapMTextAreaInner {
+/* ==========================================================================
+   TRENDING MODERN TEXTAREA (APP-WIDE & DIALOGS)
+   ========================================================================== */
+.sapMTextArea,
+.sapMTextArea.sapMInputBase {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 110px !important;
+  margin-bottom: 0.85rem !important;
+  display: block !important;
+}
+
+.sapMTextArea .sapMInputBaseContentWrapper,
+.sapMDialogContent .sapMTextArea .sapMInputBaseContentWrapper,
+.sapMDialogContent .sapMTextArea.sapMInputBase .sapMInputBaseContentWrapper {
+  height: auto !important;
+  min-height: 110px !important;
+  max-height: none !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  background-color: #f8fafc !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+  overflow: hidden !important;
+  display: flex !important;
+}
+
+.sapMTextArea .sapMInputBaseContentWrapper:hover,
+.sapMDialogContent .sapMTextArea .sapMInputBaseContentWrapper:hover {
+  border-color: #c7d2fe !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(83, 59, 255, 0.06) !important;
+}
+
+.sapMTextArea .sapMInputBaseContentWrapper:focus-within,
+.sapMDialogContent .sapMTextArea .sapMInputBaseContentWrapper:focus-within,
+.sapMTextArea.sapMFocus .sapMInputBaseContentWrapper {
+  border-color: #533bff !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3.5px rgba(83, 59, 255, 0.15), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  outline: none !important;
+}
+
+.sapMTextAreaInner,
+.sapMTextArea .sapMTextAreaInner,
+.sapMDialogContent .sapMTextAreaInner,
+textarea.sapMTextAreaInner {
+  height: auto !important;
+  min-height: 104px !important;
+  max-height: none !important;
+  padding: 12px 14px !important;
+  font-size: 0.925rem !important;
+  line-height: 1.6 !important;
+  color: #0f172a !important;
+  background: transparent !important;
+  background-color: transparent !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
-  padding: 0.65rem 0.85rem !important;
-  box-sizing: border-box !important;
-  background-color: transparent !important;
-  color: #0f172a !important;
   resize: vertical !important;
+  box-sizing: border-box !important;
+  font-family: inherit !important;
+  width: 100% !important;
+}
+
+/* Eliminate browser scrollbar arrows/buttons and sleek modern scrollbar */
+.sapMTextAreaInner::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+.sapMTextAreaInner::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.sapMTextAreaInner::-webkit-scrollbar-thumb {
+  background: #cbd5e1 !important;
+  border-radius: 9999px !important;
+}
+
+.sapMTextAreaInner::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8 !important;
+}
+
+.sapMTextAreaInner::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.sapMTextAreaInner::placeholder {
+  color: #94a3b8 !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
 }
 
 /* Remove all inner borders/outlines on focus to prevent double-ring corner misalignment */
@@ -1105,7 +1193,7 @@ span.sapTntNLITagContainer {
    .sapMSelect), select arrow = .sapMSltArrow, select closed-state label =
    .sapMSltLabel. */
 
-.sapMInputBaseContentWrapper,
+.sapMInputBase:not(.sapMTextArea) > .sapMInputBaseContentWrapper,
 .sapMSlt {
   border: 1px solid #e2e8f0 !important;
   border-radius: 10px !important;
@@ -2767,10 +2855,10 @@ div[id*="-text"] {
   margin-bottom: 20px !important;
 }
 
-.sapMSimpleForm .sapMInputBaseContentWrapper,
-.sapUiForm .sapMInputBaseContentWrapper,
-.sapMInputBaseContentWrapper,
-.xyraFormInput .sapMInputBaseContentWrapper {
+.sapMSimpleForm .sapMInput:not(.sapMTextArea) .sapMInputBaseContentWrapper,
+.sapUiForm .sapMInput:not(.sapMTextArea) .sapMInputBaseContentWrapper,
+.sapMInput:not(.sapMTextArea) .sapMInputBaseContentWrapper,
+.xyraFormInput .sapMInput:not(.sapMTextArea) .sapMInputBaseContentWrapper {
   background-color: #ffffff !important;
   border: 1px solid #cbd5e1 !important;
   border-radius: 8px !important;
@@ -3887,15 +3975,10 @@ div[id*="-text"] {
   background-color: #f1f5f9 !important;
 }
 
-/* Selected or active row styling (clean neutral instead of blue highlight) */
-.sapMTable .sapMLIBSelected,
-.sapMListTbl .sapMLIBSelected,
-.sapMTable .sapMLIBActive,
-.sapMListTbl .sapMLIBActive {
-  background-color: #f8fafc !important;
-  outline: none !important;
-  box-shadow: none !important;
-  border-bottom: 1px solid #e2e8f0 !important;
+/* Calendar month & year picker grid */
+.xyraCalPickerGrid,
+.xyraCalMonthGrid,
+.xyraCalYearGrid {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
   gap: 8px !important;
@@ -3939,18 +4022,10 @@ div[id*="-text"] {
 }
 
 /* ==========================================================================
-   Table Styling: Remove Blue Border & Add Light Gray Row Hover
+   Table Row & MultiSelect Checkbox Styling: Crisp Alignment & Zero Border Artifacts
    ========================================================================== */
 
-/* 1. Eliminate any blue border / focus outline / box-shadow on all tables, rows, and cells */
-.sapMTable,
-.sapMListTbl,
-.sapMTable table,
-.sapMListTbl table {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
+/* 1. Ensure table rows and cells are ALWAYS standard table-row and table-cell */
 .sapMTable tr,
 .sapMListTbl tr,
 .sapMTable .sapMLIB,
@@ -3958,73 +4033,144 @@ div[id*="-text"] {
 .sapMTable .sapMListTblRow,
 .sapMListTbl .sapMListTblRow,
 .sapMTable tbody tr,
-.sapMListTbl tbody tr {
-  outline: none !important;
-  outline-width: 0 !important;
-  outline-color: transparent !important;
-  box-shadow: none !important;
-  border-left: none !important;
-  border-right: none !important;
-  border-top: none !important;
-  border-bottom: 1px solid #e2e8f0 !important;
-}
-
-/* Remove focus / active / selected blue borders and outlines */
-.sapMTable .sapMLIB:focus,
-.sapMTable .sapMLIB:focus-visible,
-.sapMTable .sapMLIB:focus-within,
-.sapMTable .sapMLIBFocused,
+.sapMListTbl tbody tr,
 .sapMTable .sapMLIBSelected,
-.sapMTable .sapMLIBActive,
-.sapMTable .sapMListTblRow:focus,
-.sapMTable .sapMListTblRow:focus-visible,
-.sapMTable .sapMListTblRow:focus-within,
-.sapMTable .sapMListTblRow.sapMLIBFocused,
-.sapMTable .sapMListTblRow.sapMLIBSelected,
-.sapMTable .sapMListTblRow.sapMLIBActive,
-.sapMListTbl .sapMLIB:focus,
-.sapMListTbl .sapMLIB:focus-visible,
-.sapMListTbl .sapMLIB:focus-within,
-.sapMListTbl .sapMLIBFocused,
 .sapMListTbl .sapMLIBSelected,
+.sapMTable .sapMLIBActive,
+.sapMListTbl .sapMLIBActive {
+  display: table-row !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* 2. Standardize cells: crisp horizontal divider only, no vertical borders */
+.sapMTable td,
+.sapMListTbl td,
+.sapMTable .sapMListTblCell,
+.sapMListTbl .sapMListTblCell,
+.sapMTable .sapMListTblSelCol,
+.sapMListTbl .sapMListTblSelCol {
+  display: table-cell !important;
+  vertical-align: middle !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* 3. Selected Row Styling: clean neutral, perfectly aligned cells */
+.sapMTable .sapMLIBSelected,
+.sapMListTbl .sapMLIBSelected,
+.sapMTable .sapMLIBActive,
 .sapMListTbl .sapMLIBActive,
-.sapMListTbl .sapMListTblRow:focus,
-.sapMListTbl .sapMListTblRow:focus-visible,
-.sapMListTbl .sapMListTblRow:focus-within,
-.sapMListTbl .sapMListTblRow.sapMLIBFocused,
-.sapMListTbl .sapMListTblRow.sapMLIBSelected,
-.sapMListTbl .sapMListTblRow.sapMLIBActive {
+.sapMTable .sapMListTblRow.sapMLIBSelected,
+.sapMListTbl .sapMListTblRow.sapMLIBSelected {
+  background-color: #f8fafc !important;
+}
+
+.sapMTable .sapMLIBSelected > td,
+.sapMListTbl .sapMLIBSelected > td,
+.sapMTable .sapMLIBActive > td,
+.sapMListTbl .sapMLIBActive > td,
+.sapMTable .sapMListTblRow.sapMLIBSelected > td,
+.sapMListTbl .sapMListTblRow.sapMLIBSelected > td {
+  background-color: #f8fafc !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.sapMTable .sapMLIBSelected:hover > td,
+.sapMListTbl .sapMLIBSelected:hover > td {
+  background-color: #f1f5f9 !important;
+}
+
+/* 4. Table MultiSelect Checkbox column alignment: prevent overlap & ensure perfect centering */
+.sapMTable .sapMListTblSelCol,
+.sapMListTbl .sapMListTblSelCol,
+.sapMTable th.sapMListTblSelCol,
+.sapMListTbl th.sapMListTblSelCol,
+.sapMTable td.sapMListTblSelCol,
+.sapMListTbl td.sapMListTblSelCol,
+th.sapMListTblSelCol,
+td.sapMListTblSelCol {
+  width: 3.25rem !important;
+  min-width: 3.25rem !important;
+  max-width: 3.25rem !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 0.55rem 0.5rem !important;
+}
+
+/* Ensure all table header cells and column header contents share identical vertical-alignment */
+.sapMTable th,
+.sapMListTbl th,
+.sapMTableTH,
+.sapMListTblHeaderCell {
+  vertical-align: middle !important;
+  padding-top: 0.55rem !important;
+  padding-bottom: 0.55rem !important;
+}
+
+.sapMTable th .sapMColumnHeader,
+.sapMListTbl th .sapMColumnHeader,
+.sapMColumnHeader,
+.sapMColumnHeaderContent,
+span.sapMColumnHeaderContent {
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+  min-height: 1.5rem !important;
+  vertical-align: middle !important;
+}
+
+/* ==========================================================================
+   REMOVE CHECKBOX OUTER BORDER & FOCUS RING (APP-WIDE & ALL TABLES)
+   ========================================================================== */
+.sapMCb,
+.sapMCb:focus,
+.sapMCb:focus-visible,
+.sapMCb:focus-within,
+.sapMCb.sapMFocus,
+.sapMLIBSelectM,
+.sapMLIBSelectM:focus,
+.sapMListTblSelCol .sapMCb,
+.sapMListTblSelCol .sapMCb:focus,
+.sapMListTblSelCol .sapMCb.sapMFocus {
   outline: none !important;
   outline-width: 0 !important;
   outline-color: transparent !important;
   box-shadow: none !important;
-  border-left: none !important;
-  border-right: none !important;
-  border-top: none !important;
-  border-bottom: 1px solid #e2e8f0 !important;
+  border: none !important;
 }
 
-/* Strip any pseudo-element focus rings (SAP Horizon / Quartz border rings) */
-.sapMTable .sapMLIB::before,
-.sapMTable .sapMLIB::after,
-.sapMTable .sapMListTblRow::before,
-.sapMTable .sapMListTblRow::after,
-.sapMListTbl .sapMLIB::before,
-.sapMListTbl .sapMLIB::after,
-.sapMListTbl .sapMListTblRow::before,
-.sapMListTbl .sapMListTblRow::after,
-.sapMTable .sapMLIBFocused::before,
-.sapMTable .sapMLIBFocused::after,
-.sapMTable .sapMLIBSelected::before,
-.sapMTable .sapMLIBSelected::after,
-.sapMListTbl .sapMLIBFocused::before,
-.sapMListTbl .sapMLIBFocused::after,
-.sapMListTbl .sapMLIBSelected::before,
-.sapMListTbl .sapMLIBSelected::after,
-.sapMTable .sapMLIB:focus::before,
-.sapMTable .sapMLIB:focus::after,
-.sapMListTbl .sapMLIB:focus::before,
-.sapMListTbl .sapMLIB:focus::after {
+/* Eliminate the pseudo-element outer blue focus border box entirely */
+.sapMCb::before,
+.sapMCb::after,
+.sapMCb:focus::before,
+.sapMCb:focus::after,
+.sapMCb:focus-visible::before,
+.sapMCb:focus-visible::after,
+.sapMCb:focus-within::before,
+.sapMCb:focus-within::after,
+.sapMCb.sapMFocus::before,
+.sapMCb.sapMFocus::after,
+.sapMLIBSelectM::before,
+.sapMLIBSelectM::after,
+.sapMLIBSelectM:focus::before,
+.sapMLIBSelectM:focus::after,
+.sapMLIBSelectM.sapMFocus::before,
+.sapMLIBSelectM.sapMFocus::after,
+.sapMListTblSelCol .sapMCb::before,
+.sapMListTblSelCol .sapMCb::after,
+.sapMListTblSelCol .sapMCb:focus::before,
+.sapMListTblSelCol .sapMCb:focus::after,
+.sapMListTblSelCol .sapMCb.sapMFocus::before,
+.sapMListTblSelCol .sapMCb.sapMFocus::after {
   display: none !important;
   border: none !important;
   outline: none !important;
@@ -4032,79 +4178,129 @@ div[id*="-text"] {
   content: none !important;
 }
 
-/* Strip focus rings on cells */
-.sapMTable td,
-.sapMTable th,
-.sapMListTbl td,
-.sapMListTbl th,
-.sapMListTblCell,
-.sapMListTblHeaderCell {
+/* Table MultiSelect Checkbox Container: centered, zero stray offsets */
+.sapMTable .sapMCb,
+.sapMListTbl .sapMCb,
+.sapMListTblHeader .sapMCb,
+.sapMListTblHeader .sapMLIBSelectM,
+.sapMListTblSelCol .sapMCb,
+.sapMLIBSelectM {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  top: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  position: relative !important;
+  height: 1.25rem !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  border: none !important;
   outline: none !important;
   box-shadow: none !important;
 }
 
-.sapMTable td:focus,
-.sapMTable th:focus,
-.sapMListTbl td:focus,
-.sapMListTbl th:focus,
-.sapMListTblCell:focus,
-.sapMListTblHeaderCell:focus {
+.sapMListTblSelCol .sapMCb,
+.sapMLIBSelectM {
+  width: 1.25rem !important;
+  min-width: 1.25rem !important;
+}
+
+/* Checkbox Box Base: neutral rounded square, zero UI5 theme downward offsets */
+.sapMTable .sapMCbBg,
+.sapMListTbl .sapMCbBg,
+.sapMCbBg {
+  border-radius: 6px !important;
+  border: 1.5px solid #a6b4c9 !important;
+  background-color: #ffffff !important;
+  transition: all 0.15s ease !important;
   outline: none !important;
   box-shadow: none !important;
+  width: 1.125rem !important;
+  height: 1.125rem !important;
+  min-width: 1.125rem !important;
+  min-height: 1.125rem !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  top: 0 !important;
+  bottom: auto !important;
+  left: 0 !important;
+  right: auto !important;
+  margin: 0 auto !important;
+  transform: none !important;
 }
 
-/* 2. Light Gray Background on Table Row Hover across all tables */
-.sapMTable tbody tr.sapMListTblRow,
-.sapMTable tbody tr.sapMLIB,
-.sapMListTbl tbody tr.sapMListTblRow,
-.sapMListTbl tbody tr.sapMLIB,
-.sapMTable tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader),
-.sapMListTbl tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader) {
-  transition: background-color 0.15s ease-in-out !important;
+.sapMCbBg::after {
+  display: none !important;
+  content: none !important;
 }
 
-.sapMTable tbody tr.sapMListTblRow:hover,
-.sapMTable tbody tr.sapMLIB:hover,
-.sapMListTbl tbody tr.sapMListTblRow:hover,
-.sapMListTbl tbody tr.sapMLIB:hover,
-.sapMTable tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover,
-.sapMListTbl tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover {
-  background-color: #f1f5f9 !important;
+.sapMCbBg:hover {
+  border-color: #533bff !important;
 }
 
-/* Ensure all cells inside hovered row show the light gray background */
-.sapMTable tbody tr.sapMListTblRow:hover > td,
-.sapMTable tbody tr.sapMLIB:hover > td,
-.sapMListTbl tbody tr.sapMListTblRow:hover > td,
-.sapMListTbl tbody tr.sapMLIB:hover > td,
-.sapMTable tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover > td,
-.sapMListTbl tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover > td {
-  background-color: #f1f5f9 !important;
+/* Checked state - solid purple background */
+.sapMCb[aria-checked="true"] .sapMCbBg,
+.sapMCb.sapMCbMarkChecked .sapMCbBg,
+.sapMCbBg.sapMCbMarkChecked,
+.sapMLIBSelected .sapMCbBg {
+  background-color: #533bff !important;
+  border-color: #533bff !important;
 }
 
-/* Selected or active row styling (clean neutral instead of blue highlight) */
-.sapMTable .sapMLIBSelected,
-.sapMListTbl .sapMLIBSelected,
-.sapMTable .sapMLIBActive,
-.sapMListTbl .sapMLIBActive {
-  background-color: #f8fafc !important;
-  outline: none !important;
-  box-shadow: none !important;
-  border-bottom: 1px solid #e2e8f0 !important;
+/* Checkmark ("tik") icon - render crisp white checkmark */
+.sapMCb[aria-checked="true"] .sapMCbBg::before,
+.sapMCb.sapMCbMarkChecked .sapMCbBg::before,
+.sapMCbBg.sapMCbMarkChecked::before,
+.sapMLIBSelected .sapMCbBg::before {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  content: "\e05b" !important;
+  font-family: "SAP-icons" !important;
+  color: #ffffff !important;
+  font-size: 0.75rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  box-sizing: border-box !important;
 }
 
-.sapMTable .sapMLIBSelected > td,
-.sapMListTbl .sapMLIBSelected > td,
-.sapMTable .sapMLIBActive > td,
-.sapMListTbl .sapMLIBActive > td {
-  background-color: #f8fafc !important;
+/* Mixed state (partial selection) */
+.sapMCb[aria-checked="mixed"] .sapMCbBg {
+  background-color: #533bff !important;
+  border-color: #533bff !important;
 }
 
-.sapMTable .sapMLIBSelected:hover,
-.sapMListTbl .sapMLIBSelected:hover,
-.sapMTable .sapMLIBSelected:hover > td,
-.sapMListTbl .sapMLIBSelected:hover > td {
-  background-color: #f1f5f9 !important;
+.sapMCb[aria-checked="mixed"] .sapMCbBg::before {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  content: "—" !important;
+  font-family: inherit !important;
+  color: #ffffff !important;
+  font-size: 0.85rem !important;
+  font-weight: bold !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Unchecked state explicitly has no checkmark */
+.sapMCb[aria-checked="false"] .sapMCbBg::before,
+.sapMCb:not([aria-checked="true"]):not(.sapMCbMarkChecked):not(.sapMLIBSelected) .sapMCbBg:not(.sapMCbMarkChecked)::before {
+  display: none !important;
+  content: "" !important;
 }
 
 /* ==========================================================================

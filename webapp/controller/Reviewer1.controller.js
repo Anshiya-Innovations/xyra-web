@@ -657,14 +657,70 @@ sap.ui.define([
             }
         },
 
+        _parseDateString: function (vDate) {
+            if (!vDate) { return null; }
+            if (vDate instanceof Date) { return vDate; }
+            var s = String(vDate).trim();
+            if (!s) { return null; }
+
+            var aSlashParts = s.split(/[\/\.]/);
+            if (aSlashParts.length === 3 && aSlashParts[0].length <= 2 && aSlashParts[1].length <= 2 && aSlashParts[2].length === 4) {
+                var day = parseInt(aSlashParts[0], 10);
+                var month = parseInt(aSlashParts[1], 10) - 1;
+                var year = parseInt(aSlashParts[2], 10);
+                var dSlash = new Date(year, month, day);
+                if (!isNaN(dSlash.getTime())) {
+                    return dSlash;
+                }
+            }
+
+            var sNormalized = s.replace(/-/g, " ");
+            var dParsed = new Date(sNormalized);
+            if (!isNaN(dParsed.getTime())) {
+                return dParsed;
+            }
+
+            var dFallback = new Date(s);
+            if (!isNaN(dFallback.getTime())) {
+                return dFallback;
+            }
+
+            return null;
+        },
+
         // HISTORY SEARCH & DIALOG HANDLERS
         onSearchHistory: function () {
+            var that = this;
             var sSearchText = this.byId("searchHistory") ? this.byId("searchHistory").getValue() : "";
             var sControlId = this.byId("inputHistoryControlId") ? this.byId("inputHistoryControlId").getValue() : "";
             var sSystem = this.byId("selectHistorySystem") ? this.byId("selectHistorySystem").getSelectedKey() : "All";
             var sDecision = this.byId("selectHistoryDecision") ? this.byId("selectHistoryDecision").getSelectedKey() : "All";
             var sStatus = this.byId("selectHistoryStatus") ? this.byId("selectHistoryStatus").getSelectedKey() : "All";
-            var sDate = this.byId("dpHistoryDate") ? this.byId("dpHistoryDate").getValue() : "";
+
+            var oStartDatePicker = this.byId("dpHistoryStartDate");
+            var oEndDatePicker = this.byId("dpHistoryEndDate");
+
+            var dStart = null;
+            if (oStartDatePicker) {
+                if (oStartDatePicker.getStartDate && oStartDatePicker.getStartDate()) {
+                    dStart = oStartDatePicker.getStartDate();
+                } else if (oStartDatePicker.getDateValue && oStartDatePicker.getDateValue()) {
+                    dStart = oStartDatePicker.getDateValue();
+                } else if (oStartDatePicker.getValue && oStartDatePicker.getValue()) {
+                    dStart = this._parseDateString(oStartDatePicker.getValue());
+                }
+            }
+
+            var dEnd = null;
+            if (oEndDatePicker) {
+                if (oEndDatePicker.getEndDate && oEndDatePicker.getEndDate()) {
+                    dEnd = oEndDatePicker.getEndDate();
+                } else if (oEndDatePicker.getDateValue && oEndDatePicker.getDateValue()) {
+                    dEnd = oEndDatePicker.getDateValue();
+                } else if (oEndDatePicker.getValue && oEndDatePicker.getValue()) {
+                    dEnd = this._parseDateString(oEndDatePicker.getValue());
+                }
+            }
 
             var aFilters = [];
 
@@ -693,8 +749,21 @@ sap.ui.define([
                 aFilters.push(new Filter("ticketStatus", FilterOperator.Contains, sStatus));
             }
 
-            if (sDate && sDate.trim() !== "") {
-                aFilters.push(new Filter("reviewedDate", FilterOperator.Contains, sDate.trim()));
+            if (dStart || dEnd) {
+                var dStartDay = dStart ? new Date(dStart.getFullYear(), dStart.getMonth(), dStart.getDate(), 0, 0, 0, 0) : null;
+                var dEndDay = dEnd ? new Date(dEnd.getFullYear(), dEnd.getMonth(), dEnd.getDate(), 23, 59, 59, 999) : null;
+
+                aFilters.push(new Filter({
+                    path: "reviewedDate",
+                    test: function (sDateStr) {
+                        if (!sDateStr) { return false; }
+                        var dItem = that._parseDateString(sDateStr);
+                        if (!dItem || isNaN(dItem.getTime())) { return true; }
+                        if (dStartDay && dItem < dStartDay) { return false; }
+                        if (dEndDay && dItem > dEndDay) { return false; }
+                        return true;
+                    }
+                }));
             }
 
             var oTable = this.byId("reviewerHistoryTable");
@@ -712,7 +781,8 @@ sap.ui.define([
             if (this.byId("selectHistorySystem")) { this.byId("selectHistorySystem").setSelectedKey("All"); }
             if (this.byId("selectHistoryDecision")) { this.byId("selectHistoryDecision").setSelectedKey("All"); }
             if (this.byId("selectHistoryStatus")) { this.byId("selectHistoryStatus").setSelectedKey("All"); }
-            if (this.byId("dpHistoryDate")) { this.byId("dpHistoryDate").reset(); }
+            if (this.byId("dpHistoryStartDate")) { this.byId("dpHistoryStartDate").reset(); }
+            if (this.byId("dpHistoryEndDate")) { this.byId("dpHistoryEndDate").reset(); }
             this.onSearchHistory();
             MessageToast.show("Reviewer History Filters Reset.");
         },

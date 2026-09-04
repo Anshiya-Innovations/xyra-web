@@ -316,7 +316,6 @@
                                 </layout:Grid>
                                 <OverflowToolbar class="sapUiTinyMarginTop">
                                     <ToolbarSpacer/>
-                                    <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchReports" class="sapUiTinyMarginEnd"/>
                                     <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetFilters"/>
                                 </OverflowToolbar>
                             </Panel>
@@ -482,7 +481,6 @@
                                 </layout:Grid>
                                 <OverflowToolbar class="sapUiTinyMarginTop">
                                     <ToolbarSpacer/>
-                                    <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchHistory"/>
                                     <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetHistoryFilters"/>
                                 </OverflowToolbar>
                             </Panel>
