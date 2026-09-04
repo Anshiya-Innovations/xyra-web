@@ -24,7 +24,7 @@
                 class="xyraLoginBg xyraLoginPane">
 
                 <VBox id="_IDGenVBox"
-                    width="380px"
+                    width="100%"
                     alignItems="Stretch"
                     class="xyraLoginCard">
 
@@ -81,6 +81,11 @@
                         submit="onLogin"
                         class="xyraLoginField"/>
 
+                    <CheckBox
+                        id="_IDGenCheckBox"
+                        text="Remember Me"
+                        class="xyraLoginCheckbox"/>
+
                     <Button id="_IDGenButton"
                         text="Sign In"
                         type="Emphasized"
@@ -108,8 +113,6 @@
                 alignItems="Center"
                 renderType="Div"
                 class="xyraLoginHeroPane">
-
-                <Image src="img/login-hero.png" alt="Xyra — AI-enabled control monitoring dashboard" class="xyraLoginHero"/>
 
             </FlexBox>
 

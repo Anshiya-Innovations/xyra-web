@@ -1130,74 +1130,87 @@ textarea.sapMTextAreaInner {
   margin-bottom: 1.5rem !important;
 }
 
-/* ===== Modern Login Page ===== */
+/* ===== Modern Enterprise Login Page ===== */
 
 .xyraLoginSplit {
   height: 100% !important;
   width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
   overflow: hidden !important;
+  background-color: #ffffff !important;
 }
 
 .xyraLoginPane {
-  /* fitContainer="true" on this FlexBox sets its own flex-grow, which fights
-     a plain width override and was splitting the two panes evenly regardless
-     of the percentage here — flex-basis via the shorthand wins over that. */
-  flex: 0 0 35% !important;
-  width: 35% !important;
-  padding: 3rem 4rem !important;
+  flex: 0 0 45% !important;
+  width: 45% !important;
+  max-width: 48% !important;
+  min-width: 380px !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 2.5rem 4rem !important;
   box-sizing: border-box !important;
-  /* both panes are near-white, so the split was invisible. box-shadow bled
-     across the flex boundary but a sibling element with no positioning of
-     its own can still end up painting over/clipping it depending on stacking
-     — border-right is part of this box's own edge, nothing else can hide it. */
-  border-right: 1px solid rgba(15, 23, 42, 0.1) !important;
+  background-color: #ffffff !important;
+  border-right: 1px solid #edf2f7 !important;
+  position: relative !important;
+  z-index: 2 !important;
+  box-shadow: 4px 0 24px rgba(15, 23, 42, 0.04) !important;
+}
+
+.xyraLoginHeroPane {
+  flex: 0 0 55% !important;
+  width: 55% !important;
+  height: 100% !important;
+  background-color: #ffffff !important;
+  background-image: url('../img/login-hero.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-size: contain !important;
+  display: block !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
   position: relative !important;
   z-index: 1 !important;
 }
 
-/* box-shadow kept not reading against whatever's in the photo at that exact
-   edge — painting the shadow explicitly as a pseudo-element strip instead of
-   trusting a blurred box-shadow to stay visible over a busy image. */
-.xyraLoginPane::after {
-  content: "" !important;
-  position: absolute !important;
-  top: 0 !important;
-  right: -24px !important;
-  width: 24px !important;
-  height: 100% !important;
-  background: linear-gradient(to right, rgba(15, 23, 42, 0.14), transparent) !important;
-  z-index: 2 !important;
-  pointer-events: none !important;
-}
-
-.xyraLoginHeroPane {
-  flex: 0 0 65% !important;
-  width: 65% !important;
-  height: 100% !important;
-  /* explicitly below the left pane's z-index:1, so the shadow bleeding off
-     its right edge can never end up painted over by this pane/image */
-  position: relative !important;
-  z-index: 0 !important;
-}
-
 .xyraLoginHero {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  display: block !important;
-  position: relative !important;
-  z-index: 0 !important;
+  display: none !important;
 }
 
-/* Below tablet width there isn't room for both the form and the hero image —
-   drop the image and let the form take the full width. */
-@media (max-width: 900px) {
+/* Tablet & Mobile Responsiveness */
+@media (max-width: 1100px) {
+  .xyraLoginPane {
+    flex: 0 0 50% !important;
+    width: 50% !important;
+    padding: 2rem !important;
+  }
+  .xyraLoginHeroPane {
+    flex: 0 0 50% !important;
+    width: 50% !important;
+    padding: 0 !important;
+    background-size: contain !important;
+    background-position: center center !important;
+  }
+}
+
+@media (max-width: 850px) {
+  .xyraLoginSplit {
+    flex-direction: column !important;
+    overflow-y: auto !important;
+  }
   .xyraLoginPane {
     flex: 0 0 100% !important;
     width: 100% !important;
-    padding: 2.5rem !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 3rem 1.5rem !important;
+    border-right: none !important;
+    box-shadow: none !important;
   }
-
   .xyraLoginHeroPane {
     display: none !important;
   }
@@ -1209,54 +1222,134 @@ textarea.sapMTextAreaInner {
   background-color: #ffffff !important;
 }
 
-/* No longer a floating boxed card — the pane itself is the surface now
-   (left-aligned content, matching the reference), this just keeps the
-   column from stretching edge to edge on a wide pane. */
 .xyraLoginCard {
   width: 100% !important;
+  max-width: 440px !important;
+  box-sizing: border-box !important;
 }
 
 .xyraLoginLogo {
   display: block !important;
-  width: 120px !important;
+  width: 135px !important;
   height: auto !important;
-  margin: 0 0 2.5rem !important;
+  object-fit: contain !important;
+  margin: 0 0 2rem 0 !important;
 }
 
 .xyraLoginTitle {
   color: #0f172a !important;
+  font-size: 1.85rem !important;
   font-weight: 700 !important;
-  margin-bottom: 0.35rem !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.25 !important;
+  margin: 0 0 0.5rem 0 !important;
 }
 
 .xyraLoginSubtitle {
   color: #64748b !important;
-  font-size: 0.875rem !important;
-  margin-bottom: 1.75rem !important;
+  font-size: 0.925rem !important;
+  line-height: 1.5 !important;
+  margin: 0 0 1.75rem 0 !important;
 }
 
 .xyraLoginLabel {
-  color: #64748b !important;
-  font-size: 0.8rem !important;
+  color: #1e293b !important;
+  font-size: 0.875rem !important;
   font-weight: 600 !important;
   margin-top: 0 !important;
-  margin-bottom: 0.45rem !important;
+  margin-bottom: 8px !important;
   display: block !important;
 }
 
-/* Persona Select Container: 16px bottom margin separating Persona dropdown from Email Label */
+/* Persona Select Container spacing */
 .xyraLoginCard > .sapMFlexItem:has(> #role),
 .xyraLoginCard > .sapMFlexItem:has(> .xyraLoginField:first-of-type) {
-  margin-bottom: 1rem !important;
+  margin-bottom: 1.25rem !important;
 }
 
-/* Email Input Container: Clean spacing above Sign In button */
+/* Email Input Container spacing */
 .xyraLoginCard > .sapMFlexItem:has(> #username) {
-  margin-bottom: 1.5rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+/* Login Page Input & Select Styling with Crisp Focus Glow */
+.xyraLoginCard .sapMInputBaseContentWrapper,
+.xyraLoginCard #username .sapMInputBaseContentWrapper,
+.xyraLoginCard #username.sapMInputBase > .sapMInputBaseContentWrapper,
+.xyraLoginField.sapMInputBase > .sapMInputBaseContentWrapper,
+.xyraLoginCard #role.sapMSlt,
+.xyraLoginField.sapMSelect > .sapMSlt,
+.xyraLoginField .sapMSlt {
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background-color: #f8fafc !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+.xyraLoginCard .sapMInputBaseContentWrapper:hover,
+.xyraLoginCard #username .sapMInputBaseContentWrapper:hover,
+.xyraLoginCard #username.sapMInputBase > .sapMInputBaseContentWrapper:hover,
+.xyraLoginField.sapMInputBase > .sapMInputBaseContentWrapper:hover,
+.xyraLoginCard #role.sapMSlt:hover,
+.xyraLoginField.sapMSelect > .sapMSlt:hover,
+.xyraLoginField .sapMSlt:hover {
+  border-color: #533bff !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(83, 59, 255, 0.08) !important;
+}
+
+.xyraLoginCard .sapMInputBaseContentWrapper:focus-within,
+.xyraLoginCard .sapMInputBaseContentWrapper.sapMInputBaseContentWrapperFocus,
+.xyraLoginCard #username .sapMInputBaseContentWrapper:focus-within,
+.xyraLoginCard #username.sapMInputBase > .sapMInputBaseContentWrapper:focus-within,
+.xyraLoginCard #username.sapMFocus .sapMInputBaseContentWrapper,
+.xyraLoginField.sapMInputBase > .sapMInputBaseContentWrapper:focus-within,
+.xyraLoginField.sapMFocus .sapMInputBaseContentWrapper,
+.xyraLoginCard #role.sapMSlt:focus-within,
+.xyraLoginCard #role.sapMSltFocused,
+.xyraLoginField.sapMSelect > .sapMSlt:focus-within,
+.xyraLoginField .sapMSltFocused {
+  border: 1.5px solid #533bff !important;
+  border-color: #533bff !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3.5px rgba(83, 59, 255, 0.18), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  outline: none !important;
+}
+
+.xyraLoginField .sapMSltLabel {
+  line-height: 44px !important;
+  font-size: 0.95rem !important;
+  color: #0f172a !important;
+  padding-left: 14px !important;
+}
+
+.xyraLoginField .sapMSltArrow {
+  line-height: 44px !important;
+  color: #64748b !important;
+}
+
+.xyraLoginField input.sapMInputBaseInner {
+  font-size: 0.95rem !important;
+  color: #0f172a !important;
+  padding: 0 14px !important;
+  height: 44px !important;
+  line-height: 44px !important;
+}
+
+/* Remember Me Checkbox Container Spacing (24px to Sign In) */
+.xyraLoginCard > .sapMFlexItem:has(> .xyraLoginCheckbox),
+.xyraLoginCard > .sapMFlexItem:has(> #_IDGenCheckBox) {
+  margin-top: 14px !important;
+  margin-bottom: 24px !important;
+  display: block !important;
+  width: 100% !important;
 }
 
 .xyraLoginCheckbox,
-.sapMCb.sapMCbHasLabel {
+.sapMCb.sapMCbHasLabel.xyraLoginCheckbox {
   margin: 0 !important;
   display: inline-flex !important;
   flex-direction: row !important;
@@ -1270,8 +1363,7 @@ textarea.sapMTextAreaInner {
   min-height: 1.5rem !important;
 }
 
-.xyraLoginCheckbox .sapMCbBg,
-.sapMCb.sapMCbHasLabel .sapMCbBg {
+.xyraLoginCheckbox .sapMCbBg {
   margin: 0 !important;
   flex-shrink: 0 !important;
   top: 0 !important;
@@ -1280,12 +1372,26 @@ textarea.sapMTextAreaInner {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 5px !important;
+  border: 1.5px solid #cbd5e1 !important;
+  background-color: #ffffff !important;
+  transition: all 0.2s ease !important;
+}
+
+.xyraLoginCheckbox:hover .sapMCbBg {
+  border-color: #533bff !important;
+  box-shadow: 0 0 0 2.5px rgba(83, 59, 255, 0.12) !important;
+}
+
+.xyraLoginCheckbox.sapMCbMarkChecked .sapMCbBg {
+  background-color: #533bff !important;
+  border-color: #533bff !important;
 }
 
 .xyraLoginCheckbox .sapMCbLabel,
-.sapMCb.sapMCbHasLabel .sapMCbLabel,
-.xyraLoginCheckbox span.sapMLabel,
-.sapMCb.sapMCbHasLabel span.sapMLabel {
+.xyraLoginCheckbox span.sapMLabel {
   display: inline-block !important;
   padding: 0 !important;
   padding-left: 0 !important;
@@ -1301,7 +1407,7 @@ textarea.sapMTextAreaInner {
   max-width: none !important;
 }
 
-/* ===== Login Page Sign In Button Full-Width Sizing & Inner Span Stretch ===== */
+/* ===== Login Page Sign In Button Full-Width & Modern Elevation ===== */
 .xyraLoginCard .sapMBtn:has(#_IDGenButton),
 .xyraLoginCard .sapMBtn:has(.xyraLoginBtn),
 .xyraLoginBtn {
@@ -1309,6 +1415,7 @@ textarea.sapMTextAreaInner {
   max-width: 100% !important;
   display: block !important;
   box-sizing: border-box !important;
+  height: 48px !important;
 }
 
 .xyraLoginCard .sapMBtnInner,
@@ -1316,11 +1423,43 @@ textarea.sapMTextAreaInner {
 #_IDGenButton-inner {
   width: 100% !important;
   max-width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  border-radius: 10px !important;
+  background: #533bff !important;
+  background-color: #533bff !important;
+  border: 1px solid #533bff !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 0.975rem !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   box-sizing: border-box !important;
   text-align: center !important;
+  box-shadow: 0 4px 14px rgba(83, 59, 255, 0.28) !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.xyraLoginCard .sapMBtn:hover .sapMBtnInner,
+.xyraLoginBtn:hover .sapMBtnInner,
+#_IDGenButton:hover #_IDGenButton-inner {
+  background: #432cd9 !important;
+  background-color: #432cd9 !important;
+  border-color: #432cd9 !important;
+  box-shadow: 0 6px 20px rgba(83, 59, 255, 0.38) !important;
+  transform: translateY(-1px) !important;
+}
+
+.xyraLoginCard .sapMBtn:active .sapMBtnInner,
+.xyraLoginBtn:active .sapMBtnInner,
+#_IDGenButton:active #_IDGenButton-inner {
+  background: #3822be !important;
+  background-color: #3822be !important;
+  border-color: #3822be !important;
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 8px rgba(83, 59, 255, 0.2) !important;
 }
 
 .xyraLoginCard > .sapMFlexItem:has(> #_IDGenButton),
@@ -1330,12 +1469,19 @@ textarea.sapMTextAreaInner {
 }
 
 .xyraLoginFooter {
-  margin-top: 1.75rem !important;
+  margin-top: 2.25rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 4px !important;
+  text-align: center !important;
 }
 
 .xyraLoginFooter .sapMText {
   color: #94a3b8 !important;
-  font-size: 0.75rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
 }
 
 /* ===== Global field design (all Input/Select boxes app-wide) =====
@@ -1371,12 +1517,14 @@ textarea.sapMTextAreaInner {
   border-color: #533bff !important;
 }
 
-.sapMInputBaseContentWrapper:focus-within:not(:hover),
-.sapMSlt:focus-within:not(:hover),
-.sapMSltFocused:not(:hover),
-.sapMSelect:focus-within:not(:hover) {
-  border-color: #e2e8f0 !important;
-  box-shadow: none !important;
+.sapMInputBaseContentWrapper:focus-within,
+.sapMInputBaseContentWrapper.sapMInputBaseContentWrapperFocus,
+.sapMSlt:focus-within,
+.sapMSltFocused,
+.sapMSelect:focus-within {
+  border-color: #533bff !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(83, 59, 255, 0.16) !important;
   outline: none !important;
 }
 
