@@ -3113,7 +3113,10 @@ div[id*="-text"] {
   right: 0 !important;
   width: auto !important;
   height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
   border-radius: 0 !important;
+  clip-path: inset(0) !important;
 }
 
 .xyraLoadingOverlayCard {

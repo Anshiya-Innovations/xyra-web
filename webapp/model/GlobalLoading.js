@@ -59,37 +59,63 @@ sap.ui.define([
 
         // Sign In AND Logout MUST BE 100% FULL SCREEN BLURRED (including sidebar / entire window)
         if (bIsFullPageAction) {
+            if (oOverlay.parentNode !== document.body) {
+                document.body.appendChild(oOverlay);
+            }
+            oOverlay.style.setProperty("position", "fixed", "important");
             oOverlay.style.setProperty("left", "0px", "important");
             oOverlay.style.setProperty("right", "0px", "important");
             oOverlay.style.setProperty("top", "0px", "important");
             oOverlay.style.setProperty("bottom", "0px", "important");
-            oOverlay.style.setProperty("width", "auto", "important");
-            oOverlay.style.setProperty("height", "auto", "important");
+            oOverlay.style.setProperty("width", "100%", "important");
+            oOverlay.style.setProperty("height", "100%", "important");
             oOverlay.classList.remove("xyraContentOnlyOverlay");
             return;
         }
 
-        // In-app route loading (System Configuration & Access Management refresh): blur ONLY main content area (offset by sidebar)
-        var oSideNav = document.querySelector(".sapTntSideNavigation") ||
-                       document.querySelector(".sapTntToolPageAside") ||
-                       document.querySelector(".sapTNTSideNavigation") ||
-                       document.querySelector(".sapTNTToolPageSide");
+        // In-app route loading (System Configuration & Access Management refresh): blur ONLY main content area
+        var oMain = document.querySelector(".sapTntToolPageMain") ||
+                    document.querySelector(".sapTntToolPageContent") ||
+                    document.querySelector(".sapMPage");
 
-        var iSideWidth = 240;
-        if (oSideNav && oSideNav.getBoundingClientRect) {
-            var oRect = oSideNav.getBoundingClientRect();
-            if (oRect && oRect.width > 50) {
-                iSideWidth = oRect.width;
+        if (oMain) {
+            var sPos = window.getComputedStyle(oMain).position;
+            if (sPos === "static" || !sPos) {
+                oMain.style.setProperty("position", "relative", "important");
             }
+            if (oOverlay.parentNode !== oMain) {
+                oMain.appendChild(oOverlay);
+            }
+            oOverlay.style.setProperty("position", "absolute", "important");
+            oOverlay.style.setProperty("left", "0px", "important");
+            oOverlay.style.setProperty("right", "0px", "important");
+            oOverlay.style.setProperty("top", "0px", "important");
+            oOverlay.style.setProperty("bottom", "0px", "important");
+            oOverlay.style.setProperty("width", "100%", "important");
+            oOverlay.style.setProperty("height", "100%", "important");
+            oOverlay.classList.add("xyraContentOnlyOverlay");
+        } else {
+            // Fallback if main content container is not yet attached to DOM
+            if (oOverlay.parentNode !== document.body) {
+                document.body.appendChild(oOverlay);
+            }
+            var oSideNav = document.querySelector(".sapTntSideNavigation") ||
+                           document.querySelector(".sapTntToolPageAside") ||
+                           document.querySelector("aside");
+            var iSideWidth = 240;
+            if (oSideNav && oSideNav.getBoundingClientRect) {
+                var r = oSideNav.getBoundingClientRect().right;
+                if (r > 50) {
+                    iSideWidth = Math.ceil(r);
+                }
+            }
+            oOverlay.style.setProperty("position", "fixed", "important");
+            oOverlay.style.setProperty("left", iSideWidth + "px", "important");
+            oOverlay.style.setProperty("right", "0px", "important");
+            oOverlay.style.setProperty("top", "0px", "important");
+            oOverlay.style.setProperty("bottom", "0px", "important");
+            oOverlay.classList.add("xyraContentOnlyOverlay");
         }
-
-        oOverlay.style.setProperty("left", iSideWidth + "px", "important");
-        oOverlay.style.setProperty("right", "0px", "important");
-        oOverlay.style.setProperty("top", "0px", "important");
-        oOverlay.style.setProperty("bottom", "0px", "important");
-        oOverlay.style.setProperty("width", "auto", "important");
-        oOverlay.style.setProperty("height", "auto", "important");
-        oOverlay.classList.add("xyraContentOnlyOverlay");
     }
 
     var GlobalLoading = {
@@ -146,6 +172,9 @@ sap.ui.define([
             fnUpdate();
             setTimeout(fnUpdate, 50);
             setTimeout(fnUpdate, 150);
+            setTimeout(fnUpdate, 300);
+            setTimeout(fnUpdate, 500);
+            setTimeout(fnUpdate, 800);
 
             if (iHideTimer) {
                 clearTimeout(iHideTimer);
