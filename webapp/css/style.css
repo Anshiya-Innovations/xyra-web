@@ -2165,49 +2165,69 @@ textarea.sapMTextAreaInner {
   transition: background-color 0.15s ease, border-color 0.15s ease !important;
 }
 
-/* Stable hover state — border turns brand purple #533bff, zero height/width/padding expansion */
-.sapMBtnTransparent:not(.sapMOverflowToolbar .sapMBtnTransparent):not(.sapMTB .sapMBtnTransparent):not(.sapMHeaderToolbar .sapMBtnTransparent):not(.sapMBar .sapMBtnTransparent):hover,
-.sapMBtnDefault:not(.sapMOverflowToolbar .sapMBtnDefault):not(.sapMTB .sapMBtnDefault):not(.sapMHeaderToolbar .sapMBtnDefault):not(.sapMBar .sapMBtnDefault):hover,
-.sapMBtnGhost:not(.sapMOverflowToolbar .sapMBtnGhost):not(.sapMTB .sapMBtnGhost):not(.sapMHeaderToolbar .sapMBtnGhost):not(.sapMBar .sapMBtnGhost):hover,
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):hover,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):hover,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):hover {
-  background-color: rgba(83, 59, 255, 0.08) !important;
+/* Ensure outer .sapMBtn container NEVER draws an outside border or background on hover, focus, or active */
+html body .sapMBtn,
+html body .sapMBtn:hover,
+html body .sapMBtn:focus,
+html body .sapMBtn:active {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Secondary / Default / Transparent / Ghost buttons (e.g. System Health, Execution History, Schedule Report, System History, Cancel, etc.) hover state:
+   replaces gray background with soft purple #f3f0ff & brand purple #533bff border ONLY on inner button span (.sapMBtnInner) */
+html body .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(.sapMBtnAccept):hover,
+html body .sapMBtnInner.sapMBtnHoverable:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(.sapMBtnAccept):hover,
+html body .sapMBtnHoverable:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(.sapMBtnAccept):hover,
+html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
+html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
+html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
+html body .sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
+html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):not([title*="Notification"]):not([tooltip*="Notification"]):not([aria-label*="Notification"]):hover .sapMBtnInner {
+  background-color: #f3f0ff !important;
+  background: #f3f0ff !important;
   border: 1px solid #533bff !important;
   border-color: #533bff !important;
   box-sizing: border-box !important;
   transform: none !important;
 }
 
-/* Stable click/active state — border stays brand purple #533bff, zero height/width/padding expansion */
-.sapMBtnTransparent:not(.sapMOverflowToolbar .sapMBtnTransparent):not(.sapMTB .sapMBtnTransparent):not(.sapMHeaderToolbar .sapMBtnTransparent):not(.sapMBar .sapMBtnTransparent):active,
-.sapMBtnDefault:not(.sapMOverflowToolbar .sapMBtnDefault):not(.sapMTB .sapMBtnDefault):not(.sapMHeaderToolbar .sapMBtnDefault):not(.sapMBar .sapMBtnDefault):active,
-.sapMBtnGhost:not(.sapMOverflowToolbar .sapMBtnGhost):not(.sapMTB .sapMBtnGhost):not(.sapMHeaderToolbar .sapMBtnGhost):not(.sapMBar .sapMBtnGhost):active,
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):active,
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *).sapMBtnActive,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):active,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *).sapMBtnActive,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *):active,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):not(.sapMBar *):not(.sapMBarChild):not(.sapMHeaderToolbar *):not(.sapMOverflowToolbar *):not(.sapMTB *):not([title*="Notification"] *):not([tooltip*="Notification"] *):not([aria-label*="Notification"] *):not([data-unread-count] *).sapMBtnActive {
-  background-color: rgba(83, 59, 255, 0.16) !important;
+/* Active / Pressed state for all secondary non-emphasized buttons */
+html body .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(.sapMBtnAccept):active,
+html body .sapMBtnInner.sapMBtnHoverable:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(.sapMBtnAccept):active,
+html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
+html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
+html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
+html body .sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
+html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):not([title*="Notification"]):not([tooltip*="Notification"]):not([aria-label*="Notification"]):active .sapMBtnInner {
+  background-color: #e0e7ff !important;
+  background: #e0e7ff !important;
   border: 1px solid #533bff !important;
   border-color: #533bff !important;
   box-sizing: border-box !important;
   transform: none !important;
 }
 
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi {
+/* Text and icon colors inside hovered secondary buttons remain brand purple #533bff */
+html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
+html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
+html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
+html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi,
+html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
+html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
+html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
+html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi,
+html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
+html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
+html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
+html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi,
+html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):hover .sapMBtnContent,
+html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):hover .sapMBtnIcon,
+html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):hover .sapUiIcon,
+html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):hover bdi {
   color: #533BFF !important;
 }
 

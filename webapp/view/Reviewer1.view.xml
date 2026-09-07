@@ -389,11 +389,11 @@
                                     <OverflowToolbar>
                                         <Title text="Reviewer 1 Quick Actions" level="H4"/>
                                         <ToolbarSpacer/>
-                                        <Button text="View Report" icon="sap-icon://show" press="onViewReport" class="sapUiTinyMarginEnd"/>
-                                        <Button text="View Evidence" icon="sap-icon://document" press="onViewEvidence" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Add Comments" icon="sap-icon://comment" press="onAddComments" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Request Information" icon="sap-icon://hint" press="onRequestInfo" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Confirm Remediation" icon="sap-icon://edit" press="onConfirmRemediation" class="sapUiTinyMarginEnd"/>
+                                        <Button text="View Report" icon="sap-icon://show" press="onViewReport" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
+                                        <Button text="View Evidence" icon="sap-icon://document" press="onViewEvidence" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
+                                        <Button text="Add Comments" icon="sap-icon://comment" press="onAddComments" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
+                                        <Button text="Request Information" icon="sap-icon://hint" press="onRequestInfo" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
+                                        <Button text="Confirm Remediation" icon="sap-icon://edit" press="onConfirmRemediation" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
                                         <Button text="Approve &amp; Forward" type="Accept" icon="sap-icon://accept" press="onApproveForward" class="sapUiTinyMarginEnd"/>
                                         <Button text="Reject" type="Reject" icon="sap-icon://decline" press="onRejectReport"/>
                                     </OverflowToolbar>

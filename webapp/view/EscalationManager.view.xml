@@ -326,11 +326,11 @@
                                     <OverflowToolbar>
                                         <Title text="Escalation Manager Quick Actions" level="H4"/>
                                         <ToolbarSpacer/>
-                                        <Button text="View Report" icon="sap-icon://show" press="onViewReport" class="sapUiTinyMarginEnd"/>
+                                        <Button text="View Report" icon="sap-icon://show" press="onViewReport" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
                                         <Button text="Approve" type="Accept" icon="sap-icon://accept" press="onApprove" class="sapUiTinyMarginEnd"/>
                                         <Button text="Reject" type="Reject" icon="sap-icon://decline" press="onReject" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Request Correction" icon="sap-icon://undo" press="onRequestCorrection" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Export Final Report" icon="sap-icon://excel-attachment" press="onExportFinalReport" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Request Correction" icon="sap-icon://undo" press="onRequestCorrection" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
+                                        <Button text="Export Final Report" icon="sap-icon://excel-attachment" press="onExportFinalReport" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
                                         <Button text="Close Audit" type="Emphasized" icon="sap-icon://locked" press="onCloseAudit"/>
                                     </OverflowToolbar>
                                 </headerToolbar>

@@ -106,7 +106,7 @@
                             <Button text="Generate Now" type="Emphasized" icon="sap-icon://create" press="onSubmitGenerateReport"/>
                         </beginButton>
                         <endButton>
-                            <Button text="Cancel" press="onCloseGenerateReportDialog"/>
+                            <Button text="Cancel" press="onCloseGenerateReportDialog" class="xyraCancelBtn"/>
                         </endButton>
                     </Dialog>
 
@@ -165,7 +165,7 @@
                             <Button text="Schedule Job" type="Emphasized" icon="sap-icon://pending" press="onSubmitScheduleReport"/>
                         </beginButton>
                         <endButton>
-                            <Button text="Cancel" press="onCloseScheduleReportDialog"/>
+                            <Button text="Cancel" press="onCloseScheduleReportDialog" class="xyraCancelBtn"/>
                         </endButton>
                     </Dialog>
                 </dependents>
@@ -210,11 +210,11 @@
                                         <Title text="Quick Actions" level="H4"/>
                                         <ToolbarSpacer/>
                                         <Button text="Generate Report" icon="sap-icon://add" type="Emphasized" press="onGenerateReportDialog" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Schedule Report" icon="sap-icon://pending" type="Default" press="onScheduleReportDialog" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Export PDF" icon="sap-icon://pdf-attachment" type="Default" press="onExportPDF" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Export Excel" icon="sap-icon://excel-attachment" type="Default" press="onExportExcel" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Email Report" icon="sap-icon://email" type="Default" press="onEmailReport" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Refresh" icon="sap-icon://refresh" type="Ghost" press="onRefreshReports"/>
+                                        <Button text="Schedule Report" icon="sap-icon://pending" type="Default" press="onScheduleReportDialog" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
+                                        <Button text="Export PDF" icon="sap-icon://pdf-attachment" type="Default" press="onExportPDF" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
+                                        <Button text="Export Excel" icon="sap-icon://excel-attachment" type="Default" press="onExportExcel" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
+                                        <Button text="Email Report" icon="sap-icon://email" type="Default" press="onEmailReport" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
+                                        <Button text="Refresh" icon="sap-icon://refresh" type="Ghost" press="onRefreshReports" class="xyraQuickActionBtn"/>
                                     </OverflowToolbar>
                                 </headerToolbar>
                             </Panel>
