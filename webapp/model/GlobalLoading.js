@@ -47,6 +47,47 @@ sap.ui.define([
         document.body.appendChild(oOverlay);
     }
 
+    function updateOverlayBounds() {
+        if (!oOverlay) {
+            return;
+        }
+
+        var sHash = window.location.hash || "";
+        var bIsLogin = !sHash || sHash === "#" || sHash === "#/" || sHash.indexOf("Login") !== -1;
+
+        if (bIsLogin) {
+            oOverlay.style.setProperty("left", "0px", "important");
+            oOverlay.style.setProperty("right", "0px", "important");
+            oOverlay.style.setProperty("top", "0px", "important");
+            oOverlay.style.setProperty("bottom", "0px", "important");
+            oOverlay.style.setProperty("width", "auto", "important");
+            oOverlay.style.setProperty("height", "auto", "important");
+            oOverlay.classList.remove("xyraContentOnlyOverlay");
+            return;
+        }
+
+        var oSideNav = document.querySelector(".sapTntSideNavigation") ||
+                       document.querySelector(".sapTntToolPageAside") ||
+                       document.querySelector(".sapTNTSideNavigation") ||
+                       document.querySelector(".sapTNTToolPageSide");
+
+        var iSideWidth = 240;
+        if (oSideNav && oSideNav.getBoundingClientRect) {
+            var oRect = oSideNav.getBoundingClientRect();
+            if (oRect && oRect.width > 50) {
+                iSideWidth = oRect.width;
+            }
+        }
+
+        oOverlay.style.setProperty("left", iSideWidth + "px", "important");
+        oOverlay.style.setProperty("right", "0px", "important");
+        oOverlay.style.setProperty("top", "0px", "important");
+        oOverlay.style.setProperty("bottom", "0px", "important");
+        oOverlay.style.setProperty("width", "auto", "important");
+        oOverlay.style.setProperty("height", "auto", "important");
+        oOverlay.classList.add("xyraContentOnlyOverlay");
+    }
+
     var GlobalLoading = {
         init: function () {
             createOverlay();
@@ -64,7 +105,6 @@ sap.ui.define([
         show: function (sActivityText, iDurationMs, bForce, bContentOnly) {
             // Auto-detect activity text from hash if missing
             var sHash = window.location.hash || "";
-            var bIsLogin = !sHash || sHash === "#" || sHash === "#/" || sHash.indexOf("Login") !== -1;
 
             if (!sActivityText) {
                 if (sHash.indexOf("Configuration") !== -1) {
@@ -95,39 +135,9 @@ sap.ui.define([
                 oTextEl.style.display = "block";
             }
 
-            // Detect DOM sidebar navigation
-            var oSideNav = document.querySelector(".sapTntSideNavigation") ||
-                           document.querySelector(".sapTntToolPageAside") ||
-                           document.querySelector(".sapTNTSideNavigation") ||
-                           document.querySelector(".sapTNTToolPageSide");
-
-            // On Login page or when sidebar does not exist in DOM, ALWAYS cover 100% full screen
-            if (bIsLogin || !oSideNav) {
-                bContentOnly = false;
-            } else if (bContentOnly === undefined) {
-                bContentOnly = true;
-            }
-
-            if (bContentOnly && oSideNav) {
-                var oRect = oSideNav.getBoundingClientRect ? oSideNav.getBoundingClientRect() : null;
-                var iSideWidth = oRect && oRect.width > 0 ? oRect.width : 240;
-
-                oOverlay.style.setProperty("left", iSideWidth + "px", "important");
-                oOverlay.style.setProperty("right", "0px", "important");
-                oOverlay.style.setProperty("top", "0px", "important");
-                oOverlay.style.setProperty("bottom", "0px", "important");
-                oOverlay.style.setProperty("width", "auto", "important");
-                oOverlay.style.setProperty("height", "auto", "important");
-                oOverlay.classList.add("xyraContentOnlyOverlay");
-            } else {
-                oOverlay.style.setProperty("left", "0px", "important");
-                oOverlay.style.setProperty("right", "0px", "important");
-                oOverlay.style.setProperty("top", "0px", "important");
-                oOverlay.style.setProperty("bottom", "0px", "important");
-                oOverlay.style.setProperty("width", "auto", "important");
-                oOverlay.style.setProperty("height", "auto", "important");
-                oOverlay.classList.remove("xyraContentOnlyOverlay");
-            }
+            updateOverlayBounds();
+            setTimeout(updateOverlayBounds, 50);
+            setTimeout(updateOverlayBounds, 150);
 
             if (iHideTimer) {
                 clearTimeout(iHideTimer);
