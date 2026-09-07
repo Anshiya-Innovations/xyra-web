@@ -97,11 +97,11 @@ sap.ui.define([
         _generateAdminTrendLineChartSvg: function (aTrendData) {
             var aData = aTrendData || [];
             var width = 960;
-            var height = 230;
-            var padL = 45;
-            var padR = 25;
-            var padT = 30;
-            var padB = 40;
+            var height = 180;
+            var padL = 50;
+            var padR = 35;
+            var padT = 20;
+            var padB = 30;
 
             var chartW = width - padL - padR;
             var chartH = height - padT - padB;
@@ -136,8 +136,8 @@ sap.ui.define([
 
             var sUid = "trend_svg_" + Math.floor(Math.random() * 100000);
 
-            var html = '<div class="trend-chart-wrapper" style="position:relative; width:100%; max-width:100%; display:block;">';
-            html += '<svg width="100%" height="230" viewBox="0 0 960 230" preserveAspectRatio="none" style="overflow:visible; width:100%;">';
+            var html = '<div class="trend-chart-wrapper" style="position:relative; width:100%; max-width:100%; display:block; overflow:hidden;">';
+            html += '<svg width="100%" height="150" viewBox="0 0 960 180" preserveAspectRatio="xMidYMid meet" style="overflow:hidden; width:100%; max-width:100%; display:block;">';
             html += '<defs>' +
                 '<linearGradient id="' + sUid + '_grad" x1="0%" y1="0%" x2="0%" y2="100%">' +
                     '<stop offset="0%" stop-color="#3b82f6" stop-opacity="0.38"/>' +
@@ -225,8 +225,8 @@ sap.ui.define([
 
             var sUid = "adm_pie_" + Math.floor(Math.random() * 100000);
 
-            var html = '<div class="donut-chart-wrapper" style="position:relative; width:170px; height:170px; display:inline-block;">';
-            html += '<svg width="170" height="170" viewBox="0 0 170 170" style="overflow:visible;">';
+            var html = '<div class="donut-chart-wrapper" style="position:relative; width:130px; height:130px; display:inline-block; overflow:hidden;">';
+            html += '<svg width="130" height="130" viewBox="0 0 170 170" style="overflow:hidden;">';
             html += '<style>' +
                 '.adm-donut-path { transition: all 0.25s ease-in-out; cursor: pointer; transform-origin: 85px 85px; }' +
                 '.adm-donut-path:hover { stroke-width: 25px !important; filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.35)); opacity: 1 !important; }' +

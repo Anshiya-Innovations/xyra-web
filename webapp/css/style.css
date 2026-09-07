@@ -19,6 +19,71 @@ body,
   width: 100% !important;
 }
 
+/* Ensure SAP UI5 ToolPage Main Content Area & Pages fit viewport without horizontal scrolling */
+.sapTNTToolPageMain,
+.sapTntToolPageMain {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.sapMPage {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+.sapMPageScroll,
+.sapMPageSection {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+/* Fix width: 100% containers with sapUiSmallMargin causing 100% + 32px horizontal overflow */
+.sapUiSmallMargin,
+.sapUiMediumMargin,
+.sapUiLargeMargin {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.sapTntToolPageMain .sapUiSmallMargin,
+.sapTntToolPageMain .sapMVBox.sapUiSmallMargin,
+.sapTntToolPageMain .sapMHBox.sapUiSmallMargin,
+.sapTntToolPageMain div.sapUiSmallMargin {
+  max-width: calc(100% - 2rem) !important;
+  box-sizing: border-box !important;
+}
+
+.sapMOTB[style*="4.5rem"],
+.sapMOTBHeader,
+.sapMPageHeader .sapMOTB,
+.sapMOTB {
+  max-width: 100% !important;
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Executive Compact Layout Margins for 100% Zoom Fit */
+.sapUiSmallMarginBottom {
+  margin-bottom: 0.5rem !important;
+}
+
+.sapUiSmallMarginTop {
+  margin-top: 0.5rem !important;
+}
+
+.sapUiSmallMargin {
+  margin: 0.5rem !important;
+}
+
 /* ===== Dark sidebar =====
    Verified against sap.tnt renderer sources (ToolPageRenderer,
    SideNavigationRenderer, NavigationListItemRenderer): side panel wrapper is
@@ -1145,13 +1210,13 @@ textarea.sapMTextAreaInner {
   flex: 0 0 45% !important;
   width: 45% !important;
   max-width: 48% !important;
-  min-width: 380px !important;
+  min-width: 360px !important;
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
   align-items: center !important;
-  padding: 2.5rem 4rem !important;
+  padding: clamp(1.5rem, 3vh, 2.5rem) clamp(2rem, 3vw, 4rem) !important;
   box-sizing: border-box !important;
   background-color: #ffffff !important;
   border-right: 1px solid #edf2f7 !important;
@@ -1217,15 +1282,15 @@ textarea.sapMTextAreaInner {
   z-index: 2 !important;
 }
 
-/* Showcase Card & Image - Zero padding and flush bottom-right anchor (no gap) */
+/* Showcase Card & Image - Fully visible scaled fit without cropping */
 .xyraHeroShowcase {
   width: 100% !important;
   height: 100% !important;
   flex: 1 1 auto !important;
   display: flex !important;
-  justify-content: flex-end !important;
-  align-items: flex-end !important;
-  padding: 0 !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 1.5rem !important;
   margin: 0 !important;
   box-sizing: border-box !important;
   min-height: 0 !important;
@@ -1233,12 +1298,12 @@ textarea.sapMTextAreaInner {
 }
 
 .xyraHeroImg {
-  width: 100% !important;
-  height: 100% !important;
+  width: auto !important;
+  height: auto !important;
   max-width: 100% !important;
   max-height: 100% !important;
-  object-fit: cover !important;
-  object-position: right bottom !important;
+  object-fit: contain !important;
+  object-position: center center !important;
   transition: transform 0.4s ease !important;
 }
 
@@ -1346,46 +1411,46 @@ textarea.sapMTextAreaInner {
 
 .xyraLoginLogo {
   display: block !important;
-  width: 135px !important;
+  width: 105px !important;
   height: auto !important;
   object-fit: contain !important;
-  margin: 0 0 2rem 0 !important;
+  margin: 0 0 0.75rem 0 !important;
 }
 
 .xyraLoginTitle {
   color: #0f172a !important;
-  font-size: 1.85rem !important;
+  font-size: 1.35rem !important;
   font-weight: 700 !important;
   letter-spacing: -0.025em !important;
-  line-height: 1.25 !important;
-  margin: 0 0 0.5rem 0 !important;
+  line-height: 1.2 !important;
+  margin: 0 0 0.25rem 0 !important;
 }
 
 .xyraLoginSubtitle {
   color: #64748b !important;
-  font-size: 0.925rem !important;
-  line-height: 1.5 !important;
-  margin: 0 0 1.75rem 0 !important;
+  font-size: 0.8rem !important;
+  line-height: 1.4 !important;
+  margin: 0 0 0.75rem 0 !important;
 }
 
 .xyraLoginLabel {
   color: #1e293b !important;
-  font-size: 0.875rem !important;
+  font-size: 0.775rem !important;
   font-weight: 600 !important;
   margin-top: 0 !important;
-  margin-bottom: 8px !important;
+  margin-bottom: 4px !important;
   display: block !important;
 }
 
 /* Persona Select Container spacing */
 .xyraLoginCard > .sapMFlexItem:has(> #role),
 .xyraLoginCard > .sapMFlexItem:has(> .xyraLoginField:first-of-type) {
-  margin-bottom: 1.25rem !important;
+  margin-bottom: 0.65rem !important;
 }
 
 /* Email Input Container spacing */
 .xyraLoginCard > .sapMFlexItem:has(> #username) {
-  margin-bottom: 0.25rem !important;
+  margin-bottom: 0.2rem !important;
 }
 
 /* Login Page Input & Select Styling with Crisp Focus Glow */
@@ -1397,10 +1462,10 @@ textarea.sapMTextAreaInner {
 .xyraLoginField.sapMSelect > .sapMSlt,
 .xyraLoginField .sapMSlt {
   border: 1.5px solid #e2e8f0 !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   background-color: #f8fafc !important;
-  height: 48px !important;
-  min-height: 48px !important;
+  height: 36px !important;
+  min-height: 36px !important;
   box-sizing: border-box !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
 }
@@ -1436,30 +1501,30 @@ textarea.sapMTextAreaInner {
 }
 
 .xyraLoginField .sapMSltLabel {
-  line-height: 44px !important;
-  font-size: 0.95rem !important;
+  line-height: 34px !important;
+  font-size: 0.85rem !important;
   color: #0f172a !important;
-  padding-left: 14px !important;
+  padding-left: 12px !important;
 }
 
 .xyraLoginField .sapMSltArrow {
-  line-height: 44px !important;
+  line-height: 34px !important;
   color: #64748b !important;
 }
 
 .xyraLoginField input.sapMInputBaseInner {
-  font-size: 0.95rem !important;
+  font-size: 0.85rem !important;
   color: #0f172a !important;
-  padding: 0 14px !important;
-  height: 44px !important;
-  line-height: 44px !important;
+  padding: 0 12px !important;
+  height: 34px !important;
+  line-height: 34px !important;
 }
 
-/* Remember Me Checkbox Container Spacing (24px to Sign In) */
+/* Remember Me Checkbox Container Spacing */
 .xyraLoginCard > .sapMFlexItem:has(> .xyraLoginCheckbox),
 .xyraLoginCard > .sapMFlexItem:has(> #_IDGenCheckBox) {
-  margin-top: 14px !important;
-  margin-bottom: 24px !important;
+  margin-top: 8px !important;
+  margin-bottom: 12px !important;
   display: block !important;
   width: 100% !important;
 }
@@ -1531,7 +1596,7 @@ textarea.sapMTextAreaInner {
   max-width: 100% !important;
   display: block !important;
   box-sizing: border-box !important;
-  height: 48px !important;
+  height: 36px !important;
 }
 
 .xyraLoginCard .sapMBtnInner,
@@ -1539,21 +1604,21 @@ textarea.sapMTextAreaInner {
 #_IDGenButton-inner {
   width: 100% !important;
   max-width: 100% !important;
-  height: 48px !important;
-  min-height: 48px !important;
-  border-radius: 10px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  border-radius: 8px !important;
   background: #533bff !important;
   background-color: #533bff !important;
   border: 1px solid #533bff !important;
   color: #ffffff !important;
   font-weight: 600 !important;
-  font-size: 0.975rem !important;
+  font-size: 0.875rem !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   box-sizing: border-box !important;
   text-align: center !important;
-  box-shadow: 0 4px 14px rgba(83, 59, 255, 0.28) !important;
+  box-shadow: 0 3px 10px rgba(83, 59, 255, 0.28) !important;
   transition: all 0.2s ease !important;
   cursor: pointer !important;
 }
@@ -2722,29 +2787,36 @@ td .sapMBtnInner.sapMBtnReject:active,
    dashboard's KPI tiles already were — no live wiring was asked for here. */
 
 .xyraKpiRow {
-  gap: 1rem;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.65rem !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .xyraKpiCard {
   background-color: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
-  border-radius: 14px !important;
-  padding: 1.25rem 1.5rem !important;
+  border-radius: 12px !important;
+  padding: 0.65rem 0.9rem !important;
   box-sizing: border-box !important;
-  flex: 1 1 220px;
+  flex: 1 1 170px !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
 }
 
 .xyraKpiIcon {
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 10px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
 }
 
 .xyraKpiIcon .sapMText {
-  font-size: 1.1rem !important;
+  font-size: 0.95rem !important;
 }
 
 .xyraKpiIconPurple {
@@ -2781,47 +2853,63 @@ td .sapMBtnInner.sapMBtnReject:active,
 
 .xyraKpiValue {
   color: #0f172a !important;
-  font-size: 1.9rem !important;
+  font-size: 1.35rem !important;
   font-weight: 700 !important;
-  line-height: 1.2 !important;
+  line-height: 1.15 !important;
 }
 
 .xyraKpiLabel {
   color: #64748b !important;
-  font-size: 0.85rem !important;
+  font-size: 0.78rem !important;
   font-weight: 600 !important;
 }
 
 .xyraKpiTrendUp {
   color: #16a34a !important;
-  font-size: 0.8rem !important;
+  font-size: 0.75rem !important;
   font-weight: 600 !important;
 }
 
 .xyraKpiTrendDown {
   color: #dc2626 !important;
-  font-size: 0.8rem !important;
+  font-size: 0.75rem !important;
   font-weight: 600 !important;
 }
 
 .xyraStatChip {
   background-color: #f8fafc !important;
   border: 1px solid #e2e8f0 !important;
-  border-radius: 10px !important;
-  padding: 0.6rem 1rem !important;
-  flex: 1 1 160px;
+  border-radius: 8px !important;
+  padding: 0.35rem 0.75rem !important;
+  flex: 1 1 130px !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
 }
 
 .xyraStatChip .xyraKpiValue {
-  font-size: 1.2rem !important;
+  font-size: 1.05rem !important;
 }
 
 .xyraDashboardCard {
   background-color: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
-  border-radius: 14px !important;
-  padding: 1.5rem !important;
+  border-radius: 12px !important;
+  padding: 0.75rem 1rem !important;
   box-sizing: border-box !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.xyraDonutCard {
+  flex: 1 1 290px !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+.xyraTrendCard {
+  flex: 1.8 1 380px !important;
+  width: auto !important;
+  max-width: 100% !important;
 }
 
 /* ===== SOX COMPLIANCE BAR STYLES ===== */

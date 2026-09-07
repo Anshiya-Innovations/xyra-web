@@ -189,7 +189,7 @@
                         <!-- POSTURE DONUT + TREND CHART -->
                         <HBox wrap="Wrap" alignItems="Stretch" class="xyraKpiRow sapUiSmallMarginBottom">
 
-                            <VBox width="34%" class="xyraDashboardCard">
+                            <VBox class="xyraDashboardCard xyraDonutCard">
                                 <Title text="Posture Overview" level="H4" class="sapUiSmallMarginBottom"/>
 
                                 <HBox width="100%" justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginTop">
@@ -223,7 +223,7 @@
                                 </HBox>
                             </VBox>
 
-                            <VBox width="64%" class="xyraDashboardCard">
+                            <VBox class="xyraDashboardCard xyraTrendCard">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
                                     <VBox>
                                         <Title text="Trend Overview — Effective Controls" level="H4"/>
