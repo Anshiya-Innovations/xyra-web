@@ -209,6 +209,7 @@ sap.ui.define([
 
                 oNotificationPopover = new ResponsivePopover({
                     placement: "Bottom",
+                    showHeader: false,
                     showCloseButton: false,
                     contentWidth: "420px",
                     content: [oMainContainer]

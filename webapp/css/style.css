@@ -4132,6 +4132,12 @@ div[id*="-text"] {
    CUSTOM ADVANCED NOTIFICATION POPOVER PANEL (MATCHING DESIGN SCREENSHOT)
    ========================================================================== */
 .xyraCustomNotificationPopover {
+  top: 56px !important;
+  right: 20px !important;
+  left: auto !important;
+  bottom: auto !important;
+  height: auto !important;
+  max-height: calc(100vh - 80px) !important;
   border-radius: 16px !important;
   overflow: hidden !important;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
@@ -4139,11 +4145,21 @@ div[id*="-text"] {
 }
 
 .xyraCustomNotificationPopover .sapMPopoverHeader,
-.xyraCustomNotificationPopover .sapMPopoverHeader * {
+.xyraCustomNotificationPopover .sapMPopoverHeader *,
+.xyraCustomNotificationPopover .sapMPopoverHiddenFocusable,
+.sapMPopoverHiddenFocusable {
   display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  pointer-events: none !important;
 }
 
+.xyraCustomNotificationPopover .sapMPopoverWrapper,
 .xyraCustomNotificationPopover .sapMPopoverContent {
+  height: auto !important;
+  max-height: calc(100vh - 80px) !important;
   padding: 0 !important;
   background-color: #ffffff !important;
   border-radius: 16px !important;
@@ -4305,6 +4321,8 @@ div[id*="-text"] {
 
 .xyraNotifyList {
   background-color: #ffffff !important;
+  max-height: 400px !important;
+  overflow-y: auto !important;
 }
 
 .xyraNotifyListItem {
