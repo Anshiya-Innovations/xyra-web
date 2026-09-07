@@ -1232,16 +1232,16 @@ textarea.sapMTextAreaInner {
 }
 
 .xyraLoginPane {
-  flex: 0 0 45% !important;
-  width: 45% !important;
-  max-width: 48% !important;
-  min-width: 360px !important;
+  flex: 0 0 35% !important;
+  width: 35% !important;
+  max-width: 38% !important;
+  min-width: 340px !important;
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
   align-items: center !important;
-  padding: clamp(1.5rem, 3vh, 2.5rem) clamp(2rem, 3vw, 4rem) !important;
+  padding: clamp(1.5rem, 3vh, 2.5rem) clamp(1.5rem, 2.5vw, 3rem) !important;
   box-sizing: border-box !important;
   background-color: #ffffff !important;
   border-right: 1px solid #edf2f7 !important;
@@ -1251,8 +1251,8 @@ textarea.sapMTextAreaInner {
 }
 
 .xyraLoginHeroPane {
-  flex: 0 0 55% !important;
-  width: 55% !important;
+  flex: 0 0 65% !important;
+  width: 65% !important;
   height: 100% !important;
   background: linear-gradient(135deg, #f0e5fc 0%, #ebe0fa 50%, #f8f2fe 100%) !important;
   background-color: #ede2fc !important;
@@ -1383,13 +1383,13 @@ textarea.sapMTextAreaInner {
 /* Tablet & Mobile Responsiveness */
 @media (max-width: 1100px) {
   .xyraLoginPane {
-    flex: 0 0 50% !important;
-    width: 50% !important;
-    padding: 2rem !important;
+    flex: 0 0 40% !important;
+    width: 40% !important;
+    padding: 2rem 1.5rem !important;
   }
   .xyraLoginHeroPane {
-    flex: 0 0 50% !important;
-    width: 50% !important;
+    flex: 0 0 60% !important;
+    width: 60% !important;
     padding: 2rem 1.5rem !important;
   }
   .xyraHeroTitle {
