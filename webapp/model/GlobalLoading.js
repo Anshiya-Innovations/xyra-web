@@ -64,6 +64,8 @@ sap.ui.define([
         show: function (sActivityText, iDurationMs, bForce, bContentOnly) {
             // Auto-detect activity text from hash if missing
             var sHash = window.location.hash || "";
+            var bIsLogin = !sHash || sHash === "#" || sHash === "#/" || sHash.indexOf("Login") !== -1;
+
             if (!sActivityText) {
                 if (sHash.indexOf("Configuration") !== -1) {
                     sActivityText = "System Configuration";
@@ -93,26 +95,37 @@ sap.ui.define([
                 oTextEl.style.display = "block";
             }
 
-            if (bContentOnly === undefined) {
-                bContentOnly = (sClean === "System Configuration" || sClean === "Access Management" ||
-                                sHash.indexOf("Configuration") !== -1 || sHash.indexOf("AccessManagement") !== -1);
+            // Detect DOM sidebar navigation
+            var oSideNav = document.querySelector(".sapTntSideNavigation") ||
+                           document.querySelector(".sapTntToolPageAside") ||
+                           document.querySelector(".sapTNTSideNavigation") ||
+                           document.querySelector(".sapTNTToolPageSide");
+
+            // On Login page or when sidebar does not exist in DOM, ALWAYS cover 100% full screen
+            if (bIsLogin || !oSideNav) {
+                bContentOnly = false;
+            } else if (bContentOnly === undefined) {
+                bContentOnly = true;
             }
 
-            if (bContentOnly) {
-                // Ensure left sidebar is NOT blurred by offsetting overlay past sidebar width (default 240px)
-                var oSideNav = document.querySelector(".sapTNTSideNavigation") ||
-                               document.querySelector(".sapTNTToolPageSide");
-                var iSideWidth = oSideNav ? oSideNav.getBoundingClientRect().width : 240;
-                if (!iSideWidth || iSideWidth < 10) {
-                    iSideWidth = 240;
-                }
+            if (bContentOnly && oSideNav) {
+                var oRect = oSideNav.getBoundingClientRect ? oSideNav.getBoundingClientRect() : null;
+                var iSideWidth = oRect && oRect.width > 0 ? oRect.width : 240;
 
                 oOverlay.style.setProperty("left", iSideWidth + "px", "important");
-                oOverlay.style.setProperty("width", "calc(100vw - " + iSideWidth + "px)", "important");
+                oOverlay.style.setProperty("right", "0px", "important");
+                oOverlay.style.setProperty("top", "0px", "important");
+                oOverlay.style.setProperty("bottom", "0px", "important");
+                oOverlay.style.setProperty("width", "auto", "important");
+                oOverlay.style.setProperty("height", "auto", "important");
                 oOverlay.classList.add("xyraContentOnlyOverlay");
             } else {
                 oOverlay.style.setProperty("left", "0px", "important");
-                oOverlay.style.setProperty("width", "100vw", "important");
+                oOverlay.style.setProperty("right", "0px", "important");
+                oOverlay.style.setProperty("top", "0px", "important");
+                oOverlay.style.setProperty("bottom", "0px", "important");
+                oOverlay.style.setProperty("width", "auto", "important");
+                oOverlay.style.setProperty("height", "auto", "important");
                 oOverlay.classList.remove("xyraContentOnlyOverlay");
             }
 

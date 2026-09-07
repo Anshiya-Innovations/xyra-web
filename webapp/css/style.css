@@ -3081,12 +3081,16 @@ div[id*="-text"] {
 .xyraLoadingOverlayContainer {
   position: fixed !important;
   top: 0 !important;
+  bottom: 0 !important;
   left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  background-color: rgba(15, 23, 42, 0.45) !important;
-  backdrop-filter: blur(4px) !important;
-  -webkit-backdrop-filter: blur(4px) !important;
+  right: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  background-color: rgba(15, 23, 42, 0.55) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
   z-index: 999999 !important;
   display: flex !important;
   align-items: center !important;
@@ -3104,8 +3108,11 @@ div[id*="-text"] {
 }
 
 .xyraLoadingOverlayContainer.xyraContentOnlyOverlay {
-  left: 240px !important;
-  width: calc(100vw - 240px) !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: auto !important;
+  height: auto !important;
   border-radius: 0 !important;
 }
 
