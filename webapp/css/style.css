@@ -5403,6 +5403,28 @@ span.sapMColumnHeaderContent,
 /* ==========================================================================
    FILTER BAR HORIZONTAL EQUAL ALIGNMENT (AUDIT LOGS & AUDITOR PAGES)
    ========================================================================== */
+.xyraFieldGroup {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+}
+
+.xyraFieldGroup .xyraLoginLabel {
+  margin-top: 0 !important;
+  margin-bottom: 4px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+  white-space: nowrap !important;
+}
+
+.xyraFieldGroup .xyraSingleDateWrapper {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+}
+
 .xyraFieldGroup .sapMSF {
   height: 46px !important;
   max-height: 46px !important;

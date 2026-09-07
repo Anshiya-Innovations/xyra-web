@@ -165,7 +165,7 @@
                                 </headerToolbar>
 
                                 <content>
-                                     <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="End">
+                                     <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Start">
                                          <!-- Search Field -->
                                          <VBox width="15.8%" class="xyraFieldGroup">
                                              <Label text="Search" class="xyraLoginLabel"/>

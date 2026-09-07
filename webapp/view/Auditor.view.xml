@@ -360,12 +360,12 @@
                                             </Select>
                                         </VBox>
 
-                                         <VBox class="xyraFieldGroup">
+                                         <VBox width="15.8%" class="xyraFieldGroup">
                                              <Label text="Starting Date" class="xyraLoginLabel"/>
                                              <xyra:DateRangePicker id="filterStartingDateAuditor" field="start" placeholder="Select Starting Date" change="onSearchAuditor" width="100%"/>
                                          </VBox>
 
-                                         <VBox class="xyraFieldGroup">
+                                         <VBox width="15.8%" class="xyraFieldGroup">
                                              <Label text="Ending Date" class="xyraLoginLabel"/>
                                              <xyra:DateRangePicker id="filterEndingDateAuditor" field="end" placeholder="Select Ending Date" change="onSearchAuditor" width="100%"/>
                                          </VBox>
@@ -737,12 +737,12 @@
                                             </Select>
                                         </VBox>
 
-                                         <VBox class="xyraFieldGroup">
+                                         <VBox width="18%" class="xyraFieldGroup">
                                              <Label text="Starting Date" class="xyraLoginLabel"/>
                                              <xyra:DateRangePicker id="dpHistoryStartDateAud" field="start" placeholder="Select Starting Date" change="onSearchAuditHistory" width="100%"/>
                                          </VBox>
 
-                                         <VBox class="xyraFieldGroup">
+                                         <VBox width="18%" class="xyraFieldGroup">
                                              <Label text="Ending Date" class="xyraLoginLabel"/>
                                              <xyra:DateRangePicker id="dpHistoryEndDateAud" field="end" placeholder="Select Ending Date" change="onSearchAuditHistory" width="100%"/>
                                          </VBox>
