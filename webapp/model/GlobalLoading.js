@@ -47,15 +47,18 @@ sap.ui.define([
         document.body.appendChild(oOverlay);
     }
 
-    function updateOverlayBounds() {
+    function updateOverlayBounds(sActivityText, bContentOnly) {
         if (!oOverlay) {
             return;
         }
 
         var sHash = window.location.hash || "";
         var bIsLogin = !sHash || sHash === "#" || sHash === "#/" || sHash.indexOf("Login") !== -1;
+        var sText = (sActivityText || "").toLowerCase();
+        var bIsFullPageAction = bIsLogin || sText.indexOf("logout") !== -1 || sText.indexOf("signing in") !== -1 || sText.indexOf("sign in") !== -1 || bContentOnly === false;
 
-        if (bIsLogin) {
+        // Sign In AND Logout MUST BE 100% FULL SCREEN BLURRED (including sidebar / entire window)
+        if (bIsFullPageAction) {
             oOverlay.style.setProperty("left", "0px", "important");
             oOverlay.style.setProperty("right", "0px", "important");
             oOverlay.style.setProperty("top", "0px", "important");
@@ -66,6 +69,7 @@ sap.ui.define([
             return;
         }
 
+        // In-app route loading (System Configuration & Access Management refresh): blur ONLY main content area (offset by sidebar)
         var oSideNav = document.querySelector(".sapTntSideNavigation") ||
                        document.querySelector(".sapTntToolPageAside") ||
                        document.querySelector(".sapTNTSideNavigation") ||
@@ -135,9 +139,13 @@ sap.ui.define([
                 oTextEl.style.display = "block";
             }
 
-            updateOverlayBounds();
-            setTimeout(updateOverlayBounds, 50);
-            setTimeout(updateOverlayBounds, 150);
+            var fnUpdate = function () {
+                updateOverlayBounds(sActivityText, bContentOnly);
+            };
+
+            fnUpdate();
+            setTimeout(fnUpdate, 50);
+            setTimeout(fnUpdate, 150);
 
             if (iHideTimer) {
                 clearTimeout(iHideTimer);
