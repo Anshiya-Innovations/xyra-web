@@ -22,17 +22,24 @@ sap.ui.define([
             this.setModel(models.createDeviceModel(), "device");
             this.setModel(NotificationService.getModel(), "notifications");
 
-            // Show loading screen ONLY ONCE on initial page load / F5 refresh
+            // Show loading screen on initial page load / F5 refresh OR first time entering page after Sign In
             var bInitialPageLoad = true;
+            var mVisitedRoutes = {};
             var oRouter = this.getRouter();
             if (oRouter) {
                 oRouter.attachBeforeRouteMatched((oEvent) => {
                     var sRouteName = oEvent.getParameter("name");
-                    if (bInitialPageLoad && GlobalLoading.isAllowedRoute(sRouteName)) {
-                        bInitialPageLoad = false;
-                        var sActivity = GlobalLoading.getActivityForRoute(sRouteName);
-                        GlobalLoading.show(sActivity, 1500, true, true);
+                    if (sRouteName === "Login") {
+                        mVisitedRoutes = {};
                     }
+                    if (GlobalLoading.isAllowedRoute(sRouteName)) {
+                        if (bInitialPageLoad || !mVisitedRoutes[sRouteName]) {
+                            mVisitedRoutes[sRouteName] = true;
+                            var sActivity = GlobalLoading.getActivityForRoute(sRouteName);
+                            GlobalLoading.show(sActivity, 1500, true, true);
+                        }
+                    }
+                    bInitialPageLoad = false;
                 });
                 // Every page has its own bell button instance - a freshly
                 // rendered one starts with no data-unread-count attribute until
