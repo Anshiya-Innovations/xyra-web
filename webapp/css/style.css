@@ -585,17 +585,42 @@ span.sapTntNLITagContainer {
   top: -9999px !important;
 }
 
-/* ===== COMPACT & SINGLE-LINE DIALOG HEADER (NO SECOND LINE, NO GAPS) ===== */
-.sapMMessageBox,
-.sapMDialog,
-.sapMMessageDialog {
-  min-width: 520px !important;
-  max-width: 95vw !important;
+/* ===== GLOBAL DIALOG & POPOVER PERFECT CENTERING & SLIGHTLY REDUCED COMPACT SIZING (EXCEPT NOTIFICATION POPOVER) ===== */
+.sapMDialog:not(.xyraCustomNotificationPopover),
+.sapMMessageDialog:not(.xyraCustomNotificationPopover) {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 90vw !important;
+  max-width: 680px !important;
+  min-width: 320px !important;
+  margin: 0 !important;
   border-radius: 16px !important;
   overflow: hidden !important;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
   border: 1px solid rgba(226, 232, 240, 0.9) !important;
-  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.2) !important;
   background-color: #ffffff !important;
+}
+
+.sapMMessageBox:not(.xyraCustomNotificationPopover) {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 90vw !important;
+  max-width: 480px !important;
+  min-width: 320px !important;
+  margin: 0 !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  background-color: #ffffff !important;
+}
+
+.sapMPopover:not(.xyraCustomNotificationPopover) {
+  max-width: 680px !important;
 }
 
 /* Single Header Container */
