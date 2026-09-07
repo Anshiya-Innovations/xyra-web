@@ -1307,15 +1307,15 @@ textarea.sapMTextAreaInner {
   z-index: 2 !important;
 }
 
-/* Showcase Card & Image - Flush scaled fit without padding gap */
+/* Showcase Card & Image - Fitted without top cutoff */
 .xyraHeroShowcase {
   width: 100% !important;
   height: 100% !important;
   flex: 1 1 auto !important;
   display: flex !important;
-  justify-content: flex-end !important;
-  align-items: flex-end !important;
-  padding: 0 !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 3.75rem 2rem 2rem 2rem !important;
   margin: 0 !important;
   box-sizing: border-box !important;
   min-height: 0 !important;
@@ -1328,7 +1328,7 @@ textarea.sapMTextAreaInner {
   max-width: 100% !important;
   max-height: 100% !important;
   object-fit: contain !important;
-  object-position: right bottom !important;
+  object-position: center center !important;
   transition: transform 0.4s ease !important;
 }
 
