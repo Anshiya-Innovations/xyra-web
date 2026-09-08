@@ -358,10 +358,10 @@
                         <VBox id="vboxReviewQueue" visible="true" width="100%">
 
                             <!-- FILTER BAR -->
-                            <Panel headerText="Filter Reviewer 1 Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
-                                <layout:Grid defaultSpan="XL3 L3 M6 S12">
-                                    <SearchField id="searchReviewer1" placeholder="Search reports..." search="onSearchReports" liveChange="onSearchReports"/>
-                                    <SearchField id="inputReportIdFilter" placeholder="Report ID (e.g. REP-101)" search="onSearchReports" liveChange="onSearchReports"/>
+                            <Panel headerText="Filter Reviewer 1 Queue" expandable="true" expanded="true" class="xyraFilterPanel sapUiSmallMarginBottom">
+                                <layout:Grid defaultSpan="XL3 L3 M6 S12" vSpacing="0" hSpacing="1">
+                                    <SearchField id="searchReviewer1" width="100%" placeholder="Search reports..." search="onSearchReports" liveChange="onSearchReports"/>
+                                    <SearchField id="inputReportIdFilter" width="100%" placeholder="Report ID (e.g. REP-101)" search="onSearchReports" liveChange="onSearchReports"/>
                                     <Select id="selectSystemFilter" width="100%" change="onFilterSystem">
                                         <core:Item key="All" text="All Systems"/>
                                         <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
@@ -376,9 +376,8 @@
                                         <core:Item key="Rejected" text="Rejected"/>
                                     </Select>
                                 </layout:Grid>
-                                <OverflowToolbar class="sapUiTinyMarginTop">
+                                <OverflowToolbar class="xyraFilterActionToolbar">
                                     <ToolbarSpacer/>
-                                    <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchReports"/>
                                     <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetFilters"/>
                                 </OverflowToolbar>
                             </Panel>
@@ -487,7 +486,7 @@
                                         rows="4"
                                         width="100%"
                                         placeholder="Enter detailed Root Cause Analysis explaining parameter misconfiguration, unauthorized change, or exception justification..."
-                                        class="sapUiSmallMarginBottom"/>
+                                        class="xyraRcaTextArea sapUiSmallMarginBottom"/>
                                 </VBox>
                             </Panel>
 
@@ -609,10 +608,10 @@
                             </HBox>
 
                             <!-- FILTER BAR -->
-                            <Panel headerText="Filter Reviewer History" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
-                                <layout:Grid defaultSpan="XL3 L3 M6 S12">
-                                    <SearchField id="searchHistory" placeholder="Search Report ID / Name..." search="onSearchHistory" liveChange="onSearchHistory"/>
-                                    <SearchField id="inputHistoryControlId" placeholder="Control ID (e.g. LOG08)" search="onSearchHistory" liveChange="onSearchHistory"/>
+                            <Panel headerText="Filter Reviewer History" expandable="true" expanded="true" class="xyraFilterPanel sapUiSmallMarginBottom">
+                                <layout:Grid defaultSpan="XL3 L3 M6 S12" vSpacing="0" hSpacing="1">
+                                    <SearchField id="searchHistory" width="100%" placeholder="Search Report ID / Name..." search="onSearchHistory" liveChange="onSearchHistory"/>
+                                    <SearchField id="inputHistoryControlId" width="100%" placeholder="Control ID (e.g. LOG08)" search="onSearchHistory" liveChange="onSearchHistory"/>
                                     <Select id="selectHistorySystem" width="100%" change="onSearchHistory">
                                         <core:Item key="All" text="All Systems"/>
                                         <core:Item key="PRD-100 (Java)" text="PRD-100 (Java)"/>
@@ -638,7 +637,7 @@
                                     <xyra:DateRangePicker id="dpHistoryStartDate" field="start" placeholder="Select Starting Date" change="onSearchHistory" width="100%"/>
                                     <xyra:DateRangePicker id="dpHistoryEndDate" field="end" placeholder="Select Ending Date" change="onSearchHistory" width="100%"/>
                                 </layout:Grid>
-                                <OverflowToolbar class="sapUiTinyMarginTop">
+                                <OverflowToolbar class="xyraFilterActionToolbar">
                                     <ToolbarSpacer/>
                                     <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetHistoryFilters"/>
                                 </OverflowToolbar>

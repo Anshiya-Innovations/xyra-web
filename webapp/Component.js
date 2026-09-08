@@ -56,33 +56,21 @@ sap.ui.define([
                             const sR = oSelDom.getBoundingClientRect();
                             const pR = oPkrDom.getBoundingClientRect();
 
-                            // 1. Horizontal flush alignment
-                            const dX = sR.left - pR.left;
-                            if (Math.abs(dX) > 0.5) {
-                                const curLeft = parseFloat(oPkrDom.style.left) || parseFloat(window.getComputedStyle(oPkrDom).left) || 0;
-                                oPkrDom.style.left = (curLeft + (dX / z)) + "px";
-                            }
-
-                            // 2. Docking vertical alignment
-                            if (pR.top >= sR.top) {
-                                const dY = sR.bottom - pR.top;
-                                if (Math.abs(dY) > 0.5) {
-                                    const curTop = parseFloat(oPkrDom.style.top) || parseFloat(window.getComputedStyle(oPkrDom).top) || 0;
-                                    oPkrDom.style.top = (curTop + (dY / z)) + "px";
-                                }
-                            } else {
-                                const dY = sR.top - pR.bottom;
-                                if (Math.abs(dY) > 0.5) {
-                                    const curTop = parseFloat(oPkrDom.style.top) || parseFloat(window.getComputedStyle(oPkrDom).top) || 0;
-                                    oPkrDom.style.top = (curTop + (dY / z)) + "px";
-                                }
-                            }
-
-                            // 3. Exact matching width
+                            // 1. Exact horizontal alignment & matching width
+                            oPkrDom.style.left = (sR.left / z) + "px";
                             if (sR.width > 0) {
                                 const sWidth = (sR.width / z) + "px";
                                 oPkrDom.style.width = sWidth;
                                 oPkrDom.style.minWidth = sWidth;
+                            }
+
+                            // 2. Docking vertical alignment
+                            const pHeight = pR.height || 180;
+                            const spaceBelow = window.innerHeight - sR.bottom;
+                            if (spaceBelow >= Math.min(pHeight, 180) || spaceBelow >= (window.innerHeight / 3)) {
+                                oPkrDom.style.top = ((sR.bottom + 2) / z) + "px";
+                            } else {
+                                oPkrDom.style.top = ((sR.top - 2 - pHeight) / z) + "px";
                             }
                         };
 
@@ -100,8 +88,6 @@ sap.ui.define([
                         setTimeout(fnAlign, 10);
                         setTimeout(fnAlign, 30);
                         setTimeout(fnAlign, 60);
-                        setTimeout(fnAlign, 120);
-                        setTimeout(fnAlign, 250);
                     }
                     return res;
                 };

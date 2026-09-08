@@ -279,26 +279,16 @@ sap.ui.define([
                 var sR = oInputDom.getBoundingClientRect();
                 var pR = oPkrDom.getBoundingClientRect();
 
-                // Flush horizontal alignment
-                var dX = sR.left - pR.left;
-                if (Math.abs(dX) > 0.5) {
-                    var curLeft = parseFloat(oPkrDom.style.left) || parseFloat(window.getComputedStyle(oPkrDom).left) || 0;
-                    oPkrDom.style.left = (curLeft + (dX / z)) + "px";
-                }
+                // 1. Horizontal flush alignment
+                oPkrDom.style.left = (sR.left / z) + "px";
 
-                // Docking vertical alignment
-                if (pR.top >= sR.top) {
-                    var dY = (sR.bottom + 4) - pR.top;
-                    if (Math.abs(dY) > 0.5) {
-                        var curTop = parseFloat(oPkrDom.style.top) || parseFloat(window.getComputedStyle(oPkrDom).top) || 0;
-                        oPkrDom.style.top = (curTop + (dY / z)) + "px";
-                    }
+                // 2. Docking vertical alignment
+                var pHeight = pR.height || 295;
+                var spaceBelow = window.innerHeight - sR.bottom;
+                if (spaceBelow >= Math.min(pHeight, 260) || spaceBelow >= (window.innerHeight / 3)) {
+                    oPkrDom.style.top = ((sR.bottom + 4) / z) + "px";
                 } else {
-                    var dY = (sR.top - 4) - pR.bottom;
-                    if (Math.abs(dY) > 0.5) {
-                        var curTop = parseFloat(oPkrDom.style.top) || parseFloat(window.getComputedStyle(oPkrDom).top) || 0;
-                        oPkrDom.style.top = (curTop + (dY / z)) + "px";
-                    }
+                    oPkrDom.style.top = ((sR.top - 4 - pHeight) / z) + "px";
                 }
             };
 
@@ -310,8 +300,6 @@ sap.ui.define([
             setTimeout(fnAlign, 10);
             setTimeout(fnAlign, 30);
             setTimeout(fnAlign, 60);
-            setTimeout(fnAlign, 120);
-            setTimeout(fnAlign, 250);
         },
 
         _buildPopoverUI: function () {
@@ -383,9 +371,10 @@ sap.ui.define([
                 items: aWeekdayTexts
             }).addStyleClass("xyraCalWeekdayHeader");
 
+            var sGridId = this.getId() + "-calGrid";
             this._oGridHTML = new HTML({
                 preferDOM: false,
-                content: "<div class='xyraCalGrid'></div>"
+                content: "<div id='" + sGridId + "' class='xyraCalGrid'></div>"
             });
 
             var oMainContainer = new VBox({
@@ -394,10 +383,11 @@ sap.ui.define([
 
             // Event delegation on the stable main container
             oMainContainer.attachBrowserEvent("click", function (oEvent) {
-                var $target = $(oEvent.target);
+                var target = oEvent.target;
+                if (!target) { return; }
 
-                var $prev = $target.hasClass("xyraCalNavPrev") ? $target : $target.closest(".xyraCalNavPrev");
-                if ($prev.length) {
+                var prev = target.closest(".xyraCalNavPrev");
+                if (prev) {
                     oEvent.stopPropagation();
                     var y = that._dCurrentDisplayMonth.getFullYear();
                     var m = that._dCurrentDisplayMonth.getMonth();
@@ -412,8 +402,8 @@ sap.ui.define([
                     return;
                 }
 
-                var $next = $target.hasClass("xyraCalNavNext") ? $target : $target.closest(".xyraCalNavNext");
-                if ($next.length) {
+                var next = target.closest(".xyraCalNavNext");
+                if (next) {
                     oEvent.stopPropagation();
                     var y = that._dCurrentDisplayMonth.getFullYear();
                     var m = that._dCurrentDisplayMonth.getMonth();
@@ -428,43 +418,43 @@ sap.ui.define([
                     return;
                 }
 
-                var $month = $target.hasClass("xyraCalHeaderMonthText") ? $target : $target.closest(".xyraCalHeaderMonthText");
-                if ($month.length) {
+                var month = target.closest(".xyraCalHeaderMonthText");
+                if (month) {
                     oEvent.stopPropagation();
                     that._sViewMode = (that._sViewMode === "MONTHS") ? "DAYS" : "MONTHS";
                     that._updatePopoverContent();
                     return;
                 }
 
-                var $year = $target.hasClass("xyraCalHeaderYearText") ? $target : $target.closest(".xyraCalHeaderYearText");
-                if ($year.length) {
+                var year = target.closest(".xyraCalHeaderYearText");
+                if (year) {
                     oEvent.stopPropagation();
                     that._sViewMode = (that._sViewMode === "YEARS") ? "DAYS" : "YEARS";
                     that._updatePopoverContent();
                     return;
                 }
 
-                var $day = $target.hasClass("xyraCalDay") ? $target : $target.closest(".xyraCalDay");
-                if ($day.length) {
+                var day = target.closest(".xyraCalDay");
+                if (day) {
                     oEvent.stopPropagation();
-                    var sDate = $day.attr("data-date");
+                    var sDate = day.getAttribute("data-date");
                     if (sDate) {
                         that._onDayClick(that._parseDateStr(sDate));
                     }
                     return;
                 }
 
-                var $cell = $target.hasClass("xyraCalPickerCell") ? $target : $target.closest(".xyraCalPickerCell");
-                if ($cell.length) {
+                var cell = target.closest(".xyraCalPickerCell");
+                if (cell) {
                     oEvent.stopPropagation();
-                    if ($cell.attr("data-month") !== undefined) {
-                        var iM = parseInt($cell.attr("data-month"), 10);
+                    if (cell.getAttribute("data-month") !== null) {
+                        var iM = parseInt(cell.getAttribute("data-month"), 10);
                         var iY = that._dCurrentDisplayMonth.getFullYear();
                         that._dCurrentDisplayMonth = new Date(iY, iM, 1);
                         that._sViewMode = "DAYS";
                         that._updatePopoverContent();
-                    } else if ($cell.attr("data-year") !== undefined) {
-                        var iY = parseInt($cell.attr("data-year"), 10);
+                    } else if (cell.getAttribute("data-year") !== null) {
+                        var iY = parseInt(cell.getAttribute("data-year"), 10);
                         var iM = that._dCurrentDisplayMonth.getMonth();
                         that._dCurrentDisplayMonth = new Date(iY, iM, 1);
                         that._sViewMode = "MONTHS";
@@ -520,30 +510,29 @@ sap.ui.define([
                 }
             }
 
-            var sHtmlId = this._oGridHTML ? this._oGridHTML.getId() : "";
+            var sHtmlId = this._oGridHTML ? this._oGridHTML.getId() : (this.getId() + "-calGrid");
+            var sHtml = "";
 
             if (this._sViewMode === "MONTHS") {
                 if (this._oWeekdayRow) { this._oWeekdayRow.setVisible(false); }
-                var sHtml = "<div id='" + sHtmlId + "' class='xyraCalPickerGrid xyraCalMonthGrid'>";
+                sHtml = "<div id='" + sHtmlId + "' class='xyraCalPickerGrid xyraCalMonthGrid'>";
                 for (var m = 0; m < 12; m++) {
                     var sMName = MONTH_NAMES[m].substring(0, 3);
                     var bSelected = (m === month);
                     sHtml += "<div class='xyraCalPickerCell " + (bSelected ? "xyraCalPickerCellActive" : "") + "' data-month='" + m + "'>" + sMName + "</div>";
                 }
                 sHtml += "</div>";
-                if (this._oGridHTML) { this._oGridHTML.setContent(sHtml); }
 
             } else if (this._sViewMode === "YEARS") {
                 if (this._oWeekdayRow) { this._oWeekdayRow.setVisible(false); }
                 var startDecade = year - (year % 12);
                 var endDecade = startDecade + 11;
-                var sHtml = "<div id='" + sHtmlId + "' class='xyraCalPickerGrid xyraCalYearGrid'>";
+                sHtml = "<div id='" + sHtmlId + "' class='xyraCalPickerGrid xyraCalYearGrid'>";
                 for (var y = startDecade; y <= endDecade; y++) {
                     var bSelected = (y === year);
                     sHtml += "<div class='xyraCalPickerCell " + (bSelected ? "xyraCalPickerCellActive" : "") + "' data-year='" + y + "'>" + y + "</div>";
                 }
                 sHtml += "</div>";
-                if (this._oGridHTML) { this._oGridHTML.setContent(sHtml); }
 
             } else {
                 // DAYS mode
@@ -553,7 +542,7 @@ sap.ui.define([
                 var daysInMonth = new Date(year, month + 1, 0).getDate();
                 var dToday = new Date();
 
-                var sHtml = "<div id='" + sHtmlId + "' class='xyraCalGrid'>";
+                sHtml = "<div id='" + sHtmlId + "' class='xyraCalGrid'>";
                 var iCellCount = 0;
                 for (var i = 0; i < firstDayIndex; i++) {
                     sHtml += "<div class='xyraCalDayEmpty'></div>";
@@ -589,9 +578,13 @@ sap.ui.define([
                 }
 
                 sHtml += "</div>";
+            }
 
-                if (this._oGridHTML) {
-                    this._oGridHTML.setContent(sHtml);
+            if (this._oGridHTML) {
+                this._oGridHTML.setContent(sHtml);
+                var oDom = this._oGridHTML.getDomRef();
+                if (oDom && oDom.parentNode) {
+                    oDom.outerHTML = sHtml;
                 }
             }
         },

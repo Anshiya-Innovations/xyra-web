@@ -1089,9 +1089,9 @@ div[id*="Popover"] .sapUiScrollDelegate {
 
 .sapMTextArea .sapMInputBaseContentWrapper:hover,
 .sapMDialogContent .sapMTextArea .sapMInputBaseContentWrapper:hover {
-  border-color: #c7d2fe !important;
+  border-color: #533bff !important;
   background-color: #ffffff !important;
-  box-shadow: 0 2px 6px rgba(83, 59, 255, 0.06) !important;
+  box-shadow: 0 0 0 2px rgba(83, 59, 255, 0.12), 0 2px 6px rgba(83, 59, 255, 0.08) !important;
 }
 
 .sapMTextArea .sapMInputBaseContentWrapper:focus-within,
@@ -2223,8 +2223,7 @@ textarea.sapMTextAreaInner {
 .sapMSelect,
 .sapMSlt {
   width: 100% !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+  margin: 0 !important;
   box-sizing: border-box !important;
 }
 
@@ -5012,13 +5011,19 @@ div[id*="-text"] {
 }
 
 .xyraCompactDateRangePopover {
+  width: 310px !important;
+  min-width: 310px !important;
+  max-width: 310px !important;
+  height: 295px !important;
+  min-height: 295px !important;
+  max-height: 295px !important;
   border-radius: 12px !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
-  overflow: visible !important;
+  overflow: hidden !important;
   border: 1px solid #e2e8f0 !important;
   z-index: 99999 !important;
-  max-width: calc(100vw - 24px) !important;
   box-sizing: border-box !important;
+  background-color: #ffffff !important;
 }
 
 .xyraCompactDateRangePopover .sapMPopoverHeader,
@@ -5080,28 +5085,24 @@ div[id*="-text"] {
 }
 
 .xyraCompactDateRangePopover .sapMPopoverCont,
-.xyraCompactDateRangePopover .sapMPopoverContent {
+.xyraCompactDateRangePopover .sapMPopoverContent,
+.xyraCompactDateRangePopover .sapMPopoverScroll {
+  width: 310px !important;
+  height: 295px !important;
+  min-height: 295px !important;
+  max-height: 295px !important;
+  overflow: hidden !important;
   padding: 0 !important;
   background-color: #ffffff !important;
-  border-radius: 12px !important;
-  overflow: visible !important;
-  max-height: none !important;
-  height: auto !important;
-}
-
-.xyraCompactDateRangePopover .sapMPopoverScroll {
-  overflow: visible !important;
-  max-height: none !important;
-  height: auto !important;
 }
 
 .xyraCalPopupContainer {
   padding: 12px 14px 14px 14px !important;
   background: #ffffff !important;
   box-sizing: border-box !important;
-  width: 100% !important;
-  height: auto !important;
-  min-height: 285px !important;
+  width: 310px !important;
+  height: 295px !important;
+  overflow: hidden !important;
 }
 
 /* Calendar Header */
@@ -5114,11 +5115,60 @@ div[id*="-text"] {
   padding: 0 4px !important;
 }
 
+.xyraCalTitleBox {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+}
+
+.xyraCalHeaderTitleText,
 .xyraCalMonthTitle {
   font-weight: 700 !important;
   font-size: 0.95rem !important;
   color: #0f172a !important;
   text-align: center !important;
+  cursor: pointer !important;
+  display: inline-block !important;
+}
+
+.xyraCalHeaderTitleText:hover {
+  color: #533bff !important;
+}
+
+.xyraCalHeaderTitleActive {
+  color: #533bff !important;
+}
+
+.xyraCalPickerGrid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  height: 220px !important;
+  padding: 8px 0 !important;
+}
+
+.xyraCalPickerCell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 8px !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.xyraCalPickerCell:hover {
+  background-color: rgba(83, 59, 255, 0.1) !important;
+  color: #533bff !important;
+}
+
+.xyraCalPickerCellActive {
+  background-color: #533bff !important;
+  color: #ffffff !important;
 }
 
 .xyraCalNavBtn {
@@ -6250,5 +6300,198 @@ span.sapMColumnHeaderContent,
   padding-right: 0.6rem !important;
   white-space: nowrap !important;
 }
+
+/* Root Cause Analysis (Mandatory) Text Area - Purple hover & focus border */
+.xyraRcaTextArea,
+[id*="inputRcaArea"],
+[id*="inputRcaArea2"] {
+  width: 100% !important;
+}
+
+.xyraRcaTextArea .sapMInputBaseContentWrapper,
+[id*="inputRcaArea"] .sapMInputBaseContentWrapper,
+[id*="inputRcaArea2"] .sapMInputBaseContentWrapper {
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background-color: #ffffff !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+.xyraRcaTextArea:hover .sapMInputBaseContentWrapper,
+.xyraRcaTextArea .sapMInputBaseContentWrapper:hover,
+[id*="inputRcaArea"]:hover .sapMInputBaseContentWrapper,
+[id*="inputRcaArea"] .sapMInputBaseContentWrapper:hover,
+[id*="inputRcaArea2"]:hover .sapMInputBaseContentWrapper,
+[id*="inputRcaArea2"] .sapMInputBaseContentWrapper:hover {
+  border-color: #533bff !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 2.5px rgba(83, 59, 255, 0.16), 0 2px 6px rgba(83, 59, 255, 0.08) !important;
+}
+
+.xyraRcaTextArea .sapMInputBaseContentWrapper:focus-within,
+.xyraRcaTextArea.sapMFocus .sapMInputBaseContentWrapper,
+[id*="inputRcaArea"] .sapMInputBaseContentWrapper:focus-within,
+[id*="inputRcaArea"].sapMFocus .sapMInputBaseContentWrapper,
+[id*="inputRcaArea2"] .sapMInputBaseContentWrapper:focus-within,
+[id*="inputRcaArea2"].sapMFocus .sapMInputBaseContentWrapper {
+  border-color: #533bff !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3.5px rgba(83, 59, 255, 0.22), 0 2px 6px rgba(83, 59, 255, 0.08) !important;
+  outline: none !important;
+}
+
+.xyraRcaTextArea .sapMTextAreaInner,
+[id*="inputRcaArea"] .sapMTextAreaInner,
+[id*="inputRcaArea2"] .sapMTextAreaInner,
+.xyraRcaTextArea textarea,
+[id*="inputRcaArea"] textarea,
+[id*="inputRcaArea2"] textarea {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: #0f172a !important;
+  font-family: inherit !important;
+}
+
+/* Filter Panel Spacing and Alignment Optimization */
+.xyraFilterPanel .sapMPanelContent {
+  padding: 0.85rem 1.15rem 0.5rem 1.15rem !important;
+  overflow: visible !important;
+}
+
+.xyraFilterPanel .sapUiRespGrid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  column-gap: 1.15rem !important;
+  row-gap: 0.85rem !important;
+  padding: 0.25rem 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 1100px) {
+  .xyraFilterPanel .sapUiRespGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .xyraFilterPanel .sapUiRespGrid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.xyraFilterPanel .sapUiRespGrid > div {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  box-sizing: border-box !important;
+  vertical-align: top !important;
+}
+
+/* Ensure SearchField, Select, and DatePicker have IDENTICAL outer geometry & 0 margin */
+.xyraFilterPanel .sapMSF,
+.xyraFilterPanel .sapMSelect,
+.xyraFilterPanel .xyraSingleDateWrapper {
+  width: 100% !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: top !important;
+  box-sizing: border-box !important;
+  display: block !important;
+}
+
+/* Ensure inner form, inner select div, and inner input wrapper have IDENTICAL geometry & baseline */
+.xyraFilterPanel .sapMSF .sapMSFF,
+.xyraFilterPanel .sapMSelect .sapMSlt,
+.xyraFilterPanel .xyraSingleDateInput .sapMInputBaseContentWrapper {
+  width: 100% !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background-color: #f8fafc !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  position: relative !important;
+  vertical-align: top !important;
+  transition: border-color 0.15s ease !important;
+}
+
+.xyraFilterPanel .sapMSF .sapMSFF:hover,
+.xyraFilterPanel .sapMSelect .sapMSlt:hover,
+.xyraFilterPanel .xyraSingleDateInput .sapMInputBaseContentWrapper:hover {
+  border-color: #94a3b8 !important;
+  background-color: #ffffff !important;
+}
+
+.xyraFilterPanel .sapMSF.sapMSFFocused .sapMSFF,
+.xyraFilterPanel .sapMSelect.sapMSltFocused .sapMSlt,
+.xyraFilterPanel .sapMSelect:focus-within .sapMSlt,
+.xyraFilterPanel .sapMSF:focus-within .sapMSFF {
+  border-color: #533bff !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(83, 59, 255, 0.15) !important;
+}
+
+.xyraFilterPanel .sapMSFI,
+.xyraFilterPanel .sapMSlt .sapMSltLabel,
+.xyraFilterPanel .xyraSingleDateInput input {
+  height: 42px !important;
+  line-height: 42px !important;
+  font-size: 0.925rem !important;
+  padding-left: 0.75rem !important;
+  color: #0f172a !important;
+  box-sizing: border-box !important;
+}
+
+.xyraFilterPanel .sapMSelect .sapMSltArrow {
+  height: 42px !important;
+  line-height: 42px !important;
+}
+
+.xyraFilterPanel .sapMSF .sapMSFBtn,
+.xyraFilterPanel .sapMSF .sapMSFS {
+  height: 42px !important;
+  line-height: 42px !important;
+}
+
+.xyraFilterActionToolbar {
+  height: 32px !important;
+  min-height: 32px !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin-top: 0.65rem !important;
+  margin-bottom: 0 !important;
+}
+
+.xyraFilterActionToolbar .sapMBtn {
+  height: 28px !important;
+  min-height: 28px !important;
+}
+
+.xyraFilterActionToolbar .sapMBtnInner {
+  height: 28px !important;
+  min-height: 28px !important;
+  line-height: 26px !important;
+  padding: 0 0.65rem !important;
+  border-radius: 6px !important;
+  font-size: 0.85rem !important;
+}
+
+
 
 
