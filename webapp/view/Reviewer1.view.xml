@@ -386,8 +386,8 @@
                             <!-- QUICK ACTIONS TOOLBAR (EXACTLY MATCHING SPECIFIED 7 BUTTONS) -->
                             <Panel expandable="false" class="sapUiSmallMarginBottom">
                                 <headerToolbar>
-                                    <OverflowToolbar>
-                                        <Title text="Reviewer 1 Quick Actions" level="H4"/>
+                                    <OverflowToolbar class="xyraQuickActionToolbar">
+                                        <Title text="Quick Actions" level="H4"/>
                                         <ToolbarSpacer/>
                                         <Button text="View Report" icon="sap-icon://show" press="onViewReport" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
                                         <Button text="View Evidence" icon="sap-icon://document" press="onViewEvidence" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>

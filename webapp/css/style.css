@@ -6226,3 +6226,29 @@ span.sapMColumnHeaderContent,
   justify-content: center !important;
 }
 
+/* Decision Actions & Quick Actions Toolbars - ensure buttons never clip and fit comfortably */
+.xyraDecisionActionsToolbar,
+.xyraQuickActionToolbar {
+  padding-right: 0.75rem !important;
+  overflow: visible !important;
+}
+
+.xyraDecisionActionsToolbar .sapMBtn,
+.xyraQuickActionToolbar .sapMBtn {
+  margin-right: 0.35rem !important;
+  flex-shrink: 0 !important;
+}
+
+.xyraDecisionActionsToolbar .sapMBtn:last-child,
+.xyraQuickActionToolbar .sapMBtn:last-child {
+  margin-right: 0 !important;
+}
+
+.xyraDecisionActionsToolbar .sapMBtnInner,
+.xyraQuickActionToolbar .sapMBtnInner {
+  padding-left: 0.6rem !important;
+  padding-right: 0.6rem !important;
+  white-space: nowrap !important;
+}
+
+

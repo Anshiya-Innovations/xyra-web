@@ -354,15 +354,15 @@
                             <!-- SECTION 8: DECISION BUTTONS TOOLBAR -->
                             <Panel expandable="false" class="sapUiSmallMarginBottom">
                                 <headerToolbar>
-                                    <OverflowToolbar>
-                                        <Title text="Reviewer 2 Decision Actions" level="H4"/>
+                                    <OverflowToolbar class="xyraDecisionActionsToolbar">
+                                        <Title text="Decision Actions" level="H4"/>
                                         <ToolbarSpacer/>
                                         <Button text="View Report" icon="sap-icon://show" press="onViewReport" class="sapUiTinyMarginEnd"/>
                                         <Button text="View Evidence" icon="sap-icon://document" press="onViewEvidence" class="sapUiTinyMarginEnd"/>
                                         <Button text="Add Comments" icon="sap-icon://comment" press="onAddComments" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Approve &amp; Forward to Escalation Manager" type="Accept" icon="sap-icon://accept" press="onApproveForward" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Reject &amp; Return to Reviewer 1" type="Reject" icon="sap-icon://undo" press="onRejectReport" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Request Additional Evidence" icon="sap-icon://hint" press="onRequestEvidence"/>
+                                        <Button text="Approve &amp; Forward" tooltip="Approve &amp; Forward to Escalation Manager" type="Accept" icon="sap-icon://accept" press="onApproveForward" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Reject &amp; Return" tooltip="Reject &amp; Return to Reviewer 1" type="Reject" icon="sap-icon://undo" press="onRejectReport" class="sapUiTinyMarginEnd"/>
+                                        <Button text="Request Additional Evidence" tooltip="Request Additional Evidence" icon="sap-icon://hint" press="onRequestEvidence"/>
                                     </OverflowToolbar>
                                 </headerToolbar>
                             </Panel>
