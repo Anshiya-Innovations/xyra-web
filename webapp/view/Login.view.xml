@@ -139,7 +139,7 @@
                         <VBox id="xyraSlide1" class="xyraHeroSlide xyraHeroSlideActive" width="100%">
                             <VBox class="xyraHeroTextSection">
                                 <core:HTML content='&lt;div class="xyraHeroBrandBadge"&gt;&lt;span class="xyraHeroBrandDot"&gt;✦&lt;/span&gt;&lt;span class="xyraHeroBrandText"&gt;XYRA ENTERPRISE&lt;/span&gt;&lt;/div&gt;' />
-                                <Title text="AI-Powered Next-Gen Control Monitoring" level="H1" class="xyraSlideH1"/>
+                                <Title text="AI-Powered Next-Gen Control Monitoring" level="H1" wrapping="true" class="xyraSlideH1"/>
                                 <Text text="Smarter Monitoring. Intelligent Control. Next-Level Security." class="xyraSlideH2"/>
                             </VBox>
                             <core:HTML content='&lt;div class="xyraHeroShowcase"&gt;&lt;img src="img/xyra-tablet-slide1.png" alt="XYRA AI Control Monitoring Tablet" class="xyraHeroTabletImg xyraTabletSlide1" /&gt;&lt;/div&gt;' />
@@ -148,7 +148,7 @@
                         <!-- Slide 2: AI-Powered SOX Monitoring -->
                         <VBox id="xyraSlide2" class="xyraHeroSlide" width="100%">
                             <VBox class="xyraHeroTextSection">
-                                <Title text="AI-Powered SOX Monitoring" level="H1" class="xyraSlideH1"/>
+                                <Title text="AI-Powered SOX Monitoring" level="H1" wrapping="true" class="xyraSlideH1"/>
                                 <Text text="Monitor controls smarter, detect risks faster, and stay audit-ready." class="xyraSlideH2"/>
                                 <core:HTML content='&lt;div class="xyraHeroPartnerRow"&gt;&lt;span class="xyraHeroPartnerBadge"&gt;SAP S/4HANA&lt;/span&gt;&lt;span class="xyraHeroPartnerBadge"&gt;SOX 404&lt;/span&gt;&lt;span class="xyraHeroPartnerBadge"&gt;ISO 27001&lt;/span&gt;&lt;span class="xyraHeroPartnerBadge"&gt;SOC 2&lt;/span&gt;&lt;/div&gt;' />
                             </VBox>

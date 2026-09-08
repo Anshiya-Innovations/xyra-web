@@ -1571,10 +1571,11 @@ textarea.sapMTextAreaInner {
 
 /* Slide Typography Section */
 .xyraHeroTextSection {
-  max-width: 450px !important;
+  max-width: 520px !important;
+  width: 100% !important;
   z-index: 20 !important;
   flex: 0 0 auto !important;
-  padding: clamp(2rem, 4.5vh, 3.2rem) clamp(2rem, 3.8vw, 3.2rem) 0 clamp(2rem, 3.8vw, 3.2rem) !important;
+  padding: clamp(1.8rem, 4vh, 2.8rem) clamp(1.8rem, 3.5vw, 3rem) 0 clamp(1.8rem, 3.5vw, 3rem) !important;
   box-sizing: border-box !important;
   position: relative !important;
 }
@@ -1589,7 +1590,7 @@ textarea.sapMTextAreaInner {
   font-weight: 700 !important;
   letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
-  margin-bottom: 0.75rem !important;
+  margin-bottom: 0.65rem !important;
 }
 
 .xyraHeroBrandDot {
@@ -1603,7 +1604,7 @@ textarea.sapMTextAreaInner {
   flex-wrap: wrap !important;
   align-items: center !important;
   gap: 8px !important;
-  margin-top: 0.85rem !important;
+  margin-top: 0.75rem !important;
   position: relative !important;
   z-index: 20 !important;
 }
@@ -1623,22 +1624,35 @@ textarea.sapMTextAreaInner {
 }
 
 .xyraSlideH1,
-.xyraSlideH1 .sapMTitle {
+.xyraSlideH1 .sapMTitle,
+.xyraSlideH1 .sapMTitleText,
+.xyraSlideH1 span {
   color: #ffffff !important;
-  font-size: clamp(1.35rem, 2vw, 1.75rem) !important;
+  font-size: clamp(1.2rem, 1.75vw, 1.55rem) !important;
   font-weight: 700 !important;
-  line-height: 1.25 !important;
+  line-height: 1.3 !important;
   letter-spacing: -0.02em !important;
-  margin-bottom: 0.5rem !important;
+  margin-bottom: 0.4rem !important;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.12) !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  display: block !important;
 }
 
 .xyraSlideH2,
-.xyraSlideH2.sapMText {
-  color: rgba(255, 255, 255, 0.88) !important;
-  font-size: clamp(0.85rem, 1.05vw, 0.95rem) !important;
+.xyraSlideH2.sapMText,
+.xyraSlideH2 span {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: clamp(0.825rem, 1vw, 0.925rem) !important;
   font-weight: 400 !important;
-  line-height: 1.45 !important;
+  line-height: 1.4 !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  display: block !important;
 }
 
 /* Ensure SAPUI5 Flex Item wrapper inside slide takes full remaining height */
@@ -1667,13 +1681,13 @@ textarea.sapMTextAreaInner {
   pointer-events: none !important;
 }
 
-/* Slide 1 Tablet Positioning (Tilted Tablet Anchored Bottom-Right - NO OVERLAPPING LABELS & NO GAP) */
+/* Slide 1 Tablet Positioning (Tilted Tablet Dropped Down & Right - NO OVERLAPPING LABELS & NO GAP) */
 .xyraTabletSlide1 {
   position: absolute !important;
-  bottom: -35px !important;
-  right: -25px !important;
-  width: 84% !important;
-  max-width: 520px !important;
+  bottom: -95px !important;
+  right: -35px !important;
+  width: 78% !important;
+  max-width: 450px !important;
   height: auto !important;
   object-fit: contain !important;
   filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.45)) !important;
@@ -1686,15 +1700,15 @@ textarea.sapMTextAreaInner {
   animation: xyraTabletFloat1 6s ease-in-out infinite alternate !important;
 }
 
-/* Slide 2 Tablet Positioning (Upright Tablet Anchored to Right Edge - NO GAP WITH BLUE FRAME) */
+/* Slide 2 Tablet Positioning (Upright Tablet Dropped Down - CLEAR OF BADGES & NO BLUE GAP) */
 .xyraTabletSlide2 {
   position: absolute !important;
-  bottom: -25px !important;
+  bottom: -85px !important;
   right: -20px !important;
   left: auto !important;
   transform: none !important;
-  width: 90% !important;
-  max-width: 620px !important;
+  width: 84% !important;
+  max-width: 540px !important;
   height: auto !important;
   object-fit: contain !important;
   filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.45)) !important;
