@@ -12,28 +12,12 @@
             padding: 0;
         }
 
-        /* Responsive executive scaling for internal dashboard views */
+        /* Internal application pages zoom to fit screen at 100% browser zoom */
         html.xyra-app-zoomed,
         html:has(.sapTntToolPage),
         html:has(.sapTNTToolPage) {
-            zoom: 0.85;
+            zoom: 0.82;
             -webkit-text-size-adjust: 100%;
-        }
-
-        @media (max-height: 850px) {
-            html.xyra-app-zoomed,
-            html:has(.sapTntToolPage),
-            html:has(.sapTNTToolPage) {
-                zoom: 0.82;
-            }
-        }
-
-        @media (min-height: 1100px) {
-            html.xyra-app-zoomed,
-            html:has(.sapTntToolPage),
-            html:has(.sapTNTToolPage) {
-                zoom: 0.88;
-            }
         }
 
         /* Login page strictly stays at unscaled 100% zoom for edge-to-edge layout */
@@ -61,7 +45,7 @@
             window.addEventListener("hashchange", updateRouteState);
         })();
     </script>
-    <link rel="stylesheet" type="text/css" href="css/style.css?v=20260908_19">
+    <link rel="stylesheet" type="text/css" href="css/style.css?v=20260908_22">
     <script
         id="sap-ui-bootstrap"
         src="https://ui5.sap.com/1.150.0/resources/sap-ui-core.js"
@@ -75,53 +59,6 @@
         data-sap-ui-preload="none"
         data-sap-ui-frame-options="trusted"
     ></script>
-    <script>
-        (function() {
-            function patchPopup() {
-                if (window.sap && sap.ui && sap.ui.require) {
-                    sap.ui.require(["sap/ui/core/Popup"], function(Popup) {
-                        if (!Popup || Popup._xyraZoomPatched) return;
-                        Popup._xyraZoomPatched = true;
-
-                        var fnOrigApplyPosition = Popup.prototype._applyPosition;
-                        Popup.prototype._applyPosition = function(oPosition) {
-                            fnOrigApplyPosition.apply(this, arguments);
-
-                            var z = parseFloat(window.getComputedStyle(document.documentElement).zoom) || 1;
-                            if (Math.abs(z - 1) > 0.005 && this._$) {
-                                var $Ref = this._$();
-                                if ($Ref && $Ref.length && $Ref[0]) {
-                                    var dom = $Ref[0];
-                                    if (dom.classList.contains("sapMDialog") || dom.classList.contains("sapMMessageBox") || dom.classList.contains("sapMMessageDialog")) {
-                                        return;
-                                    }
-                                    if (dom.style.left && dom.style.left.indexOf("px") > -1) {
-                                        dom.style.left = (parseFloat(dom.style.left) / z) + "px";
-                                    }
-                                    if (dom.style.right && dom.style.right.indexOf("px") > -1) {
-                                        dom.style.right = (parseFloat(dom.style.right) / z) + "px";
-                                    }
-                                    if (dom.style.top && dom.style.top.indexOf("px") > -1) {
-                                        dom.style.top = (parseFloat(dom.style.top) / z) + "px";
-                                    }
-                                    if (dom.style.width && dom.style.width.indexOf("px") > -1) {
-                                        dom.style.width = (parseFloat(dom.style.width) / z) + "px";
-                                    }
-                                    if (dom.style.minWidth && dom.style.minWidth.indexOf("px") > -1) {
-                                        dom.style.minWidth = (parseFloat(dom.style.minWidth) / z) + "px";
-                                    }
-                                }
-                            }
-                        };
-                    });
-                }
-            }
-            window.addEventListener("DOMContentLoaded", patchPopup);
-            window.addEventListener("load", patchPopup);
-            setTimeout(patchPopup, 100);
-            setTimeout(patchPopup, 500);
-        })();
-    </script>
 </head>
 <body class="sapUiBody sapUiSizeCompact" id="content">
     <div

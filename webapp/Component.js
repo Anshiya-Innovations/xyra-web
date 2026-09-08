@@ -3,8 +3,9 @@ sap.ui.define([
     "xyraweb/model/models",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationService",
-    "sap/ui/core/Popup"
-], (UIComponent, models, GlobalLoading, NotificationService, Popup) => {
+    "sap/ui/core/Popup",
+    "sap/m/Select"
+], (UIComponent, models, GlobalLoading, NotificationService, Popup, Select) => {
     "use strict";
 
     return UIComponent.extend("xyraweb.Component", {
@@ -19,39 +20,90 @@ sap.ui.define([
             // call the base component's init function
             UIComponent.prototype.init.apply(this, arguments);
 
-            // Install automatic coordinate compensator for SAPUI5 Popups when CSS zoom is active
-            if (Popup && !Popup._xyraZoomPatched) {
-                Popup._xyraZoomPatched = true;
+            // Install safe coordinate callback delegator for Popups
+            if (Popup && !Popup._xyraCallbackPatched) {
+                Popup._xyraCallbackPatched = true;
                 const fnOrigApplyPosition = Popup.prototype._applyPosition;
                 Popup.prototype._applyPosition = function(oPosition) {
                     fnOrigApplyPosition.apply(this, arguments);
+                    if (typeof this._xyraAlignCallback === "function") {
+                        this._xyraAlignCallback();
+                    }
+                };
+            }
 
-                    const z = parseFloat(window.getComputedStyle(document.documentElement).zoom) || 1;
-                    if (Math.abs(z - 1) > 0.005 && this._$) {
-                        const $Ref = this._$();
-                        if ($Ref && $Ref.length && $Ref[0]) {
-                            const dom = $Ref[0];
-                            // Do not adjust Dialogs or Message Boxes which are centered via CSS fixed positioning
-                            if (dom.classList.contains("sapMDialog") || dom.classList.contains("sapMMessageBox") || dom.classList.contains("sapMMessageDialog")) {
+            // Install closed-loop alignment compensator specifically for dropdown selection popovers
+            if (Select && !Select._xyraAlignPatched) {
+                Select._xyraAlignPatched = true;
+                const fnOrigOpen = Select.prototype.open;
+                Select.prototype.open = function() {
+                    const res = fnOrigOpen.apply(this, arguments);
+                    const oPicker = this.getPicker();
+                    if (oPicker) {
+                        const that = this;
+                        const fnAlign = function() {
+                            const oSelDom = that.getDomRef();
+                            const oPkrDom = oPicker.getDomRef();
+                            if (!oSelDom || !oPkrDom) {
                                 return;
                             }
-                            if (dom.style.left && dom.style.left.indexOf("px") > -1) {
-                                dom.style.left = (parseFloat(dom.style.left) / z) + "px";
+
+                            const z = parseFloat(window.getComputedStyle(document.documentElement).zoom) || 1;
+                            if (Math.abs(z - 1) < 0.005) {
+                                return;
                             }
-                            if (dom.style.right && dom.style.right.indexOf("px") > -1) {
-                                dom.style.right = (parseFloat(dom.style.right) / z) + "px";
+
+                            const sR = oSelDom.getBoundingClientRect();
+                            const pR = oPkrDom.getBoundingClientRect();
+
+                            // 1. Horizontal flush alignment
+                            const dX = sR.left - pR.left;
+                            if (Math.abs(dX) > 0.5) {
+                                const curLeft = parseFloat(oPkrDom.style.left) || parseFloat(window.getComputedStyle(oPkrDom).left) || 0;
+                                oPkrDom.style.left = (curLeft + (dX / z)) + "px";
                             }
-                            if (dom.style.top && dom.style.top.indexOf("px") > -1) {
-                                dom.style.top = (parseFloat(dom.style.top) / z) + "px";
+
+                            // 2. Docking vertical alignment
+                            if (pR.top >= sR.top) {
+                                const dY = sR.bottom - pR.top;
+                                if (Math.abs(dY) > 0.5) {
+                                    const curTop = parseFloat(oPkrDom.style.top) || parseFloat(window.getComputedStyle(oPkrDom).top) || 0;
+                                    oPkrDom.style.top = (curTop + (dY / z)) + "px";
+                                }
+                            } else {
+                                const dY = sR.top - pR.bottom;
+                                if (Math.abs(dY) > 0.5) {
+                                    const curTop = parseFloat(oPkrDom.style.top) || parseFloat(window.getComputedStyle(oPkrDom).top) || 0;
+                                    oPkrDom.style.top = (curTop + (dY / z)) + "px";
+                                }
                             }
-                            if (dom.style.width && dom.style.width.indexOf("px") > -1) {
-                                dom.style.width = (parseFloat(dom.style.width) / z) + "px";
+
+                            // 3. Exact matching width
+                            if (sR.width > 0) {
+                                const sWidth = (sR.width / z) + "px";
+                                oPkrDom.style.width = sWidth;
+                                oPkrDom.style.minWidth = sWidth;
                             }
-                            if (dom.style.minWidth && dom.style.minWidth.indexOf("px") > -1) {
-                                dom.style.minWidth = (parseFloat(dom.style.minWidth) / z) + "px";
-                            }
+                        };
+
+                        const oPopup = oPicker.oPopup || (oPicker._oPopover && oPicker._oPopover.oPopup);
+                        if (oPopup) {
+                            oPopup._xyraAlignCallback = fnAlign;
                         }
+
+                        if (!oPicker._xyraAlignAttached) {
+                            oPicker._xyraAlignAttached = true;
+                            oPicker.attachAfterOpen(fnAlign);
+                        }
+
+                        requestAnimationFrame(fnAlign);
+                        setTimeout(fnAlign, 10);
+                        setTimeout(fnAlign, 30);
+                        setTimeout(fnAlign, 60);
+                        setTimeout(fnAlign, 120);
+                        setTimeout(fnAlign, 250);
                     }
+                    return res;
                 };
             }
 

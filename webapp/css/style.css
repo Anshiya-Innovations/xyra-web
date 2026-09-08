@@ -2,24 +2,8 @@
 html.xyra-app-zoomed,
 html:has(.sapTntToolPage),
 html:has(.sapTNTToolPage) {
-  zoom: 0.85;
+  zoom: 0.82;
   -webkit-text-size-adjust: 100%;
-}
-
-@media (max-height: 850px) {
-  html.xyra-app-zoomed,
-  html:has(.sapTntToolPage),
-  html:has(.sapTNTToolPage) {
-    zoom: 0.82;
-  }
-}
-
-@media (min-height: 1100px) {
-  html.xyra-app-zoomed,
-  html:has(.sapTntToolPage),
-  html:has(.sapTNTToolPage) {
-    zoom: 0.88;
-  }
 }
 
 /* Login page strictly stays at unscaled 100% zoom for edge-to-edge layout */

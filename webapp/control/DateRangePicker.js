@@ -255,7 +255,63 @@ sap.ui.define([
 
             if (this._oPopover && !this._oPopover.isOpen()) {
                 this._oPopover.openBy(oTargetDom);
+                this._alignPopover();
             }
+        },
+
+        _alignPopover: function () {
+            var that = this;
+            var fnAlign = function () {
+                if (!that._oPopover || !that._oPopover.isOpen()) {
+                    return;
+                }
+                var oInputDom = (that._oInput && that._oInput.getDomRef()) ? that._oInput.getDomRef() : that.getDomRef();
+                var oPkrDom = that._oPopover.getDomRef();
+                if (!oInputDom || !oPkrDom) {
+                    return;
+                }
+
+                var z = parseFloat(window.getComputedStyle(document.documentElement).zoom) || 1;
+                if (Math.abs(z - 1) < 0.005) {
+                    return;
+                }
+
+                var sR = oInputDom.getBoundingClientRect();
+                var pR = oPkrDom.getBoundingClientRect();
+
+                // Flush horizontal alignment
+                var dX = sR.left - pR.left;
+                if (Math.abs(dX) > 0.5) {
+                    var curLeft = parseFloat(oPkrDom.style.left) || parseFloat(window.getComputedStyle(oPkrDom).left) || 0;
+                    oPkrDom.style.left = (curLeft + (dX / z)) + "px";
+                }
+
+                // Docking vertical alignment
+                if (pR.top >= sR.top) {
+                    var dY = (sR.bottom + 4) - pR.top;
+                    if (Math.abs(dY) > 0.5) {
+                        var curTop = parseFloat(oPkrDom.style.top) || parseFloat(window.getComputedStyle(oPkrDom).top) || 0;
+                        oPkrDom.style.top = (curTop + (dY / z)) + "px";
+                    }
+                } else {
+                    var dY = (sR.top - 4) - pR.bottom;
+                    if (Math.abs(dY) > 0.5) {
+                        var curTop = parseFloat(oPkrDom.style.top) || parseFloat(window.getComputedStyle(oPkrDom).top) || 0;
+                        oPkrDom.style.top = (curTop + (dY / z)) + "px";
+                    }
+                }
+            };
+
+            if (this._oPopover && this._oPopover.oPopup) {
+                this._oPopover.oPopup._xyraAlignCallback = fnAlign;
+            }
+
+            requestAnimationFrame(fnAlign);
+            setTimeout(fnAlign, 10);
+            setTimeout(fnAlign, 30);
+            setTimeout(fnAlign, 60);
+            setTimeout(fnAlign, 120);
+            setTimeout(fnAlign, 250);
         },
 
         _buildPopoverUI: function () {
@@ -430,6 +486,10 @@ sap.ui.define([
                 horizontalScrolling: false,
                 content: [oMainContainer]
             }).addStyleClass("sapUiNoContentPadding xyraCompactDateRangePopover");
+
+            this._oPopover.attachAfterOpen(function () {
+                that._alignPopover();
+            });
 
             this.addDependent(this._oPopover);
             this._updatePopoverContent();
