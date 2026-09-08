@@ -7,7 +7,8 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "xyraweb/model/GlobalLoading",
-    "xyraweb/model/NotificationPopover"
+    "xyraweb/model/NotificationPopover",
+    "xyraweb/service/ReviewClient"
 ], function (
     Controller,
     UIComponent,
@@ -17,116 +18,115 @@ sap.ui.define([
     MessageToast,
     MessageBox,
     GlobalLoading,
-    NotificationPopover
+    NotificationPopover,
+    ReviewClient
 ) {
     "use strict";
 
+    // Per SOP-8865 6.3.1/6.7: the deviation approval chain is exactly 2 levels
+    // (Control Exception Reviewer / "Reviewer1", then Manager Exception
+    // Reviewer / "Reviewer2" - final). There is no third approval gate, so
+    // this page is NOT a decision queue - it's the oversight/monitoring view
+    // the SOP describes ("review process actively monitored... weekly report
+    // summarizing any pending deviations" - 6.7), read-only over both levels'
+    // real queues and history. The Escalation Manager persona itself still
+    // exists (its own login role, own access to Reports/Audit Logs/Access
+    // Management like every other persona) - only the fake 3rd approval tier
+    // that used to live on this page is gone.
     return Controller.extend("xyraweb.controller.EscalationManager", {
 
         onInit: function () {
             this._loadEscalationManagerData();
         },
 
+        _getFallbackReports: function () {
+            return [{
+                reportId: "REP-101",
+                reportName: "Java Security Parameter Check",
+                controlId: "PAR01",
+                system: "PRD-100 (Java)",
+                reviewer1Comments: "Reviewer 1 verified param login/fails_to_user_lock set to 3.",
+                reviewer2Comments: "",
+                evidence: "N/A",
+                complianceStatus: "Pending Review",
+                complianceState: "Warning",
+                remediationStatus: "Awaiting Decision",
+                remediationState: "Warning",
+                workflowStatus: "Pending Review",
+                workflowState: "Warning",
+                managerNotes: ""
+            }];
+        },
+
+        _getFallbackHistory: function () {
+            return [{
+                ticketId: "TCK-99014",
+                reportId: "REP-098",
+                controlId: "LOG08",
+                reportName: "Java Audit Buffer Retention Verification",
+                system: "PRD-100 (Java)",
+                decision: "Approved",
+                reviewedDate: "04-Aug-2026",
+                complianceStatus: "Compliant",
+                complianceState: "Success",
+                remediationStatus: "Remediated & Verified",
+                remediationState: "Success",
+                ticketStatus: "Closed",
+                ticketStatusState: "Success",
+                reviewerName: "David Lead",
+                employeeId: "EM001",
+                removedRemediatedItem: "Buffer Retention Limit Exceeded (Threshold: 90 Days)",
+                previousValue: "30 Days Retention",
+                updatedValue: "90 Days Extended Audit Buffer",
+                reason: "System parameter adjusted via Change Ticket CHG-88410. Verified by Security Lead.",
+                reviewComment: "Remediation verified against SAP NWA audit log buffer. Approved & Closed."
+            }];
+        },
+
         _loadEscalationManagerData: function () {
             var oData = {
-                kpi: {
-                    pendingApproval: 6,
-                    remediationVerified: 18,
-                    complianceRate: 98.4
-                },
-                historyKpis: {
-                    approved: 24,
-                    rejected: 2,
-                    pending: 6
-                },
-                reports: [
-                    {
-                        reportId: "REP-101",
-                        reportName: "Java Security Parameter Check",
-                        controlId: "PAR01",
-                        system: "PRD-100 (Java)",
-                        reviewer1Comments: "Reviewer 1 verified param login/fails_to_user_lock set to 3.",
-                        reviewer2Comments: "Reviewer 2 confirmed lock parameter compliant with security policy.",
-                        evidence: "Verified",
-                        complianceStatus: "Compliant",
-                        complianceState: "Success",
-                        remediationStatus: "Verified",
-                        remediationState: "Success",
-                        workflowStatus: "Pending Final Approval",
-                        workflowState: "Warning",
-                        managerNotes: "Final audit check ready for security lead signoff."
-                    },
-                    {
-                        reportId: "REP-102",
-                        reportName: "HANA Audit Logging Verification",
-                        controlId: "LOG28",
-                        system: "HDB-10 (HANA)",
-                        reviewer1Comments: "Audit buffer settings logged with zero anomalies.",
-                        reviewer2Comments: "HANA audit policy configuration verified by manager.",
-                        evidence: "Verified",
-                        complianceStatus: "Compliant",
-                        complianceState: "Success",
-                        remediationStatus: "Verified",
-                        remediationState: "Success",
-                        workflowStatus: "Pending Final Approval",
-                        workflowState: "Warning",
-                        managerNotes: "All 12 DB audit policies validated."
-                    }
-                ],
-                history: [
-                    {
-                        ticketId: "TCK-99014",
-                        reportId: "REP-098",
-                        controlId: "LOG08",
-                        reportName: "Java Audit Buffer Retention Verification",
-                        system: "PRD-100 (Java)",
-                        decision: "Approved",
-                        reviewedDate: "04-Aug-2026",
-                        complianceStatus: "Compliant",
-                        complianceState: "Success",
-                        remediationStatus: "Remediated & Verified",
-                        remediationState: "Success",
-                        ticketStatus: "Closed",
-                        ticketStatusState: "Success",
-                        reviewerName: "David Lead",
-                        employeeId: "EM001",
-                        removedRemediatedItem: "Buffer Retention Limit Exceeded (Threshold: 90 Days)",
-                        previousValue: "30 Days Retention",
-                        updatedValue: "90 Days Extended Audit Buffer",
-                        reason: "System parameter adjusted via Change Ticket CHG-88410. Verified by Security Lead.",
-                        reviewComment: "Remediation verified against SAP NWA audit log buffer. Approved & Closed."
-                    },
-                    {
-                        ticketId: "TCK-98410",
-                        reportId: "REP-092",
-                        controlId: "SEC14",
-                        reportName: "HANA Privileged Account Authorization Audit",
-                        system: "HDB-20 (HANA)",
-                        decision: "Rejected",
-                        reviewedDate: "02-Aug-2026",
-                        complianceStatus: "Non-Compliant",
-                        complianceState: "Error",
-                        remediationStatus: "Action Required",
-                        remediationState: "Error",
-                        ticketStatus: "Action Required",
-                        ticketStatusState: "Error",
-                        reviewerName: "David Lead",
-                        employeeId: "EM001",
-                        removedRemediatedItem: "Unapproved SYSTEM User Elevated Privilege Assignment",
-                        previousValue: "DBA_ADMIN Role Granted",
-                        updatedValue: "Role Revoked / Pending Re-authorization",
-                        reason: "Elevated role granted without emergency change authorization reference.",
-                        reviewComment: "Rejected final sign-off. Dispatched correction request to Reviewer 2."
-                    }
-                ],
+                kpi: { pendingApproval: 0, remediationVerified: 0, complianceRate: 0 },
+                historyKpis: { approved: 0, rejected: 0, pending: 0 },
+                reports: [],
+                history: [],
                 selectedReport: null,
                 selectedHistoryItem: null
             };
-
-            oData.selectedReport = oData.reports[0];
-            oData.selectedHistoryItem = oData.history[0];
             var oModel = new JSONModel(oData);
             this.getView().setModel(oModel, "escManagerModel");
+
+            var that = this;
+            Promise.all([
+                ReviewClient.listLevel1Queue(), ReviewClient.listLevel2Queue(),
+                ReviewClient.listLevel1History(), ReviewClient.listLevel2History()
+            ]).then(function (aResults) {
+                var aPending = aResults[0].concat(aResults[1]);
+                // Level 1 "Approved" entries are mid-flight (forwarded to
+                // Level 2, already counted in the pending queue above), not a
+                // closed outcome - only Level 1 rejections are terminal.
+                // Every Level 2 history entry is terminal either way (final
+                // approval or a remediation ticket - SOP 6.3.1.9).
+                var aHistory = aResults[2].filter(function (h) { return h.decision === "Rejected"; }).concat(aResults[3]);
+                aHistory.sort(function (a, b) { return new Date(b.reviewedDate) - new Date(a.reviewedDate); });
+
+                var aReports = aPending.length ? aPending : that._getFallbackReports();
+                var aHist = aHistory.length ? aHistory : that._getFallbackHistory();
+
+                var iApproved = aHist.filter(function (h) { return h.decision === "Approved"; }).length;
+                var iRejected = aHist.filter(function (h) { return h.decision === "Rejected"; }).length;
+                var iTotal = aHist.length;
+
+                oModel.setProperty("/reports", aReports);
+                oModel.setProperty("/history", aHist);
+                oModel.setProperty("/kpi", {
+                    pendingApproval: aReports.length,
+                    remediationVerified: iApproved,
+                    complianceRate: iTotal ? Math.round((iApproved / iTotal) * 1000) / 10 : 100
+                });
+                oModel.setProperty("/historyKpis", { approved: iApproved, rejected: iRejected, pending: aReports.length });
+                oModel.setProperty("/selectedReport", aReports[0] || null);
+                oModel.setProperty("/selectedHistoryItem", aHist[0] || null);
+            });
         },
 
         onSideNavToggle: function () {
@@ -181,10 +181,10 @@ sap.ui.define([
                     this.getView().getModel("escManagerModel").setProperty("/selectedReport", oContext.getObject());
                 }
             }
-            MessageToast.show(aItems.length + " final report(s) selected");
+            MessageToast.show(aItems.length + " report(s) selected");
         },
 
-        // QUICK ACTIONS
+        // READ-ONLY QUICK ACTIONS
         onViewReport: function () {
             var oReport = this._getSelectedReport();
             this.getView().getModel("escManagerModel").setProperty("/selectedReport", oReport);
@@ -201,190 +201,9 @@ sap.ui.define([
             }
         },
 
-        onApprove: function () {
-            var oReport = this._getSelectedReport();
-            oReport.workflowStatus = "Approved & Closed";
-            oReport.workflowState = "Success";
-
-            var oModel = this.getView().getModel("escManagerModel");
-            var aHistory = oModel.getProperty("/history") || [];
-            aHistory.unshift({
-                ticketId: "TCK-" + Math.floor(10000 + Math.random() * 90000),
-                reportId: oReport.reportId,
-                controlId: oReport.controlId,
-                reportName: oReport.reportName,
-                system: oReport.system,
-                decision: "Approved",
-                reviewedDate: new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' }),
-                complianceStatus: oReport.complianceStatus || "Compliant",
-                complianceState: "Success",
-                remediationStatus: "Remediated & Verified",
-                remediationState: "Success",
-                ticketStatus: "Closed",
-                ticketStatusState: "Success",
-                reviewerName: "David Lead",
-                employeeId: "EM001",
-                removedRemediatedItem: "Security Discrepancy Verified & Cleared",
-                previousValue: "Non-Compliant / Pending Signoff",
-                updatedValue: "Fully Compliant / Closed",
-                reason: "Security Team Lead final audit review completed successfully.",
-                reviewComment: "Final audit report approved by Escalation Manager."
-            });
-            oModel.setProperty("/history", aHistory);
-
-            var iHistApproved = oModel.getProperty("/historyKpis/approved") || 0;
-            oModel.setProperty("/historyKpis/approved", iHistApproved + 1);
-
-            oModel.refresh(true);
-            MessageToast.show("Final Audit Report " + oReport.reportId + " Approved successfully.");
-        },
-
-        onReject: function () {
-            var oDialog = this.byId("rejectDialog");
-            if (oDialog) {
-                oDialog.open();
-            }
-        },
-
-        onSubmitReject: function () {
-            var sReason = this.byId("inputRejectReasonArea") ? this.byId("inputRejectReasonArea").getValue() : "";
-            if (!sReason || sReason.trim() === "") {
-                MessageBox.error("Please enter a reason for rejection.");
-                return;
-            }
-
-            var oReport = this._getSelectedReport();
-            oReport.workflowStatus = "Rejected";
-            oReport.workflowState = "Error";
-
-            var oModel = this.getView().getModel("escManagerModel");
-            var aHistory = oModel.getProperty("/history") || [];
-            aHistory.unshift({
-                ticketId: "TCK-" + Math.floor(10000 + Math.random() * 90000),
-                reportId: oReport.reportId,
-                controlId: oReport.controlId,
-                reportName: oReport.reportName,
-                system: oReport.system,
-                decision: "Rejected",
-                reviewedDate: new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' }),
-                complianceStatus: "Non-Compliant",
-                complianceState: "Error",
-                remediationStatus: "Action Required",
-                remediationState: "Error",
-                ticketStatus: "Action Required",
-                ticketStatusState: "Error",
-                reviewerName: "David Lead",
-                employeeId: "EM001",
-                removedRemediatedItem: "Final Audit Sign-off Rejection",
-                previousValue: "Pending Final Approval",
-                updatedValue: "Rejected",
-                reason: sReason,
-                reviewComment: "Escalation Manager rejection: " + sReason
-            });
-            oModel.setProperty("/history", aHistory);
-
-            var iHistRejected = oModel.getProperty("/historyKpis/rejected") || 0;
-            oModel.setProperty("/historyKpis/rejected", iHistRejected + 1);
-
-            oModel.refresh(true);
-            MessageToast.show("Final Audit Report " + oReport.reportId + " Rejected.");
-            this.onCloseRejectDialog();
-        },
-
-        onCloseRejectDialog: function () {
-            var oDialog = this.byId("rejectDialog");
-            if (oDialog) {
-                oDialog.close();
-            }
-        },
-
-        onRequestCorrection: function () {
-            var oDialog = this.byId("requestCorrectionDialog");
-            if (oDialog) {
-                oDialog.open();
-            }
-        },
-
-        onSubmitRequestCorrection: function () {
-            var sNotes = this.byId("inputCorrectionNotesArea") ? this.byId("inputCorrectionNotesArea").getValue() : "";
-            var sTarget = this.byId("selectTargetReviewer") ? this.byId("selectTargetReviewer").getSelectedKey() : "REV1";
-
-            if (!sNotes || sNotes.trim() === "") {
-                MessageBox.error("Please enter correction instructions.");
-                return;
-            }
-
-            var oReport = this._getSelectedReport();
-            oReport.workflowStatus = "Correction Requested";
-            oReport.workflowState = "Warning";
-
-            var oModel = this.getView().getModel("escManagerModel");
-            var aHistory = oModel.getProperty("/history") || [];
-            aHistory.unshift({
-                ticketId: "TCK-" + Math.floor(10000 + Math.random() * 90000),
-                reportId: oReport.reportId,
-                controlId: oReport.controlId,
-                reportName: oReport.reportName,
-                system: oReport.system,
-                decision: "Correction Requested",
-                reviewedDate: new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' }),
-                complianceStatus: "Pending Correction",
-                complianceState: "Warning",
-                remediationStatus: "Correction Sent (" + sTarget + ")",
-                remediationState: "Warning",
-                ticketStatus: "In Review",
-                ticketStatusState: "Warning",
-                reviewerName: "David Lead",
-                employeeId: "EM001",
-                removedRemediatedItem: "Correction Request Dispatched",
-                previousValue: "Pending Approval",
-                updatedValue: "Revision Requested (" + sTarget + ")",
-                reason: sNotes,
-                reviewComment: "Dispatched to " + sTarget + ": " + sNotes
-            });
-            oModel.setProperty("/history", aHistory);
-            oModel.refresh(true);
-
-            MessageToast.show("Correction request dispatched to " + sTarget + " for " + oReport.reportId);
-            this.onCloseRequestCorrectionDialog();
-        },
-
-        onCloseRequestCorrectionDialog: function () {
-            var oDialog = this.byId("requestCorrectionDialog");
-            if (oDialog) {
-                oDialog.close();
-            }
-        },
-
         onExportFinalReport: function () {
             var oReport = this._getSelectedReport();
-            MessageToast.show("Exporting Final Audit Report PDF & Package for " + oReport.reportId);
-        },
-
-        onCloseAudit: function () {
-            var oDialog = this.byId("closeAuditDialog");
-            if (oDialog) {
-                oDialog.open();
-            }
-        },
-
-        onSubmitCloseAudit: function () {
-            var oReport = this._getSelectedReport();
-            oReport.workflowStatus = "Approved & Closed";
-            oReport.workflowState = "Success";
-            oReport.remediationStatus = "Verified & Closed";
-
-            var oModel = this.getView().getModel("escManagerModel");
-            oModel.refresh(true);
-            MessageToast.show("Audit Workflow Closed & Certificate Generated for " + oReport.reportId);
-            this.onCloseCloseAuditDialog();
-        },
-
-        onCloseCloseAuditDialog: function () {
-            var oDialog = this.byId("closeAuditDialog");
-            if (oDialog) {
-                oDialog.close();
-            }
+            MessageToast.show("Exporting Deviation Monitoring Report for " + oReport.reportId);
         },
 
         _parseDateString: function (vDate) {
@@ -539,7 +358,7 @@ sap.ui.define([
             }
         },
 
-        // SEARCH & FILTER HANDLERS (ESCALATION QUEUE LIVE FILTER)
+        // SEARCH & FILTER HANDLERS (PENDING DEVIATIONS LIVE FILTER)
         onSearchReports: function () {
             var sSearchText = this.byId("searchEscalation") ? this.byId("searchEscalation").getValue() : "";
             var sReportId = this.byId("inputReportIdFilterEsc") ? this.byId("inputReportIdFilterEsc").getValue() : "";
@@ -586,7 +405,7 @@ sap.ui.define([
             if (this.byId("selectSystemFilterEsc")) { this.byId("selectSystemFilterEsc").setSelectedKey("All"); }
             if (this.byId("selectStatusFilterEsc")) { this.byId("selectStatusFilterEsc").setSelectedKey("All"); }
             this.onSearchReports();
-            MessageToast.show("Escalation Manager Filters Reset.");
+            MessageToast.show("Filters Reset.");
         },
 
         onFilterSystem: function () {

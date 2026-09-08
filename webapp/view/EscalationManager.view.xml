@@ -16,8 +16,8 @@
         <tnt:sideContent>
             <tnt:SideNavigation id="escSideNavigation" expanded="true" selectedKey="Queue" itemSelect="onSideNavItemSelect">
                 <tnt:NavigationList>
-                    <tnt:NavigationListItem text="Escalation Queue" icon="sap-icon://table-view" key="Queue" select="onSelectTabQueue"/>
-                    <tnt:NavigationListItem text="Reviewer History" icon="sap-icon://history" key="History" select="onSelectTabHistory"/>
+                    <tnt:NavigationListItem text="Pending Deviations" icon="sap-icon://table-view" key="Queue" select="onSelectTabQueue"/>
+                    <tnt:NavigationListItem text="Review History" icon="sap-icon://history" key="History" select="onSelectTabHistory"/>
                 </tnt:NavigationList>
 
                 <tnt:fixedItem>
@@ -49,7 +49,7 @@
                                     <Avatar displaySize="M" initials="EM" backgroundColor="Accent6" class="sapUiSmallMarginEnd"/>
                                     <VBox>
                                         <Title text="Security Team Lead" level="H3"/>
-                                        <Text text="Escalation Manager - Final Sign-off"/>
+                                        <Text text="Escalation Manager - Review Monitoring"/>
                                         <ObjectStatus text="Active Manager" state="Success"/>
                                     </VBox>
                                 </HBox>
@@ -61,7 +61,7 @@
                                     <Label text="Email" design="Bold" class="sapUiTinyMarginTop"/>
                                     <Text text="security.lead@xyra.ai"/>
                                     <Label text="Responsibilities" design="Bold" class="sapUiTinyMarginTop"/>
-                                    <Text text="Final report review, verify evidence &amp; remediation, resolve discrepancies, approve/reject, close audit workflow."/>
+                                    <Text text="Monitor deviations pending review at Level 1 &amp; Level 2, track SLA timelines, and review closed decisions and remediation tickets."/>
                                 </VBox>
                                 <HBox justifyContent="End" class="sapUiSmallMarginTop">
                                     <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
@@ -115,62 +115,6 @@
                         </endButton>
                     </Dialog>
 
-                    <!-- REQUEST CORRECTION DIALOG -->
-                    <Dialog id="requestCorrectionDialog" title="Request Correction / Revision" contentWidth="480px">
-                        <content>
-                            <VBox class="sapUiMediumMargin">
-                                <MessageStrip text="Send correction request back to Reviewer 1 or Reviewer 2." type="Warning" showIcon="true" class="sapUiSmallMarginBottom"/>
-                                <Label text="Target Reviewer" required="true"/>
-                                <Select id="selectTargetReviewer" width="100%" class="sapUiSmallMarginBottom">
-                                    <core:Item key="REV1" text="Reviewer 1 (Basis Team)"/>
-                                    <core:Item key="REV2" text="Reviewer 2 (Basis Manager)"/>
-                                </Select>
-                                <Label text="Correction Instructions" required="true"/>
-                                <TextArea id="inputCorrectionNotesArea" rows="4" width="100%" placeholder="Specify required corrections, evidence re-validation, or log checks..." class="sapUiSmallMarginBottom"/>
-                            </VBox>
-                        </content>
-                        <beginButton>
-                            <Button text="Dispatch Request" type="Emphasized" icon="sap-icon://paper-plane" press="onSubmitRequestCorrection"/>
-                        </beginButton>
-                        <endButton>
-                            <Button text="Cancel" press="onCloseRequestCorrectionDialog"/>
-                        </endButton>
-                    </Dialog>
-
-                    <!-- REJECT DIALOG -->
-                    <Dialog id="rejectDialog" title="Reject Final Audit Report" contentWidth="480px">
-                        <content>
-                            <VBox class="sapUiMediumMargin">
-                                <Label text="Reason for Rejection" required="true"/>
-                                <TextArea id="inputRejectReasonArea" rows="4" width="100%" placeholder="Enter manager rejection justification..." class="sapUiSmallMarginBottom"/>
-                            </VBox>
-                        </content>
-                        <beginButton>
-                            <Button text="Reject Report" type="Reject" press="onSubmitReject"/>
-                        </beginButton>
-                        <endButton>
-                            <Button text="Cancel" press="onCloseRejectDialog"/>
-                        </endButton>
-                    </Dialog>
-
-                    <!-- CLOSE AUDIT DIALOG -->
-                    <Dialog id="closeAuditDialog" title="Close Audit Workflow" contentWidth="500px">
-                        <content>
-                            <VBox class="sapUiMediumMargin">
-                                <MessageStrip text="Closing this audit workflow will generate a final compliance certificate and archive all evidence files." type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
-                                <CheckBox text="Final Evidence Package Verified &amp; Signed" selected="true"/>
-                                <CheckBox text="Remediation Confirmed &amp; Validated" selected="true"/>
-                                <CheckBox text="Audit Trail Hash Checksum Sealed" selected="true"/>
-                            </VBox>
-                        </content>
-                        <beginButton>
-                            <Button text="Confirm &amp; Close Audit" type="Emphasized" icon="sap-icon://locked" press="onSubmitCloseAudit"/>
-                        </beginButton>
-                        <endButton>
-                            <Button text="Cancel" press="onCloseCloseAuditDialog"/>
-                        </endButton>
-                    </Dialog>
-
                     <!-- HISTORICAL DETAILS & REMOVED/REMEDIATED ITEM DIALOG FOR ESCALATION MANAGER HISTORY -->
                     <Dialog id="viewHistoryDetailsDialogEsc" title="Historical Decision &amp; Audit Traceability Details" contentWidth="600px">
                         <content>
@@ -185,7 +129,7 @@
                                 <Panel headerText="1. Final Decision Summary" expandable="false" class="sapUiSmallMarginBottom">
                                     <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiTinyMargin">
                                         <VBox>
-                                            <Label text="Escalation Manager Decision" design="Bold"/>
+                                            <Label text="Final Decision" design="Bold"/>
                                             <ObjectStatus text="{escManagerModel>/selectedHistoryItem/decision}" state="{= ${escManagerModel>/selectedHistoryItem/decision} === 'Approved' ? 'Success' : (${escManagerModel>/selectedHistoryItem/decision} === 'Rejected' ? 'Error' : 'Warning') }" class="sapUiTinyMarginBottom"/>
 
                                             <Label text="Current Ticket Status" design="Bold"/>
@@ -204,8 +148,8 @@
                                                 <ObjectStatus text="{escManagerModel>/selectedHistoryItem/remediationStatus}" state="{escManagerModel>/selectedHistoryItem/remediationState}"/>
                                             </HBox>
 
-                                            <Label text="Escalation Manager" design="Bold"/>
-                                            <Text text="{escManagerModel>/selectedHistoryItem/reviewerName} ({escManagerModel>/selectedHistoryItem/employeeId})"/>
+                                            <Label text="Decided By" design="Bold"/>
+                                            <Text text="{escManagerModel>/selectedHistoryItem/reviewerName}"/>
                                         </VBox>
                                     </layout:Grid>
                                 </Panel>
@@ -252,7 +196,7 @@
 
                         <VBox justifyContent="Center">
                             <Title text="XYRA – Escalation Manager Dashboard" level="H4" class="sapUiNoMargin"/>
-                            <Text text="Security Team Lead – Final Audit Review, Discrepancy Resolution &amp; Sign-off" class="textMuted sapUiNoMargin"/>
+                            <Text text="Security Team Lead – Deviation Review Monitoring &amp; SLA Oversight" class="textMuted sapUiNoMargin"/>
                         </VBox>
 
                         <ToolbarSpacer/>
@@ -267,17 +211,17 @@
 
                         <!-- BUSINESS ROLE & RESPONSIBILITIES BANNER -->
                         <MessageStrip
-                            text="Business Role: Security Team Lead / Manager | Purpose: Perform final review and approval of reports after Reviewer 2 completes technical review. | Responsibilities: Review final report, verify evidence, verify remediation, resolve discrepancies, approve or reject, and close audit workflow."
+                            text="Business Role: Security Team Lead / Manager | Purpose: Monitor the 2-level deviation review process (Reviewer 1 then Reviewer 2) for SLA compliance. | Responsibilities: Track deviations pending review at either level, review closed decisions and remediation tickets, export monitoring reports."
                             type="Information"
                             showIcon="true"
                             showCloseButton="false"
                             class="sapUiSmallMarginBottom"/>
 
-                        <!-- SLIDE 1: ESCALATION QUEUE -->
+                        <!-- SLIDE 1: PENDING DEVIATIONS (READ-ONLY MONITORING - NOT AN APPROVAL QUEUE) -->
                         <VBox id="vboxEscalationQueue" visible="true" width="100%">
 
                             <!-- FILTER BAR (WITH REAL-TIME AUTOMATIC LIVE FILTERING) -->
-                            <Panel headerText="Filter Escalation Queue" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                            <Panel headerText="Filter Pending Deviations" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
                                 <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiTinyMarginBottom">
                                     <!-- 1. Search Reports -->
                                     <VBox width="100%" class="xyraFieldGroup">
@@ -307,10 +251,7 @@
                                         <Label text="Workflow Status" class="xyraLoginLabel"/>
                                         <Select id="selectStatusFilterEsc" width="100%" change="onFilterStatus">
                                             <core:Item key="All" text="All Workflow Statuses"/>
-                                            <core:Item key="Pending Final Approval" text="Pending Final Approval"/>
-                                            <core:Item key="Approved &amp; Closed" text="Approved &amp; Closed"/>
-                                            <core:Item key="Correction Requested" text="Correction Requested"/>
-                                            <core:Item key="Rejected" text="Rejected"/>
+                                            <core:Item key="Pending Review" text="Pending Review"/>
                                         </Select>
                                     </VBox>
                                 </layout:Grid>
@@ -320,24 +261,21 @@
                                 </OverflowToolbar>
                             </Panel>
 
-                            <!-- QUICK ACTIONS TOOLBAR (EXACTLY MATCHING SPECIFIED 6 BUTTONS) -->
+                            <!-- READ-ONLY QUICK ACTIONS - no approve/reject here, the SOP's 2-level chain
+                                 decides on Reviewer1/Reviewer2's own pages, this page only monitors it -->
                             <Panel expandable="false" class="sapUiSmallMarginBottom">
                                 <headerToolbar>
                                     <OverflowToolbar>
-                                        <Title text="Escalation Manager Quick Actions" level="H4"/>
+                                        <Title text="Quick Actions" level="H4"/>
                                         <ToolbarSpacer/>
                                         <Button text="View Report" icon="sap-icon://show" press="onViewReport" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
-                                        <Button text="Approve" type="Accept" icon="sap-icon://accept" press="onApprove" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Reject" type="Reject" icon="sap-icon://decline" press="onReject" class="sapUiTinyMarginEnd"/>
-                                        <Button text="Request Correction" icon="sap-icon://undo" press="onRequestCorrection" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
-                                        <Button text="Export Final Report" icon="sap-icon://excel-attachment" press="onExportFinalReport" class="xyraQuickActionBtn sapUiTinyMarginEnd"/>
-                                        <Button text="Close Audit" type="Emphasized" icon="sap-icon://locked" press="onCloseAudit"/>
+                                        <Button text="Export Monitoring Report" icon="sap-icon://excel-attachment" press="onExportFinalReport" class="xyraQuickActionBtn"/>
                                     </OverflowToolbar>
                                 </headerToolbar>
                             </Panel>
 
                             <!-- MAIN RESPONSIVE SAPUI5 TABLE -->
-                            <Panel headerText="Final Audit Approval Queue" expandable="false" class="sapUiSmallMarginBottom">
+                            <Panel headerText="Pending Deviations (Level 1 &amp; Level 2)" expandable="false" class="sapUiSmallMarginBottom">
                                 <Table
                                     id="escalationTable"
                                     items="{escManagerModel>/reports}"
@@ -374,13 +312,13 @@
 
                         </VBox>
 
-                        <!-- SLIDE 2: REVIEWER HISTORY (NEW PAGE FOR ESCALATION MANAGER) -->
+                        <!-- SLIDE 2: REVIEW HISTORY (READ-ONLY, ACROSS BOTH LEVELS) -->
                         <VBox id="vboxEscalationHistory" visible="false" width="100%">
 
                             <OverflowToolbar class="sapUiSmallMarginBottom">
-                                <Title text="Escalation Manager Reviewer History &amp; Audit Traceability" level="H4"/>
+                                <Title text="Review History &amp; Audit Traceability" level="H4"/>
                                 <ToolbarSpacer/>
-                                <Text text="Immutable final sign-off audit logs &amp; remediation verification history" class="textMuted"/>
+                                <Text text="Immutable Level 1 &amp; Level 2 decision logs &amp; remediation ticket history" class="textMuted"/>
                             </OverflowToolbar>
 
                             <!-- COMPACT SUMMARY CARDS -->
@@ -404,29 +342,29 @@
                                 <VBox width="31%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #ef4444; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
                                     <HBox justifyContent="SpaceBetween" alignItems="Center">
                                         <VBox>
-                                            <Text text="Rejected / Returned" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Text text="Rejected / Ticketed" class="textMuted fontSizeSmall fontWeightBold"/>
                                             <Title text="{escManagerModel>/historyKpis/rejected}" level="H2" class="sapUiTinyMarginTop textDanger fontWeightBold"/>
                                         </VBox>
                                         <Avatar src="sap-icon://sys-cancel-2" backgroundColor="Accent1" displaySize="M"/>
                                     </HBox>
                                     <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
-                                        <ObjectStatus text="🔴 Correction Requested" state="Error"/>
-                                        <Text text="Dispatched to Reviewers" class="fontSizeSmall textDanger fontWeightBold"/>
+                                        <ObjectStatus text="🔴 Remediation Ticket Created" state="Error"/>
+                                        <Text text="Sent to Ticketing System" class="fontSizeSmall textDanger fontWeightBold"/>
                                     </HBox>
                                 </VBox>
 
-                                <!-- PENDING SIGN-OFF CARD -->
+                                <!-- PENDING REVIEW CARD -->
                                 <VBox width="31%" class="sapUiSmallMarginBottom xyraKpiCardContainer" style="background:#f8fafc; border-radius:8px; border-left:4px solid #3b82f6; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
                                     <HBox justifyContent="SpaceBetween" alignItems="Center">
                                         <VBox>
-                                            <Text text="Pending Final Sign-off" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Text text="Pending Review (L1 &amp; L2)" class="textMuted fontSizeSmall fontWeightBold"/>
                                             <Title text="{escManagerModel>/historyKpis/pending}" level="H2" class="sapUiTinyMarginTop textPrimary fontWeightBold"/>
                                         </VBox>
                                         <Avatar src="sap-icon://history" backgroundColor="Accent6" displaySize="M"/>
                                     </HBox>
                                     <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
-                                        <ObjectStatus text="⚙ In Final Review" state="Information"/>
-                                        <Text text="Awaiting Security Lead" class="fontSizeSmall textMuted"/>
+                                        <ObjectStatus text="⚙ Awaiting Decision" state="Information"/>
+                                        <Text text="Reviewer 1 or Reviewer 2" class="fontSizeSmall textMuted"/>
                                     </HBox>
                                 </VBox>
                             </HBox>
@@ -457,17 +395,14 @@
                                             <core:Item key="All" text="All Decisions"/>
                                             <core:Item key="Approved" text="Approved"/>
                                             <core:Item key="Rejected" text="Rejected"/>
-                                            <core:Item key="Correction Requested" text="Correction Requested"/>
                                         </Select>
                                     </VBox>
                                     <VBox width="100%" class="xyraFieldGroup">
                                         <Label text="Ticket Status" class="xyraLoginLabel"/>
                                         <Select id="selectHistoryStatusEsc" width="100%" change="onSearchHistory">
                                             <core:Item key="All" text="All Ticket Statuses"/>
-                                            <core:Item key="Closed" text="Closed"/>
-                                            <core:Item key="In Review" text="In Review"/>
-                                            <core:Item key="Pending Signoff" text="Pending Signoff"/>
-                                            <core:Item key="Action Required" text="Action Required"/>
+                                            <core:Item key="Closed - Approved" text="Closed - Approved"/>
+                                            <core:Item key="Remediation Required" text="Remediation Required"/>
                                         </Select>
                                     </VBox>
                                     <VBox width="100%" class="xyraFieldGroup">

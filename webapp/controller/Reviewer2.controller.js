@@ -7,7 +7,8 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "xyraweb/model/GlobalLoading",
-    "xyraweb/model/NotificationPopover"
+    "xyraweb/model/NotificationPopover",
+    "xyraweb/service/ReviewClient"
 ], function (
     Controller,
     UIComponent,
@@ -17,7 +18,8 @@ sap.ui.define([
     MessageToast,
     MessageBox,
     GlobalLoading,
-    NotificationPopover
+    NotificationPopover,
+    ReviewClient
 ) {
     "use strict";
 
@@ -27,140 +29,91 @@ sap.ui.define([
             this._loadReviewer2Data();
         },
 
+        _getFallbackReports: function () {
+            return [{
+                reportId: "REP-102",
+                reportName: "HANA Audit Logging Parameter Check",
+                controlId: "LOG28",
+                controlName: "SAP HANA Security Audit Logging",
+                businessProcess: "Database Administration",
+                riskLevel: "Medium Risk",
+                riskState: "Warning",
+                system: "HDB-10 (HANA)",
+                generatedDate: "03-Aug-2026",
+                reviewer1Decision: "Approved",
+                rev1Date: "03-Aug-2026 11:15 AM",
+                rev1Signature: "John Basis (EMP-88492) • Verified (SHA-256)",
+                rev1Comments: "All 12 HANA audit policies validated against SCS policy.",
+                rev1RcaText: "Root Cause: Routine audit policy check completed with zero deviations.",
+                evidenceStatus: "Verified",
+                reviewer2Status: "Pending Technical Review",
+                reviewer2State: "Warning",
+                rev2RcaText: "",
+                reviewer2Name: "Sarah Manager",
+                employeeId: "MGR-99021",
+                decisionDate: "",
+                sigStatus: "Verified (SHA-256)",
+                elecSigConfirmed: true,
+                evidenceFiles: [
+                    { title: "HANA DB Audit Policy Dump", description: "SYSTEMDB AUDIT_LOG export", status: "Verified" }
+                ],
+                reviewHistory: [
+                    { action: "Level 1 Approval", comments: "Forwarded to Reviewer 2 by John Basis", statusTimeline: "Completed (03-Aug 11:15 AM)" },
+                    { action: "Level 2 Review", comments: "Assigned to Manager Exception Reviewer", statusTimeline: "In Progress" }
+                ]
+            }];
+        },
+
+        _getFallbackHistory: function () {
+            return [{
+                reportId: "REP-105",
+                reportName: "NetWeaver Parameter Audit",
+                controlId: "PAR04",
+                system: "PRD-100 (Java)",
+                decision: "Approved",
+                actionDate: "03-Aug-2026",
+                ticketStatus: "Closed - Approved",
+                ticketStatusState: "Success",
+                ticketId: "TCK-90412",
+                reviewer2Name: "Sarah Manager",
+                employeeId: "MGR-99021",
+                rev1RcaText: "Lock parameter adjusted to align with updated password policy.",
+                rcaText: "Manager Validation: Password lockout policy change reviewed and approved. Final sign-off - closed."
+            }];
+        },
+
         _loadReviewer2Data: function () {
             var oData = {
-                kpi: {
-                    pendingReviews: 12,
-                    approvedToday: 48,
-                    rejectedToday: 1,
-                    slaDue: 2
-                },
-                historyKpis: {
-                    approved: 48,
-                    rejected: 1,
-                    pending: 12
-                },
-                reports: [
-                    {
-                        reportId: "REP-102",
-                        reportName: "HANA Audit Logging Parameter Check",
-                        controlId: "LOG28",
-                        controlName: "SAP HANA Security Audit Logging",
-                        businessProcess: "Database Administration",
-                        riskLevel: "Medium Risk",
-                        riskState: "Warning",
-                        system: "HDB-10 (HANA)",
-                        generatedDate: "03-Aug-2026",
-                        reviewer1Decision: "Approved",
-                        rev1Date: "03-Aug-2026 11:15 AM",
-                        rev1Signature: "John Basis (EMP-88492) • Verified (SHA-256)",
-                        rev1Comments: "All 12 HANA audit policies validated against SCS policy.",
-                        rev1RcaText: "Root Cause: Routine audit policy check completed with zero deviations.",
-                        evidenceStatus: "Verified",
-                        reviewer2Status: "Pending Technical Review",
-                        reviewer2State: "Warning",
-                        rev2RcaText: "Manager Validation: Evaluated HANA audit log parameter configuration against enterprise security policy. Confirmed compliant.",
-                        reviewer2Name: "Sarah Manager",
-                        employeeId: "MGR-99021",
-                        decisionDate: "04-Aug-2026",
-                        sigStatus: "Verified (SHA-256)",
-                        elecSigConfirmed: true,
-                        evidenceFiles: [
-                            { title: "HANA DB Audit Policy Dump", description: "SYSTEMDB AUDIT_LOG export", status: "Verified" }
-                        ],
-                        reviewHistory: [
-                            { action: "Level 1 Approval", comments: "Forwarded to Reviewer 2 by John Basis", statusTimeline: "Completed (03-Aug 11:15 AM)" },
-                            { action: "Level 2 Review", comments: "Assigned to Manager Exception Reviewer", statusTimeline: "In Progress" }
-                        ]
-                    },
-                    {
-                        reportId: "REP-105",
-                        reportName: "NetWeaver Parameter Audit",
-                        controlId: "PAR04",
-                        controlName: "SAP Kernel Parameter Verification",
-                        businessProcess: "System Parameter Governance",
-                        riskLevel: "High Risk",
-                        riskState: "Error",
-                        system: "PRD-100 (Java)",
-                        generatedDate: "02-Aug-2026",
-                        reviewer1Decision: "Approved",
-                        rev1Date: "03-Aug-2026 09:30 AM",
-                        rev1Signature: "John Basis (EMP-88492) • Verified (SHA-256)",
-                        rev1Comments: "Parameter login/fails_to_user_lock set to 3.",
-                        rev1RcaText: "Root Cause: Lock parameter adjusted to align with updated password policy.",
-                        evidenceStatus: "Verified",
-                        reviewer2Status: "Approved & Forwarded",
-                        reviewer2State: "Success",
-                        rev2RcaText: "Manager Validation: Password lockout policy change reviewed and approved.",
-                        reviewer2Name: "Sarah Manager",
-                        employeeId: "MGR-99021",
-                        decisionDate: "03-Aug-2026",
-                        sigStatus: "Verified (SHA-256)",
-                        elecSigConfirmed: true,
-                        evidenceFiles: [
-                            { title: "login_fails_lock.trc", description: "Kernel trace log", status: "Verified" }
-                        ],
-                        reviewHistory: [
-                            { action: "Level 1 Approval", comments: "Approved by Reviewer 1", statusTimeline: "Completed" },
-                            { action: "Level 2 Approval", comments: "Forwarded to Escalation Manager", statusTimeline: "Approved" }
-                        ]
-                    }
-                ],
-                history: [
-                    {
-                        reportId: "REP-105",
-                        reportName: "NetWeaver Parameter Audit",
-                        controlId: "PAR04",
-                        system: "PRD-100 (Java)",
-                        decision: "Approved",
-                        actionDate: "03-Aug-2026",
-                        ticketStatus: "Escalated",
-                        ticketStatusState: "Success",
-                        ticketId: "TCK-90412",
-                        reviewer2Name: "Sarah Manager",
-                        employeeId: "MGR-99021",
-                        rev1RcaText: "Lock parameter adjusted to align with updated password policy.",
-                        rcaText: "Manager Validation: Password lockout policy change reviewed and approved. Forwarded to Escalation Manager."
-                    },
-                    {
-                        reportId: "REP-099",
-                        reportName: "HANA Privileged User Audit",
-                        controlId: "SEC14",
-                        system: "HDB-20 (HANA)",
-                        decision: "Rejected",
-                        actionDate: "01-Aug-2026",
-                        ticketStatus: "Returned",
-                        ticketStatusState: "Error",
-                        ticketId: "TCK-89201",
-                        reviewer2Name: "Sarah Manager",
-                        employeeId: "MGR-99021",
-                        rev1RcaText: "User assigned temporary elevated DB admin privileges.",
-                        rcaText: "Manager Rejection: Emergency change ticket ticket reference missing. Returned to Reviewer 1 for remediation."
-                    },
-                    {
-                        reportId: "REP-094",
-                        reportName: "Java Audit Buffer Retention",
-                        controlId: "LOG08",
-                        system: "QAS-200 (Java)",
-                        decision: "Additional Evidence Requested",
-                        actionDate: "30-Jul-2026",
-                        ticketStatus: "Action Required",
-                        ticketStatusState: "Warning",
-                        ticketId: "TCK-88745",
-                        reviewer2Name: "Sarah Manager",
-                        employeeId: "MGR-99021",
-                        rev1RcaText: "Log retention updated to 90 days.",
-                        rcaText: "Additional Evidence Requested: Requested raw NWA log file export for verification."
-                    }
-                ],
+                kpi: { pendingReviews: 0, approvedToday: 0, rejectedToday: 0, slaDue: 0 },
+                historyKpis: { approved: 0, rejected: 0, pending: 0 },
+                reports: [],
+                history: [],
                 selectedReport: null,
                 selectedHistoryItem: null
             };
-
-            oData.selectedReport = oData.reports[0];
-            oData.selectedHistoryItem = oData.history[0];
             var oModel = new JSONModel(oData);
             this.getView().setModel(oModel, "reviewer2Model");
+
+            var that = this;
+            Promise.all([ReviewClient.listLevel2Queue(), ReviewClient.listLevel2History()]).then(function (aResults) {
+                var aReports = aResults[0].length ? aResults[0] : that._getFallbackReports();
+                var aHistory = aResults[1].length ? aResults[1] : that._getFallbackHistory();
+
+                var sToday = new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' });
+                var iApproved = aHistory.filter(function (h) { return h.decision === "Approved" && h.reviewedDate === sToday; }).length;
+                var iRejected = aHistory.filter(function (h) { return h.decision === "Rejected" && h.reviewedDate === sToday; }).length;
+
+                oModel.setProperty("/reports", aReports);
+                oModel.setProperty("/history", aHistory);
+                oModel.setProperty("/kpi", { pendingReviews: aReports.length, approvedToday: iApproved, rejectedToday: iRejected, slaDue: 0 });
+                oModel.setProperty("/historyKpis", {
+                    approved: aHistory.filter(function (h) { return h.decision === "Approved"; }).length,
+                    rejected: aHistory.filter(function (h) { return h.decision === "Rejected"; }).length,
+                    pending: aReports.length
+                });
+                oModel.setProperty("/selectedReport", aReports[0] || null);
+                oModel.setProperty("/selectedHistoryItem", aHistory[0] || null);
+            });
         },
 
         onSideNavToggle: function () {
@@ -393,45 +346,13 @@ sap.ui.define([
 
         onConfirmApproveForward: function () {
             var oReport = this._getSelectedReport();
-            oReport.reviewer2Status = "Approved & Forwarded";
-            oReport.reviewer2State = "Success";
-
-            if (!oReport.reviewHistory) { oReport.reviewHistory = []; }
-            oReport.reviewHistory.unshift({
-                action: "Level 2 Approval",
-                comments: oReport.rev2RcaText,
-                statusTimeline: "Forwarded to Escalation Manager (" + new Date().toLocaleTimeString() + ")"
+            var that = this;
+            ReviewClient.decideLevel2(oReport.reportId, "APPROVE", oReport.rev2RcaText).then(function (oData) {
+                if (!oData.success) { MessageBox.error(oData.message || "Could not record the decision."); return; }
+                MessageToast.show("Report " + oReport.reportId + " Approved - Final sign-off, deviation closed.");
+                that.onCloseApproveDialog();
+                that._loadReviewer2Data();
             });
-
-            var oModel = this.getView().getModel("reviewer2Model");
-            var iApproved = oModel.getProperty("/kpi/approvedToday") || 0;
-            oModel.setProperty("/kpi/approvedToday", iApproved + 1);
-
-            // Add record to Reviewer 2 History table
-            var aHistory = oModel.getProperty("/history") || [];
-            aHistory.unshift({
-                reportId: oReport.reportId,
-                reportName: oReport.reportName,
-                controlId: oReport.controlId,
-                system: oReport.system,
-                decision: "Approved",
-                actionDate: new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' }),
-                ticketStatus: "Escalated",
-                ticketStatusState: "Success",
-                ticketId: "TCK-" + Math.floor(10000 + Math.random() * 90000),
-                reviewer2Name: "Sarah Manager",
-                employeeId: "MGR-99021",
-                rev1RcaText: oReport.rev1RcaText,
-                rcaText: oReport.rev2RcaText
-            });
-            oModel.setProperty("/history", aHistory);
-
-            var iHistApproved = oModel.getProperty("/historyKpis/approved") || 0;
-            oModel.setProperty("/historyKpis/approved", iHistApproved + 1);
-
-            oModel.refresh(true);
-            MessageToast.show("Report " + oReport.reportId + " Approved & Forwarded to Escalation Manager.");
-            this.onCloseApproveDialog();
         },
 
         onCloseApproveDialog: function () {
@@ -463,45 +384,13 @@ sap.ui.define([
 
         onSubmitReject: function () {
             var oReport = this._getSelectedReport();
-            oReport.reviewer2Status = "Returned to Reviewer 1";
-            oReport.reviewer2State = "Error";
-
-            if (!oReport.reviewHistory) { oReport.reviewHistory = []; }
-            oReport.reviewHistory.unshift({
-                action: "Level 2 Rejection",
-                comments: oReport.rev2RcaText,
-                statusTimeline: "Returned to Reviewer 1 (" + new Date().toLocaleTimeString() + ")"
+            var that = this;
+            ReviewClient.decideLevel2(oReport.reportId, "REMEDIATE", oReport.rev2RcaText).then(function (oData) {
+                if (!oData.success) { MessageBox.error(oData.message || "Could not record the decision."); return; }
+                MessageToast.show("Report " + oReport.reportId + " Rejected — Remediation ticket " + oData.ticketNumber + " created.");
+                that.onCloseRejectDialog();
+                that._loadReviewer2Data();
             });
-
-            var oModel = this.getView().getModel("reviewer2Model");
-            var iRejected = oModel.getProperty("/kpi/rejectedToday") || 0;
-            oModel.setProperty("/kpi/rejectedToday", iRejected + 1);
-
-            // Add record to Reviewer 2 History table
-            var aHistory = oModel.getProperty("/history") || [];
-            aHistory.unshift({
-                reportId: oReport.reportId,
-                reportName: oReport.reportName,
-                controlId: oReport.controlId,
-                system: oReport.system,
-                decision: "Rejected",
-                actionDate: new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' }),
-                ticketStatus: "Returned",
-                ticketStatusState: "Error",
-                ticketId: "TCK-" + Math.floor(10000 + Math.random() * 90000),
-                reviewer2Name: "Sarah Manager",
-                employeeId: "MGR-99021",
-                rev1RcaText: oReport.rev1RcaText,
-                rcaText: oReport.rev2RcaText
-            });
-            oModel.setProperty("/history", aHistory);
-
-            var iHistRejected = oModel.getProperty("/historyKpis/rejected") || 0;
-            oModel.setProperty("/historyKpis/rejected", iHistRejected + 1);
-
-            oModel.refresh(true);
-            MessageToast.show("Report " + oReport.reportId + " Rejected & Returned to Reviewer 1.");
-            this.onCloseRejectDialog();
         },
 
         onCloseRejectDialog: function () {
