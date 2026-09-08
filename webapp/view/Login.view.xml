@@ -8,140 +8,161 @@
         id="loginPage"
         showHeader="false"
         enableScrolling="false"
-        class="sapUiNoContentPadding">
+        class="sapUiNoContentPadding xyraLoginPageBg">
 
         <content>
 
             <HBox fitContainer="true" renderType="Div" class="xyraLoginSplit">
 
-            <FlexBox
-                id="loginContainer"
-                fitContainer="true"
-                justifyContent="Center"
-                alignItems="Center"
-                direction="Column"
-                renderType="Div"
-                class="xyraLoginBg xyraLoginPane">
-
-                <VBox id="_IDGenVBox"
-                    width="100%"
-                    alignItems="Stretch"
-                    class="xyraLoginCard">
-
-                    <Image src="img/logo.png" alt="Xyra" class="xyraLoginLogo"/>
-
-                    <Title id="_IDGenTitle"
-                        text="Welcome back"
-                        level="H2"
-                        textAlign="Begin"
-                        width="100%"
-                        class="xyraLoginTitle"/>
-
-                    <Text id="_IDGenText"
-                        text="Sign in to continue to Xyra Control Monitoring"
-                        textAlign="Begin"
-                        width="100%"
-                        wrapping="true"
-                        class="xyraLoginSubtitle"/>
-
-                    <Label id="_IDGenLabel"
-                        text="Persona"
-                        required="true"
-                        class="xyraLoginLabel"/>
-
-                    <Select
-                        id="role"
-                        width="100%"
-                        change="onRoleChange"
-                        class="xyraLoginField">
-
-                        <items>
-                            <core:Item id="_IDGenItem" key="" text="-- Select Persona --"/>
-                            <core:Item id="_IDGenItem1" key="ADMIN" text="Admin"/>
-                            <core:Item id="_IDGenItem2" key="ACM" text="Escalation Manager"/>
-                            <core:Item id="_IDGenItem3" key="REV1" text="Reviewer 1"/>
-                            <core:Item id="_IDGenItem4" key="REV2" text="Reviewer 2"/>
-
-                            <core:Item id="_IDGenItem6" key="AUDITOR" text="Auditor"/>
-                        </items>
-
-                    </Select>
-
-                    <Label id="_IDGenLabel1"
-                        text="Email"
-                        required="true"
-                        class="xyraLoginLabel"/>
-
-                    <Input
-                        id="username"
-                        width="100%"
-                        type="Email"
-                        placeholder="Enter Email"
-                        liveChange="onEmailLiveChange"
-                        submit="onLogin"
-                        class="xyraLoginField"/>
-
-                    <Button id="_IDGenButton"
-                        text="Sign In"
-                        type="Emphasized"
-                        width="100%"
-                        press="onLogin"
-                        class="xyraLoginBtn"/>
-
-                    <VBox id="_IDGenVBox1"
-                        width="100%"
-                        alignItems="Center"
-                        class="xyraLoginFooter">
-
-                        <Text id="_IDGenText1" text="Version 1.0.0"/>
-                        <Text id="_IDGenText2" text="© 2026 Forte Innovations"/>
-
-                    </VBox>
-
-                </VBox>
-
-            </FlexBox>
-
-            <FlexBox
-                id="xyraLoginHeroPane"
-                fitContainer="true"
-                justifyContent="Center"
-                alignItems="Center"
-                direction="Column"
-                renderType="Div"
-                class="xyraLoginHeroPane">
-
-                <!-- Slides Wrapper -->
+                <!-- Left Login Panel -->
                 <FlexBox
-                    id="xyraHeroSlidesWrapper"
+                    id="loginContainer"
                     fitContainer="true"
                     justifyContent="Center"
                     alignItems="Center"
+                    direction="Column"
                     renderType="Div"
-                    class="xyraHeroSlidesWrapper">
+                    class="xyraLoginBg xyraLoginPane">
 
-                    <!-- Slide 1: Overview & Trend -->
-                    <VBox id="xyraSlide1" class="xyraHeroSlide xyraHeroSlideActive" width="100%" alignItems="Center">
-                        <FlexBox class="xyraHeroShowcase" justifyContent="Center" alignItems="Center" width="100%">
-                            <Image src="img/login-slide1.png?v=20260904_30" alt="Xyra Overview Dashboard" class="xyraHeroImg" densityAware="false"/>
-                        </FlexBox>
-                    </VBox>
+                    <VBox id="_IDGenVBox"
+                        width="100%"
+                        alignItems="Stretch"
+                        class="xyraLoginCard">
 
-                    <!-- Slide 2: SOX Compliance -->
-                    <VBox id="xyraSlide2" class="xyraHeroSlide" width="100%" alignItems="Center">
-                        <FlexBox class="xyraHeroShowcase" justifyContent="Center" alignItems="Center" width="100%">
-                            <Image src="img/login-slide2.png?v=20260904_30" alt="Xyra SOX Compliance" class="xyraHeroImg" densityAware="false"/>
-                        </FlexBox>
+                        <Image src="img/logo.png" alt="Xyra" class="xyraLoginLogo"/>
+
+                        <VBox class="xyraLoginHeaderGroup">
+                            <Title id="_IDGenTitle"
+                                text="Welcome back"
+                                level="H2"
+                                textAlign="Begin"
+                                width="100%"
+                                class="xyraLoginTitle"/>
+
+                            <Text id="_IDGenText"
+                                text="Sign in to continue to Xyra Control Monitoring"
+                                textAlign="Begin"
+                                width="100%"
+                                wrapping="true"
+                                class="xyraLoginSubtitle"/>
+                        </VBox>
+
+                        <VBox class="xyraLoginFormGroup">
+                            <Label id="_IDGenLabel"
+                                text="Persona"
+                                required="true"
+                                class="xyraLoginLabel"/>
+
+                            <Select
+                                id="role"
+                                width="100%"
+                                change="onRoleChange"
+                                class="xyraLoginField">
+
+                                <items>
+                                    <core:Item id="_IDGenItem" key="" text="-- Select Persona --"/>
+                                    <core:Item id="_IDGenItem1" key="ADMIN" text="Admin"/>
+                                    <core:Item id="_IDGenItem2" key="ACM" text="Escalation Manager"/>
+                                    <core:Item id="_IDGenItem3" key="REV1" text="Reviewer 1"/>
+                                    <core:Item id="_IDGenItem4" key="REV2" text="Reviewer 2"/>
+                                    <core:Item id="_IDGenItem6" key="AUDITOR" text="Auditor"/>
+                                </items>
+
+                            </Select>
+                        </VBox>
+
+                        <VBox class="xyraLoginFormGroup">
+                            <Label id="_IDGenLabel1"
+                                text="Email"
+                                required="true"
+                                class="xyraLoginLabel"/>
+
+                            <Input
+                                id="username"
+                                width="100%"
+                                type="Email"
+                                placeholder="Enter Email"
+                                liveChange="onEmailLiveChange"
+                                submit="onLogin"
+                                class="xyraLoginField"/>
+                        </VBox>
+
+                        <CheckBox
+                            id="_IDGenCheckBox"
+                            text="Remember Me"
+                            class="xyraLoginCheckbox"/>
+
+                        <Button id="_IDGenButton"
+                            text="Sign In"
+                            type="Emphasized"
+                            width="100%"
+                            press="onLogin"
+                            class="xyraLoginBtn"/>
+
+                        <VBox id="_IDGenVBox1"
+                            width="100%"
+                            alignItems="Center"
+                            class="xyraLoginFooter">
+
+                            <Text id="_IDGenText1" text="Version 1.0.0"/>
+                            <Text id="_IDGenText2" text="© 2026 Forte Innovations"/>
+
+                        </VBox>
+
                     </VBox>
 
                 </FlexBox>
 
-                <!-- Top Right Circular Slide Indicator Dots -->
-                <core:HTML
-                    id="xyraSlideIndicatorsHtml"
-                    content='&lt;div class="xyraHeroIndicators" id="xyraHeroIndicators"&gt;&lt;div class="xyraHeroBar xyraHeroBarActive" id="xyraHeroBar1" title="Slide 1: Overview"&gt;&lt;/div&gt;&lt;div class="xyraHeroBar" id="xyraHeroBar2" title="Slide 2: SOX Compliance"&gt;&lt;/div&gt;&lt;/div&gt;' />
+                <!-- Right Visual Slide Panel -->
+                <FlexBox
+                    id="xyraLoginHeroPane"
+                    fitContainer="true"
+                    justifyContent="Center"
+                    alignItems="Center"
+                    direction="Column"
+                    renderType="Div"
+                    class="xyraLoginHeroPane">
 
-            </FlexBox>
+                    <!-- Background Vesper-Style Curved Decorative Overlay -->
+                    <core:HTML content='&lt;div class="xyraHeroCurveOverlay"&gt;&lt;svg class="xyraHeroSvgWave" viewBox="0 0 500 500" preserveAspectRatio="none"&gt;&lt;path d="M0,0 C150,180 350,120 500,320 L500,0 Z" fill="rgba(0,40,140,0.18)"/&gt;&lt;path d="M0,200 C200,350 300,180 500,450 L500,500 L0,500 Z" fill="rgba(0,30,110,0.15)"/&gt;&lt;/svg&gt;&lt;/div&gt;' />
+
+                    <!-- Slides Wrapper -->
+                    <FlexBox
+                        id="xyraHeroSlidesWrapper"
+                        fitContainer="true"
+                        justifyContent="Center"
+                        alignItems="Center"
+                        renderType="Div"
+                        class="xyraHeroSlidesWrapper">
+
+                        <!-- Slide 1: AI-Powered Control Monitoring -->
+                        <VBox id="xyraSlide1" class="xyraHeroSlide xyraHeroSlideActive" width="100%">
+                            <VBox class="xyraHeroTextSection">
+                                <core:HTML content='&lt;div class="xyraHeroBrandBadge"&gt;&lt;span class="xyraHeroBrandDot"&gt;✦&lt;/span&gt;&lt;span class="xyraHeroBrandText"&gt;XYRA ENTERPRISE&lt;/span&gt;&lt;/div&gt;' />
+                                <Title text="AI-Powered Next-Gen Control Monitoring" level="H1" class="xyraSlideH1"/>
+                                <Text text="Smarter Monitoring. Intelligent Control. Next-Level Security." class="xyraSlideH2"/>
+                            </VBox>
+                            <core:HTML content='&lt;div class="xyraHeroShowcase"&gt;&lt;img src="img/xyra-tablet-slide1.png" alt="XYRA AI Control Monitoring Tablet" class="xyraHeroTabletImg xyraTabletSlide1" /&gt;&lt;/div&gt;' />
+                        </VBox>
+
+                        <!-- Slide 2: AI-Powered SOX Monitoring -->
+                        <VBox id="xyraSlide2" class="xyraHeroSlide" width="100%">
+                            <VBox class="xyraHeroTextSection">
+                                <Title text="AI-Powered SOX Monitoring" level="H1" class="xyraSlideH1"/>
+                                <Text text="Monitor controls smarter, detect risks faster, and stay audit-ready." class="xyraSlideH2"/>
+                                <core:HTML content='&lt;div class="xyraHeroPartnerRow"&gt;&lt;span class="xyraHeroPartnerBadge"&gt;SAP S/4HANA&lt;/span&gt;&lt;span class="xyraHeroPartnerBadge"&gt;SOX 404&lt;/span&gt;&lt;span class="xyraHeroPartnerBadge"&gt;ISO 27001&lt;/span&gt;&lt;span class="xyraHeroPartnerBadge"&gt;SOC 2&lt;/span&gt;&lt;/div&gt;' />
+                            </VBox>
+                            <core:HTML content='&lt;div class="xyraHeroShowcase"&gt;&lt;img src="img/xyra-tablet-slide2.png" alt="XYRA SOX Compliance Tablet" class="xyraHeroTabletImg xyraTabletSlide2" /&gt;&lt;/div&gt;' />
+                        </VBox>
+
+                    </FlexBox>
+
+                    <!-- Bottom Right Slide Indicator Dots -->
+                    <core:HTML
+                        id="xyraSlideIndicatorsHtml"
+                        content='&lt;div class="xyraHeroIndicators" id="xyraHeroIndicators"&gt;&lt;div class="xyraHeroBar xyraHeroBarActive" id="xyraHeroBar1" title="Slide 1: Overview"&gt;&lt;/div&gt;&lt;div class="xyraHeroBar" id="xyraHeroBar2" title="Slide 2: SOX Compliance"&gt;&lt;/div&gt;&lt;/div&gt;' />
+
+                </FlexBox>
 
             </HBox>
 

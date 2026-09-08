@@ -1220,202 +1220,615 @@ textarea.sapMTextAreaInner {
   margin-bottom: 1.5rem !important;
 }
 
-/* ===== Modern Enterprise Login Page ===== */
+/* ===== Modern Enterprise Split Login Page ===== */
+
+.xyraLoginPageBg {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
 
 .xyraLoginSplit {
-  height: 100% !important;
-  width: 100% !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  background-color: #ffffff !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
   display: flex !important;
   flex-direction: row !important;
-  overflow: hidden !important;
-  background-color: #ffffff !important;
-}
-
-.xyraLoginPane {
-  flex: 0 0 35% !important;
-  width: 35% !important;
-  max-width: 38% !important;
-  min-width: 340px !important;
-  height: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  padding: clamp(1.5rem, 3vh, 2.5rem) clamp(1.5rem, 2.5vw, 3rem) !important;
-  box-sizing: border-box !important;
-  background-color: #ffffff !important;
-  border-right: 1px solid #edf2f7 !important;
-  position: relative !important;
-  z-index: 2 !important;
-  box-shadow: 4px 0 24px rgba(15, 23, 42, 0.04) !important;
-}
-
-.xyraLoginHeroPane {
-  flex: 0 0 65% !important;
-  width: 65% !important;
-  height: 100% !important;
-  background: linear-gradient(135deg, #f0e5fc 0%, #ebe0fa 50%, #f8f2fe 100%) !important;
-  background-color: #ede2fc !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
+  align-items: stretch !important;
+  margin: 0 !important;
   padding: 0 !important;
   box-sizing: border-box !important;
-  overflow: hidden !important;
-  position: relative !important;
-  z-index: 1 !important;
 }
 
-/* Slides Wrapper - holds stacked slides */
+/* Left Login Pane (46%) */
+.xyraLoginPane {
+  flex: 0 0 46% !important;
+  width: 46% !important;
+  max-width: 46% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: clamp(1.5rem, 4vh, 3.5rem) clamp(2rem, 4vw, 4.5rem) !important;
+  box-sizing: border-box !important;
+  background-color: #ffffff !important;
+  border-right: none !important;
+  position: relative !important;
+  z-index: 2 !important;
+  overflow: hidden !important;
+}
+
+.xyraLoginCard {
+  width: 100% !important;
+  max-width: 380px !important;
+  height: 100% !important;
+  max-height: 560px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+.xyraLoginLogo {
+  display: block !important;
+  width: 105px !important;
+  height: auto !important;
+  object-fit: contain !important;
+  margin-bottom: clamp(1rem, 2.5vh, 1.75rem) !important;
+}
+
+.xyraLoginHeaderGroup {
+  margin-bottom: clamp(1rem, 2vh, 1.35rem) !important;
+}
+
+.xyraLoginTitle {
+  color: #111827 !important;
+  font-size: clamp(1.4rem, 2vw, 1.65rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.25 !important;
+  margin: 0 0 0.35rem 0 !important;
+}
+
+.xyraLoginSubtitle {
+  color: #6b7280 !important;
+  font-size: clamp(0.825rem, 1.1vw, 0.875rem) !important;
+  line-height: 1.45 !important;
+  margin: 0 !important;
+}
+
+.xyraLoginFormGroup {
+  margin-bottom: clamp(0.75rem, 1.8vh, 1.15rem) !important;
+  width: 100% !important;
+}
+
+.xyraLoginLabel {
+  color: #374151 !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.35rem !important;
+  display: block !important;
+}
+
+/* Inputs & Selects */
+.xyraLoginCard .sapMInputBaseContentWrapper,
+.xyraLoginCard #username .sapMInputBaseContentWrapper,
+.xyraLoginCard #username.sapMInputBase > .sapMInputBaseContentWrapper,
+.xyraLoginField.sapMInputBase > .sapMInputBaseContentWrapper,
+.xyraLoginCard #role.sapMSlt,
+.xyraLoginField.sapMSelect > .sapMSlt,
+.xyraLoginField .sapMSlt {
+  border: 1.5px solid #d1d5db !important;
+  border-radius: 8px !important;
+  background-color: #ffffff !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease !important;
+}
+
+.xyraLoginCard .sapMInputBaseContentWrapper:hover,
+.xyraLoginCard #role.sapMSlt:hover,
+.xyraLoginField.sapMSelect > .sapMSlt:hover,
+.xyraLoginField .sapMSlt:hover {
+  border-color: #0052cc !important;
+  background-color: #ffffff !important;
+}
+
+.xyraLoginCard .sapMInputBaseContentWrapper:focus-within,
+.xyraLoginCard #username.sapMFocus .sapMInputBaseContentWrapper,
+.xyraLoginField.sapMInputBase > .sapMInputBaseContentWrapper:focus-within,
+.xyraLoginField.sapMSelect > .sapMSlt:focus-within,
+.xyraLoginField .sapMSltFocused {
+  border: 1.5px solid #0052cc !important;
+  border-color: #0052cc !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3.5px rgba(0, 82, 204, 0.15) !important;
+  outline: none !important;
+}
+
+.xyraLoginField .sapMSltLabel {
+  line-height: 40px !important;
+  font-size: 0.875rem !important;
+  color: #111827 !important;
+  padding-left: 14px !important;
+}
+
+.xyraLoginField .sapMSltArrow {
+  line-height: 40px !important;
+  color: #6b7280 !important;
+}
+
+.xyraLoginField input.sapMInputBaseInner {
+  font-size: 0.875rem !important;
+  color: #111827 !important;
+  padding: 0 14px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+}
+
+/* Remember Me Checkbox */
+.xyraLoginCard > .sapMFlexItem:has(> .xyraLoginCheckbox),
+.xyraLoginCard > .sapMFlexItem:has(> #_IDGenCheckBox),
+.xyraLoginCheckbox,
+.sapMCb.sapMCbHasLabel.xyraLoginCheckbox {
+  margin-top: 0.15rem !important;
+  margin-bottom: clamp(0.75rem, 1.8vh, 1.15rem) !important;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  cursor: pointer !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  min-height: 1.5rem !important;
+}
+
+.xyraLoginCheckbox .sapMCbBg {
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 4px !important;
+  border: 1.5px solid #d1d5db !important;
+  background-color: #ffffff !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.xyraLoginCheckbox:hover .sapMCbBg {
+  border-color: #0052cc !important;
+}
+
+.xyraLoginCheckbox.sapMCbMarkChecked .sapMCbBg {
+  background-color: #0052cc !important;
+  border-color: #0052cc !important;
+}
+
+.xyraLoginCheckbox .sapMCbLabel,
+.xyraLoginCheckbox span.sapMLabel {
+  color: #4b5563 !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+}
+
+/* Sign In Button */
+.xyraLoginCard .sapMBtn:has(#_IDGenButton),
+.xyraLoginCard .sapMBtn:has(.xyraLoginBtn),
+.xyraLoginBtn {
+  width: 100% !important;
+  display: block !important;
+  height: 42px !important;
+  margin-bottom: clamp(0.6rem, 1.5vh, 0.85rem) !important;
+}
+
+.xyraLoginCard .sapMBtnInner,
+.xyraLoginBtn .sapMBtnInner,
+#_IDGenButton-inner {
+  width: 100% !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  border-radius: 8px !important;
+  background: #0052cc !important;
+  background-color: #0052cc !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 0.9375rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 12px rgba(0, 82, 204, 0.25) !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.xyraLoginCard .sapMBtn:hover .sapMBtnInner,
+.xyraLoginBtn:hover .sapMBtnInner,
+#_IDGenButton:hover #_IDGenButton-inner {
+  background: #0040b3 !important;
+  background-color: #0040b3 !important;
+  box-shadow: 0 6px 18px rgba(0, 82, 204, 0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+.xyraLoginCard .sapMBtn:active .sapMBtnInner,
+.xyraLoginBtn:active .sapMBtnInner,
+#_IDGenButton:active #_IDGenButton-inner {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 6px rgba(0, 82, 204, 0.2) !important;
+}
+
+/* Footer Section */
+.xyraLoginFooter {
+  margin-top: auto !important;
+  padding-top: 0.5rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 2px !important;
+  text-align: center !important;
+}
+
+.xyraLoginFooter .sapMText,
+#_IDGenText1,
+#_IDGenText2 {
+  color: #9ca3af !important;
+  font-size: 0.775rem !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+}
+
+/* Right Panel (54%) - Solid Edge-to-Edge Cobalt Blue Panel (NO CORNER GAPS) */
+/* Right Panel - Vesper-Style Rounded Hero Card with White Outer Border Frame */
+.xyraLoginHeroPane {
+  flex: 1 1 54% !important;
+  width: calc(54% - 24px) !important;
+  max-width: calc(54% - 24px) !important;
+  height: calc(100vh - 32px) !important;
+  max-height: calc(100vh - 32px) !important;
+  margin: 16px 16px 16px 8px !important;
+  padding: 0 !important;
+  background: linear-gradient(135deg, #0056d6 0%, #0047ba 50%, #0036a3 100%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 10px 30px rgba(0, 54, 163, 0.12) !important;
+  box-sizing: border-box !important;
+}
+
+/* Curved Background SVG Overlay */
+.xyraHeroCurveOverlay {
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
+}
+
+.xyraHeroSvgWave {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+/* Slides Wrapper */
 .xyraHeroSlidesWrapper {
   width: 100% !important;
   height: 100% !important;
-  flex: 1 1 auto !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
   position: relative !important;
-  min-height: 0 !important;
+  z-index: 1 !important;
+  flex: 1 !important;
 }
 
 /* Individual Slide */
 .xyraHeroSlide {
   position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
+  inset: 0 !important;
   width: 100% !important;
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
   opacity: 0 !important;
   visibility: hidden !important;
-  transform: scale(0.98) !important;
-  transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1), transform 0.55s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.55s ease !important;
+  transform: translateY(10px) scale(0.99) !important;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.55s ease !important;
   pointer-events: none !important;
+  overflow: hidden !important;
 }
 
 .xyraHeroSlide.xyraHeroSlideActive {
   opacity: 1 !important;
   visibility: visible !important;
-  transform: scale(1) !important;
+  transform: translateY(0) scale(1) !important;
   pointer-events: auto !important;
   z-index: 2 !important;
 }
 
-/* Showcase Card & Image - Fitted without top cutoff */
-.xyraHeroShowcase {
-  width: 100% !important;
-  height: 100% !important;
-  flex: 1 1 auto !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  padding: 3.75rem 2rem 2rem 2rem !important;
-  margin: 0 !important;
+/* Slide Typography Section */
+.xyraHeroTextSection {
+  max-width: 450px !important;
+  z-index: 20 !important;
+  flex: 0 0 auto !important;
+  padding: clamp(2rem, 4.5vh, 3.2rem) clamp(2rem, 3.8vw, 3.2rem) 0 clamp(2rem, 3.8vw, 3.2rem) !important;
   box-sizing: border-box !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
+  position: relative !important;
 }
 
-.xyraHeroImg {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  object-fit: contain !important;
-  object-position: center center !important;
-  transition: transform 0.4s ease !important;
-}
-
-/* Top-Right Circular Slide Indicator Dots - Exact match to media_1788534263185.png */
-.xyraHeroIndicators {
-  position: absolute !important;
-  top: 2rem !important;
-  right: 2.5rem !important;
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
+/* Hero Slide Brand Tag / Badge (Slide 1) */
+.xyraHeroBrandBadge {
+  display: inline-flex !important;
   align-items: center !important;
   gap: 7px !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.xyraHeroBrandDot {
+  font-size: 0.85rem !important;
+  color: #93c5fd !important;
+}
+
+/* Hero Slide Partner / Compliance Badges (Slide 2) */
+.xyraHeroPartnerRow {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-top: 0.85rem !important;
+  position: relative !important;
+  z-index: 20 !important;
+}
+
+.xyraHeroPartnerBadge {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 4px 11px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(6px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.xyraSlideH1,
+.xyraSlideH1 .sapMTitle {
+  color: #ffffff !important;
+  font-size: clamp(1.35rem, 2vw, 1.75rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 0.5rem !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.12) !important;
+}
+
+.xyraSlideH2,
+.xyraSlideH2.sapMText {
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: clamp(0.85rem, 1.05vw, 0.95rem) !important;
+  font-weight: 400 !important;
+  line-height: 1.45 !important;
+}
+
+/* Ensure SAPUI5 Flex Item wrapper inside slide takes full remaining height */
+.xyraHeroSlide > .sapMFlexItem:nth-child(2),
+.xyraHeroSlide > .sapMFlexItem:last-child {
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Tablet Showcase Containers */
+.xyraHeroShowcase {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Slide 1 Tablet Positioning (Tilted Tablet Anchored Bottom-Right - NO OVERLAPPING LABELS & NO GAP) */
+.xyraTabletSlide1 {
+  position: absolute !important;
+  bottom: -35px !important;
+  right: -25px !important;
+  width: 84% !important;
+  max-width: 520px !important;
+  height: auto !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.45)) !important;
+  transform-origin: bottom right !important;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  z-index: 10 !important;
+}
+
+.xyraHeroSlide.xyraHeroSlideActive .xyraTabletSlide1 {
+  animation: xyraTabletFloat1 6s ease-in-out infinite alternate !important;
+}
+
+/* Slide 2 Tablet Positioning (Upright Tablet Anchored to Right Edge - NO GAP WITH BLUE FRAME) */
+.xyraTabletSlide2 {
+  position: absolute !important;
+  bottom: -25px !important;
+  right: -20px !important;
+  left: auto !important;
+  transform: none !important;
+  width: 90% !important;
+  max-width: 620px !important;
+  height: auto !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.45)) !important;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  z-index: 10 !important;
+}
+
+.xyraHeroSlide.xyraHeroSlideActive .xyraTabletSlide2 {
+  animation: xyraTabletFloat2 6s ease-in-out infinite alternate !important;
+}
+
+@keyframes xyraTabletFloat1 {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes xyraTabletFloat2 {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Bottom Slide Indicators */
+.xyraHeroIndicators {
+  position: absolute !important;
+  bottom: 1.25rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
   z-index: 25 !important;
   cursor: pointer !important;
-  padding: 4px 6px !important;
+  padding: 5px 14px !important;
+  background: rgba(0, 0, 0, 0.25) !important;
+  backdrop-filter: blur(8px) !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
 .xyraHeroBar {
   display: inline-block !important;
-  width: 9px !important;
-  height: 9px !important;
-  min-width: 9px !important;
+  width: 8px !important;
+  height: 8px !important;
   border-radius: 50% !important;
-  background-color: #dcc8fc !important;
+  background-color: rgba(255, 255, 255, 0.45) !important;
   cursor: pointer !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .xyraHeroBar:hover {
-  background-color: #bfa3f8 !important;
-  transform: scale(1.15) !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .xyraHeroBarActive {
-  width: 9px !important;
-  min-width: 9px !important;
-  background-color: #391a9b !important;
-  box-shadow: 0 0 8px rgba(57, 26, 155, 0.45) !important;
-  transform: scale(1.15) !important;
+  width: 20px !important;
+  border-radius: 10px !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.7) !important;
 }
 
-.xyraLoginHero {
-  display: none !important;
-}
-
-/* Tablet & Mobile Responsiveness */
+/* Responsive Layout */
 @media (max-width: 1100px) {
   .xyraLoginPane {
-    flex: 0 0 40% !important;
-    width: 40% !important;
-    padding: 2rem 1.5rem !important;
+    flex: 0 0 46% !important;
+    width: 46% !important;
+    max-width: 46% !important;
+    padding: 2rem 2rem !important;
   }
   .xyraLoginHeroPane {
-    flex: 0 0 60% !important;
-    width: 60% !important;
-    padding: 2rem 1.5rem !important;
+    flex: 1 1 54% !important;
+    width: calc(54% - 18px) !important;
+    max-width: calc(54% - 18px) !important;
+    margin: 12px 12px 12px 6px !important;
+    height: calc(100vh - 24px) !important;
+    max-height: calc(100vh - 24px) !important;
+    border-radius: 20px !important;
   }
-  .xyraHeroTitle {
-    font-size: 1.5rem !important;
-  }
-  .xyraHeroSubtitle {
-    font-size: 0.9rem !important;
-  }
-  .xyraHeroImg {
-    max-height: 400px !important;
+  .xyraHeroSlide {
+    padding: 2rem 1.75rem 0 1.75rem !important;
   }
 }
 
-@media (max-width: 850px) {
+@media (max-width: 900px) {
   .xyraLoginSplit {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100vh !important;
     flex-direction: column !important;
     overflow-y: auto !important;
   }
+  .xyraLoginPageBg {
+    overflow-y: auto !important;
+  }
   .xyraLoginPane {
-    flex: 0 0 100% !important;
+    flex: 0 0 auto !important;
     width: 100% !important;
-    min-width: 0 !important;
     max-width: 100% !important;
-    padding: 3rem 1.5rem !important;
-    border-right: none !important;
+    padding: 2.5rem 2rem !important;
+  }
+  .xyraLoginCard {
+    max-width: 420px !important;
+    margin: 0 auto !important;
+  }
+  .xyraLoginHeroPane {
+    flex: 0 0 420px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 420px !important;
+    min-height: 420px !important;
+    border-radius: 0 !important;
+  }
+}
+
+@media (max-width: 580px) {
+  .xyraLoginPageBg {
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+  .xyraLoginSplit {
+    border-radius: 0 !important;
     box-shadow: none !important;
+    min-height: 100vh !important;
+  }
+  .xyraLoginPane {
+    padding: 2rem 1.5rem !important;
   }
   .xyraLoginHeroPane {
     display: none !important;
