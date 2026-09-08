@@ -622,18 +622,11 @@
                                         <core:Item key="Action Required" text="Action Required"/>
                                         <core:Item key="Pending" text="Pending"/>
                                     </Select>
-                                     <VBox class="xyraFieldGroup">
-                                         <Label text="Starting Date" class="xyraLoginLabel"/>
-                                         <xyra:DateRangePicker id="dpHistoryStartDate2" field="start" placeholder="Select Starting Date" change="onSearchHistory"/>
-                                     </VBox>
-                                     <VBox class="xyraFieldGroup">
-                                         <Label text="Ending Date" class="xyraLoginLabel"/>
-                                         <xyra:DateRangePicker id="dpHistoryEndDate2" field="end" placeholder="Select Ending Date" change="onSearchHistory"/>
-                                     </VBox>
+                                    <xyra:DateRangePicker id="dpHistoryStartDate2" field="start" placeholder="Select Starting Date" change="onSearchHistory" width="100%"/>
+                                    <xyra:DateRangePicker id="dpHistoryEndDate2" field="end" placeholder="Select Ending Date" change="onSearchHistory" width="100%"/>
                                 </layout:Grid>
                                 <OverflowToolbar class="sapUiTinyMarginTop">
                                     <ToolbarSpacer/>
-                                    <Button text="Search" type="Emphasized" icon="sap-icon://search" press="onSearchHistory"/>
                                     <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetHistoryFilters"/>
                                 </OverflowToolbar>
                             </Panel>
@@ -642,15 +635,15 @@
                             <Panel headerText="Reviewer 2 Historical Decisions (Read-Only)" expandable="false" class="sapUiSmallMarginBottom">
                                 <Table id="reviewerHistoryTable2" items="{reviewer2Model>/history}" mode="None" width="100%">
                                     <columns>
-                                        <Column width="11%"><Text text="Ticket ID" class="fontWeightBold"/></Column>
-                                        <Column width="10%"><Text text="Report ID"/></Column>
-                                        <Column width="9%"><Text text="Control ID"/></Column>
-                                        <Column width="18%"><Text text="Report Name"/></Column>
+                                        <Column width="9%"><Text text="Ticket ID" class="fontWeightBold"/></Column>
+                                        <Column width="8%"><Text text="Report ID"/></Column>
+                                        <Column width="8%"><Text text="Control ID"/></Column>
+                                        <Column width="19%"><Text text="Report Name"/></Column>
                                         <Column width="11%"><Text text="System"/></Column>
-                                        <Column width="11%"><Text text="Decision"/></Column>
-                                        <Column width="9%"><Text text="Action Date"/></Column>
-                                        <Column width="10%"><Text text="Ticket Status"/></Column>
-                                        <Column width="11%" hAlign="Center"><Text text="Action"/></Column>
+                                        <Column width="9%"><Text text="Decision"/></Column>
+                                        <Column width="10%"><Text text="Action Date"/></Column>
+                                        <Column width="13%"><Text text="Ticket Status"/></Column>
+                                        <Column width="13%" hAlign="Center"><Text text="Action"/></Column>
                                     </columns>
                                     <items>
                                         <ColumnListItem>

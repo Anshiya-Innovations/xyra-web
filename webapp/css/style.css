@@ -1,4 +1,33 @@
-/* Modern SAP Fiori Horizon Custom Styles & Full Viewport Responsiveness */
+/* Responsive executive scaling for internal dashboard views */
+html.xyra-app-zoomed,
+html:has(.sapTntToolPage),
+html:has(.sapTNTToolPage) {
+  zoom: 0.85;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (max-height: 850px) {
+  html.xyra-app-zoomed,
+  html:has(.sapTntToolPage),
+  html:has(.sapTNTToolPage) {
+    zoom: 0.82;
+  }
+}
+
+@media (min-height: 1100px) {
+  html.xyra-app-zoomed,
+  html:has(.sapTntToolPage),
+  html:has(.sapTNTToolPage) {
+    zoom: 0.88;
+  }
+}
+
+/* Login page strictly stays at unscaled 100% zoom for edge-to-edge layout */
+html.xyra-login-active,
+html:has(.xyraLoginPageBg) {
+  zoom: 1 !important;
+  -webkit-text-size-adjust: 100%;
+}
 
 html,
 body,
@@ -592,15 +621,22 @@ span.sapTntNLITagContainer {
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: 90vw !important;
-  max-width: 680px !important;
+  width: auto !important;
+  max-width: min(92vw, 1040px) !important;
   min-width: 320px !important;
+  max-height: calc(100vh - 48px) !important;
   margin: 0 !important;
   border-radius: 16px !important;
   overflow: hidden !important;
   box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
   border: 1px solid rgba(226, 232, 240, 0.9) !important;
   background-color: #ffffff !important;
+}
+
+.sapMDialogContent,
+.sapMDialogScrollCont {
+  max-height: calc(100vh - 160px) !important;
+  overflow-y: auto !important;
 }
 
 .sapMMessageBox:not(.xyraCustomNotificationPopover) {
@@ -620,7 +656,8 @@ span.sapTntNLITagContainer {
 }
 
 .sapMPopover:not(.xyraCustomNotificationPopover) {
-  max-width: 680px !important;
+  max-width: min(680px, calc(100vw - 24px)) !important;
+  box-sizing: border-box !important;
 }
 
 /* Single Header Container */
@@ -1681,13 +1718,13 @@ textarea.sapMTextAreaInner {
   pointer-events: none !important;
 }
 
-/* Slide 1 Tablet Positioning (Tilted Tablet Dropped Down & Right - NO OVERLAPPING LABELS & NO GAP) */
+/* Slide 1 Tablet Positioning (Tilted Tablet - Visible Left Corner & No Height Increase) */
 .xyraTabletSlide1 {
   position: absolute !important;
-  bottom: -95px !important;
-  right: -35px !important;
-  width: 78% !important;
-  max-width: 450px !important;
+  bottom: -115px !important;
+  right: -30px !important;
+  width: 82% !important;
+  max-width: 490px !important;
   height: auto !important;
   object-fit: contain !important;
   filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.45)) !important;
@@ -1700,15 +1737,15 @@ textarea.sapMTextAreaInner {
   animation: xyraTabletFloat1 6s ease-in-out infinite alternate !important;
 }
 
-/* Slide 2 Tablet Positioning (Upright Tablet Dropped Down - CLEAR OF BADGES & NO BLUE GAP) */
+/* Slide 2 Tablet Positioning (Upright Tablet - Balanced & No Height Increase) */
 .xyraTabletSlide2 {
   position: absolute !important;
-  bottom: -85px !important;
-  right: -20px !important;
+  bottom: -110px !important;
+  right: -25px !important;
   left: auto !important;
   transform: none !important;
-  width: 84% !important;
-  max-width: 540px !important;
+  width: 88% !important;
+  max-width: 580px !important;
   height: auto !important;
   object-fit: contain !important;
   filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.45)) !important;
@@ -2250,7 +2287,7 @@ textarea.sapMTextAreaInner {
   border-color: #16a34a !important;
 }
 
-/* Dropdown Popup / Popover Container: clean frame, smooth shadow, zero protrusion */
+/* Dropdown Popup / Popover Container: clean frame, smooth shadow, zero protrusion, responsive */
 .sapMSelectPicker,
 .sapMSltPicker,
 .sapMSelect-Picker {
@@ -2259,6 +2296,8 @@ textarea.sapMTextAreaInner {
   box-shadow: 0 4px 20px rgba(15, 23, 42, 0.1) !important;
   background-color: #ffffff !important;
   overflow: hidden !important;
+  box-sizing: border-box !important;
+  max-width: calc(100vw - 24px) !important;
 }
 
 /* Remove popover arrow and protruding side frames completely */
@@ -3384,6 +3423,16 @@ td .sapMBtnInner.sapMBtnReject:active,
   max-width: 100% !important;
 }
 
+#recentFindingsTable .sapMListTblCell {
+  padding-top: 0.45rem !important;
+  padding-bottom: 0.45rem !important;
+}
+
+#recentFindingsTable .sapMListTblHeaderCell {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
 /* ===== SOX COMPLIANCE BAR STYLES ===== */
 .soxBarCompliant {
   background-color: #10b981 !important;
@@ -3713,6 +3762,8 @@ div[id*="-text"] {
 .xyraProfilePopover {
   border-radius: 12px !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+  max-width: calc(100vw - 24px) !important;
+  box-sizing: border-box !important;
 }
 
 .xyraProfilePopoverContent {
@@ -4610,6 +4661,8 @@ div[id*="-text"] {
   bottom: auto !important;
   height: auto !important;
   max-height: calc(100vh - 80px) !important;
+  max-width: calc(100vw - 24px) !important;
+  box-sizing: border-box !important;
   border-radius: 16px !important;
   overflow: hidden !important;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
@@ -4980,6 +5033,8 @@ div[id*="-text"] {
   overflow: visible !important;
   border: 1px solid #e2e8f0 !important;
   z-index: 99999 !important;
+  max-width: calc(100vw - 24px) !important;
+  box-sizing: border-box !important;
 }
 
 .xyraCompactDateRangePopover .sapMPopoverHeader,
@@ -5002,6 +5057,42 @@ div[id*="-text"] {
 
 .xyraSingleDateInput {
   width: 100% !important;
+}
+
+.xyraSingleDateInput .sapMInputBaseContentWrapper {
+  height: 2.375rem !important;
+  min-height: 2.375rem !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: #f8fafc !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: border-color 0.15s ease !important;
+}
+
+.xyraSingleDateInput .sapMInputBaseContentWrapper:hover,
+.xyraSingleDateInput .sapMInputBaseContentWrapper:focus-within {
+  border-color: #533bff !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.xyraSingleDateInput .sapMInputBaseInner {
+  height: 100% !important;
+  line-height: normal !important;
+  font-size: 0.875rem !important;
+  padding-left: 0.75rem !important;
+  color: #0f172a !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.xyraSingleDateInput .sapMInputBaseIcon {
+  height: 100% !important;
+  line-height: 2.375rem !important;
+  color: #64748b !important;
 }
 
 .xyraCompactDateRangePopover .sapMPopoverCont,
@@ -6117,5 +6208,37 @@ span.sapMColumnHeaderContent,
 .sapMMessageToast {
   transition: opacity 150ms ease !important;
   -webkit-transition: opacity 150ms ease !important;
+}
+
+/* Reviewer History Tables Action Column & Button Width Fix (Prevents button cut-off) */
+#reviewerHistoryTable td:last-child,
+#reviewerHistoryTable2 td:last-child,
+#reviewerHistoryTable th:last-child,
+#reviewerHistoryTable2 th:last-child {
+  padding-right: 0.85rem !important;
+  text-align: center !important;
+  overflow: visible !important;
+}
+
+#reviewerHistoryTable td:last-child .sapMBtn,
+#reviewerHistoryTable2 td:last-child .sapMBtn {
+  width: auto !important;
+  min-width: 105px !important;
+  overflow: visible !important;
+  margin: 0 auto !important;
+}
+
+#reviewerHistoryTable td:last-child .sapMBtnInner,
+#reviewerHistoryTable2 td:last-child .sapMBtnInner {
+  width: auto !important;
+  min-width: 105px !important;
+  height: 32px !important;
+  padding: 0 0.85rem !important;
+  box-sizing: border-box !important;
+  border-radius: 8px !important;
+  overflow: visible !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
