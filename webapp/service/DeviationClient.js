@@ -1,4 +1,4 @@
-sap.ui.define(["xyraweb/model/config", "xyraweb/model/session"], function (Config, Session) {
+sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "xyraweb/service/apiClient"], function (Config, Session, ApiClient) {
     "use strict";
 
     // ponytail: offline-fallback fixtures only, used from the .catch() branches
@@ -327,17 +327,12 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session"], function (Confi
     return {
         queryDeviations: function (oFilters) {
             oFilters = oFilters || {};
-            return fetch(Config.AUTH_BASE_URL + "/api/deviation/listDeviations", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    subdomain: getSubdomain(),
-                    sector: oFilters.sector, region: oFilters.region, platform: oFilters.platform,
-                    systemId: oFilters.system, client: oFilters.client, controlId: oFilters.control,
-                    status: oFilters.status, startDate: oFilters.startDate || undefined, endDate: oFilters.endDate || undefined
-                })
+            return ApiClient.postJson(Config.AUTH_BASE_URL + "/api/deviation/listDeviations", {
+                subdomain: getSubdomain(),
+                sector: oFilters.sector, region: oFilters.region, platform: oFilters.platform,
+                systemId: oFilters.system, client: oFilters.client, controlId: oFilters.control,
+                status: oFilters.status, startDate: oFilters.startDate || undefined, endDate: oFilters.endDate || undefined
             })
-                .then(function (r) { return r.json(); })
                 .then(function (oData) {
                     if (!oData.success) { throw new Error(oData.message || "listDeviations failed"); }
                     var aHeaders = (oData.headers || []).map(mapHeaderForUi);
@@ -361,12 +356,7 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session"], function (Confi
         },
 
         getAlertDetails: function (sAlertId, sControlId) {
-            return fetch(Config.AUTH_BASE_URL + "/api/deviation/getDeviationDetail", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ subdomain: getSubdomain(), alertId: sAlertId })
-            })
-                .then(function (r) { return r.json(); })
+            return ApiClient.postJson(Config.AUTH_BASE_URL + "/api/deviation/getDeviationDetail", { subdomain: getSubdomain(), alertId: sAlertId })
                 .then(function (oData) {
                     if (!oData.success) { throw new Error(oData.message || "getDeviationDetail failed"); }
                     return { header: mapHeaderForUi(oData.header), items: (oData.items || []).map(mapItemForUi) };

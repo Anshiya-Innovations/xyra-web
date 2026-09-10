@@ -34,6 +34,8 @@
                 id="reviewer2Page"
                 showHeader="true"
                 enableScrolling="true"
+                busy="{reviewer2Model>/busy}"
+                busyIndicatorDelay="0"
                 class="sapUiContentPadding">
 
                 <dependents>

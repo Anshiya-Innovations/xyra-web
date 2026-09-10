@@ -13,6 +13,7 @@ framework:
     - name: sap.tnt
     - name: sap.ui.layout
     - name: sap.f
+    - name: sap.suite.ui.microchart
     - name: themelib_sap_horizon
 server:
   customMiddleware:

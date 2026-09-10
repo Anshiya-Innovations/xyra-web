@@ -33,6 +33,8 @@
                 id="exManagerPage"
                 showHeader="true"
                 enableScrolling="true"
+                busy="{escManagerModel>/busy}"
+                busyIndicatorDelay="0"
                 class="sapUiContentPadding">
 
                 <dependents>

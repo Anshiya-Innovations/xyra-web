@@ -2,12 +2,9 @@
     controllerName="xyraweb.controller.Admin"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
-    xmlns:f="sap.f"
     xmlns:core="sap.ui.core"
     xmlns:tnt="sap.tnt"
-    xmlns:viz="sap.viz.ui5.controls"
-    xmlns:vizData="sap.viz.ui5.data"
-    xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:mc="sap.suite.ui.microchart"
     height="100%">
 
     <tnt:ToolPage id="adminToolPage" sideExpanded="true">
@@ -117,135 +114,157 @@
                 <content>
                     <VBox id="_IDGenVBox2" width="100%" class="sapUiSmallMargin">
 
+                        <!-- LOADING STATE - Page's own `busy` property is a dead end here
+                             (renders via .sapUiLocalBusyIndicator, which style.css suppresses
+                             site-wide by design), so this is a plain visible-gated ring spinner
+                             instead, shown until AdminClient.loadDashboard() resolves. -->
+                        <VBox visible="{adminModel>/busy}" alignItems="Center" justifyContent="Center" class="xyraLoadingState">
+                            <core:HTML content="&lt;div class=&quot;xyraSpinnerRing&quot;&gt;&lt;/div&gt;"/>
+                            <Text text="Loading dashboard…" class="textMuted sapUiSmallMarginTop"/>
+                        </VBox>
+
+                        <VBox visible="{= !${adminModel>/busy} }">
+
                         <!-- PRIMARY KPI CARDS -->
                         <Title text="Compliance Posture" level="H3" class="sapUiSmallMarginBottom"/>
 
-                        <HBox wrap="Wrap" class="xyraKpiRow sapUiSmallMarginBottom">
-                            <VBox class="xyraKpiCard">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
-                                    <Text text="Total Controls" class="xyraKpiLabel"/>
-                                    <VBox class="xyraKpiIcon xyraKpiIconPurple" alignItems="Center" justifyContent="Center">
-                                        <core:Icon src="sap-icon://shield"/>
+                        <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                    <VBox>
+                                        <Text text="Total Controls" class="textMuted fontSizeSmall fontWeightBold"/>
+                                        <Title text="{adminModel>/controlsTotal}" level="H2" class="sapUiTinyMarginTop fontWeightBold"/>
                                     </VBox>
+                                    <Avatar src="sap-icon://shield" backgroundColor="Accent6" displaySize="M"/>
                                 </HBox>
-                                <Text text="156" class="xyraKpiValue"/>
-                                <Text text="↑ 12 this week" class="xyraKpiTrendUp sapUiTinyMarginTop"/>
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                    <ObjectStatus text="{= ${adminModel>/controlsEnabled} + ' Enabled' }" state="Success"/>
+                                </HBox>
                             </VBox>
 
-                            <VBox class="xyraKpiCard">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
-                                    <Text text="Compliant" class="xyraKpiLabel"/>
-                                    <VBox class="xyraKpiIcon xyraKpiIconGreen" alignItems="Center" justifyContent="Center">
-                                        <core:Icon src="sap-icon://sys-enter-2"/>
+                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                    <VBox>
+                                        <Text text="Open Deviations" class="textMuted fontSizeSmall fontWeightBold"/>
+                                        <Title text="{adminModel>/openDeviations}" level="H2" class="sapUiTinyMarginTop textDanger fontWeightBold"/>
                                     </VBox>
+                                    <Avatar src="sap-icon://alert" backgroundColor="Accent1" displaySize="M"/>
                                 </HBox>
-                                <Text text="143" class="xyraKpiValue"/>
-                                <Text text="↑ 91.7% of total" class="xyraKpiTrendUp sapUiTinyMarginTop"/>
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                    <ObjectStatus text="{= ${adminModel>/resolvedDeviations} + ' Resolved' }" state="Success"/>
+                                </HBox>
                             </VBox>
 
-                            <VBox class="xyraKpiCard">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
-                                    <Text text="At Risk" class="xyraKpiLabel"/>
-                                    <VBox class="xyraKpiIcon xyraKpiIconAmber" alignItems="Center" justifyContent="Center">
-                                        <core:Icon src="sap-icon://alert"/>
+                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                    <VBox>
+                                        <Text text="Rule Compliance Rate" class="textMuted fontSizeSmall fontWeightBold"/>
+                                        <Title text="{= ${adminModel>/complianceRatePct} + '%' }" level="H2" class="sapUiTinyMarginTop fontWeightBold"/>
                                     </VBox>
+                                    <mc:RadialMicroChart
+                                        percentage="{adminModel>/complianceRatePct}"
+                                        size="XS"
+                                        valueColor="{= ${adminModel>/complianceRatePct} >= 80 ? 'Good' : (${adminModel>/complianceRatePct} >= 50 ? 'Critical' : 'Error') }"/>
                                 </HBox>
-                                <Text text="8" class="xyraKpiValue"/>
-                                <Text text="5.1% of total" class="xyraKpiLabel sapUiTinyMarginTop"/>
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                    <ObjectStatus text="Rule-check pass rate" state="None"/>
+                                </HBox>
                             </VBox>
 
-                            <VBox class="xyraKpiCard">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
-                                    <Text text="Failed" class="xyraKpiLabel"/>
-                                    <VBox class="xyraKpiIcon xyraKpiIconRed" alignItems="Center" justifyContent="Center">
-                                        <core:Icon src="sap-icon://decline"/>
+                            <VBox width="23.5%" class="sapUiSmallMarginBottom xyraKpiCardContainer">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                    <VBox>
+                                        <Text text="Connected Systems" class="textMuted fontSizeSmall fontWeightBold"/>
+                                        <Title text="{= ${adminModel>/systemsOnline} + ' / ' + ${adminModel>/systemsTotal} }" level="H2" class="sapUiTinyMarginTop fontWeightBold"/>
                                     </VBox>
+                                    <Avatar src="sap-icon://connected" backgroundColor="Accent8" displaySize="M"/>
                                 </HBox>
-                                <Text text="5" class="xyraKpiValue"/>
-                                <Text text="↓ 3.2% of total" class="xyraKpiTrendDown sapUiTinyMarginTop"/>
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTop">
+                                    <ObjectStatus text="Online / Total" state="{= ${adminModel>/systemsOnline} === ${adminModel>/systemsTotal} ? 'Success' : 'Warning' }"/>
+                                </HBox>
                             </VBox>
                         </HBox>
 
-                        <!-- SECONDARY OPERATIONAL STATS -->
-                        <HBox wrap="Wrap" class="xyraKpiRow sapUiSmallMarginBottom">
-                            <VBox class="xyraStatChip">
-                                <Text text="Active Users" class="xyraKpiLabel"/>
-                                <Text text="1,420" class="xyraKpiValue"/>
-                            </VBox>
-                            <VBox class="xyraStatChip">
-                                <Text text="Configured Roles" class="xyraKpiLabel"/>
-                                <Text text="380" class="xyraKpiValue"/>
-                            </VBox>
-                            <VBox class="xyraStatChip">
-                                <Text text="Open Reviews" class="xyraKpiLabel"/>
-                                <Text text="24" class="xyraKpiValue"/>
-                            </VBox>
-                            <VBox class="xyraStatChip">
-                                <Text text="SOX Compliance Score" class="xyraKpiLabel"/>
-                                <Text text="98.4%" class="xyraKpiValue"/>
-                            </VBox>
-                        </HBox>
-
-                        <!-- POSTURE DONUT + TREND CHART -->
+                        <!-- ALERT STATUS BREAKDOWN + REVIEW PIPELINE -->
                         <HBox wrap="Wrap" alignItems="Stretch" class="xyraKpiRow sapUiSmallMarginBottom">
 
                             <VBox class="xyraDashboardCard xyraDonutCard">
-                                <Title text="Posture Overview" level="H4" class="sapUiSmallMarginBottom"/>
-
-                                <HBox width="100%" justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginTop">
-                                    <!-- Interactive SVG Donut Chart with Hover Center Count Value -->
-                                    <core:HTML content="{adminModel>/postureSvgHtml}"/>
-
-                                    <!-- Legend with Swatches & Count -->
-                                    <VBox justifyContent="Center" class="sapUiSmallMarginBegin">
-                                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
-                                            <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#3b82f6" class="sapUiTinyMarginEnd"/>
-                                            <VBox>
-                                                <Text text="Compliant: 143" class="boldText"/>
-                                                <Text text="Healthy Controls" class="textMuted"/>
-                                            </VBox>
+                                <Title text="Alert Status Breakdown" level="H4" class="sapUiSmallMarginBottom"/>
+                                <Text text="Open / In Progress / Resolved, across all deviation alerts" class="textMuted sapUiTinyMarginBottom"/>
+                                <VBox items="{adminModel>/alertBreakdown}" class="sapUiSmallMarginTop">
+                                    <VBox class="xyraProgressRow sapUiTinyMarginBottom">
+                                        <HBox justifyContent="SpaceBetween">
+                                            <Text text="{adminModel>label}" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Text text="{adminModel>value}" class="boldText"/>
                                         </HBox>
-                                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
-                                            <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#d97706" class="sapUiTinyMarginEnd"/>
-                                            <VBox>
-                                                <Text text="At Risk: 8" class="boldText"/>
-                                                <Text text="Requires Review" class="textMuted"/>
-                                            </VBox>
-                                        </HBox>
-                                        <HBox alignItems="Center">
-                                            <core:Icon src="sap-icon://color-fill" size="1.1rem" color="#ef4444" class="sapUiTinyMarginEnd"/>
-                                            <VBox>
-                                                <Text text="Failed: 5" class="boldText"/>
-                                                <Text text="Action Needed" class="textMuted"/>
-                                            </VBox>
+                                        <!-- class="{binding}" is NOT a live binding in SAPUI5 XML views (verified
+                                             against XMLTemplateProcessor.js - it's concatenated as a literal string
+                                             at parse time via addStyleClass, never re-evaluated) - so color comes
+                                             from 4 static-class variants gated by a real `visible` binding instead. -->
+                                        <HBox class="xyraProgressTrack">
+                                            <HBox width="{adminModel>pct}" visible="{= ${adminModel>state} === 'Error' }" class="xyraProgressFill xyraProgressFillRed"/>
+                                            <HBox width="{adminModel>pct}" visible="{= ${adminModel>state} === 'Warning' }" class="xyraProgressFill xyraProgressFillAmber"/>
+                                            <HBox width="{adminModel>pct}" visible="{= ${adminModel>state} === 'Success' }" class="xyraProgressFill xyraProgressFillGreen"/>
+                                            <HBox width="{adminModel>pct}" visible="{= ${adminModel>state} === 'None' }" class="xyraProgressFill xyraProgressFillBlue"/>
                                         </HBox>
                                     </VBox>
-                                </HBox>
+                                </VBox>
                             </VBox>
 
                             <VBox class="xyraDashboardCard xyraTrendCard">
-                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
-                                    <VBox>
-                                        <Title text="Trend Overview — Effective Controls" level="H4"/>
-                                        <Text text="Continuous compliance performance trajectory over time" class="textMuted"/>
+                                <Title text="Review Pipeline" level="H4" class="sapUiSmallMarginBottom"/>
+                                <Text text="Where deviations sit in the 2-level review chain right now" class="textMuted sapUiTinyMarginBottom"/>
+                                <VBox items="{adminModel>/reviewPipeline}" class="sapUiSmallMarginTop">
+                                    <VBox class="xyraProgressRow sapUiTinyMarginBottom">
+                                        <HBox justifyContent="SpaceBetween">
+                                            <Text text="{adminModel>label}" class="textMuted fontSizeSmall fontWeightBold"/>
+                                            <Text text="{adminModel>value}" class="boldText"/>
+                                        </HBox>
+                                        <HBox class="xyraProgressTrack">
+                                            <HBox width="{adminModel>pct}" visible="{= ${adminModel>state} === 'Error' }" class="xyraProgressFill xyraProgressFillRed"/>
+                                            <HBox width="{adminModel>pct}" visible="{= ${adminModel>state} === 'Warning' }" class="xyraProgressFill xyraProgressFillAmber"/>
+                                            <HBox width="{adminModel>pct}" visible="{= ${adminModel>state} === 'Success' }" class="xyraProgressFill xyraProgressFillGreen"/>
+                                            <HBox width="{adminModel>pct}" visible="{= ${adminModel>state} === 'None' }" class="xyraProgressFill xyraProgressFillBlue"/>
+                                        </HBox>
                                     </VBox>
-                                    <HBox alignItems="Center">
-                                        <core:Icon src="sap-icon://trending-up" size="1.2rem" color="#10b981" class="sapUiTinyMarginEnd"/>
-                                        <ObjectStatus text="+9.7% Growth" state="Success" class="boldText"/>
-                                        <Text text="  (Last 30 Days)" class="textMuted sapUiTinyMarginBegin"/>
-                                    </HBox>
-                                </HBox>
-
-                                <!-- Interactive SVG Gradient Area Trend Line Chart -->
-                                <core:HTML content="{adminModel>/trendSvgHtml}"/>
+                                </VBox>
                             </VBox>
                         </HBox>
 
-                        <!-- RECENT FINDINGS TABLE CARD (FULL WIDTH) -->
+                        <!-- CONTROL HEALTH TABLE (FULL WIDTH) -->
+                        <VBox width="100%" class="xyraDashboardCard sapUiSmallMarginBottom">
+                            <Title text="Control Health" level="H4" class="sapUiSmallMarginBottom"/>
+                            <Text text="Failing or overdue controls surface first" class="textMuted sapUiSmallMarginBottom"/>
+
+                            <Table id="controlHealthTable" items="{adminModel>/controls}" mode="None">
+                                <columns>
+                                    <Column width="14%"><Text text="Control"/></Column>
+                                    <Column width="30%"><Text text="Description"/></Column>
+                                    <Column width="12%"><Text text="Frequency"/></Column>
+                                    <Column width="12%"><Text text="Enabled"/></Column>
+                                    <Column width="12%"><Text text="Last Run"/></Column>
+                                    <Column width="20%"><Text text="Next Run"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{adminModel>code}" class="boldText"/>
+                                            <Text text="{adminModel>description}"/>
+                                            <Text text="{adminModel>frequency}"/>
+                                            <ObjectStatus text="{adminModel>enabledText}" state="{adminModel>enabledState}"/>
+                                            <ObjectStatus text="{adminModel>lastRunStatus}" state="{adminModel>lastRunState}"/>
+                                            <Text text="{adminModel>nextRunAt}" class="textMuted"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </VBox>
+
+                        <!-- RECENT FINDINGS TABLE (FULL WIDTH) -->
                         <VBox width="100%" class="xyraDashboardCard sapUiSmallMarginBottom">
                             <Title text="Recent Findings" level="H4" class="sapUiSmallMarginBottom"/>
 
-                            <Table id="recentFindingsTable" items="{findingsModel>/findings}" mode="None">
+                            <Table id="recentFindingsTable" items="{adminModel>/recentFindings}" mode="None">
                                 <columns>
                                     <Column width="34%"><Text text="Finding"/></Column>
                                     <Column width="16%"><Text text="Control"/></Column>
@@ -256,20 +275,18 @@
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <Text text="{findingsModel>finding}" class="boldText"/>
-                                            <Text text="{findingsModel>control}" class="boldText"/>
-                                            <ObjectStatus
-                                                text="{findingsModel>severity}"
-                                                state="{findingsModel>severityState}"
-                                                icon="{= ${findingsModel>severityState} === 'Error' ? 'sap-icon://color-fill' : (${findingsModel>severityState} === 'Warning' ? 'sap-icon://color-fill' : 'sap-icon://color-fill') }"/>
-                                            <Text text="{findingsModel>status}" class="{findingsModel>statusClass}"/>
-                                            <Text text="{findingsModel>detected}" class="textMuted"/>
+                                            <Text text="{adminModel>finding}" class="boldText"/>
+                                            <Text text="{adminModel>control}" class="boldText"/>
+                                            <ObjectStatus text="{adminModel>severity}" state="{adminModel>severityState}"/>
+                                            <ObjectStatus text="{adminModel>status}" state="{adminModel>statusState}"/>
+                                            <Text text="{adminModel>detected}" class="textMuted"/>
                                         </cells>
                                     </ColumnListItem>
                                 </items>
                             </Table>
                         </VBox>
 
+                        </VBox>
                     </VBox>
                 </content>
 

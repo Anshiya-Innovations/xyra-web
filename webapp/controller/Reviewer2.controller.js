@@ -84,6 +84,7 @@ sap.ui.define([
 
         _loadReviewer2Data: function () {
             var oData = {
+                busy: true,
                 kpi: { pendingReviews: 0, approvedToday: 0, rejectedToday: 0, slaDue: 0 },
                 historyKpis: { approved: 0, rejected: 0, pending: 0 },
                 reports: [],
@@ -103,6 +104,7 @@ sap.ui.define([
                 var iApproved = aHistory.filter(function (h) { return h.decision === "Approved" && h.reviewedDate === sToday; }).length;
                 var iRejected = aHistory.filter(function (h) { return h.decision === "Rejected" && h.reviewedDate === sToday; }).length;
 
+                oModel.setProperty("/busy", false);
                 oModel.setProperty("/reports", aReports);
                 oModel.setProperty("/history", aHistory);
                 oModel.setProperty("/kpi", { pendingReviews: aReports.length, approvedToday: iApproved, rejectedToday: iRejected, slaDue: 0 });
@@ -346,8 +348,11 @@ sap.ui.define([
 
         onConfirmApproveForward: function () {
             var oReport = this._getSelectedReport();
+            var oDialog = this.byId("approveDialog2");
             var that = this;
+            if (oDialog) { oDialog.setBusy(true); }
             ReviewClient.decideLevel2(oReport.reportId, "APPROVE", oReport.rev2RcaText).then(function (oData) {
+                if (oDialog) { oDialog.setBusy(false); }
                 if (!oData.success) { MessageBox.error(oData.message || "Could not record the decision."); return; }
                 MessageToast.show("Report " + oReport.reportId + " Approved - Final sign-off, deviation closed.");
                 that.onCloseApproveDialog();
@@ -384,8 +389,11 @@ sap.ui.define([
 
         onSubmitReject: function () {
             var oReport = this._getSelectedReport();
+            var oDialog = this.byId("rejectDialog2");
             var that = this;
+            if (oDialog) { oDialog.setBusy(true); }
             ReviewClient.decideLevel2(oReport.reportId, "REMEDIATE", oReport.rev2RcaText).then(function (oData) {
+                if (oDialog) { oDialog.setBusy(false); }
                 if (!oData.success) { MessageBox.error(oData.message || "Could not record the decision."); return; }
                 MessageToast.show("Report " + oReport.reportId + " Rejected — Remediation ticket " + oData.ticketNumber + " created.");
                 that.onCloseRejectDialog();

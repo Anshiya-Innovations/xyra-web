@@ -85,6 +85,7 @@ sap.ui.define([
 
         _loadEscalationManagerData: function () {
             var oData = {
+                busy: true,
                 kpi: { pendingApproval: 0, remediationVerified: 0, complianceRate: 0 },
                 historyKpis: { approved: 0, rejected: 0, pending: 0 },
                 reports: [],
@@ -116,6 +117,7 @@ sap.ui.define([
                 var iRejected = aHist.filter(function (h) { return h.decision === "Rejected"; }).length;
                 var iTotal = aHist.length;
 
+                oModel.setProperty("/busy", false);
                 oModel.setProperty("/reports", aReports);
                 oModel.setProperty("/history", aHist);
                 oModel.setProperty("/kpi", {

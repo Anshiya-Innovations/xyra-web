@@ -37,6 +37,7 @@ sap.ui.define([
         _loadReviewer1Data: function () {
             var that = this;
             var oData = {
+                busy: true,
                 kpi: { pendingReviews: 0, approvedToday: 0, rejectedToday: 0, slaDue: 0 },
                 historyKpis: { approved: 0, rejected: 0, inProgress: 0 },
                 reports: [],
@@ -52,6 +53,7 @@ sap.ui.define([
                 var aHistory = aResults[1].length ? aResults[1] : that._getFallbackHistory();
                 var sToday = new Date().toDateString();
 
+                oModel.setProperty("/busy", false);
                 oModel.setProperty("/reports", aReports);
                 oModel.setProperty("/history", aHistory);
                 oModel.setProperty("/kpi", {
@@ -348,8 +350,11 @@ sap.ui.define([
 
         onConfirmApproveForward: function () {
             var oReport = this._getSelectedReport();
+            var oDialog = this.byId("approveDialog");
             var that = this;
+            if (oDialog) { oDialog.setBusy(true); }
             ReviewClient.decideLevel1(oReport.reportId, "APPROVE", oReport.rcaText).then(function (oData) {
+                if (oDialog) { oDialog.setBusy(false); }
                 if (!oData.success) {
                     MessageBox.error(oData.message || "Could not record the decision.");
                     return;
@@ -389,8 +394,11 @@ sap.ui.define([
 
         onSubmitReject: function () {
             var oReport = this._getSelectedReport();
+            var oDialog = this.byId("rejectDialog");
             var that = this;
+            if (oDialog) { oDialog.setBusy(true); }
             ReviewClient.decideLevel1(oReport.reportId, "REMEDIATE", oReport.rcaText).then(function (oData) {
+                if (oDialog) { oDialog.setBusy(false); }
                 if (!oData.success) {
                     MessageBox.error(oData.message || "Could not record the decision.");
                     return;

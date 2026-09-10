@@ -925,11 +925,15 @@ div[id*="Popover"] .sapUiScrollDelegate {
   box-sizing: border-box !important;
 }
 
-/* Completely collapse hidden flex item wrappers and placeholders inside Dialogs */
+/* Completely collapse hidden flex item wrappers and placeholders inside Dialogs.
+   ponytail: the 4th clause here used to be unscoped (missing .sapMDialogContent),
+   which meant it fired on ANY .sapMFlexItem anywhere in the app with a hidden
+   sibling - including a plain FlexBox row using `visible` to pick one of
+   several children (e.g. Admin dashboard's progress bars), silently
+   collapsing the whole row to display:none. Scoped to match the other 3. */
 .sapMDialogContent .sapMFlexItem:has(> .sapUiHiddenPlaceholder),
 .sapMDialogContent .sapMFlexItem:has(> [style*="display: none"]),
-.sapMDialogContent .sapMFlexItem:has(> .sapUiHidden),
-.sapMFlexItem:has(> .sapUiHiddenPlaceholder) {
+.sapMDialogContent .sapMFlexItem:has(> .sapUiHidden) {
   display: none !important;
   height: 0 !important;
   min-height: 0 !important;
@@ -3394,6 +3398,52 @@ td .sapMBtnInner.sapMBtnReject:active,
   min-width: 0 !important;
 }
 
+/* ==========================================================================
+   MODERN PILL PROGRESS BARS. NOT sap.m.ProgressIndicator - its Horizon theme
+   paints the entire track with a pale state color plus a state icon
+   REGARDLESS of percentValue (verified straight from the theme's own LESS:
+   .sapMPIBarRemaining is position:absolute, ~100% width, always tinted by
+   the sibling .sapMPIBar<State> selector) - wrong semantics for comparing
+   sibling counts, since a 0-value bar looks identical to a 100-value one.
+   Plain HBox track + fill instead, sized via the real, verified `width`
+   property (FlexBoxRenderer writes it as a literal inline style
+   unconditionally - not a flex-basis/CSS-class trick).
+   ========================================================================== */
+.xyraProgressRow {
+  width: 100% !important;
+  gap: 0.3rem !important;
+}
+
+.xyraProgressTrack {
+  width: 100% !important;
+  height: 10px !important;
+  background-color: #f1f5f9 !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+}
+
+.xyraProgressFill {
+  height: 100% !important;
+  border-radius: 999px !important;
+  transition: width 0.4s ease !important;
+}
+
+.xyraProgressFillRed {
+  background: linear-gradient(90deg, #f87171, #ef4444) !important;
+}
+
+.xyraProgressFillAmber {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b) !important;
+}
+
+.xyraProgressFillGreen {
+  background: linear-gradient(90deg, #34d399, #10b981) !important;
+}
+
+.xyraProgressFillBlue {
+  background: linear-gradient(90deg, #60a5fa, #3b82f6) !important;
+}
+
 .xyraDonutCard {
   flex: 1 1 290px !important;
   width: auto !important;
@@ -4978,6 +5028,30 @@ div[id*="-text"] {
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
+}
+
+/* ==========================================================================
+   MODERN RING SPINNER - a control's `busy` property is a dead end here (it
+   renders via .sapUiLocalBusyIndicator, which the rule above suppresses
+   site-wide by design), so pages needing a load-state spinner show/hide a
+   plain VBox with this ring via a `visible` binding instead.
+   ========================================================================== */
+.xyraLoadingState {
+  min-height: 320px;
+  gap: 0.75rem;
+}
+
+.xyraSpinnerRing {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #533bff;
+  border-radius: 50%;
+  animation: xyraSpin 0.8s linear infinite;
+}
+
+@keyframes xyraSpin {
+  to { transform: rotate(360deg); }
 }
 
 /* ==========================================================================

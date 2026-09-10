@@ -1,4 +1,4 @@
-sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageToast"], function (Config, Session, MessageToast) {
+sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageToast", "xyraweb/service/apiClient"], function (Config, Session, MessageToast, ApiClient) {
     "use strict";
 
     var bNoticeShown = false;
@@ -19,11 +19,18 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
     }
 
     function post(action, body) {
-        return fetch(Config.AUTH_BASE_URL + "/api/review/" + action, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(Object.assign({ subdomain: getSubdomain() }, body))
-        }).then(function (r) { return r.json(); });
+        return ApiClient.postJson(Config.AUTH_BASE_URL + "/api/review/" + action, Object.assign({ subdomain: getSubdomain() }, body));
+    }
+
+    // decideLevel1/2 have no offline-mock fallback (a decision can't be
+    // faked) - but a network failure or timeout must still resolve to the
+    // same {success:false, message, ticketNumber:null} shape every caller
+    // already checks, instead of leaving their .then() waiting forever on a
+    // promise that silently never settles.
+    function decide(action, body) {
+        return post(action, body).catch(function (err) {
+            return { success: false, message: (err && err.name === "AbortError") ? "Request timed out - xyra-core may be unreachable." : "Could not reach xyra-core.", ticketNumber: null };
+        });
     }
 
     function formatDate(sIso) {
@@ -150,7 +157,7 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
             }).catch(function () { notice(); return []; });
         },
         decideLevel1: function (reviewId, decision, comment) {
-            return post("decideLevel1", { reviewId: reviewId, decision: decision, comment: comment, actingUserId: getActingUserId() });
+            return decide("decideLevel1", { reviewId: reviewId, decision: decision, comment: comment, actingUserId: getActingUserId() });
         },
 
         // Level 2 (Reviewer2)
@@ -167,7 +174,7 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
             }).catch(function () { notice(); return []; });
         },
         decideLevel2: function (reviewId, decision, comment) {
-            return post("decideLevel2", { reviewId: reviewId, decision: decision, comment: comment, actingUserId: getActingUserId() });
+            return decide("decideLevel2", { reviewId: reviewId, decision: decision, comment: comment, actingUserId: getActingUserId() });
         }
     };
 });
