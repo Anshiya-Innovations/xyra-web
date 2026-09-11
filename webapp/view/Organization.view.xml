@@ -62,7 +62,7 @@
                     <Dialog
                         id="addOrgDialog"
                         title="Create Organization"
-                        contentWidth="620px">
+                        contentWidth="620px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <MessageStrip
@@ -227,18 +227,18 @@
 
                             <Table id="orgsTable" items="{orgModel>/organizations}" mode="None" width="100%" class="sapUiNoMargin">
                                 <columns>
-                                    <Column width="14%"><Text text="Organization ID"/></Column>
-                                    <Column width="22%"><Text text="Company Name"/></Column>
-                                    <Column width="16%"><Text text="Industry"/></Column>
-                                    <Column width="12%"><Text text="Region"/></Column>
-                                    <Column width="15%"><Text text="System"/></Column>
-                                    <Column width="10%"><Text text="Status"/></Column>
-                                    <Column width="11%"><Text text="Created Date"/></Column>
-                                    <Column width="10%" hAlign="Center"><Text text="Actions"/></Column>
+                                    <Column width="14%" importance="High"><Text text="Organization ID"/></Column>
+                                    <Column width="22%" importance="High"><Text text="Company Name"/></Column>
+                                    <Column width="16%" importance="Medium" demandPopin="true" minScreenWidth="Tablet"><Text text="Industry"/></Column>
+                                    <Column width="12%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Region"/></Column>
+                                    <Column width="15%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="System"/></Column>
+                                    <Column width="10%" importance="High"><Text text="Status"/></Column>
+                                    <Column width="11%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Created Date"/></Column>
+                                    <Column width="10%" hAlign="Center" importance="High"><Text text="Actions"/></Column>
                                 </columns>
 
                                 <items>
-                                    <ColumnListItem vAlign="Middle">
+                                    <ColumnListItem vAlign="Middle" highlight="{orgModel>statusState}">
                                         <cells>
                                             <ObjectIdentifier title="{orgModel>orgId}" text="{orgModel>country}"/>
                                             <VBox>

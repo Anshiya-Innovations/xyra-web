@@ -17,7 +17,6 @@
             <tnt:SideNavigation id="reviewer2SideNavigation" expanded="true" selectedKey="Queue" itemSelect="onSideNavItemSelect">
                 <tnt:NavigationList>
                     <tnt:NavigationListItem text="Review Queue" icon="sap-icon://table-view" key="Queue" select="onSelectTabQueue"/>
-                    <tnt:NavigationListItem text="Detailed Review Analysis" icon="sap-icon://inspect" key="Analysis" select="onSelectTabAnalysis"/>
                     <tnt:NavigationListItem text="Reviewer History" icon="sap-icon://history" key="History" select="onSelectTabHistory"/>
                 </tnt:NavigationList>
 
@@ -34,8 +33,6 @@
                 id="reviewer2Page"
                 showHeader="true"
                 enableScrolling="true"
-                busy="{reviewer2Model>/busy}"
-                busyIndicatorDelay="0"
                 class="sapUiContentPadding">
 
                 <dependents>
@@ -74,7 +71,7 @@
                     </ResponsivePopover>
 
                     <!-- VIEW REPORT DIALOG -->
-                    <Dialog id="viewReportDialog" title="Exception Report Details" contentWidth="560px">
+                    <Dialog id="viewReportDialog" title="Exception Report Details" contentWidth="560px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Title text="{reviewer2Model>/selectedReport/reportName}" level="H3" class="sapUiTinyMarginBottom"/>
@@ -112,7 +109,7 @@
                     </Dialog>
 
                     <!-- VIEW EVIDENCE DIALOG -->
-                    <Dialog id="viewEvidenceDialog" title="Supporting Evidence Review" contentWidth="520px">
+                    <Dialog id="viewEvidenceDialog" title="Supporting Evidence Review" contentWidth="520px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Title text="Evidence Files &amp; Audit Logs" level="H4" class="sapUiSmallMarginBottom"/>
@@ -129,7 +126,7 @@
                     </Dialog>
 
                     <!-- SECTION 6: APPROVE DIALOG -->
-                    <Dialog id="approveDialog2" title="Approve &amp; Close" contentWidth="540px">
+                    <Dialog id="approveDialog2" title="Approve &amp; Close" contentWidth="540px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <MessageStrip text="Confirm Level 2 approval - this is the final sign-off and closes the exception record." type="Success" showIcon="true" class="sapUiSmallMarginBottom"/>
@@ -172,7 +169,7 @@
                     </Dialog>
 
                     <!-- SECTION 7: REJECT DIALOG -->
-                    <Dialog id="rejectDialog2" title="Reject (Remediation Ticket)" contentWidth="540px">
+                    <Dialog id="rejectDialog2" title="Reject (Remediation Ticket)" contentWidth="540px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <MessageStrip text="Reject Level 2 validation and create a remediation ticket for this exception record." type="Error" showIcon="true" class="sapUiSmallMarginBottom"/>
@@ -208,7 +205,7 @@
                     </Dialog>
 
                     <!-- REQUEST ADDITIONAL EVIDENCE DIALOG -->
-                    <Dialog id="requestEvidenceDialog2" title="Request Additional Evidence" contentWidth="480px">
+                    <Dialog id="requestEvidenceDialog2" title="Request Additional Evidence" contentWidth="480px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Label text="Specify Additional Evidence Required" required="true"/>
@@ -224,7 +221,7 @@
                     </Dialog>
 
                     <!-- ADD COMMENTS DIALOG -->
-                    <Dialog id="addCommentsDialog2" title="Add Manager Review Comments" contentWidth="480px">
+                    <Dialog id="addCommentsDialog2" title="Add Manager Review Comments" contentWidth="480px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Label text="Manager Review Comments &amp; Notes" required="true"/>
@@ -240,7 +237,7 @@
                     </Dialog>
 
                     <!-- HISTORICAL DETAILS DIALOG FOR REVIEWER 2 HISTORY -->
-                    <Dialog id="viewHistoryDetailsDialog2" title="Historical Decision &amp; Audit Trail Details" contentWidth="580px">
+                    <Dialog id="viewHistoryDetailsDialog2" title="Historical Decision &amp; Audit Trail Details" contentWidth="580px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Title text="{reviewer2Model>/selectedHistoryItem/reportName}" level="H3" class="sapUiTinyMarginBottom"/>
@@ -290,6 +287,47 @@
                             <Button text="Close" press="onCloseHistoryDetailsDialog"/>
                         </endButton>
                     </Dialog>
+
+                    <!-- AUTOMATION EXECUTION LOGS DIALOG (same feature as the admin-side Alert Item page) -->
+                    <Dialog
+                        id="itemLogsDialog"
+                        title="Automation Execution Logs"
+                        contentWidth="700px" stretch="{device>/system/phone}">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <VBox>
+                                        <Title id="logItemIdTitle" text="Control ID: NLG08" level="H3"/>
+                                        <Text id="logItemDescText" text="Basis Kernel Audit Logging &amp; Parameter Validation" class="textMuted"/>
+                                    </VBox>
+                                    <ObjectStatus id="logItemStatus" text="FAILED" state="Error" icon="sap-icon://status-negative"/>
+                                </HBox>
+
+                                <Table id="itemLogEntriesTable" items="{logsModel>/logEntries}" mode="None" class="sapUiTinyMarginTop">
+                                    <columns>
+                                        <Column width="30%"><Text text="Timestamp" class="fontWeightBold"/></Column>
+                                        <Column width="20%"><Text text="Log Level" class="fontWeightBold"/></Column>
+                                        <Column width="50%"><Text text="Message / Event Trace" class="fontWeightBold"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{logsModel>timestamp}"/>
+                                                <ObjectStatus text="{logsModel>level}" state="{logsModel>levelState}"/>
+                                                <Text text="{logsModel>message}"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Download Log" icon="sap-icon://download" type="Ghost" press="onDownloadLogs"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Close" press="onCloseLogsDialog"/>
+                        </endButton>
+                    </Dialog>
                 </dependents>
 
                 <customHeader>
@@ -314,7 +352,12 @@
                 </customHeader>
 
                 <content>
-                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+                    <VBox visible="{reviewer2Model>/busy}" alignItems="Center" justifyContent="Center" class="xyraLoadingState">
+                        <core:HTML content="&lt;div class=&quot;xyraSpinnerRing&quot;&gt;&lt;/div&gt;"/>
+                        <Text text="Loading review queue…" class="textMuted sapUiSmallMarginTop"/>
+                    </VBox>
+
+                    <VBox visible="{= !${reviewer2Model>/busy} }" width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
 
                         <!-- BUSINESS ROLE & PURPOSE BANNER -->
                         <MessageStrip
@@ -419,8 +462,8 @@
                                 <ObjectStatus text="{reviewer2Model>/selectedReport/reviewer2Status}" state="{reviewer2Model>/selectedReport/reviewer2State}"/>
                             </OverflowToolbar>
 
-                            <!-- SECTION 3: REPORT DETAILS PANEL (DOWNWARD ALIGNMENT) -->
-                            <Panel headerText="3. Report Details" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                            <!-- SECTION 1: REPORT DETAILS PANEL (DOWNWARD ALIGNMENT) -->
+                            <Panel headerText="1. Report Details" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
                                 <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiTinyMargin">
                                     <VBox>
                                         <Label text="Control Information" design="Bold"/>
@@ -467,8 +510,80 @@
                                 </layout:Grid>
                             </Panel>
 
-                            <!-- SECTION 3: ROOT CAUSE ANALYSIS (MANDATORY) (DOWNWARD ALIGNMENT) -->
-                            <Panel headerText="3. Root Cause Analysis (Mandatory)" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                            <!-- SECTION 3: ALERT CONTEXT SUMMARY (same feature as the admin-side Alert Item page) -->
+                            <Panel headerText="3. Alert Context Summary" expandable="false" class="sapUiSmallMarginBottom noInternalScroll">
+                                <content>
+                                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox width="23%" class="xyraFieldGroup">
+                                            <Label text="Control ID &amp; Name" class="textMuted"/>
+                                            <Title text="{reviewer2Model>/selectedReport/alertHeader/controlId}" level="H4"/>
+                                            <Text text="{reviewer2Model>/selectedReport/alertHeader/controlName}" class="sapUiTinyMarginTop"/>
+                                        </VBox>
+
+                                        <VBox width="23%" class="xyraFieldGroup">
+                                            <Label text="System &amp; Client" class="textMuted"/>
+                                            <Text text="{= ${reviewer2Model>/selectedReport/alertHeader/system} + ' (Client ' + ${reviewer2Model>/selectedReport/alertHeader/client} + ')' }" class="fontWeightBold"/>
+                                            <Text text="{= 'Sector: ' + ${reviewer2Model>/selectedReport/alertHeader/sector} + ' | Platform: ' + ${reviewer2Model>/selectedReport/alertHeader/platform} }"/>
+                                        </VBox>
+
+                                        <VBox width="23%" class="xyraFieldGroup">
+                                            <Label text="Status &amp; Severity" class="textMuted"/>
+                                            <HBox alignItems="Center">
+                                                <ObjectStatus text="{reviewer2Model>/selectedReport/alertHeader/status}" state="{= ${reviewer2Model>/selectedReport/alertHeader/status} === 'Resolved' ? 'Success' : 'Error' }" class="sapUiTinyMarginEnd"/>
+                                                <ObjectStatus text="{reviewer2Model>/selectedReport/alertHeader/severity}" state="{= ${reviewer2Model>/selectedReport/alertHeader/severity} === 'Critical' ? 'Error' : 'Warning' }"/>
+                                            </HBox>
+                                        </VBox>
+
+                                        <VBox width="23%" class="xyraFieldGroup">
+                                            <Label text="Alert Date &amp; Deviations" class="textMuted"/>
+                                            <Text text="{reviewer2Model>/selectedReport/alertHeader/alertDate}" class="fontWeightBold"/>
+                                            <ObjectNumber number="{reviewer2Model>/selectedReport/alertHeader/deviationCount}" unit="line deviations"/>
+                                        </VBox>
+                                    </HBox>
+
+                                    <VBox width="100%" class="sapUiSmallMarginTop">
+                                        <Label text="Incident Description" class="textMuted"/>
+                                        <Text text="{reviewer2Model>/selectedReport/alertHeader/description}" class="fontWeightBold"/>
+                                    </VBox>
+                                </content>
+                            </Panel>
+
+                            <!-- SECTION 4: DETAILED DEVIATION LINE ITEMS (same feature as the admin-side Alert Item page) -->
+                            <Panel headerText="4. Detailed Deviation Line Items" expandable="false" class="sapUiSmallMarginBottom noInternalScroll">
+                                <content>
+                                    <Table id="reviewer2AlertItemTable" items="{reviewer2Model>/selectedReport/alertItems}" noDataText="No detailed deviation line items found.">
+                                        <columns>
+                                            <Column width="9%" importance="High"><Text text="Item ID" class="fontWeightBold"/></Column>
+                                            <Column width="13%" importance="High"><Text text="SAP Object" class="fontWeightBold"/></Column>
+                                            <Column width="14%" importance="Medium" demandPopin="true" minScreenWidth="Tablet"><Text text="Parameter" class="fontWeightBold"/></Column>
+                                            <Column width="10%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Operator" class="fontWeightBold"/></Column>
+                                            <Column width="15%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Expected Value" class="fontWeightBold"/></Column>
+                                            <Column width="15%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Actual Detected Value" class="fontWeightBold"/></Column>
+                                            <Column width="8%" importance="High"><Text text="Status" class="fontWeightBold"/></Column>
+                                            <Column width="11%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Timestamp" class="fontWeightBold"/></Column>
+                                            <Column width="5%" importance="High"><Text text="Logs" class="fontWeightBold"/></Column>
+                                        </columns>
+                                        <items>
+                                            <ColumnListItem highlight="{= ${reviewer2Model>status} === 'Critical' ? 'Error' : (${reviewer2Model>status} === 'High' ? 'Warning' : 'Information') }">
+                                                <cells>
+                                                    <Text text="{reviewer2Model>itemId}" class="fontWeightBold"/>
+                                                    <Text text="{reviewer2Model>sapObject}"/>
+                                                    <Text text="{reviewer2Model>parameter}"/>
+                                                    <Text text="{reviewer2Model>operator}"/>
+                                                    <Text text="{reviewer2Model>expectedValue}"/>
+                                                    <Text text="{reviewer2Model>actualValue}" class="fontWeightBold"/>
+                                                    <ObjectStatus text="{reviewer2Model>status}" state="{= ${reviewer2Model>status} === 'Critical' ? 'Error' : (${reviewer2Model>status} === 'High' ? 'Warning' : 'Information') }"/>
+                                                    <Text text="{reviewer2Model>timestamp}"/>
+                                                    <Button text="Logs" type="Emphasized" press="onOpenItemLogs"/>
+                                                </cells>
+                                            </ColumnListItem>
+                                        </items>
+                                    </Table>
+                                </content>
+                            </Panel>
+
+                            <!-- SECTION 5: ROOT CAUSE ANALYSIS (MANDATORY) (DOWNWARD ALIGNMENT) -->
+                            <Panel headerText="5. Root Cause Analysis (Mandatory)" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
                                 <VBox class="sapUiTinyMargin">
                                     <MessageStrip text="Mandatory: Root Cause Analysis is required prior to approving or rejecting this review." type="Warning" showIcon="true" class="sapUiSmallMarginBottom"/>
                                     <Label text="Root Cause Analysis (Mandatory)" required="true" design="Bold"/>
@@ -482,23 +597,20 @@
                                 </VBox>
                             </Panel>
 
-                            <!-- SECTION 4: ELECTRONIC SIGNATURE PANEL (DOWNWARD ALIGNMENT) -->
-                            <Panel headerText="4. Electronic Signature Panel" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                            <!-- SECTION 6: ELECTRONIC SIGNATURE PANEL (DOWNWARD ALIGNMENT) -->
+                            <Panel headerText="6. Electronic Signature Panel" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
                                 <VBox class="sapUiTinyMargin">
                                     <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
                                         <VBox>
                                             <Label text="Reviewer Name" design="Bold"/>
                                             <Text text="{reviewer2Model>/selectedReport/reviewer2Name}"/>
-                                            
+
                                             <Label text="Employee ID" design="Bold" class="sapUiTinyMarginTop"/>
                                             <Text text="{reviewer2Model>/selectedReport/employeeId}"/>
                                         </VBox>
                                         <VBox>
                                             <Label text="Decision Date" design="Bold"/>
                                             <Text text="{reviewer2Model>/selectedReport/decisionDate}"/>
-
-                                            <Label text="Digital Signature Status" design="Bold" class="sapUiTinyMarginTop"/>
-                                            <ObjectStatus text="{reviewer2Model>/selectedReport/sigStatus}" state="Success" icon="sap-icon://sys-enter-2"/>
                                         </VBox>
                                     </layout:Grid>
 
@@ -508,26 +620,6 @@
                                         selected="{reviewer2Model>/selectedReport/elecSigConfirmed}"
                                         class="sapUiTinyMarginTop"/>
                                 </VBox>
-                            </Panel>
-
-                            <!-- SECTION 5: REVIEW HISTORY (DOWNWARD ALIGNMENT) -->
-                            <Panel headerText="5. Review History" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
-                                <Table items="{reviewer2Model>/selectedReport/reviewHistory}" inset="false" width="100%">
-                                    <columns>
-                                        <Column width="30%"><Text text="Previous Actions"/></Column>
-                                        <Column width="35%"><Text text="Reviewer Comments"/></Column>
-                                        <Column width="35%"><Text text="Status Timeline"/></Column>
-                                    </columns>
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells>
-                                                <Text text="{action}"/>
-                                                <Text text="{comments}"/>
-                                                <ObjectStatus text="{statusTimeline}" state="Information"/>
-                                            </cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
                             </Panel>
 
                             <!-- BOTTOM ACTION BAR IN DETAILED ANALYSIS SLIDE -->
@@ -636,18 +728,18 @@
                             <Panel headerText="Reviewer 2 Historical Decisions (Read-Only)" expandable="false" class="sapUiSmallMarginBottom">
                                 <Table id="reviewerHistoryTable2" items="{reviewer2Model>/history}" mode="None" width="100%">
                                     <columns>
-                                        <Column width="9%"><Text text="Ticket ID" class="fontWeightBold"/></Column>
-                                        <Column width="8%"><Text text="Report ID"/></Column>
-                                        <Column width="8%"><Text text="Control ID"/></Column>
-                                        <Column width="19%"><Text text="Report Name"/></Column>
-                                        <Column width="11%"><Text text="System"/></Column>
-                                        <Column width="9%"><Text text="Decision"/></Column>
-                                        <Column width="10%"><Text text="Action Date"/></Column>
-                                        <Column width="13%"><Text text="Ticket Status"/></Column>
-                                        <Column width="13%" hAlign="Center"><Text text="Action"/></Column>
+                                        <Column width="9%" importance="High"><Text text="Ticket ID" class="fontWeightBold"/></Column>
+                                        <Column width="8%" importance="Medium" demandPopin="true" minScreenWidth="Tablet"><Text text="Report ID"/></Column>
+                                        <Column width="8%" importance="Medium" demandPopin="true" minScreenWidth="Tablet"><Text text="Control ID"/></Column>
+                                        <Column width="19%" importance="High"><Text text="Report Name"/></Column>
+                                        <Column width="11%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="System"/></Column>
+                                        <Column width="9%" importance="High"><Text text="Decision"/></Column>
+                                        <Column width="10%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Action Date"/></Column>
+                                        <Column width="13%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Ticket Status"/></Column>
+                                        <Column width="13%" hAlign="Center" importance="High"><Text text="Action"/></Column>
                                     </columns>
                                     <items>
-                                        <ColumnListItem>
+                                        <ColumnListItem highlight="{= ${reviewer2Model>decision} === 'Approved' ? 'Success' : (${reviewer2Model>decision} === 'Rejected' ? 'Error' : 'Warning') }">
                                             <cells>
                                                 <ObjectStatus text="{reviewer2Model>ticketId}" state="Information" class="fontWeightBold"/>
                                                 <Text text="{reviewer2Model>reportId}"/>

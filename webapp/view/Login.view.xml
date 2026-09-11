@@ -14,7 +14,97 @@
 
             <HBox fitContainer="true" renderType="Div" class="xyraLoginSplit">
 
-                <!-- Left Login Panel -->
+                <!-- Left: Product Flow Panel - replaces the old auto-rotating
+                     slideshow with a static diagram of Xyra's real review
+                     chain (SAP -> rules -> deviation -> 2-level review ->
+                     approved/rejected), not stock marketing slides. -->
+                <FlexBox
+                    fitContainer="true"
+                    justifyContent="Center"
+                    alignItems="Center"
+                    direction="Column"
+                    renderType="Div"
+                    class="xyraFlowPane">
+
+                    <core:HTML content='&lt;div class="xyraFlowScene"&gt;
+    &lt;div class="xyraFlowBrand"&gt;
+        &lt;img src="img/logo-icon-dark-bg.png" alt="Xyra"/&gt;
+        &lt;span&gt;XYRA&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;div class="xyraFlowChain"&gt;
+
+        &lt;div class="xyraFlowStep"&gt;
+            &lt;div class="xyraFlowIcon xyraFlowIconBlue"&gt;
+                &lt;svg viewBox="0 0 24 24" fill="none"&gt;&lt;rect x="4" y="4" width="16" height="5" rx="1.5" stroke="currentColor" stroke-width="1.6"/&gt;&lt;rect x="4" y="10.5" width="16" height="5" rx="1.5" stroke="currentColor" stroke-width="1.6"/&gt;&lt;rect x="4" y="17" width="16" height="5" rx="1.5" stroke="currentColor" stroke-width="1.6"/&gt;&lt;circle cx="7" cy="6.5" r="0.8" fill="currentColor"/&gt;&lt;circle cx="7" cy="13" r="0.8" fill="currentColor"/&gt;&lt;circle cx="7" cy="19.5" r="0.8" fill="currentColor"/&gt;&lt;/svg&gt;
+            &lt;/div&gt;
+            &lt;div class="xyraFlowStepText"&gt;&lt;strong&gt;Connect to SAP System&lt;/strong&gt;&lt;span&gt;Pull control data in real time&lt;/span&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="xyraFlowLine"&gt;&lt;/div&gt;
+
+        &lt;div class="xyraFlowStep"&gt;
+            &lt;div class="xyraFlowIcon xyraFlowIconBlue"&gt;
+                &lt;svg viewBox="0 0 24 24" fill="none"&gt;&lt;rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/&gt;&lt;path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/&gt;&lt;/svg&gt;
+            &lt;/div&gt;
+            &lt;div class="xyraFlowStepText"&gt;&lt;strong&gt;Apply Control Rules&lt;/strong&gt;&lt;span&gt;Validate against expected values&lt;/span&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="xyraFlowLine"&gt;&lt;/div&gt;
+
+        &lt;div class="xyraFlowStep"&gt;
+            &lt;div class="xyraFlowIcon xyraFlowIconAmber"&gt;
+                &lt;svg viewBox="0 0 24 24" fill="none"&gt;&lt;path d="M12 4 L21 20 H3 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/&gt;&lt;path d="M12 10v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/&gt;&lt;circle cx="12" cy="17" r="0.9" fill="currentColor"/&gt;&lt;/svg&gt;
+            &lt;/div&gt;
+            &lt;div class="xyraFlowStepText"&gt;&lt;strong&gt;Deviation Detected&lt;/strong&gt;&lt;span&gt;Alert raised automatically&lt;/span&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="xyraFlowLine"&gt;&lt;/div&gt;
+
+        &lt;div class="xyraFlowStep"&gt;
+            &lt;div class="xyraFlowIcon xyraFlowIconBlue"&gt;
+                &lt;svg viewBox="0 0 24 24" fill="none"&gt;&lt;circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/&gt;&lt;path d="M3.5 20c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/&gt;&lt;circle cx="17" cy="7" r="2.3" stroke="currentColor" stroke-width="1.4" opacity="0.55"/&gt;&lt;path d="M13.5 20c0-2.3 1.6-4.3 3.5-4.9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/&gt;&lt;/svg&gt;
+            &lt;/div&gt;
+            &lt;div class="xyraFlowStepText"&gt;&lt;strong&gt;Reviewer 1 &amp;#8594; Reviewer 2&lt;/strong&gt;&lt;span&gt;Two-level review &amp;amp; sign-off&lt;/span&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="xyraFlowBranch"&gt;
+            &lt;svg viewBox="0 0 100 32" preserveAspectRatio="none"&gt;
+                &lt;path d="M50,0 C50,14 25,10 25,32" fill="none" stroke="rgba(139,116,255,0.5)" stroke-width="2" vector-effect="non-scaling-stroke"/&gt;
+                &lt;path d="M50,0 C50,14 75,10 75,32" fill="none" stroke="rgba(139,116,255,0.5)" stroke-width="2" vector-effect="non-scaling-stroke"/&gt;
+            &lt;/svg&gt;
+        &lt;/div&gt;
+
+        &lt;div class="xyraFlowOutcomes"&gt;
+            &lt;div class="xyraFlowOutcome"&gt;
+                &lt;div class="xyraFlowPill xyraFlowPillGreen"&gt;
+                    &lt;svg viewBox="0 0 24 24" fill="none"&gt;&lt;path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;/svg&gt;
+                    Approved
+                &lt;/div&gt;
+                &lt;div class="xyraFlowOutcomeIcon xyraFlowIconGreen"&gt;
+                    &lt;svg viewBox="0 0 24 24" fill="none"&gt;&lt;path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/&gt;&lt;path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;/svg&gt;
+                &lt;/div&gt;
+                &lt;span&gt;SOX-compliant environment&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="xyraFlowOutcome"&gt;
+                &lt;div class="xyraFlowPill xyraFlowPillRed"&gt;
+                    &lt;svg viewBox="0 0 24 24" fill="none"&gt;&lt;path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/&gt;&lt;/svg&gt;
+                    Rejected
+                &lt;/div&gt;
+                &lt;div class="xyraFlowOutcomeIcon xyraFlowIconRed"&gt;
+                    &lt;svg viewBox="0 0 24 24" fill="none"&gt;&lt;path d="M4 8a2 2 0 012-2h12a2 2 0 012 2v2a1.5 1.5 0 000 3v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2a1.5 1.5 0 000-3V8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/&gt;&lt;path d="M14 6v12" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 2"/&gt;&lt;/svg&gt;
+                &lt;/div&gt;
+                &lt;span&gt;Remediation ticket created&lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+    &lt;/div&gt;
+
+    &lt;div class="xyraFlowFooter"&gt;
+        &lt;h3&gt;Continuous Control Monitoring&lt;/h3&gt;
+        &lt;p&gt;From SAP deviation to sign-off, every step tracked automatically.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;'/>
+
+                </FlexBox>
+
+                <!-- Right: Login Form -->
                 <FlexBox
                     id="loginContainer"
                     fitContainer="true"
@@ -22,26 +112,41 @@
                     alignItems="Center"
                     direction="Column"
                     renderType="Div"
-                    class="xyraLoginBg xyraLoginPane">
+                    class="xyraLoginPane">
+
+                    <core:HTML content='&lt;div class="xyraLoginWave"&gt;
+    &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 200" preserveAspectRatio="none" width="100%" height="100%" style="display:block" aria-hidden="true" focusable="false"&gt;
+        &lt;style&gt;@media (prefers-reduced-motion: reduce) \{ .wg-layer-0, .wg-layer-1, .wg-layer-2 \{ animation: none; \} \}&lt;/style&gt;
+        &lt;path d="M 0.00 100.00 Q 120.00 119.13 180.00 127.24 Q 240.00 135.36 300.00 140.77 Q 360.00 146.19 420.00 148.10 Q 480.00 150.00 540.00 148.10 Q 600.00 146.19 660.00 140.77 Q 720.00 135.36 780.00 127.24 Q 840.00 119.13 900.00 109.57 Q 960.00 100.00 1020.00 90.43 Q 1080.00 80.87 1140.00 72.76 Q 1200.00 64.64 1260.00 59.23 Q 1320.00 53.81 1380.00 51.90 Q 1440.00 50.00 1500.00 51.90 Q 1560.00 53.81 1620.00 59.23 Q 1680.00 64.64 1740.00 72.76 Q 1800.00 80.87 1860.00 90.43 Q 1920.00 100.00 1980.00 109.57 Q 2040.00 119.13 2100.00 127.24 Q 2160.00 135.36 2220.00 140.77 Q 2280.00 146.19 2340.00 148.10 Q 2400.00 150.00 2460.00 148.10 Q 2520.00 146.19 2580.00 140.77 Q 2640.00 135.36 2700.00 127.24 Q 2760.00 119.13 2820.00 109.57 T 2880.00 100.00 L 2880 200 L 0 200 Z" fill="#a78bfa" stroke="none" stroke-width="0" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" class="wg-layer wg-layer-0"&gt;
+            &lt;animateTransform attributeName="transform" type="translate" values="0,0; -1440,0" keyTimes="0; 1" dur="10.00s" repeatCount="indefinite"/&gt;
+        &lt;/path&gt;
+        &lt;path d="M 0.00 140.00 Q 120.00 134.64 180.00 127.32 Q 240.00 120.00 300.00 110.00 Q 360.00 100.00 420.00 90.00 Q 480.00 80.00 540.00 72.68 Q 600.00 65.36 660.00 62.68 Q 720.00 60.00 780.00 62.68 Q 840.00 65.36 900.00 72.68 Q 960.00 80.00 1020.00 90.00 Q 1080.00 100.00 1140.00 110.00 Q 1200.00 120.00 1260.00 127.32 Q 1320.00 134.64 1380.00 137.32 Q 1440.00 140.00 1500.00 137.32 Q 1560.00 134.64 1620.00 127.32 Q 1680.00 120.00 1740.00 110.00 Q 1800.00 100.00 1860.00 90.00 Q 1920.00 80.00 1980.00 72.68 Q 2040.00 65.36 2100.00 62.68 Q 2160.00 60.00 2220.00 62.68 Q 2280.00 65.36 2340.00 72.68 Q 2400.00 80.00 2460.00 90.00 Q 2520.00 100.00 2580.00 110.00 Q 2640.00 120.00 2700.00 127.32 Q 2760.00 134.64 2820.00 137.32 T 2880.00 140.00 L 2880 200 L 0 200 Z" fill="#a78bfa" stroke="none" stroke-width="0" stroke-linecap="round" stroke-linejoin="round" opacity="0.2" class="wg-layer wg-layer-1"&gt;
+            &lt;animateTransform attributeName="transform" type="translate" values="0,0; -1440,0" keyTimes="0; 1" dur="11.20s" repeatCount="indefinite"/&gt;
+        &lt;/path&gt;
+        &lt;path d="M 0.00 100.00 Q 120.00 81.74 180.00 76.38 Q 240.00 71.02 300.00 71.65 Q 360.00 72.28 420.00 78.64 Q 480.00 85.00 540.00 94.46 Q 600.00 103.92 660.00 112.56 Q 720.00 121.21 780.00 125.48 Q 840.00 129.74 900.00 127.86 Q 960.00 125.98 1020.00 118.73 Q 1080.00 111.48 1140.00 101.86 Q 1200.00 92.24 1260.00 84.22 Q 1320.00 76.20 1380.00 73.10 Q 1440.00 70.00 1500.00 73.10 Q 1560.00 76.20 1620.00 84.22 Q 1680.00 92.24 1740.00 101.86 Q 1800.00 111.48 1860.00 118.73 Q 1920.00 125.98 1980.00 127.86 Q 2040.00 129.74 2100.00 125.48 Q 2160.00 121.21 2220.00 112.56 Q 2280.00 103.92 2340.00 94.46 Q 2400.00 85.00 2460.00 78.64 Q 2520.00 72.28 2580.00 71.65 Q 2640.00 71.02 2700.00 76.38 Q 2760.00 81.74 2820.00 90.87 T 2880.00 100.00 L 2880 200 L 0 200 Z" fill="#a78bfa" stroke="none" stroke-width="0" stroke-linecap="round" stroke-linejoin="round" opacity="0.35" class="wg-layer wg-layer-2"&gt;
+            &lt;animateTransform attributeName="transform" type="translate" values="0,0; -1440,0" keyTimes="0; 1" dur="12.40s" repeatCount="indefinite"/&gt;
+        &lt;/path&gt;
+    &lt;/svg&gt;
+&lt;/div&gt;'/>
 
                     <VBox id="_IDGenVBox"
                         width="100%"
                         alignItems="Stretch"
                         class="xyraLoginCard">
 
-                        <Image src="img/logo.png" alt="Xyra" class="xyraLoginLogo"/>
+                        <core:HTML content='&lt;div class="xyraLoginBadge"&gt;&lt;img src="img/logo-icon-dark-bg.png" alt="Xyra"/&gt;&lt;/div&gt;'/>
 
                         <VBox class="xyraLoginHeaderGroup">
                             <Title id="_IDGenTitle"
-                                text="Welcome back"
+                                text="Welcome back!"
                                 level="H2"
-                                textAlign="Begin"
+                                textAlign="Center"
                                 width="100%"
                                 class="xyraLoginTitle"/>
 
                             <Text id="_IDGenText"
-                                text="Sign in to continue to Xyra Control Monitoring"
-                                textAlign="Begin"
+                                text="Enter your credentials to sign in to Xyra."
+                                textAlign="Center"
                                 width="100%"
                                 wrapping="true"
                                 class="xyraLoginSubtitle"/>
@@ -87,11 +192,6 @@
                                 class="xyraLoginField"/>
                         </VBox>
 
-                        <CheckBox
-                            id="_IDGenCheckBox"
-                            text="Remember Me"
-                            class="xyraLoginCheckbox"/>
-
                         <Button id="_IDGenButton"
                             text="Sign In"
                             type="Emphasized"
@@ -110,57 +210,6 @@
                         </VBox>
 
                     </VBox>
-
-                </FlexBox>
-
-                <!-- Right Visual Slide Panel -->
-                <FlexBox
-                    id="xyraLoginHeroPane"
-                    fitContainer="true"
-                    justifyContent="Center"
-                    alignItems="Center"
-                    direction="Column"
-                    renderType="Div"
-                    class="xyraLoginHeroPane">
-
-                    <!-- Background Vesper-Style Curved Decorative Overlay -->
-                    <core:HTML content='&lt;div class="xyraHeroCurveOverlay"&gt;&lt;svg class="xyraHeroSvgWave" viewBox="0 0 500 500" preserveAspectRatio="none"&gt;&lt;path d="M0,0 C150,180 350,120 500,320 L500,0 Z" fill="rgba(0,40,140,0.18)"/&gt;&lt;path d="M0,200 C200,350 300,180 500,450 L500,500 L0,500 Z" fill="rgba(0,30,110,0.15)"/&gt;&lt;/svg&gt;&lt;/div&gt;' />
-
-                    <!-- Slides Wrapper -->
-                    <FlexBox
-                        id="xyraHeroSlidesWrapper"
-                        fitContainer="true"
-                        justifyContent="Center"
-                        alignItems="Center"
-                        renderType="Div"
-                        class="xyraHeroSlidesWrapper">
-
-                        <!-- Slide 1: AI-Powered Control Monitoring -->
-                        <VBox id="xyraSlide1" class="xyraHeroSlide xyraHeroSlideActive" width="100%">
-                            <VBox class="xyraHeroTextSection">
-                                <core:HTML content='&lt;div class="xyraHeroBrandBadge"&gt;&lt;span class="xyraHeroBrandDot"&gt;✦&lt;/span&gt;&lt;span class="xyraHeroBrandText"&gt;XYRA ENTERPRISE&lt;/span&gt;&lt;/div&gt;' />
-                                <Title text="AI-Powered Next-Gen Control Monitoring" level="H1" wrapping="true" class="xyraSlideH1"/>
-                                <Text text="Smarter Monitoring. Intelligent Control. Next-Level Security." class="xyraSlideH2"/>
-                            </VBox>
-                            <core:HTML content='&lt;div class="xyraHeroShowcase"&gt;&lt;img src="img/xyra-tablet-slide1.png" alt="XYRA AI Control Monitoring Tablet" class="xyraHeroTabletImg xyraTabletSlide1" /&gt;&lt;/div&gt;' />
-                        </VBox>
-
-                        <!-- Slide 2: AI-Powered SOX Monitoring -->
-                        <VBox id="xyraSlide2" class="xyraHeroSlide" width="100%">
-                            <VBox class="xyraHeroTextSection">
-                                <Title text="AI-Powered SOX Monitoring" level="H1" wrapping="true" class="xyraSlideH1"/>
-                                <Text text="Monitor controls smarter, detect risks faster, and stay audit-ready." class="xyraSlideH2"/>
-                                <core:HTML content='&lt;div class="xyraHeroPartnerRow"&gt;&lt;span class="xyraHeroPartnerBadge"&gt;SAP S/4HANA&lt;/span&gt;&lt;span class="xyraHeroPartnerBadge"&gt;SOX 404&lt;/span&gt;&lt;span class="xyraHeroPartnerBadge"&gt;ISO 27001&lt;/span&gt;&lt;span class="xyraHeroPartnerBadge"&gt;SOC 2&lt;/span&gt;&lt;/div&gt;' />
-                            </VBox>
-                            <core:HTML content='&lt;div class="xyraHeroShowcase"&gt;&lt;img src="img/xyra-tablet-slide2.png" alt="XYRA SOX Compliance Tablet" class="xyraHeroTabletImg xyraTabletSlide2" /&gt;&lt;/div&gt;' />
-                        </VBox>
-
-                    </FlexBox>
-
-                    <!-- Bottom Right Slide Indicator Dots -->
-                    <core:HTML
-                        id="xyraSlideIndicatorsHtml"
-                        content='&lt;div class="xyraHeroIndicators" id="xyraHeroIndicators"&gt;&lt;div class="xyraHeroBar xyraHeroBarActive" id="xyraHeroBar1" title="Slide 1: Overview"&gt;&lt;/div&gt;&lt;div class="xyraHeroBar" id="xyraHeroBar2" title="Slide 2: SOX Compliance"&gt;&lt;/div&gt;&lt;/div&gt;' />
 
                 </FlexBox>
 

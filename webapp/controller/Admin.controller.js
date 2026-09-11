@@ -15,7 +15,6 @@ sap.ui.define([
 
         onInit: function () {
             var oModel = new JSONModel({
-                busy: true,
                 controlsTotal: 0, controlsEnabled: 0,
                 openDeviations: 0, resolvedDeviations: 0, complianceRatePct: 0,
                 systemsTotal: 0, systemsOnline: 0,
@@ -24,14 +23,14 @@ sap.ui.define([
             });
             this.getView().setModel(oModel, "adminModel");
 
+            GlobalLoading.show("Loading Admin Dashboard", 0, true, true);
             AdminClient.loadDashboard().then(function (oData) {
-                oData.busy = false;
                 oModel.setData(oData);
             }).catch(function () {
                 // Every source in AdminClient already falls back on its own -
-                // this only guards against something unexpected slipping
-                // through, so the page never stays stuck in a busy state.
-                oModel.setProperty("/busy", false);
+                // this only guards against something unexpected slipping through.
+            }).then(function () {
+                GlobalLoading.hide();
             });
         },
 

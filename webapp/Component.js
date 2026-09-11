@@ -121,7 +121,15 @@ sap.ui.define([
                         if (bInitialPageLoad || !mVisitedRoutes[sRouteName]) {
                             mVisitedRoutes[sRouteName] = true;
                             var sActivity = GlobalLoading.getActivityForRoute(sRouteName);
-                            GlobalLoading.show(sActivity, 1500, true, true);
+                            // Configuration's own data load (systems list + live
+                            // health checks) can easily run past a fixed 1500ms -
+                            // a hardcoded auto-hide there was dismissing the
+                            // overlay before the table actually had data. No
+                            // timeout (0) here means it only hides when
+                            // Configuration.controller.js explicitly calls
+                            // GlobalLoading.hide() once its data is really ready.
+                            var iDuration = sRouteName === "Configuration" ? 0 : 1500;
+                            GlobalLoading.show(sActivity, iDuration, true, true);
                         }
                     }
                     bInitialPageLoad = false;

@@ -8,7 +8,8 @@ sap.ui.define([
     "sap/m/MessageBox",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationPopover",
-    "xyraweb/service/ReviewClient"
+    "xyraweb/service/ReviewClient",
+    "xyraweb/service/DeviationClient"
 ], function (
     Controller,
     UIComponent,
@@ -19,7 +20,8 @@ sap.ui.define([
     MessageBox,
     GlobalLoading,
     NotificationPopover,
-    ReviewClient
+    ReviewClient,
+    DeviationClient
 ) {
     "use strict";
 
@@ -197,10 +199,98 @@ sap.ui.define([
             var oContext = oEvent.getSource().getBindingContext("reviewer2Model");
             if (oContext) {
                 var oReport = oContext.getObject();
+                // Decision Date = the date this review was opened, stamped once
+                // (not re-stamped if the reviewer navigates back in and re-opens
+                // the same report later).
+                if (!oReport.decisionDate) {
+                    oReport.decisionDate = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+                }
                 this.getView().getModel("reviewer2Model").setProperty("/selectedReport", oReport);
+                this._loadAlertContext(oReport);
                 this.onSelectTabAnalysis();
                 MessageToast.show("Navigating to Detailed Review Analysis for " + oReport.reportId);
             }
+        },
+
+        // Alert Context Summary + Deviation Line Items - same real data the
+        // admin-side Alert Item page shows (DeviationService.getDeviationDetail),
+        // just embedded in this page's own slide instead of navigating to a
+        // page with admin-only sidebar chrome.
+        _loadAlertContext: function (oReport) {
+            this._aCachedLogs = null;
+            var oModel = this.getView().getModel("reviewer2Model");
+            if (!oReport.alertId) {
+                oReport.alertHeader = {};
+                oReport.alertItems = [];
+                oModel.refresh(true);
+                return;
+            }
+            DeviationClient.getAlertDetails(oReport.alertId, oReport.controlId).then(function (oDetails) {
+                oReport.alertHeader = oDetails.header;
+                oReport.alertItems = oDetails.items;
+                oModel.refresh(true);
+            });
+        },
+
+        // ControlRunLogs are scoped to the whole alert/run, not a single
+        // deviation line item - the log rows shown here are alert-wide
+        // regardless of which row's button was clicked, but the dialog
+        // header/status still reflects the clicked item for context.
+        onOpenItemLogs: function (oEvent) {
+            var oItemContext = oEvent.getSource().getBindingContext("reviewer2Model");
+            var oItem = oItemContext ? oItemContext.getObject() : {};
+            var oReport = this._getSelectedReport();
+            var oHeader = (oReport && oReport.alertHeader) || {};
+            var that = this;
+
+            if (!this.getView().getModel("logsModel")) {
+                this.getView().setModel(new JSONModel({ logEntries: [] }), "logsModel");
+            }
+
+            if (this.byId("logItemIdTitle")) {
+                this.byId("logItemIdTitle").setText("Control ID: " + (oHeader.controlId || "") + " (" + (oItem.itemId || "") + ")");
+            }
+            if (this.byId("logItemDescText")) {
+                this.byId("logItemDescText").setText(oHeader.controlName || "");
+            }
+            if (this.byId("logItemStatus")) {
+                this.byId("logItemStatus").setText(oItem.status === "Critical" ? "FAILED" : "DEVIATION");
+                this.byId("logItemStatus").setState(oItem.status === "Critical" ? "Error" : "Warning");
+            }
+
+            var oDialog = this.byId("itemLogsDialog");
+            if (oDialog) {
+                oDialog.open();
+            }
+
+            this._getRunLogs().then(function (aLogs) {
+                that.getView().getModel("logsModel").setProperty("/logEntries", aLogs);
+            });
+        },
+
+        // Cached per alert (cleared whenever a different report is opened) so
+        // opening Logs on several rows for the same alert only fetches once.
+        _getRunLogs: function () {
+            if (this._aCachedLogs) {
+                return Promise.resolve(this._aCachedLogs);
+            }
+            var that = this;
+            var oReport = this._getSelectedReport();
+            return DeviationClient.getRunLogs(oReport && oReport.alertId).then(function (aLogs) {
+                that._aCachedLogs = aLogs;
+                return aLogs;
+            });
+        },
+
+        onCloseLogsDialog: function () {
+            var oDialog = this.byId("itemLogsDialog");
+            if (oDialog) {
+                oDialog.close();
+            }
+        },
+
+        onDownloadLogs: function () {
+            MessageToast.show("Downloading automation execution log trace...");
         },
 
         onSelectionChange: function (oEvent) {

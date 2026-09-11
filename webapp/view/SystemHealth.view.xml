@@ -174,17 +174,17 @@
                         <Panel expandable="false" headerText="SAP Landscape Runtime Health &amp; Availability Matrix" class="sapUiSmallMarginBottom">
                             <Table id="sh_healthTable" items="{healthModel>/systems}" mode="None" width="100%">
                                 <columns>
-                                    <Column width="14%"><Text text="System ID" class="fontWeightBold"/></Column>
-                                    <Column width="15%"><Text text="System Type"/></Column>
-                                    <Column width="10%"><Text text="Client"/></Column>
-                                    <Column width="16%"><Text text="Status"/></Column>
-                                    <Column width="19%"><Text text="Last Health Check"/></Column>
-                                    <Column width="14%"><Text text="Connection Status"/></Column>
-                                    <Column width="12%" hAlign="Center"><Text text="Action"/></Column>
+                                    <Column width="14%" importance="High"><Text text="System ID" class="fontWeightBold"/></Column>
+                                    <Column width="15%" importance="Medium" demandPopin="true" minScreenWidth="Tablet"><Text text="System Type"/></Column>
+                                    <Column width="10%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Client"/></Column>
+                                    <Column width="16%" importance="High"><Text text="Status"/></Column>
+                                    <Column width="19%" importance="Low" demandPopin="true" minScreenWidth="Desktop"><Text text="Last Health Check"/></Column>
+                                    <Column width="14%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Connection Status"/></Column>
+                                    <Column width="12%" hAlign="Center" importance="High"><Text text="Action"/></Column>
                                 </columns>
 
                                 <items>
-                                    <ColumnListItem>
+                                    <ColumnListItem highlight="{healthModel>statusState}">
                                         <cells>
                                             <Link text="{healthModel>sysId}" press="onSystemIdPress" class="fontWeightBold fontSizeMedium"/>
                                             <ObjectStatus text="{healthModel>sysType}" state="{= ${healthModel>sysType} === 'Production' ? 'Error' : (${healthModel>sysType} === 'Quality' ? 'Warning' : 'Information') }"/>

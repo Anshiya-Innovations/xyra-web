@@ -44,7 +44,7 @@
                     <Dialog
                         id="itemLogsDialog"
                         title="Automation Execution Logs"
-                        contentWidth="700px">
+                        contentWidth="700px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
@@ -142,18 +142,18 @@
                             <content>
                                 <Table id="alertItemTable" items="{alertModel>/items}" noDataText="No detailed deviation line items found.">
                                     <columns>
-                                        <Column width="9%"><Text text="Item ID" class="fontWeightBold"/></Column>
-                                        <Column width="13%"><Text text="SAP Object" class="fontWeightBold"/></Column>
-                                        <Column width="14%"><Text text="Parameter" class="fontWeightBold"/></Column>
-                                        <Column width="10%"><Text text="Operator" class="fontWeightBold"/></Column>
-                                        <Column width="15%"><Text text="Expected Value" class="fontWeightBold"/></Column>
-                                        <Column width="15%"><Text text="Actual Detected Value" class="fontWeightBold"/></Column>
-                                        <Column width="8%"><Text text="Status" class="fontWeightBold"/></Column>
-                                        <Column width="11%"><Text text="Timestamp" class="fontWeightBold"/></Column>
-                                        <Column width="5%"><Text text="Logs" class="fontWeightBold"/></Column>
+                                        <Column width="9%" importance="High"><Text text="Item ID" class="fontWeightBold"/></Column>
+                                        <Column width="13%" importance="High"><Text text="SAP Object" class="fontWeightBold"/></Column>
+                                        <Column width="14%" importance="Medium" demandPopin="true" minScreenWidth="Tablet"><Text text="Parameter" class="fontWeightBold"/></Column>
+                                        <Column width="10%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Operator" class="fontWeightBold"/></Column>
+                                        <Column width="15%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Expected Value" class="fontWeightBold"/></Column>
+                                        <Column width="15%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Actual Detected Value" class="fontWeightBold"/></Column>
+                                        <Column width="8%" importance="High"><Text text="Status" class="fontWeightBold"/></Column>
+                                        <Column width="11%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Timestamp" class="fontWeightBold"/></Column>
+                                        <Column width="5%" importance="High"><Text text="Logs" class="fontWeightBold"/></Column>
                                     </columns>
                                     <items>
-                                        <ColumnListItem>
+                                        <ColumnListItem highlight="{= ${alertModel>status} === 'Critical' ? 'Error' : (${alertModel>status} === 'High' ? 'Warning' : 'Information') }">
                                             <cells>
                                                 <Text text="{alertModel>itemId}" class="fontWeightBold"/>
                                                 <Text text="{alertModel>sapObject}"/>

@@ -60,7 +60,7 @@
     "resources": {
       "css": [
         {
-          "uri": "css/style.css?v=20260904_30"
+          "uri": "css/style.css?v=20260910_wave2"
         }
       ]
     },
@@ -209,6 +209,11 @@
           "target": "ControlManagement"
         },
         {
+          "name": "ControlEditor",
+          "pattern": "ControlEditor/:controlId:",
+          "target": "ControlEditor"
+        },
+        {
           "name": "AutomationMonitoring",
           "pattern": "AutomationMonitoring",
           "target": "AutomationMonitoring"
@@ -314,6 +319,9 @@
         },
         "ControlManagement": {
           "viewName": "ControlManagement"
+        },
+        "ControlEditor": {
+          "viewName": "ControlEditor"
         },
         "AutomationMonitoring": {
           "viewName": "AutomationMonitoring"

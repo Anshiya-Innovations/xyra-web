@@ -29,10 +29,10 @@ sap.ui.define([
             }
             var oNav = this.byId("sideNavigation");
             if (oNav) {
-                oNav.setSelectedKey("ControlManagement");
+                oNav.setSelectedKey("DeviationReport");
                 var oList = oNav.getItem();
                 if (oList && oList.setSelectedKey) {
-                    oList.setSelectedKey("ControlManagement");
+                    oList.setSelectedKey("DeviationReport");
                 }
             }
         },
@@ -346,6 +346,7 @@ sap.ui.define([
             var oModel = this.getView().getModel("reportModel");
             var oFilters = oModel.getProperty("/filters");
 
+            GlobalLoading.show("Loading Deviation Report", 0, true, true);
             return DeviationService.queryDeviations(oFilters).then(function (oResult) {
                 oModel.setProperty("/headers", oResult.headers);
                 oModel.setProperty("/totalRecords", oResult.totalRecords);
@@ -356,6 +357,14 @@ sap.ui.define([
                 // Generate SVG Donut Chart HTML
                 var sSvg = that._generatePieChartSvg(oResult.kpi.openItems, oResult.kpi.resolvedItems, oResult.statusSummary.pending);
                 oModel.setProperty("/statusSvgHtml", sSvg);
+            }).catch(function () {
+                // No mock fallback for this report - a failed fetch means an
+                // empty table with a real error, not fake incident rows.
+                MessageBox.error("Could not reach the server to load the Deviation Report.");
+                oModel.setProperty("/headers", []);
+                oModel.setProperty("/totalRecords", 0);
+            }).then(function () {
+                GlobalLoading.hide();
             });
         },
 
@@ -430,10 +439,6 @@ sap.ui.define([
             return html;
         },
 
-        onNavControlManagement: function () {
-            this.getOwnerComponent().getRouter().navTo("ControlManagement");
-        },
-
         onNavAutomationMonitoring: function () {
             this.getOwnerComponent().getRouter().navTo("AutomationMonitoring");
         },
@@ -452,6 +457,7 @@ sap.ui.define([
 
         onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
         onControlManagement: function () { this.getOwnerComponent().getRouter().navTo("ControlManagement"); },
+        onDeviationReport: function () { this.getOwnerComponent().getRouter().navTo("DeviationReport"); },
         onAIInsights: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },
         onSOXCompliance: function () { this.getOwnerComponent().getRouter().navTo("SOXCompliance"); },
         onReports: function () { this.getOwnerComponent().getRouter().navTo("Reports"); },

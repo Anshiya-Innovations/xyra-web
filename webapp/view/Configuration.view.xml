@@ -30,7 +30,10 @@
 
                     <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
                     <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
-                    <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" expanded="true" selectable="false">
+                        <tnt:NavigationListItem text="System Landscape" key="Landscape" select="onSelectLandscapeTab"/>
+                        <tnt:NavigationListItem text="System Health" key="SystemHealthTab" select="onSelectSystemHealthTab"/>
+                    </tnt:NavigationListItem>
                     <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
                     <tnt:NavigationListItem text="Organization" icon="sap-icon://building" key="Organization" select="onOrganization"/>
 
@@ -332,23 +335,6 @@
 
                 <content>
                     <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
-
-                        <!-- TAB NAVIGATION BUTTONS (SAME AS CONTROL MANAGEMENT) -->
-                        <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
-                            <Button
-                                id="btnSystemLandscapeTab"
-                                text="System Landscape"
-                                icon="sap-icon://chain-link"
-                                type="{= ${configUiModel>/activeTab} === 'landscape' ? 'Emphasized' : 'Transparent' }"
-                                press="onSelectLandscapeTab"
-                                class="sapUiTinyMarginEnd"/>
-                            <Button
-                                id="btnSystemHealthTab"
-                                text="System Health"
-                                icon="sap-icon://sys-monitor"
-                                type="{= ${configUiModel>/activeTab} === 'systemHealth' ? 'Emphasized' : 'Transparent' }"
-                                press="onSelectSystemHealthTab"/>
-                        </HBox>
 
                         <!-- SLIDE 1: SAP SYSTEM LANDSCAPE CONFIGURATION -->
                         <VBox id="vboxSystemLandscape" visible="true" width="100%">

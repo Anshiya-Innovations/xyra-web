@@ -28,9 +28,12 @@ sap.ui.define([
             this._aCachedLogs = null; // new alert - drop any cached run logs from a previous one
 
             var oModel = this.getView().getModel("alertModel");
+            GlobalLoading.show("Gathering Alert Details", 0, true, true);
             DeviationService.getAlertDetails(this._sAlertId, this._sControlId).then(function (oDetails) {
                 oModel.setProperty("/header", oDetails.header);
                 oModel.setProperty("/items", oDetails.items);
+            }).then(function () {
+                GlobalLoading.hide();
             });
         },
 
@@ -137,10 +140,13 @@ sap.ui.define([
             var that = this;
             var oModel = this.getView().getModel("alertModel");
             this._aCachedLogs = null;
+            GlobalLoading.show("Gathering Alert Details", 0, true, true);
             DeviationService.getAlertDetails(this._sAlertId, this._sControlId).then(function (oDetails) {
                 oModel.setProperty("/header", oDetails.header);
                 oModel.setProperty("/items", oDetails.items);
                 MessageToast.show("Alert line items refreshed.");
+            }).then(function () {
+                GlobalLoading.hide();
             });
         },
 

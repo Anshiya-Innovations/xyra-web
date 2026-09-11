@@ -150,15 +150,13 @@ sap.ui.define([
 
             createOverlay();
 
-            var sClean = sActivityText
-                .replace(/loading\.{0,3}/gi, "")
-                .replace(/please wait\.{0,3}/gi, "")
-                .replace(/\.\.\./g, "")
-                .trim();
-
-            if (!sClean) {
-                sClean = sActivityText;
-            }
+            // The activity text IS the whole message (there's no separate
+            // "Loading" label in the markup) - show callers' text verbatim,
+            // just trim trailing dots since the animated dots already convey
+            // "in progress". Previously this stripped the word "loading"
+            // itself, which silently ate messages like "Loading Controls"
+            // down to just "Controls".
+            var sClean = sActivityText.replace(/\.{3,}$/, "").trim() || sActivityText;
 
             if (oTextEl) {
                 oTextEl.textContent = sClean;

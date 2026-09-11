@@ -33,8 +33,6 @@
                 id="exManagerPage"
                 showHeader="true"
                 enableScrolling="true"
-                busy="{escManagerModel>/busy}"
-                busyIndicatorDelay="0"
                 class="sapUiContentPadding">
 
                 <dependents>
@@ -73,7 +71,7 @@
                     </ResponsivePopover>
 
                     <!-- VIEW REPORT DIALOG -->
-                    <Dialog id="viewReportDialog" title="Final Audit Report Inspection" contentWidth="600px">
+                    <Dialog id="viewReportDialog" title="Final Audit Report Inspection" contentWidth="600px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Title text="{escManagerModel>/selectedReport/reportName}" level="H3" class="sapUiTinyMarginBottom"/>
@@ -118,7 +116,7 @@
                     </Dialog>
 
                     <!-- HISTORICAL DETAILS & REMOVED/REMEDIATED ITEM DIALOG FOR ESCALATION MANAGER HISTORY -->
-                    <Dialog id="viewHistoryDetailsDialogEsc" title="Historical Decision &amp; Audit Traceability Details" contentWidth="600px">
+                    <Dialog id="viewHistoryDetailsDialogEsc" title="Historical Decision &amp; Audit Traceability Details" contentWidth="600px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Title text="{escManagerModel>/selectedHistoryItem/reportName}" level="H3" class="sapUiTinyMarginBottom"/>
@@ -209,7 +207,12 @@
                 </customHeader>
 
                 <content>
-                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+                    <VBox visible="{escManagerModel>/busy}" alignItems="Center" justifyContent="Center" class="xyraLoadingState">
+                        <core:HTML content="&lt;div class=&quot;xyraSpinnerRing&quot;&gt;&lt;/div&gt;"/>
+                        <Text text="Loading…" class="textMuted sapUiSmallMarginTop"/>
+                    </VBox>
+
+                    <VBox visible="{= !${escManagerModel>/busy} }" width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
 
                         <!-- BUSINESS ROLE & RESPONSIBILITIES BANNER -->
                         <MessageStrip
@@ -426,20 +429,20 @@
                             <Panel headerText="Escalation Manager Historical Decisions (Read-Only Audit Trail)" expandable="false" class="sapUiSmallMarginBottom">
                                 <Table id="reviewerHistoryTableEsc" items="{escManagerModel>/history}" mode="None" width="100%">
                                     <columns>
-                                        <Column width="11%"><Text text="Ticket ID" class="fontWeightBold"/></Column>
-                                        <Column width="10%"><Text text="Report ID"/></Column>
-                                        <Column width="9%"><Text text="Control ID"/></Column>
-                                        <Column width="16%"><Text text="Report Name"/></Column>
-                                        <Column width="10%"><Text text="System"/></Column>
-                                        <Column width="10%"><Text text="Decision"/></Column>
-                                        <Column width="9%"><Text text="Reviewed Date"/></Column>
-                                        <Column width="9%"><Text text="Compliance"/></Column>
-                                        <Column width="9%"><Text text="Remediation"/></Column>
-                                        <Column width="9%"><Text text="Ticket Status"/></Column>
-                                        <Column width="11%" hAlign="Center"><Text text="Action"/></Column>
+                                        <Column width="11%" importance="High"><Text text="Ticket ID" class="fontWeightBold"/></Column>
+                                        <Column width="10%" importance="Medium" demandPopin="true" minScreenWidth="Tablet"><Text text="Report ID"/></Column>
+                                        <Column width="9%" importance="Medium" demandPopin="true" minScreenWidth="Tablet"><Text text="Control ID"/></Column>
+                                        <Column width="16%" importance="High"><Text text="Report Name"/></Column>
+                                        <Column width="10%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="System"/></Column>
+                                        <Column width="10%" importance="High"><Text text="Decision"/></Column>
+                                        <Column width="9%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Reviewed Date"/></Column>
+                                        <Column width="9%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Compliance"/></Column>
+                                        <Column width="9%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Remediation"/></Column>
+                                        <Column width="9%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Ticket Status"/></Column>
+                                        <Column width="11%" hAlign="Center" importance="High"><Text text="Action"/></Column>
                                     </columns>
                                     <items>
-                                        <ColumnListItem>
+                                        <ColumnListItem highlight="{= ${escManagerModel>decision} === 'Approved' ? 'Success' : 'Error' }">
                                             <cells>
                                                 <ObjectStatus text="{escManagerModel>ticketId}" state="Information" class="fontWeightBold"/>
                                                 <Text text="{escManagerModel>reportId}"/>

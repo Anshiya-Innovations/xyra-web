@@ -59,7 +59,7 @@
                     <Dialog
                         id="soxControlDetailsDialog"
                         title="SOX Control Details"
-                        contentWidth="780px">
+                        contentWidth="780px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
@@ -371,20 +371,20 @@
                             <content>
                                 <Table id="soxControlTable" items="{soxModel>/controls}" mode="None" width="100%">
                                     <columns>
-                                        <Column width="10%"><Text text="Control ID"/></Column>
-                                        <Column width="22%"><Text text="Control Description"/></Column>
-                                        <Column width="7%"><Text text="System"/></Column>
-                                        <Column width="6%"><Text text="Client"/></Column>
-                                        <Column width="13%"><Text text="Execution Frequency"/></Column>
-                                        <Column width="12%"><Text text="Compliance Status"/></Column>
-                                        <Column width="7%" hAlign="Center"><Text text="Deviations"/></Column>
-                                        <Column width="7%"><Text text="Risk"/></Column>
-                                        <Column width="12%"><Text text="Last Run"/></Column>
-                                        <Column width="14%" hAlign="Center"><Text text="Actions"/></Column>
+                                        <Column width="10%" importance="High"><Text text="Control ID"/></Column>
+                                        <Column width="22%" importance="High"><Text text="Control Description"/></Column>
+                                        <Column width="7%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="System"/></Column>
+                                        <Column width="6%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Client"/></Column>
+                                        <Column width="13%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Execution Frequency"/></Column>
+                                        <Column width="12%" importance="High"><Text text="Compliance Status"/></Column>
+                                        <Column width="7%" hAlign="Center" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Deviations"/></Column>
+                                        <Column width="7%" importance="High"><Text text="Risk"/></Column>
+                                        <Column width="12%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Last Run"/></Column>
+                                        <Column width="14%" hAlign="Center" importance="High"><Text text="Actions"/></Column>
                                     </columns>
 
                                     <items>
-                                        <ColumnListItem type="Active">
+                                        <ColumnListItem type="Active" highlight="{soxModel>statusState}">
                                             <cells>
                                                 <Link text="{soxModel>controlId}" press="onViewDetailsPress" class="boldText"/>
                                                 <Text text="{soxModel>description}"/>

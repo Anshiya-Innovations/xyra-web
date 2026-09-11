@@ -59,7 +59,7 @@
 
                 <dependents>
                     <!-- ADD PARAMETER MODAL -->
-                    <Dialog id="addParamDialog" title="Add Organization Parameter" contentWidth="500px">
+                    <Dialog id="addParamDialog" title="Add Organization Parameter" contentWidth="500px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <VBox class="xyraFormField">
@@ -118,7 +118,7 @@
                     </Dialog>
 
                     <!-- ASSIGN POLICY MODAL -->
-                    <Dialog id="assignPolicyDialog" title="Assign Governance Policy" contentWidth="500px">
+                    <Dialog id="assignPolicyDialog" title="Assign Governance Policy" contentWidth="500px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <VBox class="xyraFormField">
@@ -159,7 +159,7 @@
                         </endButton>
                     </Dialog>
                     <!-- EDIT SUMMARY MODAL -->
-                    <Dialog id="editSummaryDialog" title="Edit Company Executive Summary" contentWidth="600px">
+                    <Dialog id="editSummaryDialog" title="Edit Company Executive Summary" contentWidth="600px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiNoMargin">

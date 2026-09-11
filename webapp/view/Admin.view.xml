@@ -114,16 +114,7 @@
                 <content>
                     <VBox id="_IDGenVBox2" width="100%" class="sapUiSmallMargin">
 
-                        <!-- LOADING STATE - Page's own `busy` property is a dead end here
-                             (renders via .sapUiLocalBusyIndicator, which style.css suppresses
-                             site-wide by design), so this is a plain visible-gated ring spinner
-                             instead, shown until AdminClient.loadDashboard() resolves. -->
-                        <VBox visible="{adminModel>/busy}" alignItems="Center" justifyContent="Center" class="xyraLoadingState">
-                            <core:HTML content="&lt;div class=&quot;xyraSpinnerRing&quot;&gt;&lt;/div&gt;"/>
-                            <Text text="Loading dashboard…" class="textMuted sapUiSmallMarginTop"/>
-                        </VBox>
-
-                        <VBox visible="{= !${adminModel>/busy} }">
+                        <VBox>
 
                         <!-- PRIMARY KPI CARDS -->
                         <Title text="Compliance Posture" level="H3" class="sapUiSmallMarginBottom"/>

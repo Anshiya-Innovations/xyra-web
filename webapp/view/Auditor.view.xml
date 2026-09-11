@@ -73,7 +73,7 @@
                     </ResponsivePopover>
 
                     <!-- REMEDIATION EVIDENCE INSPECTION DIALOG -->
-                    <Dialog id="viewEvidenceDialogAuditor" title="Audit Evidence &amp; Remediation Verification" contentWidth="600px">
+                    <Dialog id="viewEvidenceDialogAuditor" title="Audit Evidence &amp; Remediation Verification" contentWidth="600px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Title text="{auditorModel>/selectedRemediation/finding}" level="H3" class="sapUiTinyMarginBottom"/>
@@ -123,7 +123,7 @@
                     </Dialog>
 
                     <!-- HISTORICAL AUDIT INSPECTION DIALOG -->
-                    <Dialog id="viewAuditHistoryDetailsDialog" title="Historical Audit Record &amp; Archive Traceability" contentWidth="600px">
+                    <Dialog id="viewAuditHistoryDetailsDialog" title="Historical Audit Record &amp; Archive Traceability" contentWidth="600px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <Title text="{auditorModel>/selectedHistoryItem/businessProcess}" level="H3" class="sapUiTinyMarginBottom"/>
@@ -169,7 +169,7 @@
                     </Dialog>
 
                     <!-- READ-ONLY SYSTEM ACTIVITY LOG DETAILS DIALOG -->
-                    <Dialog id="auditDetailsDialog" title="System Activity Evidence Record" contentWidth="680px">
+                    <Dialog id="auditDetailsDialog" title="System Activity Evidence Record" contentWidth="680px" stretch="{device>/system/phone}">
                         <content>
                             <VBox class="sapUiMediumMargin">
                                 <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
@@ -385,18 +385,18 @@
                                     </headerToolbar>
 
                                     <columns>
-                                        <Column width="14%"><Text text="Timestamp" class="fontWeightBold"/></Column>
-                                        <Column width="16%"><Text text="Admin User" class="fontWeightBold"/></Column>
-                                        <Column width="12%"><Text text="Action" class="fontWeightBold"/></Column>
-                                        <Column width="16%"><Text text="Module" class="fontWeightBold"/></Column>
-                                        <Column width="11%"><Text text="Object ID" class="fontWeightBold"/></Column>
-                                        <Column width="20%"><Text text="Description" class="fontWeightBold"/></Column>
-                                        <Column width="11%"><Text text="Result" class="fontWeightBold"/></Column>
-                                        <Column width="8%" hAlign="Center"><Text text="Details" class="fontWeightBold"/></Column>
+                                        <Column width="14%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Timestamp" class="fontWeightBold"/></Column>
+                                        <Column width="16%" importance="High"><Text text="Admin User" class="fontWeightBold"/></Column>
+                                        <Column width="12%" importance="High"><Text text="Action" class="fontWeightBold"/></Column>
+                                        <Column width="16%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Module" class="fontWeightBold"/></Column>
+                                        <Column width="11%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Object ID" class="fontWeightBold"/></Column>
+                                        <Column width="20%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Description" class="fontWeightBold"/></Column>
+                                        <Column width="11%" importance="High"><Text text="Result" class="fontWeightBold"/></Column>
+                                        <Column width="8%" hAlign="Center" importance="High"><Text text="Details" class="fontWeightBold"/></Column>
                                     </columns>
 
                                     <items>
-                                        <ColumnListItem type="Active" press="onInspectAuditAnalysis">
+                                        <ColumnListItem type="Active" press="onInspectAuditAnalysis" highlight="{auditorModel>resultState}">
                                             <cells>
                                                 <Text text="{auditorModel>timestamp}"/>
                                                 <ObjectIdentifier title="{auditorModel>performedBy}" subtitle="{auditorModel>role}"/>
@@ -607,17 +607,17 @@
                             <Panel headerText="Remediation Tracking &amp; Evidence Queue" expandable="false" class="sapUiSmallMarginBottom">
                                 <Table id="remediationTable" items="{auditorModel>/remediations}" mode="None" width="100%">
                                     <columns>
-                                        <Column width="10%"><Text text="Audit ID" class="fontWeightBold"/></Column>
-                                        <Column width="18%"><Text text="Finding"/></Column>
-                                        <Column width="18%"><Text text="Deviation"/></Column>
-                                        <Column width="16%"><Text text="Remediation Action"/></Column>
-                                        <Column width="11%"><Text text="Remediation"/></Column>
-                                        <Column width="11%"><Text text="Evidence Status"/></Column>
-                                        <Column width="10%"><Text text="Review Status"/></Column>
-                                        <Column width="11%" hAlign="Center"><Text text="Action"/></Column>
+                                        <Column width="10%" importance="High"><Text text="Audit ID" class="fontWeightBold"/></Column>
+                                        <Column width="18%" importance="High"><Text text="Finding"/></Column>
+                                        <Column width="18%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Deviation"/></Column>
+                                        <Column width="16%" importance="Medium" demandPopin="true" minScreenWidth="Desktop"><Text text="Remediation Action"/></Column>
+                                        <Column width="11%" importance="High"><Text text="Remediation"/></Column>
+                                        <Column width="11%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Evidence Status"/></Column>
+                                        <Column width="10%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Review Status"/></Column>
+                                        <Column width="11%" hAlign="Center" importance="High"><Text text="Action"/></Column>
                                     </columns>
                                     <items>
-                                        <ColumnListItem>
+                                        <ColumnListItem highlight="{auditorModel>remediationState}">
                                             <cells>
                                                 <ObjectStatus text="{auditorModel>auditId}" state="Information" class="fontWeightBold"/>
                                                 <ObjectIdentifier title="{auditorModel>finding}" subtitle="{auditorModel>controlId}"/>
@@ -754,17 +754,17 @@
                             <Panel headerText="Auditor Verified Historical Records (Read-Only Archive)" expandable="false" class="sapUiSmallMarginBottom">
                                 <Table id="auditHistoryTable" items="{auditorModel>/history}" mode="None" width="100%">
                                     <columns>
-                                        <Column width="12%"><Text text="Audit ID" class="fontWeightBold"/></Column>
-                                        <Column width="12%"><Text text="Control ID" class="fontWeightBold"/></Column>
-                                        <Column width="14%"><Text text="Application" class="fontWeightBold"/></Column>
-                                        <Column width="26%"><Text text="Business Process" class="fontWeightBold"/></Column>
-                                        <Column width="14%"><Text text="Auditor" class="fontWeightBold"/></Column>
-                                        <Column width="12%"><Text text="Completion Date" class="fontWeightBold"/></Column>
-                                        <Column width="10%"><Text text="Status" class="fontWeightBold"/></Column>
-                                        <Column width="10%" hAlign="Center"><Text text="Action" class="fontWeightBold"/></Column>
+                                        <Column width="12%" importance="High"><Text text="Audit ID" class="fontWeightBold"/></Column>
+                                        <Column width="12%" importance="Medium" demandPopin="true" minScreenWidth="Tablet"><Text text="Control ID" class="fontWeightBold"/></Column>
+                                        <Column width="14%" importance="Medium" demandPopin="true" minScreenWidth="Tablet"><Text text="Application" class="fontWeightBold"/></Column>
+                                        <Column width="26%" importance="High"><Text text="Business Process" class="fontWeightBold"/></Column>
+                                        <Column width="14%" importance="Low" demandPopin="true" minScreenWidth="Desktop"><Text text="Auditor" class="fontWeightBold"/></Column>
+                                        <Column width="12%" importance="Low" demandPopin="true" minScreenWidth="Tablet"><Text text="Completion Date" class="fontWeightBold"/></Column>
+                                        <Column width="10%" importance="High"><Text text="Status" class="fontWeightBold"/></Column>
+                                        <Column width="10%" hAlign="Center" importance="High"><Text text="Action" class="fontWeightBold"/></Column>
                                     </columns>
                                     <items>
-                                        <ColumnListItem type="Active" press="onViewHistoryDetails">
+                                        <ColumnListItem type="Active" press="onViewHistoryDetails" highlight="Success">
                                             <cells>
                                                 <ObjectStatus text="{auditorModel>auditId}" state="Information" class="fontWeightBold"/>
                                                 <Text text="{auditorModel>controlId}"/>

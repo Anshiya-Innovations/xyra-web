@@ -245,52 +245,6 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "xyraweb/service
         return (oSession && oSession.subdomain) || Config.TEST_SUBDOMAIN;
     }
 
-    function legacyMockQuery(oFilters) {
-        oFilters = oFilters || {};
-
-        var aFiltered = MOCK_ALERT_HEADERS.filter(function (item) {
-            if (oFilters.sector && oFilters.sector !== "All" && item.sector !== oFilters.sector) { return false; }
-            if (oFilters.region && oFilters.region !== "All" && item.region !== oFilters.region) { return false; }
-            if (oFilters.platform && oFilters.platform !== "All" && item.platform !== oFilters.platform) { return false; }
-            if (oFilters.system && oFilters.system !== "All" && item.system !== oFilters.system) { return false; }
-            if (oFilters.client && oFilters.client !== "All" && item.client !== oFilters.client) { return false; }
-            if (oFilters.control && oFilters.control !== "All" && item.controlId !== oFilters.control) { return false; }
-            if (oFilters.status && oFilters.status !== "All" && item.status !== oFilters.status) { return false; }
-            if (oFilters.startDate && item.alertDate < oFilters.startDate) { return false; }
-            if (oFilters.endDate && item.alertDate > oFilters.endDate) { return false; }
-            return true;
-        });
-
-        var iTotalIncidents = 0, iOpenItems = 0, iResolvedItems = 0;
-        var iCriticalCount = 0, iHighCount = 0, iMediumCount = 0, iLowCount = 0;
-        var mControlSet = {};
-
-        aFiltered.forEach(function (h) {
-            iTotalIncidents += h.deviationCount;
-            mControlSet[h.controlId] = true;
-            if (h.status === "Open" || h.status === "In Progress") { iOpenItems += h.deviationCount; }
-            else if (h.status === "Resolved") { iResolvedItems += h.deviationCount; }
-            if (h.severity === "Critical") { iCriticalCount += h.deviationCount; }
-            else if (h.severity === "High") { iHighCount += h.deviationCount; }
-            else if (h.severity === "Medium") { iMediumCount += h.deviationCount; }
-            else if (h.severity === "Low") { iLowCount += h.deviationCount; }
-        });
-
-        return {
-            headers: aFiltered,
-            totalRecords: aFiltered.length,
-            kpi: {
-                totalIncidents: iTotalIncidents,
-                openItems: iOpenItems,
-                resolvedItems: iResolvedItems,
-                auditedControls: Object.keys(mControlSet).length,
-                complianceRate: iTotalIncidents > 0 ? Math.round((iResolvedItems / iTotalIncidents) * 100) + "%" : "100%"
-            },
-            statusSummary: { pending: Math.max(0, iTotalIncidents - iResolvedItems) },
-            severitySummary: { critical: iCriticalCount, high: iHighCount, medium: iMediumCount, low: iLowCount }
-        };
-    }
-
     // Bridges backend field names to what DeviationReport.view.xml/AlertItem.view.xml already bind to.
     function mapHeaderForUi(h) {
         return {
@@ -349,10 +303,10 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "xyraweb/service
                         statusSummary: { pending: iPending },
                         severitySummary: mSeverity
                     };
-                })
-                .catch(function () {
-                    return legacyMockQuery(oFilters);
                 });
+            // ponytail: no mock fallback here (unlike other endpoints) - the
+            // Deviation Report table must only ever show real system data;
+            // a failed fetch should surface as an error, not fake rows.
         },
 
         getAlertDetails: function (sAlertId, sControlId) {
@@ -366,6 +320,24 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "xyraweb/service
                         return h.alertId === sAlertId || h.controlId === sControlId;
                     })[0] || MOCK_ALERT_HEADERS[0];
                     return { header: oHeader, items: MOCK_ALERT_ITEMS[oHeader.alertId] || MOCK_ALERT_ITEMS["ALT-1001"] };
+                });
+        },
+
+        // Shared with AlertItem's own inline fetch (kept there as-is) - lifted
+        // here because Reviewer1/Reviewer2 need the identical call too, and a
+        // third copy of the same fetch+mapping is exactly the point ponytail
+        // says to dedupe at.
+        getRunLogs: function (sAlertId) {
+            return ApiClient.postJson(Config.AUTH_BASE_URL + "/api/deviation/getRunLogs", { subdomain: getSubdomain(), alertId: sAlertId })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "getRunLogs failed"); }
+                    var LEVEL_TO_STATE = { INFO: "Information", WARNING: "Warning", ERROR: "Error" };
+                    return (oData.logs || []).map(function (l) {
+                        return { timestamp: l.timestamp, level: l.level, levelState: LEVEL_TO_STATE[l.level] || "Information", message: l.message };
+                    });
+                })
+                .catch(function () {
+                    return [{ timestamp: new Date().toISOString(), level: "WARNING", levelState: "Warning", message: "Could not reach the server - showing no log data." }];
                 });
         }
     };

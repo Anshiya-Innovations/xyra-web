@@ -52,6 +52,7 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
             reportId: r.id,
             reportName: r.controlDescription,
             controlId: r.controlId,
+            alertId: r.alertId,
             controlName: r.controlDescription,
             businessProcess: "",
             riskLevel: r.severity === "CRITICAL" ? "High Risk" : "Medium Risk",

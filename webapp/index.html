@@ -26,6 +26,39 @@
             zoom: 1 !important;
             -webkit-text-size-adjust: 100%;
         }
+
+        /* Pre-boot loading state: pure HTML/CSS, shown before UI5 core itself has
+           finished loading (data-sap-ui-preload="none" means every framework
+           module is a separate request, so this can genuinely take a few
+           seconds). `position: fixed` so it can never affect document flow
+           regardless of when/how it's removed - the ComponentSupport bootstrap
+           appends the rendered app alongside this div rather than replacing
+           it, so removal is handled explicitly by the script below, not left
+           to chance. */
+        .xyraBootLoader {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            background: #f8fafc;
+            z-index: 9999;
+        }
+
+        .xyraBootLoader .xyraSpinnerRing {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top-color: #533bff;
+            border-radius: 50%;
+            animation: xyraBootSpin 0.8s linear infinite;
+        }
+
+        @keyframes xyraBootSpin {
+            to { transform: rotate(360deg); }
+        }
     </style>
     <script>
         (function() {
@@ -68,5 +101,26 @@
         data-settings='{"id" : "xyraweb"}'
         data-handle-validation="true"
     ></div>
+    <div id="xyraBootLoader" class="xyraBootLoader">
+        <div class="xyraSpinnerRing"></div>
+    </div>
+    <script>
+        (function () {
+            var target = document.querySelector('[data-sap-ui-component]');
+            var loader = document.getElementById('xyraBootLoader');
+            if (!target || !loader) { return; }
+            // The ComponentSupport bootstrap appends the rendered app as a
+            // child of this div rather than replacing existing content, so
+            // the loader (a sibling, not a child - see above) is removed
+            // explicitly the moment that first child actually appears.
+            var observer = new MutationObserver(function () {
+                if (target.children.length > 0) {
+                    loader.remove();
+                    observer.disconnect();
+                }
+            });
+            observer.observe(target, { childList: true });
+        })();
+    </script>
 </body>
 </html>

@@ -1,0 +1,345 @@
+<mvc:View
+    controllerName="xyraweb.controller.ControlEditor"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="controlEditorToolPage" sideExpanded="true">
+
+        <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="ControlManagement" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList selectedKey="ControlManagement">
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" expanded="true" selectable="false">
+                        <tnt:NavigationListItem text="Controls Config" key="ControlManagement" select="onControlManagement"/>
+                        <tnt:NavigationListItem text="Deviation Report" key="DeviationReport" select="onDeviationReport"/>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights" select="onAIInsights">
+                        <tnt:tag><ObjectStatus text="New" state="Indication15" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag><ObjectStatus text="98.4%" state="Indication16" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+                    <tnt:NavigationListItem text="Organization" icon="sap-icon://building" key="Organization" select="onOrganization"/>
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
+                        <tnt:tag><ObjectStatus text="3 Risks" state="Indication18" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                </tnt:NavigationList>
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="controlEditorPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+                        <VBox justifyContent="Center">
+                            <Title text="{editorModel>/title}" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Configure the control's environments, schedule, and validation rules." class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <Button
+                        tooltip="Back to Control Management"
+                        text="Back"
+                        icon="sap-icon://nav-back"
+                        type="Transparent"
+                        press="onCancel"
+                        class="sapUiTinyMarginBegin sapUiTinyMarginTop"/>
+
+                    <VBox class="sapUiMediumMargin xyraEditorContent">
+                        <layout:Grid defaultSpan="XL6 L6 M12 S12" class="xyraCreateControlGrid">
+                            <VBox>
+                                <VBox class="xyraFormField">
+                                    <Label text="Control ID" required="true" class="xyraFormLabel"/>
+                                    <Input id="controlIdInput" editable="{= !${editorModel>/isEdit} }" placeholder="e.g. XYRA-08, XYRA-28, XYRA-001"/>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="System Type (Primary)" required="true" class="xyraFormLabel"/>
+                                    <Select id="sysType1Select" width="100%" items="{systemsModel>/systems}">
+                                        <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
+                                    </Select>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="System Type (Secondary)" class="xyraFormLabel"/>
+                                    <Select id="sysType2Select" selectedKey="None" width="100%" items="{systemsModel>/systemsWithNone}">
+                                        <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
+                                    </Select>
+                                </VBox>
+                            </VBox>
+
+                            <VBox>
+                                <VBox class="xyraFormField">
+                                    <Label text="Frequency Run" required="true" class="xyraFormLabel"/>
+                                    <Select id="frequencySelect" selectedKey="Daily" width="100%" change="onFrequencyChange">
+                                        <core:Item key="Monthly (Last day of month)" text="Monthly (Last day of month)"/>
+                                        <core:Item key="Weekly (Every Monday)" text="Weekly (Every Monday)"/>
+                                        <core:Item key="Daily" text="Daily"/>
+                                        <core:Item key="Realtime" text="Realtime"/>
+                                        <core:Item key="Cron Expression" text="Cron Expression"/>
+                                    </Select>
+                                </VBox>
+
+                                <VBox id="vboxCron" visible="false" class="xyraFormField">
+                                    <Label text="Cron Expression" required="true" class="xyraFormLabel"/>
+                                    <Input id="cronInput" placeholder="e.g. 0 0 1 * *" liveChange="onCronInputChange"/>
+                                    <MessageStrip
+                                        text="Examples: '* * * * *' (Realtime) | '0 0 * * *' (Daily) | '0 0 * * 1' (Weekly) | '0 0 L * *' (Monthly)"
+                                        type="Information"
+                                        showIcon="true"/>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Total Run (Read-Only)" class="xyraFormLabel"/>
+                                    <Input id="totalRunInput" value="365" editable="false"/>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="System Type (Tertiary)" class="xyraFormLabel"/>
+                                    <Select id="sysType3Select" selectedKey="None" width="100%" items="{systemsModel>/systemsWithNone}">
+                                        <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
+                                    </Select>
+                                </VBox>
+                            </VBox>
+                        </layout:Grid>
+
+                        <VBox class="xyraFormField sapUiSmallMarginTop">
+                            <Label text="Control Description" required="true" class="xyraFormLabel"/>
+                            <TextArea id="controlDescInput" rows="3" width="100%" placeholder="Enter detailed security control description..."/>
+                        </VBox>
+
+                        <!-- RULE CONFIGURATION SECTION (plain area, not collapsible) -->
+                        <VBox class="sapUiSmallMarginTop">
+                            <Title text="Rule Configuration" level="H6" class="sapUiTinyMarginBottom"/>
+
+                            <List id="rulesList" items="{ruleModel>/rules}" mode="None" class="sapUiNoMargin">
+                                    <items>
+                                        <CustomListItem class="sapUiSmallMarginBottom">
+                                            <VBox class="xyraRuleCard">
+                                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                                                    <Text text="{= ${ruleModel>stepLabel} ? ${ruleModel>stepLabel} : 'Rule' }" class="xyraRuleCardTitle"/>
+                                                </HBox>
+
+                                                <!-- ROW 1: SAP Object, Client, Parameter Type -->
+                                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiNoMargin xyraRuleFieldRow3">
+                                                    <VBox class="xyraFormField" width="31%">
+                                                        <Label text="SAP Object" required="true" class="xyraFormLabel"/>
+                                                        <Select selectedKey="{ruleModel>sapObject}" width="100%">
+                                                            <core:Item key="" text="-- Select --"/>
+                                                            <core:Item key="SAP*" text="SAP*"/>
+                                                            <core:Item key="DDIC" text="DDIC"/>
+                                                            <core:Item key="SAPCPIC" text="SAPCPIC"/>
+                                                            <core:Item key="TMSADM" text="TMSADM"/>
+                                                            <core:Item key="WF-BATCH" text="WF-BATCH"/>
+                                                            <core:Item key="SAP_WFRT" text="SAP_WFRT"/>
+                                                            <core:Item key="EARLYWATCH" text="EARLYWATCH"/>
+                                                            <core:Item key="SDMI_*" text="SDMI_*"/>
+                                                            <core:Item key="J2EE_ADMIN" text="J2EE_ADMIN"/>
+                                                            <core:Item key="J2EE_GUEST" text="J2EE_GUEST"/>
+                                                            <core:Item key="SAPJSF" text="SAPJSF"/>
+                                                            <core:Item key="ADSUSER" text="ADSUSER"/>
+                                                        </Select>
+                                                    </VBox>
+
+                                                    <VBox class="xyraFormField" width="31%">
+                                                        <Label text="Client" required="true" class="xyraFormLabel"/>
+                                                        <Select selectedKey="{ruleModel>client}" width="100%">
+                                                            <core:Item key="" text="-- Client --"/>
+                                                            <core:Item key="All" text="All"/>
+                                                            <core:Item key="000" text="000"/>
+                                                            <core:Item key="001" text="001"/>
+                                                            <core:Item key="066" text="066"/>
+                                                            <core:Item key="100" text="100"/>
+                                                            <core:Item key="200" text="200"/>
+                                                            <core:Item key="300" text="300"/>
+                                                            <core:Item key="Other Clients" text="Other Clients"/>
+                                                        </Select>
+                                                        <Input
+                                                            value="{ruleModel>customClient}"
+                                                            placeholder="Enter client ID..."
+                                                            visible="{= ${ruleModel>client} === 'Other Clients' }"
+                                                            width="100%"
+                                                            class="sapUiTinyMarginTop"/>
+                                                    </VBox>
+
+                                                    <VBox class="xyraFormField" width="31%">
+                                                        <Label text="Parameter Type" required="true" class="xyraFormLabel"/>
+                                                        <Select selectedKey="{ruleModel>parameterType}" width="100%" change="onParameterTypeChange">
+                                                            <core:Item key="" text="-- Select Type --"/>
+                                                            <core:Item key="SET/GET Parameter" text="SET/GET Parameter"/>
+                                                            <core:Item key="User Default Value" text="User Default Value"/>
+                                                            <core:Item key="General" text="General Parameter"/>
+                                                        </Select>
+                                                    </VBox>
+                                                </HBox>
+
+                                                <!-- ROW 2: Parameter, Validation, Expected Value -->
+                                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiNoMargin sapUiTinyMarginTop xyraRuleFieldRow3">
+                                                    <VBox class="xyraFormField" width="31%">
+                                                        <Label text="Parameter" required="true" class="xyraFormLabel"/>
+                                                        <!-- Select for SET/GET Parameter -->
+                                                        <Select selectedKey="{ruleModel>parameterSetGet}" change="onParameterSelectChange" visible="{= ${ruleModel>parameterType} === 'SET/GET Parameter' }" width="100%">
+                                                            <core:Item key="" text="-- Select SET/GET --"/>
+                                                            <core:Item key="BUK" text="BUK (Company Code)"/>
+                                                            <core:Item key="WRK" text="WRK (Plant)"/>
+                                                            <core:Item key="VKO" text="VKO (Sales Org)"/>
+                                                            <core:Item key="VTEG" text="VTEG (Distribution Channel)"/>
+                                                            <core:Item key="SPA" text="SPA (Memory ID)"/>
+                                                            <core:Item key="KOK" text="KOK (Cost Center)"/>
+                                                            <core:Item key="EKO" text="EKO (Purchasing Org)"/>
+                                                            <core:Item key="Custom" text="Custom"/>
+                                                        </Select>
+
+                                                        <!-- Select for User Default Value -->
+                                                        <Select selectedKey="{ruleModel>parameterUserDef}" change="onParameterSelectChange" visible="{= ${ruleModel>parameterType} === 'User Default Value' }" width="100%">
+                                                            <core:Item key="" text="-- Select Default --"/>
+                                                            <core:Item key="Decimal Notation" text="Decimal Notation"/>
+                                                            <core:Item key="Date Format" text="Date Format"/>
+                                                            <core:Item key="Time Zone" text="Time Zone"/>
+                                                            <core:Item key="Logon Language" text="Logon Language"/>
+                                                            <core:Item key="Spool Output (DEST)" text="Spool Output (DEST)"/>
+                                                            <core:Item key="Output Device (PRINTER)" text="Output Device (PRINTER)"/>
+                                                            <core:Item key="Custom" text="Custom"/>
+                                                        </Select>
+
+                                                        <!-- Select for General / Default Parameters -->
+                                                        <Select selectedKey="{ruleModel>parameterGeneral}" change="onParameterSelectChange" visible="{= ${ruleModel>parameterType} !== 'SET/GET Parameter' &amp;&amp; ${ruleModel>parameterType} !== 'User Default Value' }" width="100%">
+                                                            <core:Item key="" text="-- Select Parameter --"/>
+                                                            <core:Item key="Password Changed" text="Password Changed"/>
+                                                            <core:Item key="User Type" text="User Type"/>
+                                                            <core:Item key="Locked" text="Locked"/>
+                                                            <core:Item key="Failed Logins" text="Failed Logins"/>
+                                                            <core:Item key="Roles Assigned" text="Roles Assigned"/>
+                                                            <core:Item key="Security Policy" text="Security Policy"/>
+                                                            <core:Item key="SDMI_* Exists" text="SDMI_* Exists"/>
+                                                            <core:Item key="Super User" text="Super User"/>
+                                                            <core:Item key="SAP_ALL" text="SAP_ALL"/>
+                                                            <core:Item key="S_A.TMSADM" text="S_A.TMSADM"/>
+                                                            <core:Item key="Update Tool" text="Update Tool"/>
+                                                            <core:Item key="Custom" text="Custom"/>
+                                                        </Select>
+
+                                                        <Input
+                                                            value="{ruleModel>customParameter}"
+                                                            placeholder="Enter parameter name..."
+                                                            visible="{= ${ruleModel>parameter} === 'Custom' }"
+                                                            width="100%"
+                                                            class="sapUiTinyMarginTop"/>
+                                                    </VBox>
+
+                                                    <VBox class="xyraFormField" width="31%">
+                                                        <Label text="Validation" required="true" class="xyraFormLabel"/>
+                                                        <Select selectedKey="{ruleModel>operator}" width="100%">
+                                                            <core:Item key="" text="-- Select Validation --"/>
+                                                            <core:Item key="Equals" text="Equals"/>
+                                                            <core:Item key="Not Equals" text="Not Equals"/>
+                                                            <core:Item key="Contains" text="Contains"/>
+                                                            <core:Item key="Not Contains" text="Not Contains"/>
+                                                            <core:Item key="Exists" text="Exists"/>
+                                                            <core:Item key="Not Exists" text="Not Exists"/>
+                                                            <core:Item key="Greater Than" text="Greater Than"/>
+                                                            <core:Item key="Less Than" text="Less Than"/>
+                                                            <core:Item key="Greater Than or Equal" text="Greater Than or Equal"/>
+                                                            <core:Item key="Less Than or Equal" text="Less Than or Equal"/>
+                                                        </Select>
+                                                    </VBox>
+
+                                                    <VBox class="xyraFormField" width="31%">
+                                                        <Label text="Expected Value" required="true" class="xyraFormLabel"/>
+                                                        <Input
+                                                            value="{ruleModel>expectedValue}"
+                                                            type="Number"
+                                                            placeholder="Enter number e.g. 3"
+                                                            visible="{= ${ruleModel>parameter} === 'Failed Logins' }"
+                                                            width="100%"/>
+                                                        <Select
+                                                            selectedKey="{ruleModel>expectedValue}"
+                                                            visible="{= ${ruleModel>parameter} !== 'Failed Logins' }"
+                                                            width="100%">
+                                                            <core:Item key="" text="-- Select Value --"/>
+                                                            <core:Item key="1000" text="1000"/>
+                                                            <core:Item key="Yes" text="Yes"/>
+                                                            <core:Item key="No" text="No"/>
+                                                            <core:Item key="A (Dialog User)" text="A (Dialog User)"/>
+                                                            <core:Item key="B (System User)" text="B (System User)"/>
+                                                            <core:Item key="C (Communication User)" text="C (Communication User)"/>
+                                                            <core:Item key="S (Service User)" text="S (Service User)"/>
+                                                            <core:Item key="L (Reference User)" text="L (Reference User)"/>
+                                                            <core:Item key="G (Guest User)" text="G (Guest User)"/>
+                                                            <core:Item key="0" text="0"/>
+                                                            <core:Item key="1" text="1"/>
+                                                            <core:Item key="Z_NOEXPIRY" text="Z_NOEXPIRY"/>
+                                                            <core:Item key="SUPER" text="SUPER"/>
+                                                            <core:Item key="SWPM (Software Provisioning Manager)" text="SWPM (Software Provisioning Manager)"/>
+                                                            <core:Item key="SAPup (System Upgrade)" text="SAPup (System Upgrade)"/>
+                                                            <core:Item key="SAPehpi (Enhancement Package Installer)" text="SAPehpi (Enhancement Package Installer)"/>
+                                                            <core:Item key="STARTUP (Software Update Manager)" text="STARTUP (Software Update Manager)"/>
+                                                            <core:Item key="SUM (SAP Upgrade Manager)" text="SUM (SAP Upgrade Manager)"/>
+                                                            <core:Item key="None" text="None"/>
+                                                            <core:Item key="SAP delivered roles" text="SAP delivered roles"/>
+                                                            <core:Item key="Custom" text="Custom"/>
+                                                        </Select>
+                                                        <Input
+                                                            value="{ruleModel>customExpectedValue}"
+                                                            placeholder="Enter custom expected value..."
+                                                            visible="{= ${ruleModel>parameter} !== 'Failed Logins' &amp;&amp; ${ruleModel>expectedValue} === 'Custom' }"
+                                                            width="100%"
+                                                            class="sapUiTinyMarginTop"/>
+                                                    </VBox>
+                                                </HBox>
+
+                                                <!-- CARD FOOTER DELETE ACTION -->
+                                                <HBox justifyContent="End" alignItems="Center" class="sapUiTinyMarginTop">
+                                                    <Button icon="sap-icon://delete" text="Delete" type="Reject" class="xyraDeleteRuleBtn" tooltip="Delete Rule" press="onDeleteRule"/>
+                                                </HBox>
+                                            </VBox>
+                                        </CustomListItem>
+                                    </items>
+                                </List>
+
+                            <HBox justifyContent="Center" class="sapUiTinyMarginTop">
+                                <Button text="Add Rule" type="Emphasized" icon="sap-icon://add" press="onAddRule"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- SAVE / CANCEL: in the body, not a dialog-style footer -->
+                        <HBox justifyContent="End" alignItems="Center" class="sapUiMediumMarginTop">
+                            <Button text="Cancel" type="Transparent" class="xyraDialogCancelBtn sapUiTinyMarginEnd" press="onCancel"/>
+                            <Button text="Save" type="Emphasized" icon="sap-icon://save" press="onSaveControl"/>
+                        </HBox>
+                    </VBox>
+                </content>
+            </Page>
+        </tnt:mainContents>
+    </tnt:ToolPage>
+</mvc:View>

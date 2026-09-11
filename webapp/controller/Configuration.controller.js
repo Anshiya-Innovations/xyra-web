@@ -36,14 +36,7 @@ sap.ui.define([
             if (oToolPage) {
                 oToolPage.setSideExpanded(SidebarState.get());
             }
-            var oNav = this.byId("sideNavigation");
-            if (oNav) {
-                oNav.setSelectedKey("Configuration");
-                var oList = oNav.getItem();
-                if (oList && oList.setSelectedKey) {
-                    oList.setSelectedKey("Configuration");
-                }
-            }
+            this._setSidebarKey(this.getView().getModel("configUiModel").getProperty("/activeTab") === "systemHealth" ? "SystemHealthTab" : "Landscape");
             this._attachKpiClickListeners();
         },
 
@@ -87,38 +80,45 @@ sap.ui.define([
             this._loadSystems();
         },
 
+        // Landscape and Health used to be in-page tab buttons; now they're
+        // separate sidebar items on this same page/route, toggling the same
+        // two slides (same convention as Reviewer1/2's sidebar-driven slides).
         onSelectLandscapeTab: function () {
+            this.getView().getModel("configUiModel").setProperty("/activeTab", "landscape");
             var oLandscape = this.byId("vboxSystemLandscape");
             var oHealth = this.byId("vboxSystemHealth");
             if (oLandscape) { oLandscape.setVisible(true); }
             if (oHealth) { oHealth.setVisible(false); }
-
-            var oBtnLandscape = this.byId("btnSystemLandscapeTab");
-            var oBtnHealth = this.byId("btnSystemHealthTab");
-            if (oBtnLandscape) { oBtnLandscape.setType("Emphasized"); }
-            if (oBtnHealth) { oBtnHealth.setType("Transparent"); }
+            this._setSidebarKey("Landscape");
         },
 
+        // ponytail: this used to navTo("SystemHealth") whenever a router
+        // existed (i.e. always, in the real app) - silently sending users to
+        // a separate, stale, mock-only SystemHealth.view.xml page instead of
+        // this page's own real, backend-connected Health slide. Fixed to
+        // just show that slide, matching onSelectLandscapeTab.
         onSelectSystemHealthTab: function () {
-            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-            if (oRouter) {
-                oRouter.navTo("SystemHealth");
-                return;
-            }
-
+            this.getView().getModel("configUiModel").setProperty("/activeTab", "systemHealth");
             var oLandscape = this.byId("vboxSystemLandscape");
             var oHealth = this.byId("vboxSystemHealth");
             if (oLandscape) { oLandscape.setVisible(false); }
             if (oHealth) { oHealth.setVisible(true); }
-
-            var oBtnLandscape = this.byId("btnSystemLandscapeTab");
-            var oBtnHealth = this.byId("btnSystemHealthTab");
-            if (oBtnLandscape) { oBtnLandscape.setType("Transparent"); }
-            if (oBtnHealth) { oBtnHealth.setType("Emphasized"); }
+            this._setSidebarKey("SystemHealthTab");
 
             this._syncHealthFromSystems();
             var that = this;
             setTimeout(function () { that._attachKpiClickListeners(); }, 100);
+        },
+
+        _setSidebarKey: function (sKey) {
+            var oNav = this.byId("sideNavigation");
+            if (oNav) {
+                oNav.setSelectedKey(sKey);
+                var oList = oNav.getItem();
+                if (oList && oList.setSelectedKey) {
+                    oList.setSelectedKey(sKey);
+                }
+            }
         },
 
         _initHealthModel: function () {
@@ -232,6 +232,27 @@ sap.ui.define([
 
         // Runs a real connection test against every system on file, in
         // parallel, via connection_engine — no simulated latency/status.
+        // Runs the actual connection-test sweep, no busy-indicator management
+        // of its own - callers own that, so chaining this after another async
+        // step (see _loadSystems) doesn't cause a hide()-then-immediately-
+        // show() flicker, which can drop the overlay for a moment and make
+        // the page look done loading when the health checks are still running.
+        _runHealthChecks: function (oSession, bSilent) {
+            var oHealthModel = this.getView().getModel("healthModel");
+            var aRows = oHealthModel.getProperty("/systems") || [];
+            if (!aRows.length) { return Promise.resolve(); }
+
+            return Promise.all(aRows.map(function (oRow) { return this._testOneSystem(oRow, oSession); }.bind(this)))
+                .then(function (aResults) {
+                    oHealthModel.refresh(true);
+                    this._recalculateHealthKpis();
+                    if (!bSilent) {
+                        var iOk = aResults.filter(function (r) { return r.success; }).length;
+                        MessageToast.show("Connectivity check complete: " + iOk + "/" + aRows.length + " systems reachable.");
+                    }
+                }.bind(this));
+        },
+
         onRefreshHealth: function () {
             var oHealthModel = this.getView().getModel("healthModel");
             if (oHealthModel.getProperty("/isDummyData")) {
@@ -245,21 +266,15 @@ sap.ui.define([
                 return;
             }
 
-            var aRows = oHealthModel.getProperty("/systems") || [];
-            if (!aRows.length) {
+            if (!(oHealthModel.getProperty("/systems") || []).length) {
                 MessageToast.show("No systems on file — add one under System Landscape first.");
                 return;
             }
 
             BusyIndicator.show(0);
-            Promise.all(aRows.map(function (oRow) { return this._testOneSystem(oRow, oSession); }.bind(this)))
-                .then(function (aResults) {
-                    BusyIndicator.hide();
-                    oHealthModel.refresh(true);
-                    this._recalculateHealthKpis();
-                    var iOk = aResults.filter(function (r) { return r.success; }).length;
-                    MessageToast.show("Connectivity check complete: " + iOk + "/" + aRows.length + " systems reachable.");
-                }.bind(this));
+            this._runHealthChecks(oSession).then(function () {
+                BusyIndicator.hide();
+            });
         },
 
         onAutoRefreshToggle: function (oEvent) {
@@ -427,6 +442,11 @@ sap.ui.define([
         _loadSystems: function () {
             var oSession = Session.get();
             if (!oSession) {
+                // Component.js's overlay for this route has no auto-hide
+                // timeout, relying entirely on this function reaching its own
+                // end to dismiss it - bail out here still has to clear it, or
+                // it's stuck on screen through the redirect to Login.
+                GlobalLoading.hide();
                 MessageBox.error("No active session. Please log in again.");
                 this.getOwnerComponent().getRouter().navTo("Login");
                 return;
@@ -434,6 +454,13 @@ sap.ui.define([
 
             BusyIndicator.show(0);
 
+            // One continuous busy period covering the listSystems fetch AND
+            // (if there are real systems) the live health-check sweep that
+            // follows it - hiding the busy indicator between the two and
+            // immediately re-showing it for _runHealthChecks used to cause a
+            // hide-then-instant-reshow flicker that could drop the overlay
+            // for a moment, making the page look done loading while the
+            // health checks were still running in the background.
             fetch(Config.AUTH_BASE_URL + "/api/system-config/listSystems", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -441,10 +468,9 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    BusyIndicator.hide();
                     if (!oData.success) {
                         MessageBox.error(oData.message || "Could not load systems.");
-                        return;
+                        return null;
                     }
                     this.getView().getModel("systemModel").setProperty("/systems", oData.systems || []);
                     this._syncHealthFromSystems();
@@ -452,15 +478,23 @@ sap.ui.define([
                     // the Health tab shows actual status on load instead of
                     // sitting at "Unknown" until someone clicks Refresh.
                     if (!this.getView().getModel("healthModel").getProperty("/isDummyData")) {
-                        this.onRefreshHealth();
+                        return this._runHealthChecks(oSession, /*bSilent*/true);
                     }
                 }.bind(this))
                 .catch(function () {
-                    BusyIndicator.hide();
                     MockData.notice(MessageToast);
                     this.getView().getModel("systemModel").setProperty("/systems", MockData.systems);
                     this._syncHealthFromSystems();
-                }.bind(this));
+                }.bind(this))
+                .then(function () {
+                    BusyIndicator.hide();
+                    // The full-screen loading overlay shown on navigating INTO
+                    // this page (Component.js) has no auto-hide timeout for the
+                    // Configuration route specifically, exactly so it can't
+                    // disappear before this - dismiss it here, once the data
+                    // it was covering for is actually on screen.
+                    GlobalLoading.hide();
+                });
         },
 
         onSideNavToggle: function () {
