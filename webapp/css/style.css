@@ -105,7 +105,7 @@ body,
    .sapTntNLISelected, badge/tag wrapper .sapTntNLITagContainer. */
 .sapTntToolPageAside,
 .sapTntSideNavigation {
-  background-color: #0F172A !important;
+  background-color: #0f172a !important;
   border-right: none !important;
 }
 
@@ -160,16 +160,24 @@ body,
   display: none !important;
 }
 
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) {
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(
+    :has(a[aria-selected="true"])
+  ):not(:has(a[aria-current="page"])) {
   background: transparent !important;
   background-color: transparent !important;
   border: none !important;
   outline: none !important;
 }
 
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) .sapTntNLIText,
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])) .sapTntNLIIcon {
-  color: #94A3B8 !important;
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(
+    :has(a[aria-selected="true"])
+  ):not(:has(a[aria-current="page"]))
+  .sapTntNLIText,
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(
+    :has(a[aria-selected="true"])
+  ):not(:has(a[aria-current="page"]))
+  .sapTntNLIIcon {
+  color: #94a3b8 !important;
 }
 
 /* Expand/collapse caret on group items (e.g. "Control Management") -
@@ -193,7 +201,9 @@ body,
   font-size: 0.95rem !important;
 }
 
-.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(:has(a[aria-selected="true"])):not(:has(a[aria-current="page"])):hover {
+.sapTntNLI:not(.sapTntNLISelected):not([aria-selected="true"]):not(
+    :has(a[aria-selected="true"])
+  ):not(:has(a[aria-current="page"])):hover {
   background-color: rgba(255, 255, 255, 0.06) !important;
   background: rgba(255, 255, 255, 0.06) !important;
   border: none !important;
@@ -206,8 +216,8 @@ body,
 .sapTntNLI.sapTntNLISelected,
 .sapTntNLI:has(a[aria-selected="true"]),
 .sapTntNLI:has(a[aria-current="page"]) {
-  background: linear-gradient(135deg, #533BFF, #5A5FF4) !important;
-  background-color: #533BFF !important;
+  background: linear-gradient(135deg, #533bff, #5a5ff4) !important;
+  background-color: #533bff !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
@@ -222,7 +232,7 @@ body,
 .sapTntNLI:has(a[aria-selected="true"]) .sapTntNLIIcon,
 .sapTntNLI:has(a[aria-current="page"]) .sapTntNLIText,
 .sapTntNLI:has(a[aria-current="page"]) .sapTntNLIIcon {
-  color: #FFFFFF !important;
+  color: #ffffff !important;
   font-weight: 600 !important;
 }
 
@@ -269,7 +279,9 @@ span.sapTntNLITagContainer {
   padding: 2px 8px !important;
 }
 
-.sapTntNLITagContainer .sapMObjStatusInverted.sapMObjStatusIndication16 .sapMObjStatusText,
+.sapTntNLITagContainer
+  .sapMObjStatusInverted.sapMObjStatusIndication16
+  .sapMObjStatusText,
 .sapTntNLITagContainer .sapMObjStatusIndication16 .sapMObjStatusText {
   color: #065f46 !important;
   font-weight: 700 !important;
@@ -290,7 +302,7 @@ span.sapTntNLITagContainer {
    place a control above the nav list. Painting the logo as a background-image
    on the SideNavigation itself sidesteps the whole aggregation model. */
 .sapTntSideNavigation {
-  background-image: url('../img/logo-dark-bg.png') !important;
+  background-image: url("../img/logo-dark-bg.png") !important;
   background-repeat: no-repeat !important;
   background-position: 1.25rem 1.5rem !important;
   background-size: 100px auto !important;
@@ -305,7 +317,7 @@ span.sapTntNLITagContainer {
    sideExpanded=false it adds .sapTntToolPageAsideCollapsed to the content
    wrapper (an ancestor of the aside/SideNavigation), not to the aside itself. */
 .sapTntToolPageAsideCollapsed .sapTntSideNavigation {
-  background-image: url('../img/logo-icon-dark-bg.png') !important;
+  background-image: url("../img/logo-icon-dark-bg.png") !important;
   background-position: center 1.25rem !important;
   background-size: 32px auto !important;
 }
@@ -563,8 +575,6 @@ span.sapTntNLITagContainer {
   width: 0 !important;
   height: 0 !important;
 }
-
-
 
 #sap-ui-static .sapMMessageBoxIcon,
 .sapMMessageBoxIcon {
@@ -975,13 +985,17 @@ div[id*="Popover"] .sapUiScrollDelegate {
 
 /* Ensure flex item wrappers inside xyraCreateControlGrid do not swallow/collapse 16px bottom margin */
 .xyraCreateControlGrid .sapMFlexItem:has(> .xyraFormField),
-.xyraCreateControlGrid .sapVBox > .sapMFlexItem:not(:has(> .sapUiHiddenPlaceholder)) {
+.xyraCreateControlGrid
+  .sapVBox
+  > .sapMFlexItem:not(:has(> .sapUiHiddenPlaceholder)) {
   margin-bottom: 16px !important;
   margin-top: 0 !important;
 }
 
 .xyraCreateControlGrid .sapMFlexItem:last-child > .xyraFormField,
-.xyraCreateControlGrid .sapVBox > .sapMFlexItem:last-child:not(:has(> .sapUiHiddenPlaceholder)) {
+.xyraCreateControlGrid
+  .sapVBox
+  > .sapMFlexItem:last-child:not(:has(> .sapUiHiddenPlaceholder)) {
   margin-bottom: 0 !important;
 }
 
@@ -1104,7 +1118,10 @@ div[id*="Popover"] .sapUiScrollDelegate {
   background-color: #f8fafc !important;
   box-sizing: border-box !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease !important;
   overflow: hidden !important;
   display: flex !important;
 }
@@ -1113,7 +1130,9 @@ div[id*="Popover"] .sapUiScrollDelegate {
 .sapMDialogContent .sapMTextArea .sapMInputBaseContentWrapper:hover {
   border-color: #533bff !important;
   background-color: #ffffff !important;
-  box-shadow: 0 0 0 2px rgba(83, 59, 255, 0.12), 0 2px 6px rgba(83, 59, 255, 0.08) !important;
+  box-shadow:
+    0 0 0 2px rgba(83, 59, 255, 0.12),
+    0 2px 6px rgba(83, 59, 255, 0.08) !important;
 }
 
 .sapMTextArea .sapMInputBaseContentWrapper:focus-within,
@@ -1121,7 +1140,9 @@ div[id*="Popover"] .sapUiScrollDelegate {
 .sapMTextArea.sapMFocus .sapMInputBaseContentWrapper {
   border-color: #533bff !important;
   background-color: #ffffff !important;
-  box-shadow: 0 0 0 3.5px rgba(83, 59, 255, 0.15), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  box-shadow:
+    0 0 0 3.5px rgba(83, 59, 255, 0.15),
+    0 2px 6px rgba(0, 0, 0, 0.04) !important;
   outline: none !important;
 }
 
@@ -1298,7 +1319,10 @@ textarea.sapMTextAreaInner {
   width: 54% !important;
   height: 100% !important;
   background: #091130 !important;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px) !important;
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.06) 1px,
+    transparent 1px
+  ) !important;
   background-size: 22px 22px !important;
   display: flex !important;
   align-items: center !important;
@@ -1358,7 +1382,11 @@ textarea.sapMTextAreaInner {
   width: 2px;
   height: 20px;
   margin-left: 1.7rem;
-  background: linear-gradient(180deg, rgba(139, 116, 255, 0.5), rgba(139, 116, 255, 0.1));
+  background: linear-gradient(
+    180deg,
+    rgba(139, 116, 255, 0.5),
+    rgba(139, 116, 255, 0.1)
+  );
 }
 
 .xyraFlowIcon {
@@ -1675,7 +1703,9 @@ textarea.sapMTextAreaInner {
    never blends into or clashes with whatever it's sitting on (the plain
    page background vs. the rule card's slightly darker one). */
 .xyraEditorContent .sapMSlt,
-.xyraEditorContent .sapMInputBase:not(.sapMTextArea) .sapMInputBaseContentWrapper {
+.xyraEditorContent
+  .sapMInputBase:not(.sapMTextArea)
+  .sapMInputBaseContentWrapper {
   background-color: #ffffff !important;
   background-image: none !important;
 }
@@ -2205,49 +2235,103 @@ textarea.sapMTextAreaInner {
 
 /* ===== Primary Brand Purple Color & Fixed Sizing for Non-Highlighted Buttons ===== */
 
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnContent,
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnIcon,
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapUiIcon,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnContent,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnIcon,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapUiIcon,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnContent,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnIcon,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapUiIcon,
-.sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnContent,
-.sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) .sapMBtnIcon,
-.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)) .sapMBtnContent,
-.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)) .sapMBtnIcon,
-.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)) .sapUiIcon {
-  color: #533BFF !important;
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  )
+  .sapMBtnContent,
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  )
+  .sapMBtnIcon,
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  )
+  .sapUiIcon,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized)
+  .sapMBtnContent,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized)
+  .sapMBtnIcon,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized)
+  .sapUiIcon,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized)
+  .sapMBtnContent,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized)
+  .sapMBtnIcon,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized)
+  .sapUiIcon,
+.sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized)
+  .sapMBtnContent,
+.sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized)
+  .sapMBtnIcon,
+.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(
+    :has(.sapMBtnAccept)
+  )
+  .sapMBtnContent,
+.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(
+    :has(.sapMBtnAccept)
+  )
+  .sapMBtnIcon,
+.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(
+    :has(.sapMBtnAccept)
+  )
+  .sapUiIcon {
+  color: #533bff !important;
 }
 
-.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) bdi,
-.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) bdi,
-.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized) bdi,
-.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)) bdi {
-  color: #533BFF !important;
+.sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  )
+  bdi,
+.sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized)
+  bdi,
+.sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized)
+  bdi,
+.sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(
+    :has(.sapMBtnAccept)
+  )
+  bdi {
+  color: #533bff !important;
 }
 
 /* Enforce fixed height & border-box for non-emphasized buttons in page content area to match Emphasized buttons (excluding table cells & toolbars) */
-.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):not(.sapMListTblCell *):not(.sapMTable *):not(td *):has(.sapMBtnTransparent),
-.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):not(.sapMListTblCell *):not(.sapMTable *):not(td *):has(.sapMBtnDefault),
-.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(.sapMHeaderToolbar .sapMBtn):not(.sapMBar .sapMBtn):not(.sapMListTblCell *):not(.sapMTable *):not(td *):has(.sapMBtnGhost) {
+.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(
+    .sapMHeaderToolbar .sapMBtn
+  ):not(.sapMBar .sapMBtn):not(.sapMListTblCell *):not(.sapMTable *):not(
+    td *
+  ):has(.sapMBtnTransparent),
+.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(
+    .sapMHeaderToolbar .sapMBtn
+  ):not(.sapMBar .sapMBtn):not(.sapMListTblCell *):not(.sapMTable *):not(
+    td *
+  ):has(.sapMBtnDefault),
+.sapMBtn:not(.sapMOverflowToolbar .sapMBtn):not(.sapMTB .sapMBtn):not(
+    .sapMHeaderToolbar .sapMBtn
+  ):not(.sapMBar .sapMBtn):not(.sapMListTblCell *):not(.sapMTable *):not(
+    td *
+  ):has(.sapMBtnGhost) {
   height: 46px !important;
   box-sizing: border-box !important;
   overflow: visible !important;
 }
 
-.sapMBtnTransparent:not(.sapMOverflowToolbar *):not(.sapMTB *):not(.sapMHeaderToolbar *):not(.sapMBar *):not(.sapMListTblCell *):not(.sapMTable *):not(td *),
-.sapMBtnDefault:not(.sapMOverflowToolbar *):not(.sapMTB *):not(.sapMHeaderToolbar *):not(.sapMBar *):not(.sapMListTblCell *):not(.sapMTable *):not(td *),
-.sapMBtnGhost:not(.sapMOverflowToolbar *):not(.sapMTB *):not(.sapMHeaderToolbar *):not(.sapMBar *):not(.sapMListTblCell *):not(.sapMTable *):not(td *) {
+.sapMBtnTransparent:not(.sapMOverflowToolbar *):not(.sapMTB *):not(
+    .sapMHeaderToolbar *
+  ):not(.sapMBar *):not(.sapMListTblCell *):not(.sapMTable *):not(td *),
+.sapMBtnDefault:not(.sapMOverflowToolbar *):not(.sapMTB *):not(
+    .sapMHeaderToolbar *
+  ):not(.sapMBar *):not(.sapMListTblCell *):not(.sapMTable *):not(td *),
+.sapMBtnGhost:not(.sapMOverflowToolbar *):not(.sapMTB *):not(
+    .sapMHeaderToolbar *
+  ):not(.sapMBar *):not(.sapMListTblCell *):not(.sapMTable *):not(td *) {
   height: 46px !important;
   border-radius: 10px !important;
   box-sizing: border-box !important;
   padding: 0 1rem !important;
   border: 1px solid #cbd5e1 !important;
   background-color: #f8fafc !important;
-  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease !important;
 }
 
 /* Ensure outer .sapMBtn container NEVER draws an outside border or background on hover, focus, or active */
@@ -2264,14 +2348,49 @@ html body .sapMBtn:active {
 
 /* Secondary / Default / Transparent / Ghost buttons (e.g. System Health, Execution History, Schedule Report, System History, Cancel, etc.) hover state:
    replaces gray background with soft purple #f3f0ff & brand purple #533bff border ONLY on inner button span (.sapMBtnInner) */
-html body .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(.sapMBtnAccept):hover,
-html body .sapMBtnInner.sapMBtnHoverable:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(.sapMBtnAccept):hover,
-html body .sapMBtnHoverable:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(.sapMBtnAccept):hover,
-html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
-html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
-html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
-html body .sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover,
-html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):not([title*="Notification"]):not([tooltip*="Notification"]):not([aria-label*="Notification"]):hover .sapMBtnInner {
+html
+  body
+  .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(
+    .sapMBtnAccept
+  ):hover,
+html
+  body
+  .sapMBtnInner.sapMBtnHoverable:not(.sapMBtnEmphasized):not(
+    .sapMBtnReject
+  ):not(.sapMBtnAccept):hover,
+html
+  body
+  .sapMBtnHoverable:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(
+    .sapMBtnAccept
+  ):hover,
+html
+  body
+  .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover,
+html
+  body
+  .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover,
+html
+  body
+  .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover,
+html
+  body
+  .sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover,
+html
+  body
+  .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(
+    :has(.sapMBtnAccept)
+  ):not([title*="Notification"]):not([tooltip*="Notification"]):not(
+    [aria-label*="Notification"]
+  ):hover
+  .sapMBtnInner {
   background-color: #f3f0ff !important;
   background: #f3f0ff !important;
   border: 1px solid #533bff !important;
@@ -2281,13 +2400,44 @@ html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:
 }
 
 /* Active / Pressed state for all secondary non-emphasized buttons */
-html body .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(.sapMBtnAccept):active,
-html body .sapMBtnInner.sapMBtnHoverable:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(.sapMBtnAccept):active,
-html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
-html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
-html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
-html body .sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):active,
-html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):not([title*="Notification"]):not([tooltip*="Notification"]):not([aria-label*="Notification"]):active .sapMBtnInner {
+html
+  body
+  .sapMBtnInner:not(.sapMBtnEmphasized):not(.sapMBtnReject):not(
+    .sapMBtnAccept
+  ):active,
+html
+  body
+  .sapMBtnInner.sapMBtnHoverable:not(.sapMBtnEmphasized):not(
+    .sapMBtnReject
+  ):not(.sapMBtnAccept):active,
+html
+  body
+  .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):active,
+html
+  body
+  .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):active,
+html
+  body
+  .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):active,
+html
+  body
+  .sapMBtnText:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):active,
+html
+  body
+  .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(
+    :has(.sapMBtnAccept)
+  ):not([title*="Notification"]):not([tooltip*="Notification"]):not(
+    [aria-label*="Notification"]
+  ):active
+  .sapMBtnInner {
   background-color: #e0e7ff !important;
   background: #e0e7ff !important;
   border: 1px solid #533bff !important;
@@ -2297,23 +2447,103 @@ html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:
 }
 
 /* Text and icon colors inside hovered secondary buttons remain brand purple #533bff */
-html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
-html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
-html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
-html body .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi,
-html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
-html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
-html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
-html body .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi,
-html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnContent,
-html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapMBtnIcon,
-html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover .sapUiIcon,
-html body .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(.sapMBtnEmphasized):hover bdi,
-html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):hover .sapMBtnContent,
-html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):hover .sapMBtnIcon,
-html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):hover .sapUiIcon,
-html body .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(:has(.sapMBtnAccept)):hover bdi {
-  color: #533BFF !important;
+html
+  body
+  .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  .sapMBtnContent,
+html
+  body
+  .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  .sapMBtnIcon,
+html
+  body
+  .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  .sapUiIcon,
+html
+  body
+  .sapMBtnTransparent:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  bdi,
+html
+  body
+  .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  .sapMBtnContent,
+html
+  body
+  .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  .sapMBtnIcon,
+html
+  body
+  .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  .sapUiIcon,
+html
+  body
+  .sapMBtnGhost:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  bdi,
+html
+  body
+  .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  .sapMBtnContent,
+html
+  body
+  .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  .sapMBtnIcon,
+html
+  body
+  .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  .sapUiIcon,
+html
+  body
+  .sapMBtnDefault:not(.sapMBtnReject):not(.sapMBtnAccept):not(
+    .sapMBtnEmphasized
+  ):hover
+  bdi,
+html
+  body
+  .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(
+    :has(.sapMBtnAccept)
+  ):hover
+  .sapMBtnContent,
+html
+  body
+  .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(
+    :has(.sapMBtnAccept)
+  ):hover
+  .sapMBtnIcon,
+html
+  body
+  .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(
+    :has(.sapMBtnAccept)
+  ):hover
+  .sapUiIcon,
+html
+  body
+  .sapMBtn:not(:has(.sapMBtnEmphasized)):not(:has(.sapMBtnReject)):not(
+    :has(.sapMBtnAccept)
+  ):hover
+  bdi {
+  color: #533bff !important;
 }
 
 .sapMBtn:has(.sapMBtnEmphasized) {
@@ -2397,7 +2627,10 @@ td .sapMBtn:has(.sapMBtnIcon):not(:has(.sapMBtnContent)),
 }
 
 td .sapMBtnInner:not(:has(.sapMBtnContent)):not(.sapMBtnReject),
-td .sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)):not(.sapMBtnReject),
+td
+  .sapMBtnInner:has(.sapMBtnIcon):not(:has(.sapMBtnContent)):not(
+    .sapMBtnReject
+  ),
 .sapMListTblCell .sapMBtnInner:not(:has(.sapMBtnContent)):not(.sapMBtnReject) {
   width: 34px !important;
   height: 34px !important;
@@ -2470,8 +2703,12 @@ td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject),
 td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) .sapMBtnContent,
 td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) .sapMBtnIcon,
 td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) bdi,
-.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) .sapMBtnContent,
-.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) .sapMBtnIcon,
+.sapMListTblCell
+  .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject)
+  .sapMBtnContent,
+.sapMListTblCell
+  .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject)
+  .sapMBtnIcon,
 .sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject) bdi {
   font-size: 0.825rem !important;
   font-weight: 600 !important;
@@ -2492,9 +2729,15 @@ td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover,
 td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover .sapMBtnContent,
 td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover .sapMBtnIcon,
 td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover bdi,
-.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover .sapMBtnContent,
-.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover .sapMBtnIcon,
-.sapMListTblCell .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover bdi {
+.sapMListTblCell
+  .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover
+  .sapMBtnContent,
+.sapMListTblCell
+  .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover
+  .sapMBtnIcon,
+.sapMListTblCell
+  .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover
+  bdi {
   color: #533bff !important;
 }
 
@@ -2511,7 +2754,9 @@ td .sapMBtnInner:has(.sapMBtnContent):not(.sapMBtnReject):hover bdi,
 }
 
 /* Reject-type buttons */
-.sapMBtn:has(.sapMBtnReject):not(.sapMListTblCell *):not(.sapMTable *):not(td *) {
+.sapMBtn:has(.sapMBtnReject):not(.sapMListTblCell *):not(.sapMTable *):not(
+    td *
+  ) {
   height: 46px !important;
   box-sizing: border-box !important;
   overflow: visible !important;
@@ -2885,7 +3130,9 @@ td .sapMBtnInner.sapMBtnReject:active,
   background-color: #f8fafc !important;
   padding: 0 1rem !important;
   box-sizing: border-box !important;
-  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease !important;
 }
 
 .xyraBtnSecondary:hover .sapMBtnInner,
@@ -2904,7 +3151,7 @@ td .sapMBtnInner.sapMBtnReject:active,
 .xyraBtnSecondary .sapMBtnIcon,
 .xyraBtnSecondary .sapUiIcon,
 .xyraBtnSecondary bdi {
-  color: #533BFF !important;
+  color: #533bff !important;
   font-weight: 600 !important;
 }
 
@@ -3175,12 +3422,12 @@ td .sapMBtnInner.sapMBtnReject:active,
   margin-bottom: 0.9rem !important;
   cursor: pointer !important;
   transition: all 0.22s ease-in-out !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.03) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
 }
 
 .xyraActionCard:hover {
   transform: translateY(-2px) !important;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08) !important;
 }
 
 .xyraActionCardPurple {
@@ -3283,7 +3530,9 @@ div[id*="-text"] {
   justify-content: center !important;
   opacity: 0 !important;
   visibility: hidden !important;
-  transition: opacity 0.2s ease, visibility 0.2s ease !important;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease !important;
   pointer-events: none !important;
 }
 
@@ -3309,7 +3558,9 @@ div[id*="-text"] {
   background: #ffffff !important;
   padding: 1.75rem 2.5rem !important;
   border-radius: 16px !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -3319,7 +3570,8 @@ div[id*="-text"] {
 }
 
 .xyraLoadingActivityText {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
   font-size: 1rem !important;
   font-weight: 600 !important;
   color: #1e293b !important;
@@ -3372,7 +3624,9 @@ div[id*="-text"] {
 }
 
 @keyframes xyraDotPulse {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0.4);
     opacity: 0.35;
   }
@@ -3426,7 +3680,9 @@ div[id*="-text"] {
 
 .xyraProfilePopover {
   border-radius: 12px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
   max-width: calc(100vw - 24px) !important;
   box-sizing: border-box !important;
 }
@@ -3564,7 +3820,9 @@ div[id*="-text"] {
   border: 1px solid #cbd5e1 !important;
   border-radius: 8px !important;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
-  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
+  transition:
+    border-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out !important;
   margin-top: 4px !important;
   margin-bottom: 20px !important;
   box-sizing: border-box !important;
@@ -3659,7 +3917,9 @@ div[id*="-text"] {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
   border: 1px solid #cbd5e1 !important;
   border-radius: 10px !important;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
   padding: 0 !important;
   width: 38px !important;
@@ -3681,7 +3941,9 @@ div[id*="-text"] {
 .xyraNavToggleButton .sapMBtnIcon {
   color: #475569 !important;
   font-size: 1.15rem !important;
-  transition: color 0.2s ease-in-out, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition:
+    color 0.2s ease-in-out,
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .sapMBtn[tooltip="Toggle Navigation"]:hover .sapMBtnIcon,
@@ -3868,7 +4130,8 @@ div[id*="-text"] {
 .sapMBtn[tooltip="Notifications"] .sapMBtnInner.sapMBtnHoverable:hover,
 .sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner.sapMBtnHoverable:hover,
 .sapMBtn[data-unread-count] .sapMBtnInner.sapMBtnHoverable:hover,
-.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner.sapMBtnHoverable:hover,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""])
+  .sapMBtnInner.sapMBtnHoverable:hover,
 .xyraNotificationBtn .sapMBtnInner.sapMBtnHoverable:hover {
   border-radius: 8px !important;
   border: 1.5px solid #533bff !important;
@@ -3904,7 +4167,8 @@ div[id*="-text"] {
 .sapMBtn[tooltip="Notifications"] .sapMBtnInner.sapMBtnActive,
 .sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner.sapMBtnActive,
 .sapMBtn[data-unread-count] .sapMBtnInner.sapMBtnActive,
-.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner.sapMBtnActive,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""])
+  .sapMBtnInner.sapMBtnActive,
 .xyraNotificationBtn .sapMBtnInner.sapMBtnActive {
   border-radius: 8px !important;
   border: 1.5px solid #3724b8 !important;
@@ -3941,7 +4205,8 @@ div[id*="-text"] {
 .sapMBtn[tooltip="Notifications"] .sapMBtnInner:focus-visible,
 .sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner:focus-visible,
 .sapMBtn[data-unread-count] .sapMBtnInner:focus-visible,
-.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner:focus-visible,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""])
+  .sapMBtnInner:focus-visible,
 .xyraNotificationBtn .sapMBtnInner:focus-visible,
 .sapMBtn[title="Notifications"] .sapMBtnInner.sapMFocusable:focus,
 .sapMBtn[title="Alert Notifications"] .sapMBtnInner.sapMFocusable:focus,
@@ -3950,7 +4215,8 @@ div[id*="-text"] {
 .sapMBtn[tooltip="Notifications"] .sapMBtnInner.sapMFocusable:focus,
 .sapMBtn[tooltip="Alert Notifications"] .sapMBtnInner.sapMFocusable:focus,
 .sapMBtn[data-unread-count] .sapMBtnInner.sapMFocusable:focus,
-.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner.sapMFocusable:focus,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""])
+  .sapMBtnInner.sapMFocusable:focus,
 .xyraNotificationBtn .sapMBtnInner.sapMFocusable:focus {
   border-radius: 8px !important;
   outline: none !important;
@@ -3995,11 +4261,16 @@ div[id*="-text"] {
 .sapMBtn[data-unread-count] .sapMBtnInner.sapMBtnHoverable:hover::before,
 .sapMBtn[data-unread-count] .sapMBtnInner.sapMBtnActive::before,
 .sapMBtn[data-unread-count] .sapMBtnInner.sapMFocusable:focus::before,
-.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner:focus::before,
-.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner:active::before,
-.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner:hover::before,
-.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner.sapMFocusable:focus::before,
-.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""]) .sapMBtnInner.sapMBtnActive::before {
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""])
+  .sapMBtnInner:focus::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""])
+  .sapMBtnInner:active::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""])
+  .sapMBtnInner:hover::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""])
+  .sapMBtnInner.sapMFocusable:focus::before,
+.sapMBtn:has(.sapUiIcon[data-sap-ui-icon-content=""])
+  .sapMBtnInner.sapMBtnActive::before {
   display: none !important;
   content: none !important;
   border: none !important;
@@ -4285,7 +4556,8 @@ div[id*="-text"] {
   color: #ffffff !important;
   font-size: 0.725rem !important;
   font-weight: 800 !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
   height: 20px !important;
   min-width: 22px !important;
   padding: 0 6px !important;
@@ -4330,7 +4602,9 @@ div[id*="-text"] {
   box-sizing: border-box !important;
   border-radius: 16px !important;
   overflow: hidden !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.15),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
   border: 1px solid #e2e8f0 !important;
 }
 
@@ -4610,16 +4884,19 @@ div[id*="-text"] {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
   cursor: pointer !important;
   user-select: none !important;
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), 
-              box-shadow 0.22s ease, 
-              border-color 0.22s ease !important;
+  transition:
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.22s ease,
+    border-color 0.22s ease !important;
   border: 1px solid #e2e8f0 !important;
   position: relative !important;
 }
 
 .xyraKpiCardContainer:hover {
   transform: translateY(-4px) scale(1.015) !important;
-  box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.06) !important;
+  box-shadow:
+    0 12px 24px -4px rgba(15, 23, 42, 0.12),
+    0 4px 10px -2px rgba(15, 23, 42, 0.06) !important;
 }
 
 .xyraKpiCardContainer:active {
@@ -4629,7 +4906,9 @@ div[id*="-text"] {
 
 .xyraKpiCardContainer.xyraKpiCardActive {
   border-color: #533bff !important;
-  box-shadow: 0 0 0 2px #533bff, 0 10px 24px -4px rgba(83, 59, 255, 0.25) !important;
+  box-shadow:
+    0 0 0 2px #533bff,
+    0 10px 24px -4px rgba(83, 59, 255, 0.25) !important;
   transform: translateY(-2px) !important;
 }
 
@@ -4683,7 +4962,9 @@ div[id*="-text"] {
 }
 
 @keyframes xyraSpin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ==========================================================================
@@ -4724,7 +5005,9 @@ div[id*="-text"] {
   min-height: 295px !important;
   max-height: 295px !important;
   border-radius: 12px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.15),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
   overflow: hidden !important;
   border: 1px solid #e2e8f0 !important;
   z-index: 99999 !important;
@@ -5250,8 +5533,14 @@ div[id*="-text"] {
 .sapMTable tbody tr.sapMLIB:hover > td,
 .sapMListTbl tbody tr.sapMListTblRow:hover > td,
 .sapMListTbl tbody tr.sapMLIB:hover > td,
-.sapMTable tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover > td,
-.sapMListTbl tbody tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover > td {
+.sapMTable
+  tbody
+  tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover
+  > td,
+.sapMListTbl
+  tbody
+  tr:not(.sapMListTblHeader):not(.sapMListTblSubHeader):hover
+  > td {
   background-color: #f1f5f9 !important;
 }
 
@@ -5578,7 +5867,8 @@ span.sapMColumnHeaderContent {
 
 /* Unchecked state explicitly has no checkmark */
 .sapMCb[aria-checked="false"] .sapMCbBg::before,
-.sapMCb:not([aria-checked="true"]):not(.sapMCbMarkChecked):not(.sapMLIBSelected) .sapMCbBg:not(.sapMCbMarkChecked)::before {
+.sapMCb:not([aria-checked="true"]):not(.sapMCbMarkChecked):not(.sapMLIBSelected)
+  .sapMCbBg:not(.sapMCbMarkChecked)::before {
   display: none !important;
   content: "" !important;
 }
@@ -6016,7 +6306,10 @@ span.sapMColumnHeaderContent,
   border: 1.5px solid #e2e8f0 !important;
   border-radius: 10px !important;
   background-color: #ffffff !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease !important;
 }
 
 .xyraRcaTextArea:hover .sapMInputBaseContentWrapper,
@@ -6027,7 +6320,9 @@ span.sapMColumnHeaderContent,
 [id*="inputRcaArea2"] .sapMInputBaseContentWrapper:hover {
   border-color: #533bff !important;
   background-color: #ffffff !important;
-  box-shadow: 0 0 0 2.5px rgba(83, 59, 255, 0.16), 0 2px 6px rgba(83, 59, 255, 0.08) !important;
+  box-shadow:
+    0 0 0 2.5px rgba(83, 59, 255, 0.16),
+    0 2px 6px rgba(83, 59, 255, 0.08) !important;
 }
 
 .xyraRcaTextArea .sapMInputBaseContentWrapper:focus-within,
@@ -6038,7 +6333,9 @@ span.sapMColumnHeaderContent,
 [id*="inputRcaArea2"].sapMFocus .sapMInputBaseContentWrapper {
   border-color: #533bff !important;
   background-color: #ffffff !important;
-  box-shadow: 0 0 0 3.5px rgba(83, 59, 255, 0.22), 0 2px 6px rgba(83, 59, 255, 0.08) !important;
+  box-shadow:
+    0 0 0 3.5px rgba(83, 59, 255, 0.22),
+    0 2px 6px rgba(83, 59, 255, 0.08) !important;
   outline: none !important;
 }
 
@@ -6193,7 +6490,3 @@ span.sapMColumnHeaderContent,
   border-radius: 6px !important;
   font-size: 0.85rem !important;
 }
-
-
-
-
