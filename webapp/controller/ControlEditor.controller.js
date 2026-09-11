@@ -169,20 +169,29 @@ sap.ui.define([
         },
 
         // One continuous busy period covering the systems-list fetch AND
-        // (edit mode) the control-detail fetch that follows it - previously
-        // used sap.ui.core.BusyIndicator here, but GlobalLoading.js patches
+        // the control-detail fetch that follows it - previously used
+        // sap.ui.core.BusyIndicator here, but GlobalLoading.js patches
         // BusyIndicator.show into a complete no-op app-wide ("Suppress
         // native 3-dot overlay") - it was never visible, on this page or any
         // other. GlobalLoading's own overlay is the only one that actually
         // renders anything, and it doesn't require the route to be in its
         // Component.js allowlist when called directly like this.
+        //
+        // Edit mode only: there's an actual Security Control record being
+        // fetched, worth the overlay. Create mode has nothing to "load" -
+        // the systems-list fetch behind it is just populating dropdowns on
+        // an otherwise-blank form, not worth a full-page overlay for.
         _onRouteMatched: function (oEvent) {
             var sControlId = oEvent.getParameter("arguments").controlId;
-            GlobalLoading.show("Loading Security Control", 0, true, true);
+            if (sControlId) {
+                GlobalLoading.show("Loading Security Control", 0, true, true);
+            }
             this._loadSystems().then(function () {
                 return sControlId ? this._enterEditMode(sControlId) : this._enterCreateMode();
             }.bind(this)).then(function () {
-                GlobalLoading.hide();
+                if (sControlId) {
+                    GlobalLoading.hide();
+                }
             });
         },
 
