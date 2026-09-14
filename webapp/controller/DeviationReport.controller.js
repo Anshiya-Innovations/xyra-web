@@ -46,6 +46,7 @@ sap.ui.define([
             }
             var oInitialData = {
                 filters: {
+                    organization: "All",
                     sector: "All",
                     region: "All",
                     platform: "All",
@@ -57,49 +58,13 @@ sap.ui.define([
                     endDate: ""
                 },
                 options: {
-                    regions: [
-                        { key: "All", text: "All Regions" },
-                        { key: "North America", text: "North America" },
-                        { key: "EMEA", text: "EMEA" },
-                        { key: "APAC", text: "APAC" },
-                        { key: "LATAM", text: "LATAM" }
-                    ],
-                    platforms: [
-                        { key: "All", text: "All Platforms" },
-                        { key: "USROTC", text: "USROTC" },
-                        { key: "EUROTC", text: "EUROTC" },
-                        { key: "APROTC", text: "APROTC" },
-                        { key: "GLOBAL", text: "GLOBAL" }
-                    ],
-                    systems: [
-                        { key: "All", text: "All Systems" },
-                        { key: "MY8", text: "MY8" },
-                        { key: "DEV", text: "DEV" },
-                        { key: "QAS", text: "QAS" },
-                        { key: "PRD", text: "PRD" },
-                        { key: "MP8", text: "MP8" },
-                        { key: "asmy0801", text: "asmy0801" },
-                        { key: "MQ8", text: "MQ8" }
-                    ],
-                    clients: [
-                        { key: "All", text: "All Clients" },
-                        { key: "000", text: "000" },
-                        { key: "001", text: "001" },
-                        { key: "066", text: "066" },
-                        { key: "100", text: "100" },
-                        { key: "200", text: "200" },
-                        { key: "300", text: "300" }
-                    ],
-                    controls: [
-                        { key: "All", text: "All Controls" },
-                        { key: "NLG08", text: "NLG08 - Basis Kernel Audit Logging" },
-                        { key: "NLG01", text: "NLG01 - SAP Security Baseline" },
-                        { key: "XYRA-08", text: "XYRA-08 - SAP Java Audit Log" },
-                        { key: "XYRA-28", text: "XYRA-28 - SAP HANA Security Audit" },
-                        { key: "XYRA-01", text: "XYRA-01 - SoD Conflict Scan" },
-                        { key: "XYRA-002", text: "XYRA-002 - Financial PO Limit" },
-                        { key: "XYRA-003", text: "XYRA-003 - Automated Kernel Audit" }
-                    ]
+                    organizations: [{ key: "All", text: "All Organizations" }],
+                    regions: [{ key: "All", text: "All Regions" }],
+                    platforms: [{ key: "All", text: "All Platforms" }],
+                    systems: [{ key: "All", text: "All Systems" }],
+                    clients: [{ key: "All", text: "All Clients" }],
+                    sectors: [{ key: "All", text: "All Sectors" }],
+                    controls: [{ key: "All", text: "All Controls" }]
                 },
                 headers: [],
                 totalRecords: 0,
@@ -129,14 +94,30 @@ sap.ui.define([
             this._runQuery();
         },
 
-        // Populates the System/Control filter dropdowns from real data - on
-        // failure, the hardcoded lists already seeded in onInit's oInitialData
-        // stay in place as the fallback. Sector/Region/Platform/Client stay
-        // hardcoded/decorative either way (known cosmetic mismatch, not real
-        // System associations - out of scope for this pass).
+        // Organization/System/Region/Platform/Sector/Client/Control dropdowns,
+        // all from real data (Tenant -> many Organizations -> each org's own
+        // Systems; Region/Platform/Sector/Client are the same System fields
+        // Reports.controller.js/ControlEditor.controller.js already derive
+        // the same way). On failure each dropdown just keeps its "All ..."
+        // placeholder - no fake fallback rows.
         _loadFilterOptions: function () {
+            var that = this;
             var oModel = this.getView().getModel("reportModel");
             var sSubdomain = (Session.get() && Session.get().subdomain) || Config.TEST_SUBDOMAIN;
+
+            fetch(Config.AUTH_BASE_URL + "/api/organization/listOrganizations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: sSubdomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "listOrganizations failed"); }
+                    oModel.setProperty("/options/organizations", [{ key: "All", text: "All Organizations" }].concat(
+                        (oData.organizations || []).map(function (o) { return { key: o.id, text: o.orgCode + " - " + o.name }; })
+                    ));
+                })
+                .catch(function () { /* keep the "All" fallback already in the model */ });
 
             fetch(Config.AUTH_BASE_URL + "/api/system-config/listSystems", {
                 method: "POST",
@@ -146,11 +127,10 @@ sap.ui.define([
                 .then(function (r) { return r.json(); })
                 .then(function (oData) {
                     if (!oData.success) { throw new Error(oData.message || "listSystems failed"); }
-                    oModel.setProperty("/options/systems", [{ key: "All", text: "All Systems" }].concat(
-                        (oData.systems || []).map(function (s) { return { key: s.sysId, text: s.sysId }; })
-                    ));
+                    that._aAllSystems = oData.systems || [];
+                    that._applySystemFacets(that._aAllSystems);
                 })
-                .catch(function () { /* keep the hardcoded fallback already in the model */ });
+                .catch(function () { /* keep the "All" fallback already in the model */ });
 
             fetch(Config.AUTH_BASE_URL + "/api/control/listControls", {
                 method: "POST",
@@ -164,7 +144,31 @@ sap.ui.define([
                         (oData.controls || []).map(function (c) { return { key: c.code, text: c.code + " - " + c.description }; })
                     ));
                 })
-                .catch(function () { /* keep the hardcoded fallback already in the model */ });
+                .catch(function () { /* keep the "All" fallback already in the model */ });
+        },
+
+        // System dropdown is narrowed to the selected Organization's own
+        // Systems (same Organization -> Systems cascade as ControlEditor);
+        // Region/Platform/Sector/Client are independent facets derived from
+        // the same list, not further narrowed by org.
+        _applySystemFacets: function (aSystems) {
+            var oModel = this.getView().getModel("reportModel");
+            var distinct = function (get) {
+                var seen = {};
+                var out = [];
+                aSystems.forEach(function (s) {
+                    var v = get(s);
+                    if (v && !seen[v]) { seen[v] = true; out.push(v); }
+                });
+                return out.map(function (v) { return { key: v, text: v }; });
+            };
+            oModel.setProperty("/options/systems", [{ key: "All", text: "All Systems" }].concat(
+                aSystems.map(function (s) { return { key: s.sysId, text: s.sysId }; })
+            ));
+            oModel.setProperty("/options/clients", [{ key: "All", text: "All Clients" }].concat(distinct(function (s) { return s.client; })));
+            oModel.setProperty("/options/regions", [{ key: "All", text: "All Regions" }].concat(distinct(function (s) { return s.region; })));
+            oModel.setProperty("/options/platforms", [{ key: "All", text: "All Platforms" }].concat(distinct(function (s) { return s.platform; })));
+            oModel.setProperty("/options/sectors", [{ key: "All", text: "All Sectors" }].concat(distinct(function (s) { return s.sector; })));
         },
 
         onSideNavToggle: function () {
@@ -174,64 +178,28 @@ sap.ui.define([
             }
         },
 
-        onSideNavItemSelect: function (oEvent) {
-            var oItem = oEvent.getParameter("item");
-            if (oItem) {
-                var sKey = oItem.getKey();
-                if (sKey) {
-                    this.getOwnerComponent().getRouter().navTo(sKey);
-                }
-            }
+        // Filter Handlers - Organization is the one real cascade (narrows the
+        // System select to that org's own Systems, matching ControlEditor's
+        // Organization -> Systems flow); every other filter is an
+        // independent facet, no fake cascading between them.
+        onOrganizationChange: function (oEvent) {
+            var sOrgId = oEvent.getParameter("selectedItem").getKey();
+            var aAll = this._aAllSystems || [];
+            var aScoped = sOrgId === "All" ? aAll : aAll.filter(function (s) { return s.organizationId === sOrgId; });
+            this._applySystemFacets(aScoped);
+            // Previously-picked System/Region/Platform/Sector/Client may not
+            // exist in the narrowed set - reset rather than leave a stale,
+            // now-invisible selection.
+            var oModel = this.getView().getModel("reportModel");
+            oModel.setProperty("/filters/system", "All");
+            oModel.setProperty("/filters/region", "All");
+            oModel.setProperty("/filters/platform", "All");
+            oModel.setProperty("/filters/sector", "All");
+            oModel.setProperty("/filters/client", "All");
+            this.onSearch();
         },
 
-        // Cascading Filter Handlers
-        onSectorChange: function (oEvent) {
-            var sSector = oEvent.getParameter("selectedItem").getKey();
-            var oModel = this.getView().getModel("reportModel");
-
-            if (sSector === "MedTech") {
-                oModel.setProperty("/options/regions", [
-                    { key: "All", text: "All Regions" },
-                    { key: "North America", text: "North America" }
-                ]);
-                oModel.setProperty("/options/platforms", [
-                    { key: "All", text: "All Platforms" },
-                    { key: "USROTC", text: "USROTC" }
-                ]);
-            } else if (sSector === "Pharma") {
-                oModel.setProperty("/options/regions", [
-                    { key: "All", text: "All Regions" },
-                    { key: "EMEA", text: "EMEA" }
-                ]);
-                oModel.setProperty("/options/platforms", [
-                    { key: "All", text: "All Platforms" },
-                    { key: "EUROTC", text: "EUROTC" }
-                ]);
-            } else if (sSector === "Consumer Health") {
-                oModel.setProperty("/options/regions", [
-                    { key: "All", text: "All Regions" },
-                    { key: "APAC", text: "APAC" }
-                ]);
-                oModel.setProperty("/options/platforms", [
-                    { key: "All", text: "All Platforms" },
-                    { key: "APROTC", text: "APROTC" }
-                ]);
-            } else {
-                oModel.setProperty("/options/regions", [
-                    { key: "All", text: "All Regions" },
-                    { key: "North America", text: "North America" },
-                    { key: "EMEA", text: "EMEA" },
-                    { key: "APAC", text: "APAC" },
-                    { key: "LATAM", text: "LATAM" }
-                ]);
-                oModel.setProperty("/options/platforms", [
-                    { key: "All", text: "All Platforms" },
-                    { key: "USROTC", text: "USROTC" },
-                    { key: "EUROTC", text: "EUROTC" },
-                    { key: "APROTC", text: "APROTC" },
-                    { key: "GLOBAL", text: "GLOBAL" }
-                ]);
-            }
+        onSectorChange: function () {
             this.onSearch();
         },
 
@@ -243,31 +211,7 @@ sap.ui.define([
             this.onSearch();
         },
 
-        onSystemChange: function (oEvent) {
-            var sSystem = oEvent.getParameter("selectedItem").getKey();
-            var oModel = this.getView().getModel("reportModel");
-
-            if (sSystem === "MY8") {
-                oModel.setProperty("/options/clients", [
-                    { key: "All", text: "All Clients" },
-                    { key: "100", text: "100" }
-                ]);
-            } else if (sSystem === "DEV") {
-                oModel.setProperty("/options/clients", [
-                    { key: "All", text: "All Clients" },
-                    { key: "000", text: "000" }
-                ]);
-            } else {
-                oModel.setProperty("/options/clients", [
-                    { key: "All", text: "All Clients" },
-                    { key: "000", text: "000" },
-                    { key: "001", text: "001" },
-                    { key: "066", text: "066" },
-                    { key: "100", text: "100" },
-                    { key: "200", text: "200" },
-                    { key: "300", text: "300" }
-                ]);
-            }
+        onSystemChange: function () {
             this.onSearch();
         },
 
@@ -284,15 +228,6 @@ sap.ui.define([
         },
 
         onSearch: function () {
-            var oModel = this.getView().getModel("reportModel");
-            var oFilters = oModel.getProperty("/filters");
-
-            // Mandatory Validation
-            if (!oFilters.sector) {
-                MessageBox.error("Sector filter selection is mandatory.");
-                return;
-            }
-
             this._runQuery();
             MessageToast.show("Report search completed.");
         },
@@ -300,6 +235,7 @@ sap.ui.define([
         onReset: function () {
             var oModel = this.getView().getModel("reportModel");
             oModel.setProperty("/filters", {
+                organization: "All",
                 sector: "All",
                 region: "All",
                 platform: "All",
@@ -310,6 +246,7 @@ sap.ui.define([
                 startDate: "",
                 endDate: ""
             });
+            this._applySystemFacets(this._aAllSystems || []);
             if (this.byId("filterStartingDate")) { this.byId("filterStartingDate").reset(); }
             if (this.byId("filterEndingDate")) { this.byId("filterEndingDate").reset(); }
             if (this.byId("filterDateRange")) { this.byId("filterDateRange").reset(); }
@@ -443,15 +380,27 @@ sap.ui.define([
             this.getOwnerComponent().getRouter().navTo("AutomationMonitoring");
         },
 
+        // Group headers ("Control Management") have sub-items and no key of
+        // their own - select="onToggleSideNavGroup" on that item handles the
+        // actual toggle; this guard is defense-in-depth in case the click
+        // also bubbles up here, so it can never fall through to a navTo.
+        onToggleSideNavGroup: function (oEvent) {
+            var oItem = oEvent.getSource();
+            oItem.setExpanded(!oItem.getExpanded());
+        },
+
         onSideNavItemSelect: function (oEvent) {
             var oItem = oEvent.getParameter("item");
-            if (oItem) {
-                var sKey = oItem.getKey();
-                if (sKey && this[sKey]) {
-                    this[sKey]();
-                } else if (sKey) {
-                    this.getOwnerComponent().getRouter().navTo(sKey);
-                }
+            if (!oItem) { return; }
+            if (oItem.getItems && oItem.getItems().length) {
+                oItem.setExpanded(!oItem.getExpanded());
+                return;
+            }
+            var sKey = oItem.getKey();
+            if (sKey && this[sKey]) {
+                this[sKey]();
+            } else if (sKey) {
+                this.getOwnerComponent().getRouter().navTo(sKey);
             }
         },
 

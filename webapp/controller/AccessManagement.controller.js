@@ -3,13 +3,12 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "sap/ui/model/json/JSONModel",
-    "sap/ui/core/BusyIndicator",
     "xyraweb/model/config",
     "xyraweb/model/sidebarState",
     "xyraweb/model/mockData",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationPopover"
-], function (Controller, MessageToast, MessageBox, JSONModel, BusyIndicator, Config, SidebarState, MockData, GlobalLoading, NotificationPopover) {
+], function (Controller, MessageToast, MessageBox, JSONModel, Config, SidebarState, MockData, GlobalLoading, NotificationPopover) {
     "use strict";
 
     var PERSONA_TO_ROLE = {
@@ -246,7 +245,7 @@ sap.ui.define([
                 return;
             }
 
-            BusyIndicator.show(0);
+            GlobalLoading.show("Creating User", 0, true, true);
 
             fetch(Config.AUTH_BASE_URL + "/api/admin/createUser", {
                 method: "POST",
@@ -261,7 +260,7 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
 
                     if (!oData.success) {
                         MessageBox.error(oData.message || "Could not create user.");
@@ -278,7 +277,7 @@ sap.ui.define([
                     this._loadUsers();
                 }.bind(this))
                 .catch(function () {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
                     MockData.notice(MessageToast);
                     MockData.users.push({
                         id: "u" + Date.now(),
@@ -319,7 +318,7 @@ sap.ui.define([
                         return;
                     }
 
-                    BusyIndicator.show(0);
+                    GlobalLoading.show("Removing User", 0, true, true);
 
                     fetch(Config.AUTH_BASE_URL + "/api/admin/removeUser", {
                         method: "POST",
@@ -328,7 +327,7 @@ sap.ui.define([
                     })
                         .then(function (oResponse) { return oResponse.json(); })
                         .then(function (oData) {
-                            BusyIndicator.hide();
+                            GlobalLoading.hide();
 
                             if (!oData.success) {
                                 MessageBox.error(oData.message || "Could not remove user.");
@@ -339,7 +338,7 @@ sap.ui.define([
                             this._loadUsers();
                         }.bind(this))
                         .catch(function () {
-                            BusyIndicator.hide();
+                            GlobalLoading.hide();
                             MockData.notice(MessageToast);
                             MockData.users = MockData.users.filter(function (oUser) { return oUser.id !== sUserId; });
                             MessageToast.show("User access removed for " + sEmail);
@@ -389,7 +388,7 @@ sap.ui.define([
             var sEmail = oText ? oText.getText() : "User";
             var sUserId = this._sResetUserId;
 
-            BusyIndicator.show(0);
+            GlobalLoading.show("Resetting Password", 0, true, true);
 
             fetch(Config.AUTH_BASE_URL + "/api/admin/resetPassword", {
                 method: "POST",
@@ -398,7 +397,7 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
 
                     if (!oData.success) {
                         MessageBox.error(oData.message || "Could not reset password.");
@@ -413,7 +412,7 @@ sap.ui.define([
                     this.onCloseResetPasswordDialog();
                 }.bind(this))
                 .catch(function () {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
                     MockData.notice(MessageToast);
                     MessageToast.show("Password successfully reset for " + sEmail);
                     if (oNewPass) { oNewPass.setValue(""); }

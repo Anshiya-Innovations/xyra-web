@@ -7,105 +7,70 @@ sap.ui.define([
     "xyraweb/model/sidebarState",
     "xyraweb/model/focusRing",
     "xyraweb/model/GlobalLoading",
-    "xyraweb/model/NotificationPopover"
-], function (Controller, MessageToast, MessageBox, UIComponent, JSONModel, SidebarState, killFocusRing, GlobalLoading, NotificationPopover) {
+    "xyraweb/model/NotificationPopover",
+    "xyraweb/model/config",
+    "xyraweb/model/session"
+], function (Controller, MessageToast, MessageBox, UIComponent, JSONModel, SidebarState, killFocusRing, GlobalLoading, NotificationPopover, Config, Session) {
     "use strict";
+
+    function statusStateFor(sStatus) {
+        if (sStatus === "Pending Setup") { return "Warning"; }
+        if (sStatus === "Under Audit Review") { return "Information"; }
+        if (sStatus === "Inactive") { return "Error"; }
+        return "Success";
+    }
+
+    // Backend OrganizationEntry -> this page's row shape. orgCode is the
+    // human-facing "Organization ID" (e.g. ORG-TATA-01); dbId is the real
+    // tenant-DB id, needed for getOrganization/updateOrganization and for
+    // navigating into OrganizationDetails.
+    function toOrgRow(o) {
+        return {
+            orgId: o.orgCode,
+            dbId: o.id,
+            companyName: o.name,
+            industry: o.industry || "",
+            region: o.region || "",
+            country: o.country || "",
+            primaryContact: o.primaryContact || "",
+            email: o.email || "",
+            phone: o.phone || "",
+            sapSystems: o.systemCount + (o.systemCount === 1 ? " System" : " Systems"),
+            status: o.status || "Active",
+            statusState: statusStateFor(o.status),
+            createdDate: o.createdAt ? new Date(o.createdAt).toISOString().split("T")[0] : ""
+        };
+    }
 
     return Controller.extend("xyraweb.controller.Organization", {
 
         onInit: function () {
-            var aOrganizations = [
-                {
-                    orgId: "ORG-TATA-01",
-                    companyName: "Tata Sons & Group",
-                    industry: "Conglomerate & Technology",
-                    region: "Asia Pacific",
-                    country: "India",
-                    primaryContact: "Ratan Sharma (VP GRC)",
-                    email: "grc@tata.com",
-                    phone: "+91 22 6665 8282",
-                    sapSystems: "DEV, QAS, PRD (12 Systems)",
-                    status: "Active",
-                    statusState: "Success",
-                    createdDate: "2024-01-15"
-                },
-                {
-                    orgId: "ORG-ACCN-02",
-                    companyName: "Accenture Global Services",
-                    industry: "IT Consulting & Services",
-                    region: "North America",
-                    country: "United States",
-                    primaryContact: "Sarah Jenkins (Director Security)",
-                    email: "compliance@accenture.com",
-                    phone: "+1 312 844 5000",
-                    sapSystems: "DEV, PRD (8 Systems)",
-                    status: "Active",
-                    statusState: "Success",
-                    createdDate: "2024-02-01"
-                },
-                {
-                    orgId: "ORG-SAP-03",
-                    companyName: "SAP Enterprise Systems",
-                    industry: "Enterprise Software",
-                    region: "Europe",
-                    country: "Germany",
-                    primaryContact: "Hans Mueller (Chief Information Officer)",
-                    email: "h.mueller@sap.com",
-                    phone: "+49 6227 747474",
-                    sapSystems: "PRD (5 Systems)",
-                    status: "Active",
-                    statusState: "Success",
-                    createdDate: "2024-03-10"
-                },
-                {
-                    orgId: "ORG-INFY-04",
-                    companyName: "Infosys Technologies",
-                    industry: "IT & Cloud Solutions",
-                    region: "Asia Pacific",
-                    country: "India",
-                    primaryContact: "Nitin Kamath (Risk Head)",
-                    email: "risk@infosys.com",
-                    phone: "+91 80 2852 0261",
-                    sapSystems: "DEV, QAS, PRD (15 Systems)",
-                    status: "Pending Setup",
-                    statusState: "Warning",
-                    createdDate: "2024-04-05"
-                },
-                {
-                    orgId: "ORG-RELIANCE-05",
-                    companyName: "Reliance Industries",
-                    industry: "Energy & Retail",
-                    region: "Asia Pacific",
-                    country: "India",
-                    primaryContact: "Mukesh Varma (Head GRC Operations)",
-                    email: "grc.ops@ril.com",
-                    phone: "+91 22 3555 5000",
-                    sapSystems: "DEV, QAS, PRD (20 Systems)",
-                    status: "Under Audit Review",
-                    statusState: "Information",
-                    createdDate: "2024-04-18"
-                },
-                {
-                    orgId: "ORG-WIPRO-06",
-                    companyName: "Wipro Digital Solutions",
-                    industry: "IT Consulting & Services",
-                    region: "Asia Pacific",
-                    country: "India",
-                    primaryContact: "Anand Verma (Audit Lead)",
-                    email: "audit@wipro.com",
-                    phone: "+91 80 2844 0011",
-                    sapSystems: "DEV, QAS (6 Systems)",
-                    status: "Inactive",
-                    statusState: "Error",
-                    createdDate: "2024-05-02"
-                }
-            ];
+            this.getView().setModel(new JSONModel({ organizations: [], allOrganizations: [] }), "orgModel");
+            this._loadOrganizations();
+        },
 
-            var oOrgModel = new JSONModel({
-                organizations: aOrganizations,
-                allOrganizations: JSON.parse(JSON.stringify(aOrganizations))
-            });
-            this.getView().setModel(oOrgModel, "orgModel");
+        _loadOrganizations: function () {
+            var that = this;
+            var oOrgModel = this.getView().getModel("orgModel");
+            GlobalLoading.show("Loading Organizations", 0, true, true);
+            return fetch(Config.AUTH_BASE_URL + "/api/organization/listOrganizations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: (Session.get() || {}).subdomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "listOrganizations failed"); }
+                    var aRows = (oData.organizations || []).map(toOrgRow);
+                    oOrgModel.setProperty("/allOrganizations", aRows);
+                    oOrgModel.setProperty("/organizations", aRows);
+                })
+                .catch(function () {
+                    MessageToast.show("Could not reach xyra-core. Is it running?", { duration: 4000 });
+                })
+                .then(function () {
+                    GlobalLoading.hide();
+                });
         },
 
         onSearchOrg: function () {
@@ -210,45 +175,46 @@ sap.ui.define([
                 return;
             }
 
-            var sStatusState = "Success";
-            if (sStatus === "Pending Setup") { sStatusState = "Warning"; }
-            else if (sStatus === "Inactive") { sStatusState = "Error"; }
-            else if (sStatus === "Under Audit Review") { sStatusState = "Information"; }
-
-            var dNow = new Date();
-            var sDateStr = dNow.toISOString().split("T")[0];
-
-            var oNewOrg = {
-                orgId: sOrgId,
-                companyName: sCompanyName,
+            var that = this;
+            var oSession = Session.get();
+            var oPayload = {
+                subdomain: oSession && oSession.subdomain,
+                orgCode: sOrgId,
+                name: sCompanyName,
                 industry: sIndustry,
                 region: sRegion,
                 country: sCountry,
                 primaryContact: sContact,
                 email: sEmail,
-                phone: sPhone || "+1 800 555 0199",
-                sapSystems: "DEV, QAS, PRD (Default)",
+                phone: sPhone || "",
                 status: sStatus,
-                statusState: sStatusState,
-                createdDate: sDateStr
+                performedBy: oSession && oSession.email,
+                performedByRole: oSession && oSession.role
             };
 
-            var oOrgModel = this.getView().getModel("orgModel");
-            var aAll = oOrgModel.getProperty("/allOrganizations") || [];
-            aAll.unshift(oNewOrg);
-
-            oOrgModel.setProperty("/allOrganizations", aAll);
-            this._applyFilters();
-
-            this.onCloseAddOrgDialog();
-            MessageToast.show("Organization '" + sCompanyName + "' created successfully!");
+            GlobalLoading.show("Creating Organization", 0, true, true);
+            fetch(Config.AUTH_BASE_URL + "/api/organization/createOrganization", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(oPayload)
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    GlobalLoading.hide();
+                    if (!oData.success) { MessageBox.error(oData.message || "Could not create organization."); return; }
+                    that.onCloseAddOrgDialog();
+                    MessageToast.show("Organization '" + sCompanyName + "' created successfully!");
+                    that._loadOrganizations();
+                })
+                .catch(function () {
+                    GlobalLoading.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onViewDetails: function (oEvent) {
             var oItem = oEvent.getSource().getBindingContext("orgModel").getObject();
-            var sOrgId = oItem.orgId;
-
-            this.navToRoute("OrganizationDetails", { orgId: sOrgId });
+            this.navToRoute("OrganizationDetails", { orgId: oItem.dbId });
         },
 
         navToRoute: function (sRouteName, oParams) {

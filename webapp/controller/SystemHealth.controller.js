@@ -3,12 +3,11 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
-    "sap/ui/core/BusyIndicator",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationPopover"
-], function (Controller, JSONModel, MessageToast, MessageBox, BusyIndicator, Filter, FilterOperator, GlobalLoading, NotificationPopover) {
+], function (Controller, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, GlobalLoading, NotificationPopover) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.SystemHealth", {
@@ -209,9 +208,9 @@ sap.ui.define([
         },
 
         onRefreshHealth: function () {
-            BusyIndicator.show(0);
+            GlobalLoading.show("Checking System Health", 0, true, true);
             setTimeout(function () {
-                BusyIndicator.hide();
+                GlobalLoading.hide();
                 var oModel = this.getView().getModel("healthModel");
                 var aSystems = oModel.getProperty("/systems");
                 var timestamp = this._getFormattedTimestamp();
@@ -342,9 +341,9 @@ sap.ui.define([
         onTestSingleConnection: function (oEvent) {
             var oContext = oEvent.getSource().getBindingContext("healthModel");
             var oSys = oContext.getObject();
-            BusyIndicator.show(0);
+            GlobalLoading.show("Testing Connection", 0, true, true);
             setTimeout(function () {
-                BusyIndicator.hide();
+                GlobalLoading.hide();
                 if (oSys.status === "Offline") {
                     MessageBox.error("RFC Ping Failed for System " + oSys.sysId + " (" + oSys.hostName + ":" + oSys.portNumber + ").\nReason: Connection Refused / Port Unreachable.");
                 } else {
@@ -354,9 +353,9 @@ sap.ui.define([
         },
 
         onTestAllConnections: function () {
-            BusyIndicator.show(0);
+            GlobalLoading.show("Testing All Connections", 0, true, true);
             setTimeout(function () {
-                BusyIndicator.hide();
+                GlobalLoading.hide();
                 MessageToast.show("All SAP Systems Connectivity Verified. 7 Systems Active, 1 Offline.");
                 this.onRefreshHealth();
             }.bind(this), 1000);

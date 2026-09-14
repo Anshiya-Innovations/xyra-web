@@ -5,7 +5,6 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/core/BusyIndicator",
     "xyraweb/model/config",
     "xyraweb/model/session",
     "xyraweb/model/focusRing",
@@ -13,7 +12,7 @@ sap.ui.define([
     "xyraweb/model/mockData",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationPopover"
-], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, BusyIndicator, Config, Session, killFocusRing, SidebarState, MockData, GlobalLoading, NotificationPopover) {
+], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, Config, Session, killFocusRing, SidebarState, MockData, GlobalLoading, NotificationPopover) {
     "use strict";
 
     // ponytail: shown only when the tenant has zero Systems on file yet, so a
@@ -63,6 +62,8 @@ sap.ui.define([
         onInit: function () {
             this.getView().setModel(new JSONModel({ activeTab: "landscape" }), "configUiModel");
             this.getView().setModel(new JSONModel({ systems: [] }), "systemModel");
+            this.getView().setModel(new JSONModel({ organizations: [] }), "organizationsModel");
+            this._loadOrganizations();
 
             // System History stays mock data — nothing in the schema tracks a
             // change log for Systems yet (only Rules/Reviews have history
@@ -271,9 +272,9 @@ sap.ui.define([
                 return;
             }
 
-            BusyIndicator.show(0);
+            GlobalLoading.show("Checking System Connectivity", 0, true, true);
             this._runHealthChecks(oSession).then(function () {
-                BusyIndicator.hide();
+                GlobalLoading.hide();
             });
         },
 
@@ -439,6 +440,26 @@ sap.ui.define([
             // Tab switching handles slide visibility internally
         },
 
+        // Organization is now required to add/edit a System (Tenant -> many
+        // Organizations -> each Organization's own Systems) - loaded once,
+        // silently, same "small tenant dataset, fetch once" pattern as every
+        // other reference list in this codebase. No offline-mock fallback:
+        // an empty Select just means Add/Edit System correctly refuses to
+        // save until at least one real Organization exists.
+        _loadOrganizations: function () {
+            var that = this;
+            return fetch(Config.AUTH_BASE_URL + "/api/organization/listOrganizations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: (Session.get() || {}).subdomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    that.getView().getModel("organizationsModel").setProperty("/organizations", (oData.success && oData.organizations) || []);
+                })
+                .catch(function () { /* Select just stays empty - not worth a toast on a background load */ });
+        },
+
         _loadSystems: function () {
             var oSession = Session.get();
             if (!oSession) {
@@ -452,7 +473,11 @@ sap.ui.define([
                 return;
             }
 
-            BusyIndicator.show(0);
+            // Explicit GlobalLoading.show so reloads triggered after
+            // Save/Edit/Delete - not just the very first visit to this route,
+            // which Component.js's own allowlisted overlay already covers -
+            // also get real visible feedback.
+            GlobalLoading.show("Loading Systems", 0, true, true);
 
             // One continuous busy period covering the listSystems fetch AND
             // (if there are real systems) the live health-check sweep that
@@ -487,7 +512,6 @@ sap.ui.define([
                     this._syncHealthFromSystems();
                 }.bind(this))
                 .then(function () {
-                    BusyIndicator.hide();
                     // The full-screen loading overlay shown on navigating INTO
                     // this page (Component.js) has no auto-hide timeout for the
                     // Configuration route specifically, exactly so it can't
@@ -506,15 +530,27 @@ sap.ui.define([
             }
         },
 
+        // Group headers ("System Configuration") have sub-items and no key of
+        // their own - select="onToggleSideNavGroup" on that item handles the
+        // actual toggle; this guard is defense-in-depth in case the click
+        // also bubbles up here, so it can never fall through to a navTo.
+        onToggleSideNavGroup: function (oEvent) {
+            var oItem = oEvent.getSource();
+            oItem.setExpanded(!oItem.getExpanded());
+        },
+
         onSideNavItemSelect: function (oEvent) {
             var oItem = oEvent.getParameter("item");
-            if (oItem) {
-                var sKey = oItem.getKey();
-                if (sKey && this[sKey]) {
-                    this[sKey]();
-                } else if (sKey) {
-                    this.getOwnerComponent().getRouter().navTo(sKey);
-                }
+            if (!oItem) { return; }
+            if (oItem.getItems && oItem.getItems().length) {
+                oItem.setExpanded(!oItem.getExpanded());
+                return;
+            }
+            var sKey = oItem.getKey();
+            if (sKey && this[sKey]) {
+                this[sKey]();
+            } else if (sKey) {
+                this.getOwnerComponent().getRouter().navTo(sKey);
             }
         },
 
@@ -523,6 +559,7 @@ sap.ui.define([
             if (oDialog) {
                 if (this.byId("newSysId")) { this.byId("newSysId").setValue(""); }
                 if (this.byId("newClient")) { this.byId("newClient").setValue("100"); }
+                if (this.byId("newOrgSelect")) { this.byId("newOrgSelect").setSelectedKey(""); }
                 if (this.byId("newHostName")) { this.byId("newHostName").setValue(""); }
                 if (this.byId("newSysDetails")) { this.byId("newSysDetails").setValue(""); }
                 if (this.byId("newEndpoint")) { this.byId("newEndpoint").setValue(""); }
@@ -549,9 +586,10 @@ sap.ui.define([
             var sSysId = this.byId("newSysId") ? this.byId("newSysId").getValue().trim() : "";
             var sClient = this.byId("newClient") ? this.byId("newClient").getValue().trim() : "";
             var sHostName = this.byId("newHostName") ? this.byId("newHostName").getValue().trim() : "";
+            var sOrgId = this.byId("newOrgSelect") ? this.byId("newOrgSelect").getSelectedKey() : "";
 
-            if (!sSysId || !sClient || !sHostName) {
-                MessageBox.error("Please fill in mandatory fields: System ID, Client, and Host Name.");
+            if (!sSysId || !sClient || !sHostName || !sOrgId) {
+                MessageBox.error("Please fill in mandatory fields: System ID, Client, Organization, and Host Name.");
                 return;
             }
 
@@ -559,6 +597,7 @@ sap.ui.define([
                 subdomain: oSession.subdomain,
                 sysId: sSysId,
                 client: sClient,
+                organizationId: sOrgId,
                 sysType: this.byId("newSysTypeSelect") ? this.byId("newSysTypeSelect").getSelectedKey() : "Quality",
                 hostName: sHostName,
                 sysDetails: this.byId("newSysDetails") ? this.byId("newSysDetails").getValue().trim() : "",
@@ -572,10 +611,12 @@ sap.ui.define([
                 instanceNo: this.byId("newInstanceNo") ? this.byId("newInstanceNo").getValue().trim() : "",
                 endpoint: this.byId("newEndpoint") ? this.byId("newEndpoint").getValue().trim() : "",
                 credUserId: this.byId("newCredUserId") ? this.byId("newCredUserId").getValue().trim() : "",
-                credPassword: this.byId("newCredPassword") ? this.byId("newCredPassword").getValue() : ""
+                credPassword: this.byId("newCredPassword") ? this.byId("newCredPassword").getValue() : "",
+                performedBy: oSession.email,
+                performedByRole: oSession.role
             };
 
-            BusyIndicator.show(0);
+            GlobalLoading.show("Creating System", 0, true, true);
 
             fetch(Config.AUTH_BASE_URL + "/api/system-config/createSystem", {
                 method: "POST",
@@ -584,7 +625,7 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
                     if (!oData.success) {
                         MessageBox.error(oData.message || "Could not create system.");
                         return;
@@ -594,7 +635,7 @@ sap.ui.define([
                     this._loadSystems();
                 }.bind(this))
                 .catch(function () {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
                     MockData.notice(MessageToast);
                     oPayload.id = "sys" + Date.now();
                     MockData.systems.push(oPayload);
@@ -612,6 +653,7 @@ sap.ui.define([
             if (oDialog) {
                 if (this.byId("editSysId")) { this.byId("editSysId").setValue(oItem.sysId); }
                 if (this.byId("editClient")) { this.byId("editClient").setValue(oItem.client); }
+                if (this.byId("editOrgSelect")) { this.byId("editOrgSelect").setSelectedKey(oItem.organizationId || ""); }
                 if (this.byId("editSysTypeSelect")) { this.byId("editSysTypeSelect").setSelectedKey(oItem.sysType); }
                 if (this.byId("editHostName")) { this.byId("editHostName").setValue(oItem.hostName); }
                 if (this.byId("editSysDetails")) { this.byId("editSysDetails").setValue(oItem.sysDetails); }
@@ -653,6 +695,7 @@ sap.ui.define([
                 subdomain: oSession.subdomain,
                 id: this._editingSystemItem.id,
                 client: this.byId("editClient") ? this.byId("editClient").getValue().trim() : this._editingSystemItem.client,
+                organizationId: this.byId("editOrgSelect") ? this.byId("editOrgSelect").getSelectedKey() : "",
                 sysType: this.byId("editSysTypeSelect") ? this.byId("editSysTypeSelect").getSelectedKey() : this._editingSystemItem.sysType,
                 hostName: this.byId("editHostName") ? this.byId("editHostName").getValue().trim() : this._editingSystemItem.hostName,
                 sysDetails: this.byId("editSysDetails") ? this.byId("editSysDetails").getValue().trim() : this._editingSystemItem.sysDetails,
@@ -666,10 +709,12 @@ sap.ui.define([
                 instanceNo: this.byId("editInstanceNo") ? this.byId("editInstanceNo").getValue().trim() : this._editingSystemItem.instanceNo,
                 endpoint: this.byId("editEndpoint") ? this.byId("editEndpoint").getValue().trim() : this._editingSystemItem.endpoint,
                 credUserId: this.byId("editCredUserId") ? this.byId("editCredUserId").getValue().trim() : "",
-                credPassword: this.byId("editCredPassword") ? this.byId("editCredPassword").getValue() : ""
+                credPassword: this.byId("editCredPassword") ? this.byId("editCredPassword").getValue() : "",
+                performedBy: oSession.email,
+                performedByRole: oSession.role
             };
 
-            BusyIndicator.show(0);
+            GlobalLoading.show("Updating System", 0, true, true);
 
             fetch(Config.AUTH_BASE_URL + "/api/system-config/updateSystem", {
                 method: "POST",
@@ -678,7 +723,7 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
                     if (!oData.success) {
                         MessageBox.error(oData.message || "Could not update system.");
                         return;
@@ -688,7 +733,7 @@ sap.ui.define([
                     this._loadSystems();
                 }.bind(this))
                 .catch(function () {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
                     MockData.notice(MessageToast);
                     var oExisting = MockData.systems.filter(function (oSys) { return oSys.id === oPayload.id; })[0];
                     if (oExisting) {
@@ -760,7 +805,7 @@ sap.ui.define([
                 onClose: function (oAction) {
                     if (oAction !== MessageBox.Action.YES) { return; }
 
-                    BusyIndicator.show(0);
+                    GlobalLoading.show("Deleting System", 0, true, true);
                     fetch(Config.AUTH_BASE_URL + "/api/system-config/deleteSystem", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -768,7 +813,7 @@ sap.ui.define([
                     })
                         .then(function (oResponse) { return oResponse.json(); })
                         .then(function (oData) {
-                            BusyIndicator.hide();
+                            GlobalLoading.hide();
                             if (!oData.success) {
                                 MessageBox.error(oData.message || "Could not delete system.");
                                 return;
@@ -777,7 +822,7 @@ sap.ui.define([
                             this._loadSystems();
                         }.bind(this))
                         .catch(function () {
-                            BusyIndicator.hide();
+                            GlobalLoading.hide();
                             MockData.notice(MessageToast);
                             MockData.systems = MockData.systems.filter(function (oSys) { return oSys.id !== oItem.id; });
                             MessageToast.show("SAP System '" + oItem.sysId + "' deleted.");

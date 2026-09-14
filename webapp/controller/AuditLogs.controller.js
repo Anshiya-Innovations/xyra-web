@@ -1,20 +1,24 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/UIComponent",
+    "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "xyraweb/model/sidebarState",
-    "xyraweb/model/auditLogService",
+    "xyraweb/service/AuditLogClient",
+    "xyraweb/model/config",
     "xyraweb/model/session",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationPopover"
 ], function (
     Controller,
     UIComponent,
+    JSONModel,
     MessageToast,
     MessageBox,
     SidebarState,
-    AuditLogService,
+    AuditLogClient,
+    Config,
     Session,
     GlobalLoading,
     NotificationPopover
@@ -24,15 +28,99 @@ sap.ui.define([
     return Controller.extend("xyraweb.controller.AuditLogs", {
 
         onInit: function () {
-            var oAuditModel = AuditLogService.getModel();
+            var oAuditModel = new JSONModel({
+                logs: [],
+                allLogs: [],
+                isAdmin: true,
+                selectedLog: null,
+                filters: {
+                    searchQuery: "",
+                    action: "All",
+                    module: "All",
+                    adminUser: "All",
+                    systemId: "All",
+                    controlId: "All",
+                    result: "All",
+                    startDate: null,
+                    endDate: null
+                }
+            });
             this.getView().setModel(oAuditModel, "auditLogsModel");
+            this.getView().setModel(new JSONModel({ systems: [{ key: "All", text: "All Systems" }], controls: [{ key: "All", text: "All Controls" }], adminUsers: [{ key: "All", text: "All Users" }] }), "auditFilterOptionsModel");
 
             this._checkAdminAuthorization();
+            this._loadFilterOptions();
+            this._loadLogs();
 
             var oRouter = UIComponent.getRouterFor(this) || (this.getOwnerComponent() && this.getOwnerComponent().getRouter());
             if (oRouter && oRouter.getRoute("AuditLogs")) {
                 oRouter.getRoute("AuditLogs").attachPatternMatched(this._checkAdminAuthorization, this);
             }
+        },
+
+        _getSubdomain: function () {
+            var oSession = Session.get();
+            return (oSession && oSession.subdomain) || Config.TEST_SUBDOMAIN;
+        },
+
+        // Populates the System/Control filter dropdowns from real data - same
+        // pattern as DeviationReport.controller.js's own _loadFilterOptions.
+        _loadFilterOptions: function () {
+            var oModel = this.getView().getModel("auditFilterOptionsModel");
+            var sSubdomain = this._getSubdomain();
+
+            fetch(Config.AUTH_BASE_URL + "/api/system-config/listSystems", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: sSubdomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "listSystems failed"); }
+                    oModel.setProperty("/systems", [{ key: "All", text: "All Systems" }].concat(
+                        (oData.systems || []).map(function (s) { return { key: s.sysId, text: s.sysId }; })
+                    ));
+                })
+                .catch(function () { /* keep the "All" fallback already in the model */ });
+
+            fetch(Config.AUTH_BASE_URL + "/api/control/listControls", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: sSubdomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "listControls failed"); }
+                    oModel.setProperty("/controls", [{ key: "All", text: "All Controls" }].concat(
+                        (oData.controls || []).map(function (c) { return { key: c.code, text: c.code }; })
+                    ));
+                })
+                .catch(function () { /* keep the "All" fallback already in the model */ });
+        },
+
+        _loadLogs: function () {
+            var oModel = this.getView().getModel("auditLogsModel");
+            GlobalLoading.show("Loading Audit Logs", 0, true, true);
+            var that = this;
+            return AuditLogClient.listAuditLogs()
+                .then(function (aLogs) {
+                    oModel.setProperty("/allLogs", aLogs);
+                    oModel.setProperty("/logs", aLogs.slice());
+
+                    var aUsers = aLogs.map(function (l) { return l.adminUser; }).filter(function (v, i, a) {
+                        return v && a.indexOf(v) === i;
+                    });
+                    that.getView().getModel("auditFilterOptionsModel").setProperty("/adminUsers",
+                        [{ key: "All", text: "All Users" }].concat(aUsers.map(function (u) { return { key: u, text: u }; })));
+                })
+                .catch(function () {
+                    MessageBox.error("Could not reach the server to load audit logs.");
+                    oModel.setProperty("/allLogs", []);
+                    oModel.setProperty("/logs", []);
+                })
+                .then(function () {
+                    GlobalLoading.hide();
+                });
         },
 
         onAfterRendering: function () {
@@ -96,6 +184,9 @@ sap.ui.define([
             var sAction = oModel.getProperty("/filters/action");
             var sModule = oModel.getProperty("/filters/module");
             var sAdmin = oModel.getProperty("/filters/adminUser");
+            var sSystem = oModel.getProperty("/filters/systemId");
+            var sControl = oModel.getProperty("/filters/controlId");
+            var sResult = oModel.getProperty("/filters/result");
 
             var oStartDatePicker = this.byId("filterStartingDate");
             var oEndDatePicker = this.byId("filterEndingDate");
@@ -129,13 +220,24 @@ sap.ui.define([
                     return false;
                 }
 
-                // Admin user matching
-                if (sAdmin && sAdmin !== "All") {
-                    var sCleanAdmin = (sAdmin.indexOf("@") !== -1) ? sAdmin.split(" ")[0].toLowerCase() : sAdmin.toLowerCase();
-                    var sLogAdmin = (oLog.adminUser || "").toLowerCase();
-                    if (sLogAdmin.indexOf(sCleanAdmin) === -1 && sCleanAdmin.indexOf(sLogAdmin) === -1) {
-                        return false;
-                    }
+                // Admin user matching - adminUser is always a plain email now
+                if (sAdmin && sAdmin !== "All" && (oLog.adminUser || "").toLowerCase() !== sAdmin.toLowerCase()) {
+                    return false;
+                }
+
+                // System matching
+                if (sSystem && sSystem !== "All" && oLog.systemId !== sSystem) {
+                    return false;
+                }
+
+                // Control matching
+                if (sControl && sControl !== "All" && oLog.controlId !== sControl) {
+                    return false;
+                }
+
+                // Result matching
+                if (sResult && sResult !== "All" && oLog.result !== sResult) {
+                    return false;
                 }
 
                 // Date range matching
@@ -167,6 +269,9 @@ sap.ui.define([
             oModel.setProperty("/filters/action", "All");
             oModel.setProperty("/filters/module", "All");
             oModel.setProperty("/filters/adminUser", "All");
+            oModel.setProperty("/filters/systemId", "All");
+            oModel.setProperty("/filters/controlId", "All");
+            oModel.setProperty("/filters/result", "All");
 
             if (this.byId("filterStartingDate")) { this.byId("filterStartingDate").reset(); }
             if (this.byId("filterEndingDate")) { this.byId("filterEndingDate").reset(); }
@@ -180,8 +285,11 @@ sap.ui.define([
         },
 
         onRefreshLogs: function () {
-            this.onResetFilters();
-            MessageToast.show("Admin Audit Logs refreshed.");
+            var that = this;
+            this._loadLogs().then(function () {
+                that.onResetFilters();
+                MessageToast.show("Admin Audit Logs refreshed.");
+            });
         },
 
         onSelectAuditRecord: function (oEvent) {

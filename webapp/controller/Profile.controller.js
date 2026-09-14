@@ -2,14 +2,13 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
-    "sap/ui/core/BusyIndicator",
     "xyraweb/model/config",
     "xyraweb/model/session",
     "xyraweb/model/sidebarState",
     "xyraweb/model/mockData",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationPopover"
-], function (Controller, MessageToast, MessageBox, BusyIndicator, Config, Session, SidebarState, MockData, GlobalLoading, NotificationPopover) {
+], function (Controller, MessageToast, MessageBox, Config, Session, SidebarState, MockData, GlobalLoading, NotificationPopover) {
     "use strict";
 
     var ROLE_LABELS = {
@@ -40,7 +39,7 @@ sap.ui.define([
                 return;
             }
 
-            BusyIndicator.show(0);
+            GlobalLoading.show("Loading Profile", 0, true, true);
 
             var fnApplyData = function (oDataObj) {
                 this._initialProfileData = Object.assign({}, oDataObj);
@@ -64,7 +63,7 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
 
                     if (!oData.success) {
                         MessageBox.error(oData.message || "Could not load profile.");
@@ -84,7 +83,7 @@ sap.ui.define([
                     });
                 }.bind(this))
                 .catch(function () {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
                     MockData.notice(MessageToast);
                     var oProfile = MockData.profile;
                     fnApplyData({
@@ -212,7 +211,7 @@ sap.ui.define([
                 return;
             }
 
-            BusyIndicator.show(0);
+            GlobalLoading.show("Changing Password", 0, true, true);
 
             fetch(Config.AUTH_BASE_URL + "/api/profile/changePassword", {
                 method: "POST",
@@ -226,7 +225,7 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
 
                     if (!oData.success) {
                         MessageToast.show(oData.message || "Could not change password.");
@@ -239,7 +238,7 @@ sap.ui.define([
                     if (oConfirmPass) { oConfirmPass.setValue(""); }
                 })
                 .catch(function () {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
                     MockData.notice(MessageToast);
                     MessageToast.show("Password updated successfully!");
                     if (oCurrentPass) { oCurrentPass.setValue(""); }
@@ -261,7 +260,7 @@ sap.ui.define([
                 return;
             }
 
-            BusyIndicator.show(0);
+            GlobalLoading.show("Saving Profile", 0, true, true);
 
             fetch(Config.AUTH_BASE_URL + "/api/profile/updateProfile", {
                 method: "POST",
@@ -277,7 +276,7 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
 
                     if (!oData.success) {
                         MessageToast.show(oData.message || "Could not save profile.");
@@ -287,7 +286,7 @@ sap.ui.define([
                     MessageToast.show("Personal & Account details saved successfully.");
                 }.bind(this))
                 .catch(function () {
-                    BusyIndicator.hide();
+                    GlobalLoading.hide();
                     MockData.notice(MessageToast);
                     MessageToast.show("Personal & Account details saved successfully.");
                 });

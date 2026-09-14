@@ -9,7 +9,8 @@ sap.ui.define([
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationPopover",
     "xyraweb/service/ReviewClient",
-    "xyraweb/service/DeviationClient"
+    "xyraweb/service/DeviationClient",
+    "xyraweb/service/AuditLogClient"
 ], function (
     Controller,
     UIComponent,
@@ -21,7 +22,8 @@ sap.ui.define([
     GlobalLoading,
     NotificationPopover,
     ReviewClient,
-    DeviationClient
+    DeviationClient,
+    AuditLogClient
 ) {
     "use strict";
 
@@ -97,6 +99,10 @@ sap.ui.define([
             var oModel = new JSONModel(oData);
             this.getView().setModel(oModel, "reviewer2Model");
 
+            // oData.busy above was never bound to anything visible in the view
+            // (zero "busy=" bindings on reviewer2Model) - GlobalLoading is the
+            // real, visible loading feedback for this page's main load.
+            GlobalLoading.show("Loading Reviewer 2 Queue", 0, true, true);
             var that = this;
             Promise.all([ReviewClient.listLevel2Queue(), ReviewClient.listLevel2History()]).then(function (aResults) {
                 var aReports = aResults[0].length ? aResults[0] : that._getFallbackReports();
@@ -109,7 +115,7 @@ sap.ui.define([
                 oModel.setProperty("/busy", false);
                 oModel.setProperty("/reports", aReports);
                 oModel.setProperty("/history", aHistory);
-                oModel.setProperty("/kpi", { pendingReviews: aReports.length, approvedToday: iApproved, rejectedToday: iRejected, slaDue: 0 });
+                oModel.setProperty("/kpi", { pendingReviews: aReports.length, approvedToday: iApproved, rejectedToday: iRejected, slaDue: aReports.filter(function (r) { return r.isOverdue; }).length });
                 oModel.setProperty("/historyKpis", {
                     approved: aHistory.filter(function (h) { return h.decision === "Approved"; }).length,
                     rejected: aHistory.filter(function (h) { return h.decision === "Rejected"; }).length,
@@ -117,6 +123,8 @@ sap.ui.define([
                 });
                 oModel.setProperty("/selectedReport", aReports[0] || null);
                 oModel.setProperty("/selectedHistoryItem", aHistory[0] || null);
+            }).then(function () {
+                GlobalLoading.hide();
             });
         },
 
@@ -208,6 +216,16 @@ sap.ui.define([
                 this.getView().getModel("reviewer2Model").setProperty("/selectedReport", oReport);
                 this._loadAlertContext(oReport);
                 this.onSelectTabAnalysis();
+                AuditLogClient.logEvent({
+                    action: "VIEW_REPORT",
+                    module: "Review",
+                    objectType: "Report",
+                    objectId: oReport.reportId,
+                    objectLabel: oReport.controlId,
+                    description: "Viewed report '" + oReport.reportId + "' for Level 2 review.",
+                    systemId: oReport.systemId,
+                    controlId: oReport.controlId
+                });
                 MessageToast.show("Navigating to Detailed Review Analysis for " + oReport.reportId);
             }
         },

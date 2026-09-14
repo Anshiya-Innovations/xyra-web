@@ -18,7 +18,8 @@ sap.ui.define([
                 controlsTotal: 0, controlsEnabled: 0,
                 openDeviations: 0, resolvedDeviations: 0, complianceRatePct: 0,
                 systemsTotal: 0, systemsOnline: 0,
-                alertBreakdown: [], reviewPipeline: [],
+                organizationsTotal: 0, reviewsOverdue: 0, escalationsDue: 0,
+                alertBreakdown: [], reviewPipeline: [], slaHealth: [],
                 controls: [], recentFindings: []
             });
             this.getView().setModel(oModel, "adminModel");
@@ -48,6 +49,32 @@ sap.ui.define([
                 }
             }
             killFocusRing(this.getView());
+            this._attachKpiClickListeners();
+        },
+
+        // VBox has no press event - same click-through pattern as
+        // Configuration.controller.js's KPI cards (attachBrowserEvent, not an
+        // XML press attribute). Each tile links to the page that owns its data.
+        _attachKpiClickListeners: function () {
+            var that = this;
+            var aCards = [
+                { id: "adm_kpiControls", handler: "onControlManagement" },
+                { id: "adm_kpiDeviations", handler: "onDeviationReport" },
+                { id: "adm_kpiCompliance", handler: "onDeviationReport" },
+                { id: "adm_kpiSystems", handler: "onConfiguration" },
+                { id: "adm_kpiOrgs", handler: "onOrganization" },
+                { id: "adm_kpiOverdue", handler: "onEscalationManager" }
+            ];
+
+            aCards.forEach(function (card) {
+                var oControl = that.byId(card.id);
+                if (oControl && !oControl._bKpiClickAttached) {
+                    oControl._bKpiClickAttached = true;
+                    oControl.attachBrowserEvent("click", function () {
+                        that[card.handler]();
+                    });
+                }
+            });
         },
 
         navToRoute: function (sRouteName) {

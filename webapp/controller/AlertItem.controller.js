@@ -3,10 +3,11 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/model/json/JSONModel",
     "xyraweb/service/DeviationClient",
+    "xyraweb/service/AuditLogClient",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/config",
     "xyraweb/model/session"
-], function (Controller, MessageToast, JSONModel, DeviationService, GlobalLoading, Config, Session) {
+], function (Controller, MessageToast, JSONModel, DeviationService, AuditLogClient, GlobalLoading, Config, Session) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.AlertItem", {
@@ -29,9 +30,20 @@ sap.ui.define([
 
             var oModel = this.getView().getModel("alertModel");
             GlobalLoading.show("Gathering Alert Details", 0, true, true);
+            var sAlertId = this._sAlertId;
             DeviationService.getAlertDetails(this._sAlertId, this._sControlId).then(function (oDetails) {
                 oModel.setProperty("/header", oDetails.header);
                 oModel.setProperty("/items", oDetails.items);
+                AuditLogClient.logEvent({
+                    action: "VIEW_ALERT",
+                    module: "Deviation Report",
+                    objectType: "Alert",
+                    objectId: sAlertId,
+                    objectLabel: oDetails.header.controlId,
+                    description: "Viewed alert '" + sAlertId + "' details for control '" + oDetails.header.controlId + "'.",
+                    systemId: oDetails.header.systemId,
+                    controlId: oDetails.header.controlId
+                });
             }).then(function () {
                 GlobalLoading.hide();
             });
@@ -88,11 +100,13 @@ sap.ui.define([
 
             var oDialog = this.byId("itemLogsDialog");
             if (oDialog) {
+                oDialog.setBusy(true);
                 oDialog.open();
             }
 
             this._getRunLogs().then(function (aLogs) {
                 that.getView().getModel("logsModel").setProperty("/logEntries", aLogs);
+                if (oDialog) { oDialog.setBusy(false); }
             });
         },
 

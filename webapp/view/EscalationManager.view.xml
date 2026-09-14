@@ -280,6 +280,10 @@
                             </Panel>
 
                             <!-- MAIN RESPONSIVE SAPUI5 TABLE -->
+                            <HBox class="sapUiSmallMarginBottom" justifyContent="SpaceBetween">
+                                <ObjectStatus text="{escManagerModel>/kpi/pendingApproval} Pending" state="Information" icon="sap-icon://pending"/>
+                                <ObjectStatus text="{escManagerModel>/kpi/escalationsDue} Escalations Due" state="{= ${escManagerModel>/kpi/escalationsDue} > 0 ? 'Error' : 'Success' }" icon="sap-icon://alert"/>
+                            </HBox>
                             <Panel headerText="Pending Deviations (Level 1 &amp; Level 2)" expandable="false" class="sapUiSmallMarginBottom">
                                 <Table
                                     id="escalationTable"
@@ -288,18 +292,19 @@
                                     width="100%"
                                     selectionChange="onSelectionChange">
                                     <columns>
-                                        <Column width="10%"><Text text="Report ID"/></Column>
-                                        <Column width="18%"><Text text="Report Name"/></Column>
-                                        <Column width="12%" minScreenWidth="Desktop" demandPopin="true"><Text text="System"/></Column>
-                                        <Column width="15%" minScreenWidth="Desktop" demandPopin="true"><Text text="Reviewer 1 Comments"/></Column>
-                                        <Column width="15%" minScreenWidth="Desktop" demandPopin="true"><Text text="Reviewer 2 Comments"/></Column>
-                                        <Column width="10%" minScreenWidth="Tablet" demandPopin="true"><Text text="Evidence"/></Column>
-                                        <Column width="10%"><Text text="Compliance Status"/></Column>
-                                        <Column width="10%"><Text text="Remediation Status"/></Column>
+                                        <Column width="9%"><Text text="Report ID"/></Column>
+                                        <Column width="16%"><Text text="Report Name"/></Column>
+                                        <Column width="11%" minScreenWidth="Desktop" demandPopin="true"><Text text="System"/></Column>
+                                        <Column width="13%" minScreenWidth="Desktop" demandPopin="true"><Text text="Reviewer 1 Comments"/></Column>
+                                        <Column width="13%" minScreenWidth="Desktop" demandPopin="true"><Text text="Reviewer 2 Comments"/></Column>
+                                        <Column width="9%" minScreenWidth="Tablet" demandPopin="true"><Text text="Evidence"/></Column>
+                                        <Column width="9%"><Text text="Compliance Status"/></Column>
+                                        <Column width="9%"><Text text="Remediation Status"/></Column>
+                                        <Column width="11%"><Text text="Escalation"/></Column>
                                     </columns>
 
                                     <items>
-                                        <ColumnListItem>
+                                        <ColumnListItem highlight="{= ${escManagerModel>escalationDue} ? 'Error' : 'None' }">
                                             <cells>
                                                 <ObjectStatus text="{escManagerModel>reportId}" state="Information"/>
                                                 <ObjectIdentifier title="{escManagerModel>reportName}" subtitle="{escManagerModel>controlId}"/>
@@ -309,6 +314,7 @@
                                                 <ObjectStatus text="{escManagerModel>evidence}" state="Success" icon="sap-icon://sys-enter-2"/>
                                                 <ObjectStatus text="{escManagerModel>complianceStatus}" state="{escManagerModel>complianceState}"/>
                                                 <ObjectStatus text="{escManagerModel>remediationStatus}" state="{escManagerModel>remediationState}"/>
+                                                <ObjectStatus text="{escManagerModel>escalationText}" state="{escManagerModel>escalationState}" icon="sap-icon://alert" visible="{escManagerModel>escalationDue}"/>
                                             </cells>
                                         </ColumnListItem>
                                     </items>

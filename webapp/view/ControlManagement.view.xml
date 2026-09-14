@@ -15,7 +15,7 @@
                 <tnt:NavigationList selectedKey="ControlManagement">
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
 
-                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" expanded="true" selectable="false">
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" expanded="true" selectable="false" select="onToggleSideNavGroup">
                         <tnt:NavigationListItem text="Controls Config" key="ControlManagement" select="onControlManagement"/>
                         <tnt:NavigationListItem text="Deviation Report" key="DeviationReport" select="onDeviationReport"/>
                     </tnt:NavigationListItem>

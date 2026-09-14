@@ -117,47 +117,6 @@
                         </endButton>
                     </Dialog>
 
-                    <!-- ASSIGN POLICY MODAL -->
-                    <Dialog id="assignPolicyDialog" title="Assign Governance Policy" contentWidth="500px" stretch="{device>/system/phone}">
-                        <content>
-                            <VBox class="sapUiMediumMargin">
-                                <VBox class="xyraFormField">
-                                    <Label text="Policy Category" required="true" class="xyraFormLabel"/>
-                                    <Select id="policyCategorySelect" selectedKey="Security Policy" width="100%">
-                                        <core:Item key="Security Policy" text="Security Policy"/>
-                                        <core:Item key="Access Policy" text="Access Policy"/>
-                                        <core:Item key="SAP Control Policy" text="SAP Control Policy"/>
-                                        <core:Item key="Compliance Policy" text="Compliance Policy"/>
-                                    </Select>
-                                </VBox>
-
-                                <VBox class="xyraFormField">
-                                    <Label text="Policy Name" required="true" class="xyraFormLabel"/>
-                                    <Input id="policyNameInput" placeholder="e.g. Enterprise SAP Password &amp; Lockout Standard"/>
-                                </VBox>
-
-                                <VBox class="xyraFormField">
-                                    <Label text="Policy ID Code" required="true" class="xyraFormLabel"/>
-                                    <Input id="policyIdInput" placeholder="e.g. POL-SEC-05, POL-ACC-09"/>
-                                </VBox>
-
-                                <VBox class="xyraFormField">
-                                    <Label text="Initial Status" required="true" class="xyraFormLabel"/>
-                                    <Select id="policyStatusSelect" selectedKey="Active" width="100%">
-                                        <core:Item key="Active" text="Active"/>
-                                        <core:Item key="Under Review" text="Under Review"/>
-                                        <core:Item key="Draft" text="Draft"/>
-                                    </Select>
-                                </VBox>
-                            </VBox>
-                        </content>
-                        <beginButton>
-                            <Button text="Cancel" press="onCloseAssignPolicyDialog"/>
-                        </beginButton>
-                        <endButton>
-                            <Button text="Assign Policy" type="Emphasized" icon="sap-icon://accept" press="onSubmitAssignPolicy"/>
-                        </endButton>
-                    </Dialog>
                     <!-- EDIT SUMMARY MODAL -->
                     <Dialog id="editSummaryDialog" title="Edit Company Executive Summary" contentWidth="600px" stretch="{device>/system/phone}">
                         <content>
@@ -166,7 +125,7 @@
                                     <VBox>
                                         <VBox class="xyraFormField">
                                             <Label text="Organization ID" required="true" class="xyraFormLabel"/>
-                                            <Input id="editSummaryOrgIdInput" placeholder="e.g. ORG-TATA-01"/>
+                                            <Input id="editSummaryOrgIdInput" editable="false" placeholder="e.g. ORG-TATA-01"/>
                                         </VBox>
 
                                         <VBox class="xyraFormField">
@@ -239,6 +198,36 @@
                         </beginButton>
                         <endButton>
                             <Button text="Save Changes" type="Emphasized" icon="sap-icon://save" press="onSubmitEditSummary"/>
+                        </endButton>
+                    </Dialog>
+
+                    <!-- SLA SETTINGS MODAL -->
+                    <Dialog id="slaSettingsDialog" title="Reviewer Escalation SLA Settings" contentWidth="480px" stretch="{device>/system/phone}">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <MessageStrip text="Business-day deadlines for the review chain. The Reviewer 1 clock starts when a deviation is detected; the Reviewer 2 clock starts once Reviewer 1 approves. Escalation Manager has no decision of their own - they're flagged once a Level 2 item is overdue by more than the escalation delay below." type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Reviewer 1 SLA (business days)" required="true" class="xyraFormLabel"/>
+                                    <Input id="slaReviewer1Days" type="Number"/>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Reviewer 2 SLA (business days)" required="true" class="xyraFormLabel"/>
+                                    <Input id="slaReviewer2Days" type="Number"/>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Escalation delay past Reviewer 2 SLA (business days)" required="true" class="xyraFormLabel"/>
+                                    <Input id="slaEscalationDelayDays" type="Number"/>
+                                </VBox>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Cancel" press="onCloseSlaSettingsDialog"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Save Changes" type="Emphasized" icon="sap-icon://save" press="onSaveSlaSettings"/>
                         </endButton>
                     </Dialog>
                 </dependents>
@@ -405,14 +394,9 @@
                                                         <Text text="Weekly Automated PDF &amp; Excel Reports sent to grc@tata.com"/>
                                                     </VBox>
 
-                                                    <VBox class="sapUiSmallMarginBottom">
+                                                    <VBox>
                                                         <Label text="Real-Time Deviation Detection" design="Bold"/>
                                                         <ObjectStatus text="Active (High &amp; Critical Threshold Alerts)" state="Success"/>
-                                                    </VBox>
-
-                                                    <VBox>
-                                                        <Label text="Reviewer Escalation SLA Window" design="Bold"/>
-                                                        <Text text="48 Hours (Level 1 Reviewer) / 24 Hours (Level 2 Technical Manager)"/>
                                                     </VBox>
                                                 </VBox>
                                             </Panel>
@@ -471,32 +455,19 @@
                                         <Panel expandable="false">
                                             <headerToolbar>
                                                 <OverflowToolbar height="3.5rem">
-                                                    <Title text="Organization Compliance &amp; Security Policies" level="H3" class="sapUiSmallMarginBegin"/>
+                                                    <Title text="Review SLA Policy" level="H3" class="sapUiSmallMarginBegin"/>
                                                     <ToolbarSpacer/>
-                                                    <Button text="Assign Policy" icon="sap-icon://add" type="Emphasized" press="onOpenAssignPolicyDialog" class="sapUiSmallMarginEnd"/>
+                                                    <Button text="Edit SLA Settings" icon="sap-icon://edit" type="Emphasized" press="onOpenSlaSettingsDialog" class="sapUiSmallMarginEnd"/>
                                                 </OverflowToolbar>
                                             </headerToolbar>
 
-                                            <Table id="policiesTable" items="{orgDetailsModel>/policies}" mode="None" width="100%" class="sapUiNoMargin">
-                                                <columns>
-                                                    <Column width="15%"><Text text="Policy ID"/></Column>
-                                                    <Column width="35%"><Text text="Policy Name"/></Column>
-                                                    <Column width="20%"><Text text="Category / Type"/></Column>
-                                                    <Column width="12%"><Text text="Status"/></Column>
-                                                    <Column width="18%" hAlign="Center"><Text text="Last Updated"/></Column>
-                                                </columns>
-                                                <items>
-                                                    <ColumnListItem vAlign="Middle">
-                                                        <cells>
-                                                            <Text text="{orgDetailsModel>policyId}" class="fontWeightBold"/>
-                                                            <Text text="{orgDetailsModel>policyName}"/>
-                                                            <ObjectStatus text="{orgDetailsModel>category}" state="Information"/>
-                                                            <ObjectStatus text="{orgDetailsModel>status}" state="{orgDetailsModel>statusState}"/>
-                                                            <Text text="{orgDetailsModel>lastUpdated}"/>
-                                                        </cells>
-                                                    </ColumnListItem>
-                                                </items>
-                                            </Table>
+                                            <VBox class="sapUiMediumMargin">
+                                                <MessageStrip
+                                                    text="The one governance policy this organization currently enforces: business-day deadlines for the Reviewer 1 -&gt; Reviewer 2 deviation review chain, and when an overdue item gets flagged for the Escalation Manager."
+                                                    type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
+                                                <Label text="Reviewer Escalation SLA Window" design="Bold"/>
+                                                <Text text="{orgDetailsModel>/slaSummary}"/>
+                                            </VBox>
                                         </Panel>
                                     </VBox>
                                 </IconTabFilter>

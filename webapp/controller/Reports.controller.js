@@ -6,9 +6,9 @@ sap.ui.define([
     "xyraweb/model/sidebarState",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationPopover",
-    "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
-], function (Controller, JSONModel, MessageToast, MessageBox, SidebarState, GlobalLoading, NotificationPopover, Filter, FilterOperator) {
+    "xyraweb/model/config",
+    "xyraweb/model/session"
+], function (Controller, JSONModel, MessageToast, MessageBox, SidebarState, GlobalLoading, NotificationPopover, Config, Session) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.Reports", {
@@ -29,193 +29,181 @@ sap.ui.define([
         },
 
         onInit: function () {
-            var oData = {
-                availableReports: [
-                    {
-                        name: "Reviewer 1 Audit Report",
-                        subtitle: "Primary Level Evidence Review & Compliance Verification",
-                        type: "Reviewer 1",
-                        description: "Level 1 control review audit trace, reviewer approval logs, and verification status.",
-                        lastGenerated: "03-Aug-2026 10:15 IST"
-                    },
-                    {
-                        name: "Reviewer 2 Technical Audit Report",
-                        subtitle: "Secondary Technical Validation & SOD Check",
-                        type: "Reviewer 2",
-                        description: "Level 2 technical assessment logs, SOD validation traces, and secondary approval history.",
-                        lastGenerated: "03-Aug-2026 11:45 IST"
-                    },
-                    {
-                        name: "Escalation Manager Report",
-                        subtitle: "High-Risk Escalation & Overdue Incident Log",
-                        type: "Escalation Manager",
-                        description: "Escalation management audit trace, SLA violation tracking, and manager reassignment records.",
-                        lastGenerated: "03-Aug-2026 12:00 IST"
-                    },
-                    {
-                        name: "SOX Compliance Report",
-                        subtitle: "Internal Control Effectiveness & Audit Evidence",
-                        type: "SOX Compliance",
-                        description: "SOX 404 control validation details, test execution logs, and compliance score metrics.",
-                        lastGenerated: "03-Aug-2026 09:00 IST"
-                    },
-                    {
-                        name: "Role Change Report",
-                        subtitle: "Manual Role Modifications & SCS Audit Logs",
-                        type: "Role Change",
-                        description: "Audit trace of manual SAP PFCG role changes, authorization additions, and SCS compliance checks.",
-                        lastGenerated: "03-Aug-2026 11:15 IST"
-                    },
-                    {
-                        name: "User Access Review",
-                        subtitle: "Quarterly Access Certification & Persona Logs",
-                        type: "User Access Review",
-                        description: "User entitlement assignments, active persona mappings, and revoked access logs.",
-                        lastGenerated: "02-Aug-2026 18:00 IST"
-                    },
-                    {
-                        name: "SOD Conflict Report",
-                        subtitle: "Segregation of Duties Matrix Analysis",
-                        type: "SOD Conflict",
-                        description: "Identified SOD conflicts across financial postings, procurement approvals, and vendor master changes.",
-                        lastGenerated: "03-Aug-2026 12:30 IST"
-                    },
-                    {
-                        name: "Elevated Access Report",
-                        subtitle: "Superuser Emergency Access & T-Code Trace",
-                        type: "Elevated Access",
-                        description: "Privileged SAP superuser session logs, executed T-codes, and emergency access approval records.",
-                        lastGenerated: "01-Aug-2026 22:00 IST"
-                    },
-                    {
-                        name: "Critical Authorization Report",
-                        subtitle: "Sensitive Auth Objects & High-Risk Privileges",
-                        type: "Critical Auth",
-                        description: "Detailed scan of critical SAP authorizations (S_TABU_DIS, S_DEVELOP, SAP_ALL privileges).",
-                        lastGenerated: "03-Aug-2026 10:45 IST"
-                    },
-                    {
-                        name: "Audit Log Report",
-                        subtitle: "Security Audit Log & System Event History",
-                        type: "Audit Log",
-                        description: "SAP Security Audit Log (SM20) events, failed login attempts, and system configuration modifications.",
-                        lastGenerated: "03-Aug-2026 08:15 IST"
-                    },
-                    {
-                        name: "AI Risk Analysis Report",
-                        subtitle: "GenAI Predictive Risk & Anomaly Intelligence",
-                        type: "AI Risk Analysis",
-                        description: "AI-driven risk scoring, anomaly detection in journal entries, and automated mitigation recommendations.",
-                        lastGenerated: "03-Aug-2026 13:00 IST"
-                    }
-                ],
+            var oModel = new JSONModel({
+                filters: {
+                    controlId: "",
+                    systemId: "All",
+                    client: "All",
+                    region: "All",
+                    platform: "All",
+                    sector: "All",
+                    startDate: null,
+                    endDate: null
+                },
+                rows: [],
+                summary: { total: 0, passed: 0, deviations: 0 }
+            });
+            this.getView().setModel(oModel, "reportModel");
+            this.getView().setModel(new JSONModel({
+                controls: [],
+                systems: [{ key: "All", text: "All Systems" }],
+                clients: [{ key: "All", text: "All Clients" }],
+                regions: [{ key: "All", text: "All Regions" }],
+                platforms: [{ key: "All", text: "All Platforms" }],
+                sectors: [{ key: "All", text: "All Sectors" }]
+            }), "reportFilterOptionsModel");
 
-                history: [
-                    {
-                        name: "Reviewer 1 Evidence Review Log",
-                        type: "Reviewer 1",
-                        system: "PRD-100",
-                        module: "Security",
-                        generatedBy: "Jane Smith (Reviewer 1)",
-                        generatedDate: "03-Aug-2026 10:15 IST",
-                        status: "Completed",
-                        statusState: "Success"
-                    },
-                    {
-                        name: "Reviewer 2 SOD Assessment Report",
-                        type: "Reviewer 2",
-                        system: "PRD-100",
-                        module: "Security",
-                        generatedBy: "Robert Chen (Reviewer 2)",
-                        generatedDate: "03-Aug-2026 11:45 IST",
-                        status: "Completed",
-                        statusState: "Success"
-                    },
-                    {
-                        name: "Escalation Incident & SLA Violation Summary",
-                        type: "Escalation Manager",
-                        system: "PRD-100",
-                        module: "Security",
-                        generatedBy: "Marcus Vance (Escalation Lead)",
-                        generatedDate: "03-Aug-2026 12:00 IST",
-                        status: "Completed",
-                        statusState: "Success"
-                    },
-                    {
-                        name: "Q3 SOX Compliance Audit Evidence",
-                        type: "SOX Compliance",
-                        system: "PRD-100",
-                        module: "FI",
-                        generatedBy: "Sarah Jenkins (Finance Lead)",
-                        generatedDate: "03-Aug-2026 09:00 IST",
-                        status: "Completed",
-                        statusState: "Success"
-                    },
-                    {
-                        name: "Monthly Manual Role Modification Log",
-                        type: "Role Change",
-                        system: "PRD-100",
-                        module: "Basis",
-                        generatedBy: "Automated Engine",
-                        generatedDate: "03-Aug-2026 11:15 IST",
-                        status: "Completed",
-                        statusState: "Success"
-                    },
-                    {
-                        name: "User Access Privilege Certification",
-                        type: "User Access Review",
-                        system: "PRD-100",
-                        module: "Security",
-                        generatedBy: "Alex Rivera (Security Admin)",
-                        generatedDate: "02-Aug-2026 18:00 IST",
-                        status: "Completed",
-                        statusState: "Success"
-                    },
-                    {
-                        name: "Financial SOD Conflict Scan Report",
-                        type: "SOD Conflict",
-                        system: "PRD-100",
-                        module: "FI",
-                        generatedBy: "Michael Chang (GRC Officer)",
-                        generatedDate: "03-Aug-2026 12:30 IST",
-                        status: "Processing",
-                        statusState: "Information"
-                    },
-                    {
-                        name: "Superuser Emergency Access Trace",
-                        type: "Elevated Access",
-                        system: "PRD-100",
-                        module: "Basis",
-                        generatedBy: "Automated Engine",
-                        generatedDate: "01-Aug-2026 22:00 IST",
-                        status: "Completed",
-                        statusState: "Success"
-                    },
-                    {
-                        name: "Critical Authorization Objects Scan (S_TABU_DIS)",
-                        type: "Critical Auth",
-                        system: "QAS-200",
-                        module: "Security",
-                        generatedBy: "Alex Rivera (Security Admin)",
-                        generatedDate: "03-Aug-2026 10:45 IST",
-                        status: "Scheduled",
-                        statusState: "Warning"
-                    },
-                    {
-                        name: "GenAI Anomaly Detection Report",
-                        type: "AI Risk Analysis",
-                        system: "PRD-100",
-                        module: "Security",
-                        generatedBy: "Automated Engine",
-                        generatedDate: "03-Aug-2026 13:00 IST",
-                        status: "Completed",
-                        statusState: "Success"
-                    }
-                ]
+            this._loadFilterOptions();
+        },
+
+        _getSubdomain: function () {
+            var oSession = Session.get();
+            return (oSession && oSession.subdomain) || Config.TEST_SUBDOMAIN;
+        },
+
+        // Control/System dropdowns from real data; Region/Platform/Sector/Client
+        // are derived from the same listSystems response (it already joins
+        // platform/region/sector codes per system - same pattern
+        // DeviationReport.controller.js's own _loadFilterOptions uses).
+        _loadFilterOptions: function () {
+            var oModel = this.getView().getModel("reportFilterOptionsModel");
+            var sSubdomain = this._getSubdomain();
+
+            fetch(Config.AUTH_BASE_URL + "/api/control/listControls", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: sSubdomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "listControls failed"); }
+                    oModel.setProperty("/controls", (oData.controls || []).map(function (c) {
+                        return { key: c.id, text: c.code + " - " + c.description };
+                    }));
+                })
+                .catch(function () { /* leave empty - Control select just won't offer options */ });
+
+            fetch(Config.AUTH_BASE_URL + "/api/system-config/listSystems", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: sSubdomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "listSystems failed"); }
+                    var aSystems = oData.systems || [];
+                    var distinct = function (get) {
+                        var seen = {};
+                        var out = [];
+                        aSystems.forEach(function (s) {
+                            var v = get(s);
+                            if (v && !seen[v]) { seen[v] = true; out.push(v); }
+                        });
+                        return out.map(function (v) { return { key: v, text: v }; });
+                    };
+                    oModel.setProperty("/systems", [{ key: "All", text: "All Systems" }].concat(distinct(function (s) { return s.sysId; })));
+                    oModel.setProperty("/clients", [{ key: "All", text: "All Clients" }].concat(distinct(function (s) { return s.client; })));
+                    oModel.setProperty("/regions", [{ key: "All", text: "All Regions" }].concat(distinct(function (s) { return s.region; })));
+                    oModel.setProperty("/platforms", [{ key: "All", text: "All Platforms" }].concat(distinct(function (s) { return s.platform; })));
+                    oModel.setProperty("/sectors", [{ key: "All", text: "All Sectors" }].concat(distinct(function (s) { return s.sector; })));
+                })
+                .catch(function () { /* leave the "All" fallbacks already in the model */ });
+        },
+
+        onGenerateHistory: function () {
+            var oModel = this.getView().getModel("reportModel");
+            var oFilters = oModel.getProperty("/filters");
+
+            if (!oFilters.controlId) {
+                MessageBox.error("Please select a Control.");
+                return;
+            }
+
+            var oStartDatePicker = this.byId("historyStartDate");
+            var oEndDatePicker = this.byId("historyEndDate");
+            var oStart = oStartDatePicker ? oStartDatePicker.getDateValue() : null;
+            var oEnd = oEndDatePicker ? oEndDatePicker.getDateValue() : null;
+
+            var oBody = {
+                subdomain: this._getSubdomain(),
+                controlId: oFilters.controlId,
+                systemId: oFilters.systemId !== "All" ? oFilters.systemId : "",
+                client: oFilters.client !== "All" ? oFilters.client : "",
+                region: oFilters.region !== "All" ? oFilters.region : "",
+                platform: oFilters.platform !== "All" ? oFilters.platform : "",
+                sector: oFilters.sector !== "All" ? oFilters.sector : "",
+                startDate: oStart ? oStart.toISOString().slice(0, 10) : "",
+                endDate: oEnd ? oEnd.toISOString().slice(0, 10) : ""
             };
 
-            var oModel = new JSONModel(oData);
-            this.getView().setModel(oModel, "reportsModel");
+            GlobalLoading.show("Loading Control History", 0, true, true);
+            fetch(Config.AUTH_BASE_URL + "/api/control/listControlHistory", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(oBody)
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) {
+                        MessageBox.error(oData.message || "Could not load control history.");
+                        oModel.setProperty("/rows", []);
+                        oModel.setProperty("/summary", { total: 0, passed: 0, deviations: 0 });
+                        return;
+                    }
+                    var aRows = (oData.history || []).map(function (h) {
+                        return Object.assign({}, h, {
+                            deviationText: h.deviationFlag ? "Deviation" : "OK",
+                            deviationState: h.deviationFlag ? "Error" : "Success"
+                        });
+                    });
+                    var iDeviations = aRows.filter(function (r) { return r.deviationFlag; }).length;
+                    oModel.setProperty("/rows", aRows);
+                    oModel.setProperty("/summary", { total: aRows.length, passed: aRows.length - iDeviations, deviations: iDeviations });
+                })
+                .catch(function () {
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                    oModel.setProperty("/rows", []);
+                    oModel.setProperty("/summary", { total: 0, passed: 0, deviations: 0 });
+                })
+                .then(function () {
+                    GlobalLoading.hide();
+                });
+        },
+
+        onExportCsv: function () {
+            var oModel = this.getView().getModel("reportModel");
+            var aRows = oModel.getProperty("/rows") || [];
+
+            if (aRows.length === 0) {
+                MessageBox.information("No control history records available to export.");
+                return;
+            }
+
+            var aCsvRows = [];
+            aCsvRows.push([
+                "Control ID", "Description", "System ID", "Client", "Region", "Platform", "Sector",
+                "SAP Object", "Parameter", "Operator", "Actual Value", "Expected Value", "Deviation", "Message", "Captured At"
+            ].join(","));
+
+            aRows.forEach(function (r) {
+                aCsvRows.push([
+                    r.controlId, r.controlDescription, r.systemId, r.client, r.region, r.platform, r.sector,
+                    r.sapObject, r.parameter, r.operator, r.actualValue, r.expectedValue,
+                    r.deviationText, r.message, r.capturedAt
+                ].map(function (v) { return '"' + String(v || "").replace(/"/g, '""') + '"'; }).join(","));
+            });
+
+            var sCsvContent = aCsvRows.join("\n");
+            var blob = new Blob([sCsvContent], { type: "text/csv;charset=utf-8;" });
+            var link = document.createElement("a");
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "XYRA_Control_History_" + new Date().toISOString().slice(0, 10) + ".csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            MessageToast.show("Control history exported to CSV successfully.");
         },
 
         onSideNavToggle: function () {
@@ -224,34 +212,6 @@ sap.ui.define([
                 var bExpanded = !oToolPage.getSideExpanded();
                 oToolPage.setSideExpanded(bExpanded);
                 SidebarState.save(bExpanded);
-            }
-        },
-
-        onSelectTabAvailable: function () {
-            var oBtnAvailable = this.byId("btnTabAvailableReports");
-            var oBtnHistory = this.byId("btnTabExecutionHistory");
-            var oVBoxAvailable = this.byId("vboxAvailableReports");
-            var oVBoxHistory = this.byId("vboxExecutionHistory");
-
-            if (oBtnAvailable && oBtnHistory && oVBoxAvailable && oVBoxHistory) {
-                oBtnAvailable.setType("Emphasized");
-                oBtnHistory.setType("Transparent");
-                oVBoxAvailable.setVisible(true);
-                oVBoxHistory.setVisible(false);
-            }
-        },
-
-        onSelectTabHistory: function () {
-            var oBtnAvailable = this.byId("btnTabAvailableReports");
-            var oBtnHistory = this.byId("btnTabExecutionHistory");
-            var oVBoxAvailable = this.byId("vboxAvailableReports");
-            var oVBoxHistory = this.byId("vboxExecutionHistory");
-
-            if (oBtnAvailable && oBtnHistory && oVBoxAvailable && oVBoxHistory) {
-                oBtnAvailable.setType("Transparent");
-                oBtnHistory.setType("Emphasized");
-                oVBoxAvailable.setVisible(false);
-                oVBoxHistory.setVisible(true);
             }
         },
 
@@ -265,338 +225,6 @@ sap.ui.define([
                     this.getOwnerComponent().getRouter().navTo(sKey);
                 }
             }
-        },
-
-        onGenerateReportDialog: function () {
-            var oDialog = this.byId("generateReportDialog");
-            if (oDialog) {
-                oDialog.open();
-            }
-        },
-
-        onCloseGenerateReportDialog: function () {
-            var oDialog = this.byId("generateReportDialog");
-            if (oDialog) {
-                oDialog.close();
-            }
-        },
-
-        onSubmitGenerateReport: function () {
-            var sName = this.byId("dialogReportNameInput") ? this.byId("dialogReportNameInput").getValue().trim() : "";
-            var sType = this.byId("dialogReportTypeSelect") ? this.byId("dialogReportTypeSelect").getSelectedKey() : "SOX Compliance";
-            var sSystem = this.byId("dialogSystemSelect") ? this.byId("dialogSystemSelect").getSelectedKey() : "PRD-100";
-
-            if (!sName) {
-                MessageBox.error("Please enter a Report Name.");
-                return;
-            }
-
-            this._addReportToHistory(sName, sType);
-            this.onCloseGenerateReportDialog();
-        },
-
-        onGenerateRowReport: function (oEvent) {
-            var oItem = oEvent.getSource().getBindingContext("reportsModel").getObject();
-            this._addReportToHistory(oItem.name, oItem.type);
-        },
-
-        onApplyAvailableFilters: function () {
-            var oTable = this.byId("availableReportsTable");
-            if (!oTable) { return; }
-            var oBinding = oTable.getBinding("items");
-            if (!oBinding) { return; }
-
-            var sReportName = this.byId("filterAvailableReportName") ? this.byId("filterAvailableReportName").getValue().trim().toLowerCase() : "";
-            var sCategory = this.byId("filterAvailableCategory") ? this.byId("filterAvailableCategory").getSelectedKey() : "All";
-
-            var oStartDatePicker = this.byId("filterAvailableStartDate");
-            var oEndDatePicker = this.byId("filterAvailableEndDate");
-            var dStart = oStartDatePicker && oStartDatePicker.getStartDate ? oStartDatePicker.getStartDate() : null;
-            var dEnd = oEndDatePicker && oEndDatePicker.getEndDate ? oEndDatePicker.getEndDate() : null;
-
-            var aFilters = [];
-
-            if (sReportName) {
-                aFilters.push(new Filter({
-                    filters: [
-                        new Filter("name", FilterOperator.Contains, sReportName),
-                        new Filter("subtitle", FilterOperator.Contains, sReportName),
-                        new Filter("description", FilterOperator.Contains, sReportName)
-                    ],
-                    and: false
-                }));
-            }
-
-            if (sCategory && sCategory !== "All") {
-                aFilters.push(new Filter("type", FilterOperator.EQ, sCategory));
-            }
-
-            if (dStart || dEnd) {
-                var dStartDay = dStart ? new Date(dStart.getFullYear(), dStart.getMonth(), dStart.getDate(), 0, 0, 0, 0) : null;
-                var dEndDay = dEnd ? new Date(dEnd.getFullYear(), dEnd.getMonth(), dEnd.getDate(), 23, 59, 59, 999) : null;
-
-                aFilters.push(new Filter({
-                    path: "lastGenerated",
-                    test: function (sDateStr) {
-                        if (!sDateStr) { return true; }
-                        var d = new Date(sDateStr.replace(" IST", ""));
-                        if (isNaN(d.getTime())) { return true; }
-                        if (dStartDay && d < dStartDay) { return false; }
-                        if (dEndDay && d > dEndDay) { return false; }
-                        return true;
-                    }
-                }));
-            }
-
-            oBinding.filter(aFilters);
-        },
-
-        onResetAvailableFilters: function () {
-            if (this.byId("filterAvailableReportName")) {
-                this.byId("filterAvailableReportName").setValue("");
-            }
-            if (this.byId("filterAvailableCategory")) {
-                this.byId("filterAvailableCategory").setSelectedKey("All");
-            }
-            if (this.byId("filterAvailableStartDate")) {
-                this.byId("filterAvailableStartDate").reset();
-            }
-            if (this.byId("filterAvailableEndDate")) {
-                this.byId("filterAvailableEndDate").reset();
-            }
-
-            this.onApplyAvailableFilters();
-            MessageToast.show("Available reports filters reset.");
-        },
-
-        onSearchAvailableReports: function () {
-            this.onApplyAvailableFilters();
-        },
-
-        onFilterAvailableCategory: function () {
-            this.onApplyAvailableFilters();
-        },
-
-        onScheduleReportDialog: function () {
-            var oDialog = this.byId("scheduleReportDialog");
-            if (oDialog) {
-                oDialog.open();
-            }
-        },
-
-        onCloseScheduleReportDialog: function () {
-            var oDialog = this.byId("scheduleReportDialog");
-            if (oDialog) {
-                oDialog.close();
-            }
-        },
-
-        onSubmitScheduleReport: function () {
-            var sName = this.byId("scheduleReportNameInput") ? this.byId("scheduleReportNameInput").getValue().trim() : "";
-            var sType = this.byId("scheduleReportTypeSelect") ? this.byId("scheduleReportTypeSelect").getSelectedKey() : "SOX Compliance";
-            var sSystem = this.byId("scheduleSystemSelect") ? this.byId("scheduleSystemSelect").getSelectedKey() : "PRD-100";
-            var sFreq = this.byId("scheduleFrequencySelect") ? this.byId("scheduleFrequencySelect").getSelectedKey() : "Weekly";
-
-            if (!sName) {
-                MessageBox.error("Please enter a Report Name.");
-                return;
-            }
-
-            var oModel = this.getView().getModel("reportsModel");
-            var aHistory = oModel.getProperty("/history") || [];
-
-            aHistory.unshift({
-                name: sName + " (" + sFreq + ")",
-                type: sType,
-                system: sSystem,
-                generatedBy: "Automated Scheduler",
-                generatedDate: "03-Aug-2026 14:48 IST",
-                status: "Scheduled",
-                statusState: "Warning"
-            });
-
-            oModel.setProperty("/history", aHistory);
-            MessageToast.show("Automated Report '" + sName + "' scheduled successfully (" + sFreq + ")!");
-            this.onCloseScheduleReportDialog();
-        },
-
-        onExportPDF: function () {
-            MessageToast.show("Generating PDF Report Package...");
-        },
-
-        onExportExcel: function () {
-            MessageToast.show("Exporting Report Data to Excel...");
-        },
-
-        onExportCSV: function () {
-            MessageToast.show("Exporting Report Data to CSV...");
-        },
-
-        onEmailReport: function () {
-            MessageToast.show("Email Report Dialog opened.");
-        },
-
-        _resetAllFilters: function () {
-            if (this.byId("filterReportType")) { this.byId("filterReportType").setSelectedKey("All"); }
-            if (this.byId("filterSystem")) { this.byId("filterSystem").setSelectedKey("All"); }
-            if (this.byId("filterModule")) { this.byId("filterModule").setSelectedKey("All"); }
-            if (this.byId("filterStartingDate")) { this.byId("filterStartingDate").reset(); }
-            if (this.byId("filterEndingDate")) { this.byId("filterEndingDate").reset(); }
-            if (this.byId("filterDateRange")) { 
-                var oDateRange = this.byId("filterDateRange");
-                if (oDateRange.reset) { oDateRange.reset(); } else { oDateRange.setValue(""); }
-            }
-            if (this.byId("filterGeneratedBy")) { this.byId("filterGeneratedBy").setSelectedKey("All"); }
-            if (this.byId("filterStatus")) { this.byId("filterStatus").setSelectedKey("All"); }
-            if (this.byId("filterSearchField")) { this.byId("filterSearchField").setValue(""); }
-            this.onApplyFilters();
-        },
-
-        onRefreshReports: function () {
-            this._resetAllFilters();
-            MessageToast.show("Reports Dashboard & Filters Refreshed Successfully.");
-        },
-
-        onClearFilters: function () {
-            this._resetAllFilters();
-            MessageToast.show("Filters cleared.");
-        },
-
-        onGenerateSOXReport: function () { this._addReportToHistory("SOX Compliance Report", "SOX Compliance"); },
-        onGenerateRoleReport: function () { this._addReportToHistory("Role Change Report", "Role Change"); },
-        onGenerateUserAccessReport: function () { this._addReportToHistory("User Access Review", "User Access Review"); },
-        onGenerateSODReport: function () { this._addReportToHistory("SOD Conflict Report", "SOD Conflict"); },
-        onGenerateElevatedAccessReport: function () { this._addReportToHistory("Elevated Access Report", "Elevated Access"); },
-        onGenerateCriticalAuthReport: function () { this._addReportToHistory("Critical Authorization Report", "Critical Auth"); },
-        onGenerateAuditLogReport: function () { this._addReportToHistory("Audit Log Report", "Audit Log"); },
-        onGenerateAIRiskReport: function () { this._addReportToHistory("AI Risk Analysis Report", "AI Risk Analysis"); },
-
-        _addReportToHistory: function (sName, sType) {
-            var oModel = this.getView().getModel("reportsModel");
-            var aHistory = oModel.getProperty("/history") || [];
-
-            aHistory.unshift({
-                name: sName,
-                type: sType,
-                system: "PRD-100",
-                module: "Security",
-                generatedBy: "Current User",
-                generatedDate: "03-Aug-2026 13:35 IST",
-                status: "Completed",
-                statusState: "Success"
-            });
-
-            oModel.setProperty("/history", aHistory);
-            this.onApplyFilters();
-            MessageToast.show("Report '" + sName + "' generated successfully!");
-        },
-
-        onDownloadPDF: function () {
-            MessageToast.show("Downloading PDF Report...");
-        },
-
-        onDownloadExcel: function () {
-            MessageToast.show("Downloading Excel Report...");
-        },
-
-        onApplyFilters: function () {
-            var oTable = this.byId("reportsHistoryTable");
-            if (!oTable) { return; }
-            var oBinding = oTable.getBinding("items");
-            if (!oBinding) { return; }
-
-            var sReportType = this.byId("filterReportType") ? this.byId("filterReportType").getSelectedKey() : "All";
-            var sSystem = this.byId("filterSystem") ? this.byId("filterSystem").getSelectedKey() : "All";
-            var sModule = this.byId("filterModule") ? this.byId("filterModule").getSelectedKey() : "All";
-            var sGeneratedBy = this.byId("filterGeneratedBy") ? this.byId("filterGeneratedBy").getSelectedKey() : "All";
-            var sStatus = this.byId("filterStatus") ? this.byId("filterStatus").getSelectedKey() : "All";
-
-            var oStartDatePicker = this.byId("filterStartingDate");
-            var oEndDatePicker = this.byId("filterEndingDate");
-            var dStart = oStartDatePicker && oStartDatePicker.getStartDate ? oStartDatePicker.getStartDate() : null;
-            var dEnd = oEndDatePicker && oEndDatePicker.getEndDate ? oEndDatePicker.getEndDate() : null;
-
-            var aFilters = [];
-
-            if (sReportType && sReportType !== "All") {
-                aFilters.push(new Filter("type", FilterOperator.Contains, sReportType));
-            }
-
-            if (sSystem && sSystem !== "All") {
-                aFilters.push(new Filter("system", FilterOperator.Contains, sSystem));
-            }
-
-            if (sModule && sModule !== "All") {
-                aFilters.push(new Filter("module", FilterOperator.Contains, sModule));
-            }
-
-            if (sGeneratedBy && sGeneratedBy !== "All") {
-                aFilters.push(new Filter("generatedBy", FilterOperator.Contains, sGeneratedBy));
-            }
-
-            if (sStatus && sStatus !== "All") {
-                aFilters.push(new Filter("status", FilterOperator.EQ, sStatus));
-            }
-
-            if (dStart || dEnd) {
-                aFilters.push(new Filter({
-                    path: "generatedDate",
-                    test: function (sDateStr) {
-                        if (!sDateStr) { return true; }
-                        var d = new Date(sDateStr.replace(" IST", ""));
-                        if (isNaN(d.getTime())) { return true; }
-                        if (dStart && d < dStart) { return false; }
-                        if (dEnd) {
-                            var dEndDay = new Date(dEnd.getTime());
-                            dEndDay.setHours(23, 59, 59, 999);
-                            if (d > dEndDay) { return false; }
-                        }
-                        return true;
-                    }
-                }));
-            }
-
-            oBinding.filter(aFilters);
-        },
-
-        onSearchHistory: function (oEvent) {
-            var sQuery = (oEvent.getParameter("query") || oEvent.getParameter("newValue") || "").toLowerCase().trim();
-            var oTable = this.byId("reportsHistoryTable");
-            if (!oTable) { return; }
-            var oBinding = oTable.getBinding("items");
-            if (!oBinding) { return; }
-
-            if (!sQuery) {
-                this.onApplyFilters();
-                return;
-            }
-
-            var aSubFilters = [
-                new Filter("name", FilterOperator.Contains, sQuery),
-                new Filter("type", FilterOperator.Contains, sQuery),
-                new Filter("system", FilterOperator.Contains, sQuery),
-                new Filter("generatedBy", FilterOperator.Contains, sQuery),
-                new Filter("status", FilterOperator.Contains, sQuery)
-            ];
-            oBinding.filter(new Filter({ filters: aSubFilters, and: false }));
-        },
-
-        onFilterHistoryStatus: function (oEvent) {
-            var sKey = oEvent.getParameter("selectedItem") ? oEvent.getParameter("selectedItem").getKey() : "All";
-            var oTable = this.byId("reportsHistoryTable");
-            if (!oTable) { return; }
-            var oBinding = oTable.getBinding("items");
-            if (!oBinding) { return; }
-
-            if (sKey === "All") {
-                this.onApplyFilters();
-            } else {
-                oBinding.filter(new Filter("status", FilterOperator.EQ, sKey));
-            }
-        },
-
-        onExportHistory: function () {
-            MessageToast.show("Exporting execution history to Excel...");
         },
 
         onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },

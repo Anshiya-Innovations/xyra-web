@@ -58,6 +58,7 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
             riskLevel: r.severity === "CRITICAL" ? "High Risk" : "Medium Risk",
             riskState: r.severity === "CRITICAL" ? "Error" : "Warning",
             system: r.systemId + " (Client " + r.client + ")",
+            systemId: r.systemId,
             generatedDate: formatDate(r.generatedDate),
             deviations: "1 Deviation",
             deviationState: "Error",
@@ -97,7 +98,19 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
             complianceState: "Warning",
             workflowStatus: "Pending Review",
             workflowState: "Warning",
-            managerNotes: ""
+            managerNotes: "",
+            slaDeadline: r.slaDeadline,
+            daysPending: r.daysPending,
+            isOverdue: !!r.isOverdue,
+            slaState: r.isOverdue ? "Error" : "Success",
+            slaText: r.isOverdue
+                ? "Overdue (" + r.daysPending + "d)"
+                : (r.daysPending != null ? "On Track (" + r.daysPending + "d)" : "N/A"),
+            // Level 2 only - overdue by more than the tenant's configured
+            // escalation delay, for the Escalation Manager's oversight view.
+            escalationDue: !!r.escalationDue,
+            escalationState: r.escalationDue ? "Error" : "None",
+            escalationText: r.escalationDue ? "Escalate Now" : ""
         };
     }
 

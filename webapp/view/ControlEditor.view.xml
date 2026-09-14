@@ -14,7 +14,7 @@
             <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="ControlManagement" itemSelect="onSideNavItemSelect">
                 <tnt:NavigationList selectedKey="ControlManagement">
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
-                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" expanded="true" selectable="false">
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" expanded="true" selectable="false" select="onToggleSideNavGroup">
                         <tnt:NavigationListItem text="Controls Config" key="ControlManagement" select="onControlManagement"/>
                         <tnt:NavigationListItem text="Deviation Report" key="DeviationReport" select="onDeviationReport"/>
                     </tnt:NavigationListItem>
@@ -79,6 +79,13 @@
                         <layout:Grid defaultSpan="XL6 L6 M12 S12" class="xyraCreateControlGrid">
                             <VBox>
                                 <VBox class="xyraFormField">
+                                    <Label text="Organization" required="true" class="xyraFormLabel"/>
+                                    <Select id="organizationSelect" width="100%" items="{organizationsModel>/organizations}" change="onOrganizationChange">
+                                        <core:Item key="{organizationsModel>id}" text="{organizationsModel>orgCode} - {organizationsModel>name}"/>
+                                    </Select>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
                                     <Label text="Control ID" required="true" class="xyraFormLabel"/>
                                     <Input id="controlIdInput" editable="{= !${editorModel>/isEdit} }" placeholder="e.g. XYRA-08, XYRA-28, XYRA-001"/>
                                 </VBox>
@@ -117,6 +124,15 @@
                                         text="Examples: '* * * * *' (Realtime) | '0 0 * * *' (Daily) | '0 0 * * 1' (Weekly) | '0 0 L * *' (Monthly)"
                                         type="Information"
                                         showIcon="true"/>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Control Type" required="true" class="xyraFormLabel"/>
+                                    <Select id="controlTypeSelect" selectedKey="SECURITY" width="100%">
+                                        <core:Item key="SECURITY" text="Security"/>
+                                        <core:Item key="BASIS" text="Basis"/>
+                                        <core:Item key="GXP" text="GxP"/>
+                                    </Select>
                                 </VBox>
 
                                 <VBox class="xyraFormField">

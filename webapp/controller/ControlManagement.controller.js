@@ -7,14 +7,13 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "xyraweb/model/sidebarState",
-    "xyraweb/model/auditLogService",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationPopover",
     "xyraweb/model/config",
     "xyraweb/model/session",
     "xyraweb/model/mockData",
     "xyraweb/model/controlFrequency"
-], function (Controller, UIComponent, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, SidebarState, AuditLogService, GlobalLoading, NotificationPopover, Config, Session, MockData, ControlFrequency) {
+], function (Controller, UIComponent, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, SidebarState, GlobalLoading, NotificationPopover, Config, Session, MockData, ControlFrequency) {
     "use strict";
 
     // Create/Edit moved to the dedicated ControlEditor page (was two modal
@@ -156,15 +155,27 @@ sap.ui.define([
             }
         },
 
+        // Group headers ("Control Management") have sub-items and no key of
+        // their own - press="onToggleSideNavGroup" on that item handles the
+        // actual toggle; this guard is defense-in-depth in case the click
+        // also bubbles up here, so it can never fall through to a navTo.
+        onToggleSideNavGroup: function (oEvent) {
+            var oItem = oEvent.getSource();
+            oItem.setExpanded(!oItem.getExpanded());
+        },
+
         onSideNavItemSelect: function (oEvent) {
             var oItem = oEvent.getParameter("item");
-            if (oItem) {
-                var sKey = oItem.getKey();
-                if (sKey && this[sKey]) {
-                    this[sKey]();
-                } else if (sKey) {
-                    UIComponent.getRouterFor(this).navTo(sKey);
-                }
+            if (!oItem) { return; }
+            if (oItem.getItems && oItem.getItems().length) {
+                oItem.setExpanded(!oItem.getExpanded());
+                return;
+            }
+            var sKey = oItem.getKey();
+            if (sKey && this[sKey]) {
+                this[sKey]();
+            } else if (sKey) {
+                UIComponent.getRouterFor(this).navTo(sKey);
             }
         },
 
@@ -191,7 +202,12 @@ sap.ui.define([
                     fetch(Config.AUTH_BASE_URL + "/api/control/deleteControl", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ subdomain: that._getSubdomain(), id: oItem.dbId })
+                        body: JSON.stringify({
+                            subdomain: that._getSubdomain(),
+                            id: oItem.dbId,
+                            performedBy: (Session.get() || {}).email,
+                            performedByRole: (Session.get() || {}).role
+                        })
                     })
                         .then(function (r) { return r.json(); })
                         .then(function (oData) {
@@ -201,15 +217,6 @@ sap.ui.define([
                                 return;
                             }
                             MessageToast.show("Security Control '" + oItem.id + "' deleted.");
-                            AuditLogService.addLog({
-                                action: "Delete",
-                                module: "Control Management",
-                                objectId: oItem.id,
-                                description: "Deleted Security Control Master rule '" + oItem.id + "': " + oItem.description,
-                                previousValue: "Control ID: " + oItem.id + " | Desc: " + oItem.description + " | Freq: " + oItem.frequencyRun,
-                                newValue: "Record Deleted",
-                                result: "Success"
-                            });
                             that._loadControls();
                         })
                         .catch(function () {
@@ -234,7 +241,12 @@ sap.ui.define([
             fetch(Config.AUTH_BASE_URL + "/api/control/runControlNow", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ subdomain: this._getSubdomain(), id: oItem.dbId })
+                body: JSON.stringify({
+                    subdomain: this._getSubdomain(),
+                    id: oItem.dbId,
+                    performedBy: (Session.get() || {}).email,
+                    performedByRole: (Session.get() || {}).role
+                })
             })
                 .then(function (r) { return r.json(); })
                 .then(function (oData) {

@@ -86,7 +86,7 @@ sap.ui.define([
         _loadEscalationManagerData: function () {
             var oData = {
                 busy: true,
-                kpi: { pendingApproval: 0, remediationVerified: 0, complianceRate: 0 },
+                kpi: { pendingApproval: 0, remediationVerified: 0, complianceRate: 0, escalationsDue: 0 },
                 historyKpis: { approved: 0, rejected: 0, pending: 0 },
                 reports: [],
                 history: [],
@@ -96,6 +96,10 @@ sap.ui.define([
             var oModel = new JSONModel(oData);
             this.getView().setModel(oModel, "escManagerModel");
 
+            // oData.busy above was never bound to anything visible in the view
+            // (zero "busy=" bindings on escManagerModel) - GlobalLoading is
+            // the real, visible loading feedback for this page's main load.
+            GlobalLoading.show("Loading Escalation Queue", 0, true, true);
             var that = this;
             Promise.all([
                 ReviewClient.listLevel1Queue(), ReviewClient.listLevel2Queue(),
@@ -123,11 +127,14 @@ sap.ui.define([
                 oModel.setProperty("/kpi", {
                     pendingApproval: aReports.length,
                     remediationVerified: iApproved,
-                    complianceRate: iTotal ? Math.round((iApproved / iTotal) * 1000) / 10 : 100
+                    complianceRate: iTotal ? Math.round((iApproved / iTotal) * 1000) / 10 : 100,
+                    escalationsDue: aReports.filter(function (r) { return r.escalationDue; }).length
                 });
                 oModel.setProperty("/historyKpis", { approved: iApproved, rejected: iRejected, pending: aReports.length });
                 oModel.setProperty("/selectedReport", aReports[0] || null);
                 oModel.setProperty("/selectedHistoryItem", aHist[0] || null);
+            }).then(function () {
+                GlobalLoading.hide();
             });
         },
 

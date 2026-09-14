@@ -103,11 +103,16 @@
                                 <Label text="Description" class="fontWeightBold sapUiTinyMarginTop"/>
                                 <TextArea value="{auditLogsModel>/selectedLog/description}" editable="false" rows="2" width="100%" class="sapUiSmallMarginBottom"/>
 
-                                <Label text="Previous Value" class="fontWeightBold"/>
-                                <TextArea value="{auditLogsModel>/selectedLog/previousValue}" editable="false" rows="3" width="100%" class="sapUiSmallMarginBottom"/>
+                                <!-- Only shown when this action actually changed a value (e.g.
+                                     an Update) - Login/View/Run/Approve/Reject/Create/Delete etc.
+                                     carry no before-vs-after value, so there's nothing useful here. -->
+                                <VBox visible="{= !!${auditLogsModel>/selectedLog/previousValue} || !!${auditLogsModel>/selectedLog/newValue} }">
+                                    <Label text="Previous Value" class="fontWeightBold"/>
+                                    <TextArea value="{auditLogsModel>/selectedLog/previousValue}" editable="false" rows="3" width="100%" class="sapUiSmallMarginBottom"/>
 
-                                <Label text="New Value" class="fontWeightBold"/>
-                                <TextArea value="{auditLogsModel>/selectedLog/newValue}" editable="false" rows="3" width="100%" class="sapUiSmallMarginBottom"/>
+                                    <Label text="New Value" class="fontWeightBold"/>
+                                    <TextArea value="{auditLogsModel>/selectedLog/newValue}" editable="false" rows="3" width="100%" class="sapUiSmallMarginBottom"/>
+                                </VBox>
                             </VBox>
                         </content>
                         <endButton>
@@ -187,11 +192,18 @@
                                                  change="onApplyFilters"
                                                  width="100%">
                                                  <core:Item key="All" text="All Actions"/>
-                                                 <core:Item key="Create" text="Create"/>
-                                                 <core:Item key="Update" text="Update"/>
-                                                 <core:Item key="Delete" text="Delete"/>
-                                                 <core:Item key="Configuration Change" text="Configuration Change"/>
-                                                 <core:Item key="Access Grant" text="Access Grant"/>
+                                                 <core:Item key="LOGIN" text="Login"/>
+                                                 <core:Item key="VIEW_ALERT" text="View Alert"/>
+                                                 <core:Item key="VIEW_REPORT" text="View Report"/>
+                                                 <core:Item key="REVIEW_APPROVE" text="Review Approved"/>
+                                                 <core:Item key="REVIEW_REJECT" text="Review Rejected"/>
+                                                 <core:Item key="TICKET_CREATED" text="Ticket Created"/>
+                                                 <core:Item key="CONTROL_CREATE" text="Control Created"/>
+                                                 <core:Item key="CONTROL_UPDATE" text="Control Updated"/>
+                                                 <core:Item key="CONTROL_DELETE" text="Control Deleted"/>
+                                                 <core:Item key="CONTROL_RUN" text="Control Run Now"/>
+                                                 <core:Item key="SYSTEM_CREATE" text="System Created"/>
+                                                 <core:Item key="SYSTEM_UPDATE" text="System Updated"/>
                                              </Select>
                                          </VBox>
 
@@ -204,25 +216,64 @@
                                                  change="onApplyFilters"
                                                  width="100%">
                                                  <core:Item key="All" text="All Modules"/>
+                                                 <core:Item key="Authentication" text="Authentication"/>
                                                  <core:Item key="Control Management" text="Control Management"/>
                                                  <core:Item key="System Configuration" text="System Configuration"/>
-                                                 <core:Item key="Access Management" text="Access Management"/>
-                                                 <core:Item key="SOX Compliance" text="SOX Compliance"/>
+                                                 <core:Item key="Deviation Report" text="Deviation Report"/>
+                                                 <core:Item key="Review" text="Review"/>
                                              </Select>
                                          </VBox>
 
                                          <!-- Admin User Filter -->
                                          <VBox width="15.8%" class="xyraFieldGroup">
-                                             <Label text="Admin User" class="xyraLoginLabel"/>
+                                             <Label text="Performed By" class="xyraLoginLabel"/>
                                              <Select
                                                  id="filterAdmin"
                                                  selectedKey="{auditLogsModel>/filters/adminUser}"
                                                  change="onApplyFilters"
+                                                 width="100%"
+                                                 items="{auditFilterOptionsModel>/adminUsers}">
+                                                 <core:Item key="{auditFilterOptionsModel>key}" text="{auditFilterOptionsModel>text}"/>
+                                             </Select>
+                                         </VBox>
+
+                                         <!-- System Filter -->
+                                         <VBox width="15.8%" class="xyraFieldGroup">
+                                             <Label text="System" class="xyraLoginLabel"/>
+                                             <Select
+                                                 id="filterSystem"
+                                                 selectedKey="{auditLogsModel>/filters/systemId}"
+                                                 change="onApplyFilters"
+                                                 width="100%"
+                                                 items="{auditFilterOptionsModel>/systems}">
+                                                 <core:Item key="{auditFilterOptionsModel>key}" text="{auditFilterOptionsModel>text}"/>
+                                             </Select>
+                                         </VBox>
+
+                                         <!-- Control Filter -->
+                                         <VBox width="15.8%" class="xyraFieldGroup">
+                                             <Label text="Control" class="xyraLoginLabel"/>
+                                             <Select
+                                                 id="filterControl"
+                                                 selectedKey="{auditLogsModel>/filters/controlId}"
+                                                 change="onApplyFilters"
+                                                 width="100%"
+                                                 items="{auditFilterOptionsModel>/controls}">
+                                                 <core:Item key="{auditFilterOptionsModel>key}" text="{auditFilterOptionsModel>text}"/>
+                                             </Select>
+                                         </VBox>
+
+                                         <!-- Result Filter -->
+                                         <VBox width="15.8%" class="xyraFieldGroup">
+                                             <Label text="Result" class="xyraLoginLabel"/>
+                                             <Select
+                                                 id="filterResult"
+                                                 selectedKey="{auditLogsModel>/filters/result}"
+                                                 change="onApplyFilters"
                                                  width="100%">
-                                                 <core:Item key="All" text="All Admins"/>
-                                                 <core:Item key="admin@xyra.com (System Admin)" text="admin@xyra.com"/>
-                                                 <core:Item key="sysadmin@xyra.com (Security Manager)" text="sysadmin@xyra.com"/>
-                                                 <core:Item key="secops@xyra.com (Escalation Manager)" text="secops@xyra.com"/>
+                                                 <core:Item key="All" text="All Results"/>
+                                                 <core:Item key="Success" text="Success"/>
+                                                 <core:Item key="Failure" text="Failure"/>
                                              </Select>
                                          </VBox>
 

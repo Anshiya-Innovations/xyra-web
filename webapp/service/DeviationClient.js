@@ -253,6 +253,7 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "xyraweb/service
             controlName: h.controlDescription,
             system: h.systemId,
             client: h.client,
+            organizationId: h.organizationId,
             sector: h.sector,
             region: h.region,
             platform: h.platform,
@@ -283,6 +284,7 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "xyraweb/service
             oFilters = oFilters || {};
             return ApiClient.postJson(Config.AUTH_BASE_URL + "/api/deviation/listDeviations", {
                 subdomain: getSubdomain(),
+                organizationId: oFilters.organization,
                 sector: oFilters.sector, region: oFilters.region, platform: oFilters.platform,
                 systemId: oFilters.system, client: oFilters.client, controlId: oFilters.control,
                 status: oFilters.status, startDate: oFilters.startDate || undefined, endDate: oFilters.endDate || undefined

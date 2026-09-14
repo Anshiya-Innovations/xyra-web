@@ -16,7 +16,7 @@
             <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="ControlManagement" itemSelect="onSideNavItemSelect">
                 <tnt:NavigationList selectedKey="ControlManagement">
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin"/>
-                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" expanded="true" selectable="false">
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" expanded="true" selectable="false" select="onToggleSideNavGroup">
                         <tnt:NavigationListItem text="Controls Config" key="ControlManagement" select="onControlManagement"/>
                         <tnt:NavigationListItem text="Deviation Report" key="DeviationReport" select="onDeviationReport"/>
                     </tnt:NavigationListItem>
@@ -73,10 +73,7 @@
                                 <f:Card class="sapUiTinyMarginBottom">
                                     <f:content>
                                         <VBox class="sapUiMediumMargin">
-                                            <HBox justifyContent="SpaceBetween" alignItems="Center">
-                                                <Text text="Total Incidents" class="textMuted"/>
-                                                <core:Icon src="sap-icon://alert" size="1.25rem" color="#ef4444"/>
-                                            </HBox>
+                                            <Text text="Total Incidents" class="textMuted"/>
                                             <Title text="{reportModel>/kpi/totalIncidents}" level="H2" class="sapUiTinyMarginTop"/>
                                             <ObjectStatus text="Basis Control Deviations" state="Error"/>
                                         </VBox>
@@ -89,10 +86,7 @@
                                 <f:Card class="sapUiTinyMarginBottom">
                                     <f:content>
                                         <VBox class="sapUiMediumMargin">
-                                            <HBox justifyContent="SpaceBetween" alignItems="Center">
-                                                <Text text="Open Items" class="textMuted"/>
-                                                <core:Icon src="sap-icon://warning" size="1.25rem" color="#f59e0b"/>
-                                            </HBox>
+                                            <Text text="Open Items" class="textMuted"/>
                                             <Title text="{reportModel>/openItems}" level="H2" class="sapUiTinyMarginTop"/>
                                             <ObjectStatus text="Requires Remediation" state="Warning"/>
                                         </VBox>
@@ -105,10 +99,7 @@
                                 <f:Card class="sapUiTinyMarginBottom">
                                     <f:content>
                                         <VBox class="sapUiMediumMargin">
-                                            <HBox justifyContent="SpaceBetween" alignItems="Center">
-                                                <Text text="Resolved Items" class="textMuted"/>
-                                                <core:Icon src="sap-icon://sys-enter-2" size="1.25rem" color="#10b981"/>
-                                            </HBox>
+                                            <Text text="Resolved Items" class="textMuted"/>
                                             <Title text="{reportModel>/resolvedItems}" level="H2" class="sapUiTinyMarginTop"/>
                                             <ObjectStatus text="Remediated &amp; Closed" state="Success"/>
                                         </VBox>
@@ -121,10 +112,7 @@
                                 <f:Card class="sapUiTinyMarginBottom">
                                     <f:content>
                                         <VBox class="sapUiMediumMargin">
-                                            <HBox justifyContent="SpaceBetween" alignItems="Center">
-                                                <Text text="Audited Controls" class="textMuted"/>
-                                                <core:Icon src="sap-icon://bar-chart" size="1.25rem" color="#3b82f6"/>
-                                            </HBox>
+                                            <Text text="Audited Controls" class="textMuted"/>
                                             <Title text="{reportModel>/kpi/auditedControls}" level="H2" class="sapUiTinyMarginTop"/>
                                             <ObjectStatus text="{= 'Resolution Rate: ' + ${reportModel>/kpi/complianceRate} }" state="Information"/>
                                         </VBox>
@@ -186,36 +174,24 @@
                             <VBox width="49%">
                                 <f:Card headerPosition="Top">
                                     <f:header>
-                                        <card:Header title="Alert Summary" subtitle="Severity breakdown of detected deviations" iconSrc="sap-icon://bell"/>
+                                        <card:Header title="Alert Summary" subtitle="Severity breakdown of detected deviations"/>
                                     </f:header>
                                     <f:content>
                                         <VBox class="sapUiMediumMargin">
                                             <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
-                                                <HBox alignItems="Center">
-                                                    <core:Icon src="sap-icon://status-negative" size="1rem" color="#ef4444" class="sapUiTinyMarginEnd"/>
-                                                    <Text text="🔴 Critical" class="fontWeightBold"/>
-                                                </HBox>
+                                                <Text text="Critical" class="fontWeightBold"/>
                                                 <ObjectStatus text="{reportModel>/severitySummary/critical}" state="Error" class="fontWeightBold"/>
                                             </HBox>
                                             <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
-                                                <HBox alignItems="Center">
-                                                    <core:Icon src="sap-icon://status-critical" size="1rem" color="#f97316" class="sapUiTinyMarginEnd"/>
-                                                    <Text text="🟠 High" class="fontWeightBold"/>
-                                                </HBox>
+                                                <Text text="High" class="fontWeightBold"/>
                                                 <ObjectStatus text="{reportModel>/severitySummary/high}" state="Warning" class="fontWeightBold"/>
                                             </HBox>
                                             <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
-                                                <HBox alignItems="Center">
-                                                    <core:Icon src="sap-icon://status-inactive" size="1rem" color="#eab308" class="sapUiTinyMarginEnd"/>
-                                                    <Text text="🟡 Medium" class="fontWeightBold"/>
-                                                </HBox>
+                                                <Text text="Medium" class="fontWeightBold"/>
                                                 <ObjectStatus text="{reportModel>/severitySummary/medium}" state="Warning" class="fontWeightBold"/>
                                             </HBox>
                                             <HBox justifyContent="SpaceBetween" alignItems="Center">
-                                                <HBox alignItems="Center">
-                                                    <core:Icon src="sap-icon://status-positive" size="1rem" color="#10b981" class="sapUiTinyMarginEnd"/>
-                                                    <Text text="🟢 Low" class="fontWeightBold"/>
-                                                </HBox>
+                                                <Text text="Low" class="fontWeightBold"/>
                                                 <ObjectStatus text="{reportModel>/severitySummary/low}" state="Success" class="fontWeightBold"/>
                                             </HBox>
                                         </VBox>
@@ -234,32 +210,12 @@
                                 </OverflowToolbar>
                             </headerToolbar>
                             <content>
-                                <!-- Row 1: Top 5 Filters -->
+                                <!-- Row 1: Organization -> System, plus the independent facets -->
                                 <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Start" class="sapUiSmallMarginBottom">
-                                    <!-- Sector -->
+                                    <!-- Organization -->
                                     <VBox width="18.5%" class="xyraFieldGroup">
-                                        <Label text="Sector" required="true" class="xyraLoginLabel"/>
-                                        <Select id="filterSector" selectedKey="{reportModel>/filters/sector}" change="onSectorChange" width="100%">
-                                            <core:Item key="All" text="All Sectors"/>
-                                            <core:Item key="MedTech" text="MedTech"/>
-                                            <core:Item key="Pharma" text="Pharma"/>
-                                            <core:Item key="Consumer Health" text="Consumer Health"/>
-                                            <core:Item key="Corporate" text="Corporate"/>
-                                        </Select>
-                                    </VBox>
-
-                                    <!-- Region -->
-                                    <VBox width="18.5%" class="xyraFieldGroup">
-                                        <Label text="Region" class="xyraLoginLabel"/>
-                                        <Select id="filterRegion" selectedKey="{reportModel>/filters/region}" change="onRegionChange" width="100%" items="{reportModel>/options/regions}">
-                                            <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
-                                        </Select>
-                                    </VBox>
-
-                                    <!-- Platform -->
-                                    <VBox width="18.5%" class="xyraFieldGroup">
-                                        <Label text="Platform" class="xyraLoginLabel"/>
-                                        <Select id="filterPlatform" selectedKey="{reportModel>/filters/platform}" change="onPlatformChange" width="100%" items="{reportModel>/options/platforms}">
+                                        <Label text="Organization" class="xyraLoginLabel"/>
+                                        <Select id="filterOrganization" selectedKey="{reportModel>/filters/organization}" change="onOrganizationChange" width="100%" items="{reportModel>/options/organizations}">
                                             <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
                                         </Select>
                                     </VBox>
@@ -279,10 +235,34 @@
                                             <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
                                         </Select>
                                     </VBox>
+
+                                    <!-- Region -->
+                                    <VBox width="18.5%" class="xyraFieldGroup">
+                                        <Label text="Region" class="xyraLoginLabel"/>
+                                        <Select id="filterRegion" selectedKey="{reportModel>/filters/region}" change="onRegionChange" width="100%" items="{reportModel>/options/regions}">
+                                            <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
+                                        </Select>
+                                    </VBox>
+
+                                    <!-- Platform -->
+                                    <VBox width="18.5%" class="xyraFieldGroup">
+                                        <Label text="Platform" class="xyraLoginLabel"/>
+                                        <Select id="filterPlatform" selectedKey="{reportModel>/filters/platform}" change="onPlatformChange" width="100%" items="{reportModel>/options/platforms}">
+                                            <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
+                                        </Select>
+                                    </VBox>
                                 </HBox>
 
-                                <!-- Row 2: Bottom 4 Filters Aligned Straight Under Row 1 Columns -->
+                                <!-- Row 2: Sector, Control, Status, Date range - fills the same 5-column grid -->
                                 <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Start">
+                                    <!-- Sector -->
+                                    <VBox width="18.5%" class="xyraFieldGroup">
+                                        <Label text="Sector" class="xyraLoginLabel"/>
+                                        <Select id="filterSector" selectedKey="{reportModel>/filters/sector}" change="onSectorChange" width="100%" items="{reportModel>/options/sectors}">
+                                            <core:Item key="{reportModel>key}" text="{reportModel>text}"/>
+                                        </Select>
+                                    </VBox>
+
                                     <!-- Control -->
                                     <VBox width="18.5%" class="xyraFieldGroup">
                                         <Label text="Control" class="xyraLoginLabel"/>
@@ -313,9 +293,6 @@
                                          <Label text="Ending Date" class="xyraLoginLabel"/>
                                          <xyra:DateRangePicker id="filterEndingDate" field="end" endDate="{reportModel>/filters/endDate}" placeholder="Select Ending Date" change="onSearch" width="100%"/>
                                      </VBox>
-
-                                     <!-- Empty Spacer Column for 5-Column Alignment -->
-                                     <VBox width="18.5%"/>
                                 </HBox>
                             </content>
                         </Panel>
@@ -331,10 +308,7 @@
                                 <f:Card>
                                     <f:content>
                                         <VBox class="sapUiMediumMargin">
-                                            <HBox justifyContent="SpaceBetween" alignItems="Center">
-                                                <Text text="Total Incidents" class="textMuted"/>
-                                                <core:Icon src="sap-icon://accept" size="1.25rem" color="#10b981"/>
-                                            </HBox>
+                                            <Text text="Total Incidents" class="textMuted"/>
                                             <Title text="0" level="H2" class="sapUiTinyMarginTop"/>
                                             <ObjectStatus text="No Incidents Detected" state="Success"/>
                                         </VBox>
@@ -347,10 +321,7 @@
                                 <f:Card>
                                     <f:content>
                                         <VBox class="sapUiMediumMargin">
-                                            <HBox justifyContent="SpaceBetween" alignItems="Center">
-                                                <Text text="Open Incidents" class="textMuted"/>
-                                                <core:Icon src="sap-icon://sys-enter-2" size="1.25rem" color="#10b981"/>
-                                            </HBox>
+                                            <Text text="Open Incidents" class="textMuted"/>
                                             <Title text="0" level="H2" class="sapUiTinyMarginTop"/>
                                             <ObjectStatus text="Clean Compliance Status" state="Success"/>
                                         </VBox>
@@ -401,7 +372,6 @@
                             class="sapUiSmallMarginBottom">
                             <content>
                                 <VBox class="sapUiLargeMargin" alignItems="Center" justifyContent="Center">
-                                    <core:Icon src="sap-icon://message-information" size="4rem" color="#3b82f6" class="sapUiMediumMarginBottom"/>
                                     <Title text="No deviations found" level="H3" class="sapUiTinyMarginBottom"/>
                                     <Text text="There are no Basis control deviations matching your selected filter criteria. Try adjusting Sector, System, Client, or Date range." class="textMuted textCenter"/>
                                 </VBox>
@@ -415,7 +385,7 @@
                     <OverflowToolbar>
                         <Text text="© 2026 Forte Innovations"/>
                         <ToolbarSpacer/>
-                        <ObjectStatus text="July 30, 2026" icon="sap-icon://appointment-2" state="Information"/>
+                        <ObjectStatus text="July 30, 2026" state="Information"/>
                     </OverflowToolbar>
                 </footer>
             </Page>

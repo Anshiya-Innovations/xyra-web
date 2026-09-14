@@ -119,6 +119,8 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
             controlsTotal: 6, controlsEnabled: 5,
             openDeviations: 8, resolvedDeviations: 34, complianceRatePct: 92,
             systemsTotal: 4, systemsOnline: 3,
+            organizationsTotal: 2,
+            reviewsOverdue: 2, escalationsDue: 1,
             alertBreakdown: withBarStyling([
                 { label: "Open", value: 8, color: "Error" },
                 { label: "In Progress", value: 3, color: "Critical" },
@@ -128,6 +130,11 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
                 { label: "Level 1 Pending", value: 3, color: "Error" },
                 { label: "Level 2 Pending", value: 2, color: "Critical" },
                 { label: "Tickets Created", value: 3, color: "Neutral" }
+            ]),
+            slaHealth: withBarStyling([
+                { label: "On Track", value: 3, color: "Good" },
+                { label: "Overdue", value: 2, color: "Error" },
+                { label: "Escalation Due", value: 1, color: "Critical" }
             ]),
             controls: [
                 { code: "NLG08", description: "Basis Kernel Audit Logging & Parameter Validation", frequency: "DAILY", enabledText: "Enabled", enabledState: "Success", lastRunStatus: "FAIL", lastRunState: "Error", lastRunAt: "09 Sep 2026, 06:00", nextRunAt: "10 Sep 2026, 06:00" },
@@ -148,12 +155,14 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
             safe(postList("review", "listLevel1Queue", "reviews")),
             safe(postList("review", "listLevel2Queue", "reviews")),
             safe(postList("review", "listLevel1History", "reviews")),
-            safe(postList("review", "listLevel2History", "reviews"))
+            safe(postList("review", "listLevel2History", "reviews")),
+            safe(postList("organization", "listOrganizations", "organizations"))
         ]).then(function (a) {
             var controls = a[0], deviation = a[1], systems = a[2];
             var l1q = a[3], l2q = a[4], l1h = a[5], l2h = a[6];
+            var organizations = a[7];
 
-            if (!controls && !deviation && !systems && !l1q && !l2q && !l1h && !l2h) {
+            if (!controls && !deviation && !systems && !l1q && !l2q && !l1h && !l2h && !organizations) {
                 notice();
                 return getFallback();
             }
@@ -163,11 +172,21 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
             var kpi = (deviation && deviation.kpi) || {};
             systems = systems || [];
             l1q = l1q || []; l2q = l2q || []; l1h = l1h || []; l2h = l2h || [];
+            organizations = organizations || [];
 
             var statusCounts = { Open: 0, "In Progress": 0, Resolved: 0 };
             headers.forEach(function (h) { if (statusCounts[h.status] !== undefined) { statusCounts[h.status]++; } });
 
             var ticketsCreated = countTickets(l1h) + countTickets(l2h);
+
+            // Review SLA health: same pending queues reviewPipeline already
+            // fetched, cut a different way - on time vs. overdue vs. flagged
+            // for Escalation Manager (isOverdue/escalationDue come straight
+            // from review_engine's own SLA computation, not re-derived here).
+            var aPending = l1q.concat(l2q);
+            var iOverdue = aPending.filter(function (r) { return r.isOverdue; }).length;
+            var iEscalationDue = aPending.filter(function (r) { return r.escalationDue; }).length;
+            var iOnTrack = aPending.length - iOverdue;
 
             return {
                 controlsTotal: controls.length,
@@ -177,6 +196,9 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
                 complianceRatePct: parseFloat(kpi.complianceRate) || 0,
                 systemsTotal: systems.length,
                 systemsOnline: systems.filter(function (s) { return s.lastConnectionStatus === "ONLINE"; }).length,
+                organizationsTotal: organizations.length,
+                reviewsOverdue: iOverdue,
+                escalationsDue: iEscalationDue,
                 alertBreakdown: withBarStyling([
                     { label: "Open", value: statusCounts.Open, color: "Error" },
                     { label: "In Progress", value: statusCounts["In Progress"], color: "Critical" },
@@ -186,6 +208,11 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
                     { label: "Level 1 Pending", value: l1q.length, color: "Error" },
                     { label: "Level 2 Pending", value: l2q.length, color: "Critical" },
                     { label: "Tickets Created", value: ticketsCreated, color: "Neutral" }
+                ]),
+                slaHealth: withBarStyling([
+                    { label: "On Track", value: iOnTrack, color: "Good" },
+                    { label: "Overdue", value: iOverdue, color: "Error" },
+                    { label: "Escalation Due", value: iEscalationDue, color: "Critical" }
                 ]),
                 controls: controls.slice().sort(byControlHealth).slice(0, 10).map(toControlRow),
                 recentFindings: headers.slice().sort(function (a, b) { return new Date(b.alertDate) - new Date(a.alertDate); }).slice(0, 8).map(toFindingRow)

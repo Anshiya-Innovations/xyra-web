@@ -412,6 +412,10 @@
                             </Panel>
 
                             <!-- SECTION 2: REVIEW QUEUE TABLE -->
+                            <HBox class="sapUiSmallMarginBottom" justifyContent="SpaceBetween">
+                                <ObjectStatus text="{reviewer2Model>/kpi/pendingReviews} Pending" state="Information" icon="sap-icon://pending"/>
+                                <ObjectStatus text="{reviewer2Model>/kpi/slaDue} Overdue" state="{= ${reviewer2Model>/kpi/slaDue} > 0 ? 'Error' : 'Success' }" icon="sap-icon://alert"/>
+                            </HBox>
                             <Panel headerText="Exception Records Review Queue (Click Row for Detailed Analysis Slide)" expandable="false" class="sapUiSmallMarginBottom">
                                 <Table
                                     id="reviewer2Table"
@@ -420,15 +424,16 @@
                                     width="100%"
                                     selectionChange="onSelectionChange">
                                     <columns>
-                                        <Column width="10%"><Text text="Report ID"/></Column>
-                                        <Column width="18%"><Text text="Report Name"/></Column>
-                                        <Column width="9%"><Text text="Control ID"/></Column>
-                                        <Column width="11%"><Text text="SAP System"/></Column>
-                                        <Column width="11%"><Text text="Generated Date"/></Column>
-                                        <Column width="12%"><Text text="Reviewer 1 Decision"/></Column>
-                                        <Column width="14%"><Text text="Reviewer 1 Comments"/></Column>
-                                        <Column width="9%"><Text text="Evidence Status"/></Column>
-                                        <Column width="11%"><Text text="Reviewer 2 Status"/></Column>
+                                        <Column width="9%"><Text text="Report ID"/></Column>
+                                        <Column width="16%"><Text text="Report Name"/></Column>
+                                        <Column width="8%"><Text text="Control ID"/></Column>
+                                        <Column width="10%"><Text text="SAP System"/></Column>
+                                        <Column width="10%"><Text text="Generated Date"/></Column>
+                                        <Column width="11%"><Text text="Reviewer 1 Decision"/></Column>
+                                        <Column width="12%"><Text text="Reviewer 1 Comments"/></Column>
+                                        <Column width="8%"><Text text="Evidence Status"/></Column>
+                                        <Column width="10%"><Text text="Reviewer 2 Status"/></Column>
+                                        <Column width="10%"><Text text="SLA"/></Column>
                                     </columns>
 
                                     <items>
@@ -443,6 +448,7 @@
                                                 <Text text="{reviewer2Model>rev1Comments}"/>
                                                 <ObjectStatus text="{reviewer2Model>evidenceStatus}" state="Success"/>
                                                 <ObjectStatus text="{reviewer2Model>reviewer2Status}" state="{reviewer2Model>reviewer2State}"/>
+                                                <ObjectStatus text="{reviewer2Model>slaText}" state="{reviewer2Model>slaState}" icon="sap-icon://alert"/>
                                             </cells>
                                         </ColumnListItem>
                                     </items>

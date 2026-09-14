@@ -5,77 +5,25 @@ sap.ui.define([
     "sap/ui/core/UIComponent",
     "sap/ui/model/json/JSONModel",
     "xyraweb/model/sidebarState",
-    "xyraweb/model/focusRing"
-], function (Controller, MessageToast, MessageBox, UIComponent, JSONModel, SidebarState, killFocusRing) {
+    "xyraweb/model/focusRing",
+    "xyraweb/model/GlobalLoading",
+    "xyraweb/model/config",
+    "xyraweb/model/session"
+], function (Controller, MessageToast, MessageBox, UIComponent, JSONModel, SidebarState, killFocusRing, GlobalLoading, Config, Session) {
     "use strict";
 
-    var mMockOrgs = {
-        "ORG-TATA-01": {
-            orgId: "ORG-TATA-01",
-            companyName: "Tata Sons & Group",
-            industry: "Conglomerate & Technology",
-            region: "Asia Pacific",
-            country: "India",
-            primaryContact: "Ratan Sharma (VP GRC)",
-            email: "grc@tata.com",
-            phone: "+91 22 6665 8282",
-            sapSystems: "DEV, QAS, PRD (12 Systems)",
-            status: "Active",
-            statusState: "Success"
-        },
-        "ORG-ACCN-02": {
-            orgId: "ORG-ACCN-02",
-            companyName: "Accenture Global Services",
-            industry: "IT Consulting & Services",
-            region: "North America",
-            country: "United States",
-            primaryContact: "Sarah Jenkins (Director Security)",
-            email: "compliance@accenture.com",
-            phone: "+1 312 844 5000",
-            sapSystems: "DEV, PRD (8 Systems)",
-            status: "Active",
-            statusState: "Success"
-        },
-        "ORG-SAP-03": {
-            orgId: "ORG-SAP-03",
-            companyName: "SAP Enterprise Systems",
-            industry: "Enterprise Software",
-            region: "Europe",
-            country: "Germany",
-            primaryContact: "Hans Mueller (Chief Information Officer)",
-            email: "h.mueller@sap.com",
-            phone: "+49 6227 747474",
-            sapSystems: "PRD (5 Systems)",
-            status: "Active",
-            statusState: "Success"
-        },
-        "ORG-INFY-04": {
-            orgId: "ORG-INFY-04",
-            companyName: "Infosys Technologies",
-            industry: "IT & Cloud Solutions",
-            region: "Asia Pacific",
-            country: "India",
-            primaryContact: "Nitin Kamath (Risk Head)",
-            email: "risk@infosys.com",
-            phone: "+91 80 2852 0261",
-            sapSystems: "DEV, QAS, PRD (15 Systems)",
-            status: "Pending Setup",
-            statusState: "Warning"
-        },
-        "ORG-RELIANCE-05": {
-            orgId: "ORG-RELIANCE-05",
-            companyName: "Reliance Industries",
-            industry: "Energy & Retail",
-            region: "Asia Pacific",
-            country: "India",
-            primaryContact: "Mukesh Varma (Head GRC Operations)",
-            email: "grc.ops@ril.com",
-            phone: "+91 22 3555 5000",
-            sapSystems: "DEV, QAS, PRD (20 Systems)",
-            status: "Under Audit Review",
-            statusState: "Information"
-        }
-    };
+    function slaSummaryText(s) {
+        return "Reviewer 1: " + s.reviewer1Days + " business days  ·  " +
+            "Reviewer 2: " + s.reviewer2Days + " business days  ·  " +
+            "Escalation delay: " + s.escalationDelayDays + " business days past Reviewer 2 SLA";
+    }
+
+    function orgStatusStateFor(sStatus) {
+        if (sStatus === "Pending Setup") { return "Warning"; }
+        if (sStatus === "Under Audit Review") { return "Information"; }
+        if (sStatus === "Inactive") { return "Error"; }
+        return "Success";
+    }
 
     return Controller.extend("xyraweb.controller.OrganizationDetails", {
 
@@ -88,15 +36,93 @@ sap.ui.define([
                 }
             }
 
-            this._loadOrgData("ORG-TATA-01");
+            this._loadOrgData(null);
+            this._loadSlaSettings();
             this._syncSidebar();
         },
 
         _onRouteMatched: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments");
-            var sOrgId = oArgs && oArgs.orgId ? oArgs.orgId : "ORG-TATA-01";
-            this._loadOrgData(sOrgId);
+            this._loadOrgData(oArgs && oArgs.orgId);
+            this._loadSlaSettings();
             this._syncSidebar();
+        },
+
+        // The one real backend-integrated card on this otherwise 100% mock
+        // page (see mMockOrgs above) - review SLA windows are per-tenant real
+        // data (SystemConfigService.getSlaSettings/updateSlaSettings), not
+        // sample org data. Reused by onInit (populate the summary line) and
+        // onOpenSlaSettingsDialog (prefill the edit dialog).
+        _loadSlaSettings: function () {
+            var that = this;
+            var oSession = Session.get();
+            if (!oSession) { return Promise.resolve(null); }
+
+            return fetch(Config.AUTH_BASE_URL + "/api/system-config/getSlaSettings", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: oSession.subdomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { return null; }
+                    var oModel = that.getView().getModel("orgDetailsModel");
+                    if (oModel) { oModel.setProperty("/slaSummary", slaSummaryText(oData.settings)); }
+                    return oData.settings;
+                })
+                .catch(function () { return null; });
+        },
+
+        onOpenSlaSettingsDialog: function () {
+            var that = this;
+            GlobalLoading.show("Loading SLA Settings", 0, true, true);
+            this._loadSlaSettings().then(function (s) {
+                GlobalLoading.hide();
+                if (!s) { MessageBox.error("Could not load SLA settings. Is xyra-core running?"); return; }
+                that.byId("slaReviewer1Days").setValue(s.reviewer1Days);
+                that.byId("slaReviewer2Days").setValue(s.reviewer2Days);
+                that.byId("slaEscalationDelayDays").setValue(s.escalationDelayDays);
+                that.byId("slaSettingsDialog").open();
+            });
+        },
+
+        onCloseSlaSettingsDialog: function () {
+            this.byId("slaSettingsDialog").close();
+        },
+
+        onSaveSlaSettings: function () {
+            var that = this;
+            var oSession = Session.get();
+            if (!oSession) { MessageBox.error("No active session. Please log in again."); return; }
+
+            var oPayload = {
+                subdomain: oSession.subdomain,
+                reviewer1Days: parseInt(this.byId("slaReviewer1Days").getValue(), 10),
+                reviewer2Days: parseInt(this.byId("slaReviewer2Days").getValue(), 10),
+                escalationDelayDays: parseInt(this.byId("slaEscalationDelayDays").getValue(), 10),
+                performedBy: oSession.email,
+                performedByRole: oSession.role
+            };
+
+            GlobalLoading.show("Saving SLA Settings", 0, true, true);
+            fetch(Config.AUTH_BASE_URL + "/api/system-config/updateSlaSettings", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(oPayload)
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    GlobalLoading.hide();
+                    if (!oData.success) { MessageBox.error(oData.message || "Could not update SLA settings."); return; }
+                    var oModel = that.getView().getModel("orgDetailsModel");
+                    if (oModel) { oModel.setProperty("/slaSummary", slaSummaryText(oPayload)); }
+                    that.onCloseSlaSettingsDialog();
+                    MessageToast.show("SLA settings updated.");
+                })
+                .catch(function () {
+                    GlobalLoading.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         _syncSidebar: function () {
@@ -110,8 +136,12 @@ sap.ui.define([
             }
         },
 
+        // sOrgId is the real Organizations.ID (routed here from Organization's
+        // onViewDetails). Falls back to whichever org is first in the tenant's
+        // list when none is given (e.g. this route opened with no id).
         _loadOrgData: function (sOrgId) {
-            var oOrgData = mMockOrgs[sOrgId] || mMockOrgs["ORG-TATA-01"];
+            var that = this;
+            var oOrgData = { orgId: "", dbId: sOrgId || "", companyName: "Loading...", industry: "", region: "", country: "", primaryContact: "", email: "", phone: "", sapSystems: "", status: "Active", statusState: "Success" };
 
             var aParameters = [
                 { paramType: "SET/GET Parameter", paramIdName: "BUK - Company Code", value: "1000", status: "Enforced", statusState: "Success" },
@@ -129,21 +159,64 @@ sap.ui.define([
                 { paramType: "User Default Value", paramIdName: "Output Device (PRINTER)", value: "PRN01_MUMBAI", status: "Pending Verification", statusState: "Warning" }
             ];
 
-            var aPolicies = [
-                { policyId: "POL-SEC-01", policyName: "Enterprise SAP Security & Encryption Standard", category: "Security Policy", status: "Active", statusState: "Success", lastUpdated: "2024-05-10" },
-                { policyId: "POL-ACC-02", policyName: "User Emergency Privilege Access & Firefighter Mandate", category: "Access Policy", status: "Active", statusState: "Success", lastUpdated: "2024-04-18" },
-                { policyId: "POL-CTL-03", policyName: "Automated SOD Matrix & Dual Approval Policy", category: "SAP Control Policy", status: "Active", statusState: "Success", lastUpdated: "2024-03-22" },
-                { policyId: "POL-CMP-04", policyName: "SOX 404 Financial ITGC Compliance Policy", category: "Compliance Policy", status: "Under Review", statusState: "Warning", lastUpdated: "2024-06-01" }
-            ];
-
             var oDetailsModel = new JSONModel({
                 currentOrg: oOrgData,
                 parameters: aParameters,
                 allParameters: JSON.parse(JSON.stringify(aParameters)),
-                policies: aPolicies
+                slaSummary: "Loading..."
             });
 
             this.getView().setModel(oDetailsModel, "orgDetailsModel");
+            this._fetchOrganization(sOrgId, oDetailsModel);
+        },
+
+        // Real org fields (Tenant -> many Organizations -> each org's own
+        // Systems) - Parameters above stays mock, unrelated demo content with
+        // nothing in GDL-8864/SOP-8865/STR-1862 backing it. The Policies tab
+        // used to be the same kind of fake CRUD (assign a fake policy, kept
+        // in memory only, read by nothing) - removed; the Review SLA is the
+        // one real governance policy this app enforces, so that tab now
+        // shows/edits the real SlaSettings instead.
+        _fetchOrganization: function (sOrgId, oDetailsModel) {
+            var that = this;
+            var oSession = Session.get();
+            if (!oSession) { return; }
+
+            GlobalLoading.show("Loading Organization", 0, true, true);
+
+            var pOrgId = sOrgId
+                ? Promise.resolve(sOrgId)
+                : fetch(Config.AUTH_BASE_URL + "/api/organization/listOrganizations", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ subdomain: oSession.subdomain })
+                })
+                    .then(function (r) { return r.json(); })
+                    .then(function (oData) { return oData.success && oData.organizations[0] ? oData.organizations[0].id : null; });
+
+            pOrgId.then(function (sId) {
+                if (!sId) { MessageBox.error("No organization to show yet - add one from the Organization list."); return; }
+                return fetch(Config.AUTH_BASE_URL + "/api/organization/getOrganization", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ subdomain: oSession.subdomain, id: sId })
+                })
+                    .then(function (r) { return r.json(); })
+                    .then(function (oData) {
+                        if (!oData.success || !oData.organization) { MessageBox.error(oData.message || "Could not load organization."); return; }
+                        var o = oData.organization;
+                        that._orgDbId = o.id;
+                        oDetailsModel.setProperty("/currentOrg", {
+                            orgId: o.orgCode, dbId: o.id, companyName: o.name, industry: o.industry || "",
+                            region: o.region || "", country: o.country || "", primaryContact: o.primaryContact || "",
+                            email: o.email || "", phone: o.phone || "",
+                            sapSystems: o.systemCount + (o.systemCount === 1 ? " System" : " Systems"),
+                            status: o.status, statusState: orgStatusStateFor(o.status)
+                        });
+                    });
+            }).catch(function () {
+                MessageToast.show("Could not reach xyra-core. Is it running?", { duration: 4000 });
+            }).then(function () {
+                GlobalLoading.hide();
+            });
         },
 
         onNavBack: function () {
@@ -239,52 +312,6 @@ sap.ui.define([
             }
         },
 
-        onOpenAssignPolicyDialog: function () {
-            this.byId("policyCategorySelect").setSelectedKey("Security Policy");
-            this.byId("policyNameInput").setValue("");
-            this.byId("policyIdInput").setValue("");
-            this.byId("policyStatusSelect").setSelectedKey("Active");
-
-            this.byId("assignPolicyDialog").open();
-        },
-
-        onCloseAssignPolicyDialog: function () {
-            this.byId("assignPolicyDialog").close();
-        },
-
-        onSubmitAssignPolicy: function () {
-            var sCategory = this.byId("policyCategorySelect").getSelectedKey();
-            var sName = (this.byId("policyNameInput").getValue() || "").trim();
-            var sId = (this.byId("policyIdInput").getValue() || "").trim();
-            var sStatus = this.byId("policyStatusSelect").getSelectedKey();
-
-            if (!sName || !sId) {
-                MessageBox.error("Please fill in both Policy Name and Policy ID Code.");
-                return;
-            }
-
-            var dNow = new Date();
-            var sDateStr = dNow.toISOString().split("T")[0];
-            var sState = (sStatus === "Active") ? "Success" : "Warning";
-
-            var oNewPolicy = {
-                policyId: sId,
-                policyName: sName,
-                category: sCategory,
-                status: sStatus,
-                statusState: sState,
-                lastUpdated: sDateStr
-            };
-
-            var oModel = this.getView().getModel("orgDetailsModel");
-            var aPolicies = oModel.getProperty("/policies") || [];
-            aPolicies.unshift(oNewPolicy);
-            oModel.setProperty("/policies", aPolicies);
-
-            this.onCloseAssignPolicyDialog();
-            MessageToast.show("Policy '" + sName + "' assigned successfully!");
-        },
-
         onEditSummaryPress: function () {
             var oModel = this.getView().getModel("orgDetailsModel");
             var oOrg = oModel ? oModel.getProperty("/currentOrg") : null;
@@ -360,29 +387,57 @@ sap.ui.define([
                 return;
             }
 
-            var sStatusState = "Success";
-            if (sStatus === "Pending Setup") { sStatusState = "Warning"; }
-            else if (sStatus === "Inactive") { sStatusState = "Error"; }
-            else if (sStatus === "Under Audit Review") { sStatusState = "Information"; }
-
             var oModel = this.getView().getModel("orgDetailsModel");
             var oOrg = oModel.getProperty("/currentOrg") || {};
+            var oSession = Session.get();
+            if (!oOrg.dbId || !oSession) { MessageBox.error("No active session or organization to update."); return; }
 
-            oOrg.companyName = sCompanyName;
-            oOrg.orgId = sOrgId;
-            oOrg.industry = sIndustry;
-            oOrg.region = sRegion;
-            oOrg.country = sCountry;
-            oOrg.primaryContact = sContact;
-            oOrg.email = sEmail;
-            oOrg.phone = sPhone;
-            oOrg.status = sStatus;
-            oOrg.statusState = sStatusState;
+            var that = this;
+            // orgCode (sOrgId, "Organization ID") isn't editable - same "id
+            // isn't editable" stance as Configuration's Edit System dialog -
+            // updateOrganization doesn't even accept it as a param.
+            var oPayload = {
+                subdomain: oSession.subdomain,
+                id: oOrg.dbId,
+                name: sCompanyName,
+                industry: sIndustry,
+                region: sRegion,
+                country: sCountry,
+                primaryContact: sContact,
+                email: sEmail,
+                phone: sPhone,
+                status: sStatus,
+                performedBy: oSession.email,
+                performedByRole: oSession.role
+            };
 
-            oModel.setProperty("/currentOrg", oOrg);
-
-            this.onCloseEditSummaryDialog();
-            MessageToast.show("Company Executive Summary updated successfully!");
+            GlobalLoading.show("Saving Organization", 0, true, true);
+            fetch(Config.AUTH_BASE_URL + "/api/organization/updateOrganization", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(oPayload)
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    GlobalLoading.hide();
+                    if (!oData.success) { MessageBox.error(oData.message || "Could not update organization."); return; }
+                    oOrg.companyName = sCompanyName;
+                    oOrg.industry = sIndustry;
+                    oOrg.region = sRegion;
+                    oOrg.country = sCountry;
+                    oOrg.primaryContact = sContact;
+                    oOrg.email = sEmail;
+                    oOrg.phone = sPhone;
+                    oOrg.status = sStatus;
+                    oOrg.statusState = orgStatusStateFor(sStatus);
+                    oModel.setProperty("/currentOrg", oOrg);
+                    that.onCloseEditSummaryDialog();
+                    MessageToast.show("Company Executive Summary updated successfully!");
+                })
+                .catch(function () {
+                    GlobalLoading.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         navToRoute: function (sRouteName, oParams) {

@@ -30,7 +30,7 @@
 
                     <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
                     <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
-                    <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" expanded="true" selectable="false">
+                    <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" expanded="true" selectable="false" select="onToggleSideNavGroup">
                         <tnt:NavigationListItem text="System Landscape" key="Landscape" select="onSelectLandscapeTab"/>
                         <tnt:NavigationListItem text="System Health" key="SystemHealthTab" select="onSelectSystemHealthTab"/>
                     </tnt:NavigationListItem>
@@ -82,6 +82,12 @@
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="Client" required="true" class="xyraLoginLabel"/>
                                         <Input id="newClient" placeholder="e.g. 100, 000"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Organization" required="true" class="xyraLoginLabel"/>
+                                        <Select id="newOrgSelect" width="100%" items="{organizationsModel>/organizations}">
+                                            <core:Item key="{organizationsModel>id}" text="{organizationsModel>orgCode} - {organizationsModel>name}"/>
+                                        </Select>
                                     </VBox>
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="System Type" required="true" class="xyraLoginLabel"/>
@@ -188,6 +194,12 @@
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="Client" required="true" class="xyraLoginLabel"/>
                                         <Input id="editClient"/>
+                                    </VBox>
+                                    <VBox width="47%" class="xyraFieldGroup">
+                                        <Label text="Organization" required="true" class="xyraLoginLabel"/>
+                                        <Select id="editOrgSelect" width="100%" items="{organizationsModel>/organizations}">
+                                            <core:Item key="{organizationsModel>id}" text="{organizationsModel>orgCode} - {organizationsModel>name}"/>
+                                        </Select>
                                     </VBox>
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="System Type" required="true" class="xyraLoginLabel"/>
@@ -352,9 +364,10 @@
                                     <columns>
                                         <Column width="6%"><Text text="System ID"/></Column>
                                         <Column width="4%"><Text text="Client"/></Column>
+                                        <Column width="7%"><Text text="Organization"/></Column>
                                         <Column width="7%"><Text text="System Type"/></Column>
                                         <Column width="10%"><Text text="Host Name"/></Column>
-                                        <Column width="15%"><Text text="System Details"/></Column>
+                                        <Column width="12%"><Text text="System Details"/></Column>
                                         <Column width="5%"><Text text="Sector"/></Column>
                                         <Column width="5%"><Text text="Platform"/></Column>
                                         <Column width="5%"><Text text="Region"/></Column>
@@ -371,6 +384,7 @@
                                             <cells>
                                                 <Text text="{systemModel>sysId}" class="fontWeightBold"/>
                                                 <Text text="{systemModel>client}"/>
+                                                <Text text="{systemModel>organizationCode}"/>
                                                 <ObjectStatus text="{systemModel>sysType}" state="{= ${systemModel>sysType} === 'Production' ? 'Error' : (${systemModel>sysType} === 'Quality' ? 'Warning' : 'Information') }"/>
                                                 <Text text="{systemModel>hostName}"/>
                                                 <Text text="{systemModel>sysDetails}"/>
