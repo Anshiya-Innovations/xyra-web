@@ -14,7 +14,7 @@ sap.ui.define([
             id: "dummy-1",
             title: "Control Execution Deviation",
             message: "3 new Basis control deviations detected in PRD system.",
-            category: "TASK",
+            category: "ALERT",
             timestamp: "5 min ago",
             read: false,
             priority: "HIGH",
@@ -105,6 +105,27 @@ sap.ui.define([
         return (oSession && oSession.subdomain) || Config.TEST_SUBDOMAIN;
     }
 
+    // Reviewer1/Reviewer2 are both the REVIEWER role (see
+    // lib/provisioning/seed.js's own comment - they're just separate user
+    // accounts, not separate roles), so filtering on role code alone covers
+    // both personas plus Admin in one place, shared by every page's bell
+    // (this module is a singleton). Notifications stay a flat tenant-wide
+    // broadcast (no per-user targeting exists anywhere in this app) - this
+    // narrows what's SHOWN to these two roles down to the two things they
+    // actually asked for: a new deviation, or a ticket status change.
+    // Escalation Manager/Auditor are unaffected - see everything, as before.
+    var RESTRICTED_ROLES = ["REVIEWER", "ADMIN"];
+    var VISIBLE_CATEGORIES_FOR_RESTRICTED = ["ALERT", "TICKET"];
+
+    function filterForRole(aNotifications) {
+        var oSession = Session.get();
+        var sRole = oSession && oSession.role;
+        if (RESTRICTED_ROLES.indexOf(sRole) === -1) { return aNotifications; }
+        return aNotifications.filter(function (r) {
+            return VISIBLE_CATEGORIES_FOR_RESTRICTED.indexOf(r.category) !== -1;
+        });
+    }
+
     // No "previous/read" archive anymore - a notification is either in this
     // unread list or it's gone (Mark As Read / Clear All both just drop it).
     function refresh() {
@@ -116,7 +137,7 @@ sap.ui.define([
             .then(function (oResponse) { return oResponse.json(); })
             .then(function (oData) {
                 if (!oData.success) { throw new Error(oData.message || "listNotifications failed"); }
-                var aUnread = (oData.notifications || []).filter(function (r) { return !r.read; }).map(toDisplayItem);
+                var aUnread = filterForRole((oData.notifications || []).filter(function (r) { return !r.read; })).map(toDisplayItem);
                 oModel.setProperty("/items", aUnread);
                 oModel.setProperty("/unreadCount", aUnread.length);
                 oModel.setProperty("/isDummyData", false);
@@ -124,8 +145,9 @@ sap.ui.define([
             })
             .catch(function () {
                 notice();
-                oModel.setProperty("/items", DUMMY_ITEMS.slice());
-                oModel.setProperty("/unreadCount", DUMMY_ITEMS.length);
+                var aDummy = filterForRole(DUMMY_ITEMS);
+                oModel.setProperty("/items", aDummy.slice());
+                oModel.setProperty("/unreadCount", aDummy.length);
                 oModel.setProperty("/isDummyData", true);
                 updateGlobalBellBadges();
             });

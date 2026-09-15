@@ -98,6 +98,7 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
 
     function toFindingRow(h) {
         return {
+            alertId: h.id,
             finding: h.description,
             control: h.controlId,
             severity: h.severity,

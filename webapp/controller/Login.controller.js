@@ -194,6 +194,13 @@ sap.ui.define([
 
         },
 
+        // ponytail: no IdP wired up yet - stub so the button (and the
+        // "professional login page" look it's part of) is in place; wire to
+        // a real SAML/OIDC redirect once there's an IdP to point at.
+        onSsoLogin: function () {
+            MessageToast.show("SSO sign-on isn't configured yet — use Persona + Email for now.");
+        },
+
         onEmailLiveChange: function (oEvent) {
             var oInput = oEvent.getSource();
             oInput.setValueState(ValueState.None);

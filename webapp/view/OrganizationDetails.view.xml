@@ -254,52 +254,9 @@
                 <content>
                     <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
 
-                        <!-- COMPANY SUMMARY HEADER CARD -->
-                        <Panel expandable="false" class="sapUiSmallMarginBottom">
-                            <headerToolbar>
-                                <OverflowToolbar height="3rem">
-                                    <Title text="Company Executive Summary" level="H3" class="sapUiSmallMarginBegin"/>
-                                    <ToolbarSpacer/>
-                                    <Button text="Edit Summary" icon="sap-icon://edit" type="Transparent" press="onEditSummaryPress"/>
-                                </OverflowToolbar>
-                            </headerToolbar>
-                            <content>
-                                <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMargin">
-                                    <VBox>
-                                        <Label text="Company Name" design="Bold" class="textMuted"/>
-                                        <Text text="{orgDetailsModel>/currentOrg/companyName}" class="fontWeightBold fontLarge sapUiTinyMarginTop"/>
-                                    </VBox>
-                                    <VBox>
-                                        <Label text="Organization ID" design="Bold" class="textMuted"/>
-                                        <Text text="{orgDetailsModel>/currentOrg/orgId}" class="fontWeightBold fontLarge sapUiTinyMarginTop"/>
-                                    </VBox>
-                                    <VBox>
-                                        <Label text="Industry" design="Bold" class="textMuted"/>
-                                        <Text text="{orgDetailsModel>/currentOrg/industry}" class="sapUiTinyMarginTop"/>
-                                    </VBox>
-                                    <VBox>
-                                        <Label text="Region &amp; Country" design="Bold" class="textMuted"/>
-                                        <Text text="{orgDetailsModel>/currentOrg/region} ({orgDetailsModel>/currentOrg/country})" class="sapUiTinyMarginTop"/>
-                                    </VBox>
-                                    <VBox class="sapUiSmallMarginTop">
-                                        <Label text="Primary Contact" design="Bold" class="textMuted"/>
-                                        <Text text="{orgDetailsModel>/currentOrg/primaryContact}" class="sapUiTinyMarginTop"/>
-                                    </VBox>
-                                    <VBox class="sapUiSmallMarginTop">
-                                        <Label text="Email Address" design="Bold" class="textMuted"/>
-                                        <Text text="{orgDetailsModel>/currentOrg/email}" class="sapUiTinyMarginTop"/>
-                                    </VBox>
-                                    <VBox class="sapUiSmallMarginTop">
-                                        <Label text="Phone Number" design="Bold" class="textMuted"/>
-                                        <Text text="{orgDetailsModel>/currentOrg/phone}" class="sapUiTinyMarginTop"/>
-                                    </VBox>
-                                    <VBox class="sapUiSmallMarginTop">
-                                        <Label text="Status" design="Bold" class="textMuted"/>
-                                        <ObjectStatus text="{orgDetailsModel>/currentOrg/status}" state="{orgDetailsModel>/currentOrg/statusState}" class="sapUiTinyMarginTop"/>
-                                    </VBox>
-                                </layout:Grid>
-                            </content>
-                        </Panel>
+                        <!-- Company summary now lives only in the Company Details tab's
+                             Organization Profile panel - no need for a second, duplicate
+                             card showing the same fields above the tabs. -->
 
                         <!-- TABS FOR COMPANY DETAILS, CONFIGURATIONS, PARAMETERS, POLICIES -->
                         <IconTabBar id="orgDetailsTabBar" class="sapUiNoMargin">
@@ -309,37 +266,44 @@
                                 <IconTabFilter icon="sap-icon://building" text="Company Details" key="details">
                                     <VBox width="100%" class="sapUiSmallMarginTop">
                                         <layout:Grid defaultSpan="XL6 L6 M12 S12">
-                                            <!-- COMPANY OVERVIEW PANEL -->
-                                            <Panel headerText="Enterprise Profile &amp; Governance Structure" expandable="false">
+                                            <!-- ORGANIZATION PROFILE PANEL -->
+                                            <Panel expandable="false">
+                                                <headerToolbar>
+                                                    <OverflowToolbar height="3rem">
+                                                        <Title text="Organization Profile" level="H4" class="sapUiTinyMarginBegin"/>
+                                                        <ToolbarSpacer/>
+                                                        <Button text="Edit" icon="sap-icon://edit" type="Transparent" press="onEditSummaryPress"/>
+                                                    </OverflowToolbar>
+                                                </headerToolbar>
                                                 <VBox class="sapUiSmallMargin">
-                                                    <Label text="Legal Entity Name" design="Bold"/>
-                                                    <Text text="{orgDetailsModel>/currentOrg/companyName} Corporate Operations" class="sapUiSmallMarginBottom"/>
+                                                    <Label text="Company Name" design="Bold"/>
+                                                    <Text text="{orgDetailsModel>/currentOrg/companyName}" class="sapUiSmallMarginBottom"/>
 
-                                                    <Label text="Global HQ Address" design="Bold"/>
-                                                    <Text text="Bombay House, 24 Homi Mody Street, Fort, Mumbai 400001, India" class="sapUiSmallMarginBottom"/>
+                                                    <Label text="Organization ID" design="Bold"/>
+                                                    <Text text="{orgDetailsModel>/currentOrg/orgId}" class="sapUiSmallMarginBottom"/>
 
-                                                    <Label text="Enterprise Business Units" design="Bold"/>
-                                                    <Text text="Technology, Energy, Automotive, Steel, Retail &amp; Consumer Services" class="sapUiSmallMarginBottom"/>
+                                                    <Label text="Industry" design="Bold"/>
+                                                    <Text text="{orgDetailsModel>/currentOrg/industry}" class="sapUiSmallMarginBottom"/>
 
-                                                    <Label text="Multi-Tenant Isolation Key" design="Bold"/>
-                                                    <Text text="TENANT_KEY_09182_TATA_SEC" class="textMuted"/>
+                                                    <Label text="Region &amp; Country" design="Bold"/>
+                                                    <Text text="{orgDetailsModel>/currentOrg/region} ({orgDetailsModel>/currentOrg/country})"/>
                                                 </VBox>
                                             </Panel>
 
-                                            <!-- SYSTEM & ACCESS SUMMARY PANEL -->
-                                            <Panel headerText="SAP System Assignments &amp; User Seats" expandable="false">
+                                            <!-- CONTACT & STATUS PANEL -->
+                                            <Panel headerText="Contact &amp; Status" expandable="false">
                                                 <VBox class="sapUiSmallMargin">
-                                                    <Label text="Connected SAP Environments" design="Bold"/>
-                                                    <Text text="{orgDetailsModel>/currentOrg/sapSystems}" class="sapUiSmallMarginBottom"/>
+                                                    <Label text="Primary Contact" design="Bold"/>
+                                                    <Text text="{orgDetailsModel>/currentOrg/primaryContact}" class="sapUiSmallMarginBottom"/>
 
-                                                    <Label text="Provisioned User Seats" design="Bold"/>
-                                                    <Text text="450 Active Users (500 License Limit)" class="sapUiSmallMarginBottom"/>
+                                                    <Label text="Email Address" design="Bold"/>
+                                                    <Text text="{orgDetailsModel>/currentOrg/email}" class="sapUiSmallMarginBottom"/>
 
-                                                    <Label text="Primary Compliance Officer" design="Bold"/>
-                                                    <Text text="{orgDetailsModel>/currentOrg/primaryContact} ({orgDetailsModel>/currentOrg/email})" class="sapUiSmallMarginBottom"/>
+                                                    <Label text="Phone Number" design="Bold"/>
+                                                    <Text text="{orgDetailsModel>/currentOrg/phone}" class="sapUiSmallMarginBottom"/>
 
-                                                    <Label text="Last Audit Validation Date" design="Bold"/>
-                                                    <Text text="2024-05-15 (Passed 100% Integrity Check)"/>
+                                                    <Label text="Status" design="Bold"/>
+                                                    <ObjectStatus text="{orgDetailsModel>/currentOrg/status}" state="{orgDetailsModel>/currentOrg/statusState}"/>
                                                 </VBox>
                                             </Panel>
                                         </layout:Grid>
@@ -349,59 +313,42 @@
                                 <!-- TAB 2: CONFIGURATIONS -->
                                 <IconTabFilter icon="sap-icon://action-settings" text="Configurations" key="config">
                                     <VBox width="100%" class="sapUiSmallMarginTop">
-                                        <layout:Grid defaultSpan="XL6 L6 M12 S12">
+                                        <Panel expandable="false">
+                                            <headerToolbar>
+                                                <OverflowToolbar height="3.5rem">
+                                                    <Title text="SAP Systems under this Organization" level="H3" class="sapUiSmallMarginBegin"/>
+                                                    <ToolbarSpacer/>
+                                                    <ObjectStatus text="{= ${orgDetailsModel>/orgSystems}.length + ' System(s)' }" state="Information" class="sapUiSmallMarginEnd"/>
+                                                </OverflowToolbar>
+                                            </headerToolbar>
 
-                                            <!-- SAP LANDSCAPE PANEL -->
-                                            <Panel headerText="SAP Landscape &amp; System Environments" expandable="false">
-                                                <VBox class="sapUiSmallMargin">
-                                                    <Title text="Target SAP Systems" level="H4" class="sapUiTinyMarginBottom"/>
-                                                    <MessageStrip text="Configured environments scanned by XYRA Automated Rule Engine." type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
-
-                                                    <VBox class="sapUiSmallMarginBottom">
-                                                        <Label text="DEV Systems (Development)" design="Bold"/>
-                                                        <Text text="DEV-100 (Core S/4HANA Development) | DEV-200 (Customizing &amp; Workbench)"/>
-                                                    </VBox>
-
-                                                    <VBox class="sapUiSmallMarginBottom">
-                                                        <Label text="QAS Systems (Quality Assurance)" design="Bold"/>
-                                                        <Text text="QAS-300 (Integration &amp; Staging Test Environment)"/>
-                                                    </VBox>
-
-                                                    <VBox class="sapUiSmallMarginBottom">
-                                                        <Label text="PRD Systems (Production)" design="Bold"/>
-                                                        <Text text="PRD-500 (Production S/4HANA Enterprise Suite)"/>
-                                                    </VBox>
-
-                                                    <VBox>
-                                                        <Label text="Supported SAP Platforms" design="Bold"/>
-                                                        <Text text="SAP S/4HANA 2023 | SAP ECC 6.0 EHP8 | SAP BW/4HANA | SAP BTP"/>
-                                                    </VBox>
-                                                </VBox>
-                                            </Panel>
-
-                                            <!-- EXECUTION SETTINGS PANEL -->
-                                            <Panel headerText="Execution Settings &amp; Rule Automation" expandable="false">
-                                                <VBox class="sapUiSmallMargin">
-                                                    <Title text="Automation &amp; Monitoring Rules" level="H4" class="sapUiTinyMarginBottom"/>
-
-                                                    <VBox class="sapUiSmallMarginBottom">
-                                                        <Label text="Control Execution Frequency" design="Bold"/>
-                                                        <Text text="Daily Run (Every 24 Hours at 00:00 UTC) / Realtime Scanner Enabled"/>
-                                                    </VBox>
-
-                                                    <VBox class="sapUiSmallMarginBottom">
-                                                        <Label text="Automated Report Generation" design="Bold"/>
-                                                        <Text text="Weekly Automated PDF &amp; Excel Reports sent to grc@tata.com"/>
-                                                    </VBox>
-
-                                                    <VBox>
-                                                        <Label text="Real-Time Deviation Detection" design="Bold"/>
-                                                        <ObjectStatus text="Active (High &amp; Critical Threshold Alerts)" state="Success"/>
-                                                    </VBox>
-                                                </VBox>
-                                            </Panel>
-
-                                        </layout:Grid>
+                                            <Table id="orgSystemsTable" items="{orgDetailsModel>/orgSystems}" mode="None" width="100%" noDataText="No Systems are assigned to this Organization yet - add one from System Configuration.">
+                                                <columns>
+                                                    <Column width="10%"><Text text="System ID"/></Column>
+                                                    <Column width="8%"><Text text="Client"/></Column>
+                                                    <Column width="12%"><Text text="Type"/></Column>
+                                                    <Column width="20%"><Text text="Host Name"/></Column>
+                                                    <Column width="12%"><Text text="Platform"/></Column>
+                                                    <Column width="12%"><Text text="Region"/></Column>
+                                                    <Column width="12%"><Text text="Sector"/></Column>
+                                                    <Column width="14%"><Text text="Connection"/></Column>
+                                                </columns>
+                                                <items>
+                                                    <ColumnListItem>
+                                                        <cells>
+                                                            <Text text="{orgDetailsModel>sysId}" class="fontWeightBold"/>
+                                                            <Text text="{orgDetailsModel>client}"/>
+                                                            <Text text="{orgDetailsModel>sysType}"/>
+                                                            <Text text="{orgDetailsModel>hostName}"/>
+                                                            <Text text="{orgDetailsModel>platform}"/>
+                                                            <Text text="{orgDetailsModel>region}"/>
+                                                            <Text text="{orgDetailsModel>sector}"/>
+                                                            <ObjectStatus text="{orgDetailsModel>lastConnectionStatus}" state="{orgDetailsModel>connectionState}"/>
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>
+                                        </Panel>
                                     </VBox>
                                 </IconTabFilter>
 
@@ -467,6 +414,95 @@
                                                     type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
                                                 <Label text="Reviewer Escalation SLA Window" design="Bold"/>
                                                 <Text text="{orgDetailsModel>/slaSummary}"/>
+                                            </VBox>
+                                        </Panel>
+                                    </VBox>
+                                </IconTabFilter>
+
+                                <!-- TAB 5: TICKETING INTEGRATION -->
+                                <IconTabFilter icon="sap-icon://connected" text="Ticketing Integration" key="ticketing">
+                                    <VBox width="100%" class="sapUiSmallMarginTop">
+                                        <Panel expandable="false">
+                                            <headerToolbar>
+                                                <OverflowToolbar height="3.5rem">
+                                                    <Title text="Ticketing Integration" level="H3" class="sapUiSmallMarginBegin"/>
+                                                    <ToolbarSpacer/>
+                                                    <Button text="Save" icon="sap-icon://save" type="Emphasized" press="onSaveJiraSettings" class="sapUiSmallMarginEnd"/>
+                                                </OverflowToolbar>
+                                            </headerToolbar>
+
+                                            <VBox class="sapUiMediumMargin">
+                                                <Label text="Platform" design="Bold" class="sapUiTinyMarginBottom"/>
+                                                <SegmentedButton id="ticketingProviderSelector" selectedKey="jira" class="sapUiSmallMarginBottom">
+                                                    <items>
+                                                        <SegmentedButtonItem key="jira" text="Jira"/>
+                                                        <SegmentedButtonItem key="servicenow" text="ServiceNow (Coming Soon)" enabled="false"/>
+                                                        <SegmentedButtonItem key="salesforce" text="Salesforce (Coming Soon)" enabled="false"/>
+                                                    </items>
+                                                </SegmentedButton>
+
+                                                <MessageStrip
+                                                    text="When enabled, rejecting a deviation for a System under this Organization creates a real Jira issue instead of a local placeholder ticket number. The API token is never shown back once saved."
+                                                    type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
+
+                                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                                    <Switch id="jiraEnabledSwitch" state="{orgDetailsModel>/jiraSettings/enabled}"/>
+                                                    <Label text="Enable Jira ticket creation for this Organization" class="sapUiTinyMarginBegin"/>
+                                                </HBox>
+
+                                                <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiNoMargin">
+                                                    <VBox>
+                                                        <VBox class="xyraFormField">
+                                                            <Label text="Jira Site URL" required="true" class="xyraFormLabel"/>
+                                                            <Input id="jiraSiteUrlInput" placeholder="https://yourcompany.atlassian.net" value="{orgDetailsModel>/jiraSettings/siteUrl}"/>
+                                                        </VBox>
+                                                        <VBox class="xyraFormField">
+                                                            <Label text="Atlassian Account Email" required="true" class="xyraFormLabel"/>
+                                                            <Input id="jiraEmailInput" type="Email" placeholder="you@company.com" value="{orgDetailsModel>/jiraSettings/email}"/>
+                                                        </VBox>
+                                                        <VBox class="xyraFormField">
+                                                            <Label text="API Token" class="xyraFormLabel"/>
+                                                            <Input id="jiraApiTokenInput" type="Password" placeholder="{= ${orgDetailsModel>/jiraSettings/hasToken} ? 'Token on file - leave blank to keep it' : 'Paste your Atlassian API token' }"/>
+                                                        </VBox>
+                                                    </VBox>
+                                                    <VBox>
+                                                        <VBox class="xyraFormField">
+                                                            <Label text="Project (Space) Key" required="true" class="xyraFormLabel"/>
+                                                            <Input id="jiraProjectKeyInput" placeholder="e.g. XS" value="{orgDetailsModel>/jiraSettings/projectKey}"/>
+                                                        </VBox>
+                                                        <VBox class="xyraFormField">
+                                                            <Label text="Issue Type" class="xyraFormLabel"/>
+                                                            <Input id="jiraIssueTypeInput" placeholder="Task" value="{orgDetailsModel>/jiraSettings/issueType}"/>
+                                                        </VBox>
+                                                    </VBox>
+                                                </layout:Grid>
+
+                                                <Title text="Status Mapping" level="H4" class="sapUiMediumMarginTop sapUiTinyMarginBottom"/>
+                                                <MessageStrip
+                                                    text="Every Jira board names its own statuses. Fetch this board's real statuses, then map which one means each stage below - unmapped stages fall back to Jira's own To Do / In Progress / Done categories."
+                                                    type="Information" showIcon="true" class="sapUiSmallMarginBottom"/>
+                                                <Button text="Fetch Live Statuses from Jira" icon="sap-icon://refresh" press="onFetchJiraStatuses" class="sapUiSmallMarginBottom"/>
+
+                                                <layout:Grid defaultSpan="XL4 L4 M12 S12" class="sapUiNoMargin">
+                                                    <VBox class="xyraFormField">
+                                                        <Label text="Ticket Created" class="xyraFormLabel"/>
+                                                        <Select id="jiraStatusCreatedSelect" selectedKey="{orgDetailsModel>/jiraSettings/statusCreated}" items="{orgDetailsModel>/jiraStatusOptions}" width="100%">
+                                                            <core:Item key="{orgDetailsModel>key}" text="{orgDetailsModel>text}"/>
+                                                        </Select>
+                                                    </VBox>
+                                                    <VBox class="xyraFormField">
+                                                        <Label text="In Progress" class="xyraFormLabel"/>
+                                                        <Select id="jiraStatusInProgressSelect" selectedKey="{orgDetailsModel>/jiraSettings/statusInProgress}" items="{orgDetailsModel>/jiraStatusOptions}" width="100%">
+                                                            <core:Item key="{orgDetailsModel>key}" text="{orgDetailsModel>text}"/>
+                                                        </Select>
+                                                    </VBox>
+                                                    <VBox class="xyraFormField">
+                                                        <Label text="Resolved" class="xyraFormLabel"/>
+                                                        <Select id="jiraStatusResolvedSelect" selectedKey="{orgDetailsModel>/jiraSettings/statusResolved}" items="{orgDetailsModel>/jiraStatusOptions}" width="100%">
+                                                            <core:Item key="{orgDetailsModel>key}" text="{orgDetailsModel>text}"/>
+                                                        </Select>
+                                                    </VBox>
+                                                </layout:Grid>
                                             </VBox>
                                         </Panel>
                                     </VBox>

@@ -182,6 +182,16 @@ sap.ui.define([
             return oModel.getProperty("/reports/0");
         },
 
+        // Opens the real Jira issue when this ticket was created there
+        // (ticketUrl set by review_engine.createRemediationTicket) - the
+        // detail panel binds an absolute path (no row context), the history
+        // table row does, so try the row context first.
+        onTicketPress: function (oEvent) {
+            var oCtx = oEvent.getSource().getBindingContext("escManagerModel");
+            var sUrl = oCtx ? oCtx.getProperty("ticketUrl") : this.getView().getModel("escManagerModel").getProperty("/selectedHistoryItem/ticketUrl");
+            if (sUrl) { window.open(sUrl, "_blank"); }
+        },
+
         onSelectionChange: function (oEvent) {
             var aItems = oEvent.getSource().getSelectedItems();
             if (aItems.length > 0) {

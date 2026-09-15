@@ -74,7 +74,7 @@
                                     class="sapUiSmallMarginBottom"/>
 
                                 <Title text="System Identification" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
-                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraSystemFormRow">
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="System ID (SID)" required="true" class="xyraLoginLabel"/>
                                         <Input id="newSysId" placeholder="e.g. MY8, MQ8, MP8"/>
@@ -108,7 +108,7 @@
                                 </HBox>
 
                                 <Title text="Environment &amp; Network" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
-                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraSystemFormRow">
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="Sector" class="xyraLoginLabel"/>
                                         <Input id="newSector" value="MedTech" placeholder="e.g. MedTech"/>
@@ -148,7 +148,7 @@
                                 </HBox>
 
                                 <Title text="Connection &amp; Credentials" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
-                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraSystemFormRow">
                                     <VBox width="100%" class="xyraFieldGroup">
                                         <Label text="Endpoint (base URL)" class="xyraLoginLabel"/>
                                         <Input id="newEndpoint" placeholder="e.g. http://localhost:8000"/>

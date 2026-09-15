@@ -65,9 +65,9 @@
                     <Dialog
                         id="createUserDialog"
                         title="Create User / Provision Access"
-                        contentWidth="450px">
+                        contentWidth="600px">
                         <content>
-                            <VBox class="sapUiMediumMargin">
+                            <VBox class="sapUiMediumMargin xyraCreateUserForm">
                                 <VBox width="100%" class="xyraFieldGroup">
                                     <Label text="User Name" required="true" class="xyraLoginLabel"/>
                                     <Input id="createNameInput" placeholder="e.g. Jane Doe"/>
@@ -81,12 +81,8 @@
 
                                 <VBox width="100%" class="xyraFieldGroup">
                                     <Label text="Organization / Company" required="true" class="xyraLoginLabel"/>
-                                    <Select id="createOrgSelect" selectedKey="Tata Sons &amp; Group" width="100%">
-                                        <core:Item key="Tata Sons &amp; Group" text="Tata Sons &amp; Group (ORG-TATA-01)"/>
-                                        <core:Item key="Accenture Global Services" text="Accenture Global Services (ORG-ACCN-02)"/>
-                                        <core:Item key="SAP Enterprise Systems" text="SAP Enterprise Systems (ORG-SAP-03)"/>
-                                        <core:Item key="Infosys Technologies" text="Infosys Technologies (ORG-INFY-04)"/>
-                                        <core:Item key="Reliance Industries" text="Reliance Industries (ORG-RELIANCE-05)"/>
+                                    <Select id="createOrgSelect" selectedKey="" width="100%" items="{orgModel>/organizations}">
+                                        <core:Item key="{orgModel>id}" text="{orgModel>orgCode} - {orgModel>name}"/>
                                     </Select>
                                 </VBox>
 
@@ -190,7 +186,7 @@
                                         <cells>
                                             <Text text="{userModel>name}"/>
                                             <Text text="{userModel>email}"/>
-                                            <ObjectStatus text="{= ${userModel>organization} || 'Tata Sons &amp; Group' }" state="Indication17"/>
+                                            <ObjectStatus text="{userModel>organization}" state="Indication17"/>
                                             <ObjectStatus text="{userModel>persona}" state="Information"/>
                                             <ObjectStatus text="{userModel>status}" state="Success"/>
                                             <Text text="{userModel>createdDate}"/>

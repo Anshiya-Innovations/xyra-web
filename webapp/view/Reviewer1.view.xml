@@ -258,7 +258,8 @@
                             <VBox class="sapUiMediumMargin">
                                 <Title text="{reviewer1Model>/selectedHistoryItem/reportName}" level="H3" class="sapUiTinyMarginBottom"/>
                                 <HBox alignItems="Center" class="sapUiSmallMarginBottom">
-                                    <ObjectStatus text="{reviewer1Model>/selectedHistoryItem/ticketId}" state="Information" class="sapUiTinyMarginEnd"/>
+                                    <ObjectStatus text="{reviewer1Model>/selectedHistoryItem/ticketId}" state="Information" class="sapUiTinyMarginEnd" active="{= !!${reviewer1Model>/selectedHistoryItem/ticketUrl} }" press="onTicketPress"/>
+                                    <ObjectStatus text="{reviewer1Model>/selectedHistoryItem/jiraStatusText}" state="{reviewer1Model>/selectedHistoryItem/jiraStatusState}" visible="{= !!${reviewer1Model>/selectedHistoryItem/jiraStatusText} }" class="sapUiTinyMarginEnd"/>
                                     <ObjectStatus text="Report: {reviewer1Model>/selectedHistoryItem/reportId}" state="None" class="sapUiTinyMarginEnd"/>
                                     <ObjectStatus text="Control: {reviewer1Model>/selectedHistoryItem/controlId}" state="None"/>
                                 </HBox>
@@ -493,6 +494,7 @@
 
                             <!-- SLIDE BREADCRUMB & BACK HEADER -->
                             <OverflowToolbar class="sapUiSmallMarginBottom">
+                                <Button icon="sap-icon://nav-back" tooltip="Back to Review Queue" press="onSelectTabQueue" class="sapUiTinyMarginEnd"/>
                                 <Title text="Detailed Review Analysis – {reviewer1Model>/selectedReport/reportId} ({reviewer1Model>/selectedReport/reportName})" level="H4"/>
                                 <ToolbarSpacer/>
                                 <ObjectStatus text="{reviewer1Model>/selectedReport/system}" state="Information" class="sapUiTinyMarginEnd"/>
@@ -758,7 +760,10 @@
                                     <items>
                                         <ColumnListItem highlight="{= ${reviewer1Model>decision} === 'Approved' ? 'Success' : 'Error' }">
                                             <cells>
-                                                <ObjectStatus text="{reviewer1Model>ticketId}" state="Information" class="fontWeightBold"/>
+                                                <HBox alignItems="Center">
+                                                    <ObjectStatus text="{reviewer1Model>ticketId}" state="Information" class="fontWeightBold sapUiTinyMarginEnd" active="{= !!${reviewer1Model>ticketUrl} }" press="onTicketPress"/>
+                                                    <ObjectStatus text="{reviewer1Model>jiraStatusText}" state="{reviewer1Model>jiraStatusState}" visible="{= !!${reviewer1Model>jiraStatusText} }"/>
+                                                </HBox>
                                                 <Text text="{reviewer1Model>reportId}"/>
                                                 <Text text="{reviewer1Model>controlId}"/>
                                                 <ObjectIdentifier title="{reviewer1Model>reportName}"/>

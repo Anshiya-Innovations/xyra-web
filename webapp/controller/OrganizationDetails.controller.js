@@ -163,7 +163,13 @@ sap.ui.define([
                 currentOrg: oOrgData,
                 parameters: aParameters,
                 allParameters: JSON.parse(JSON.stringify(aParameters)),
-                slaSummary: "Loading..."
+                slaSummary: "Loading...",
+                jiraSettings: {
+                    enabled: false, siteUrl: "", email: "", projectKey: "", issueType: "Task", hasToken: false,
+                    statusCreated: "", statusInProgress: "", statusResolved: ""
+                },
+                jiraStatusOptions: [{ key: "", text: "-- Use Jira's default category --" }],
+                orgSystems: []
             });
 
             this.getView().setModel(oDetailsModel, "orgDetailsModel");
@@ -211,12 +217,176 @@ sap.ui.define([
                             sapSystems: o.systemCount + (o.systemCount === 1 ? " System" : " Systems"),
                             status: o.status, statusState: orgStatusStateFor(o.status)
                         });
+                        return Promise.all([
+                            that._loadJiraSettings(o.id, oDetailsModel),
+                            that._loadOrgSystems(o.id, oDetailsModel)
+                        ]);
                     });
             }).catch(function () {
                 MessageToast.show("Could not reach xyra-core. Is it running?", { duration: 4000 });
             }).then(function () {
                 GlobalLoading.hide();
             });
+        },
+
+        // Configurations tab - every real System whose organizationId
+        // matches this Organization (Tenant -> many Organizations -> each
+        // org's own Systems). listSystems already returns organizationId
+        // per row (system-config-service.js) - no new backend endpoint
+        // needed, just filter client-side, same pattern as ControlEditor's
+        // own Organization -> Systems cascade.
+        _loadOrgSystems: function (sOrgId, oDetailsModel) {
+            var oSession = Session.get();
+            if (!oSession) { return Promise.resolve(); }
+
+            return fetch(Config.AUTH_BASE_URL + "/api/system-config/listSystems", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: oSession.subdomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { return; }
+                    var aRows = (oData.systems || [])
+                        .filter(function (s) { return s.organizationId === sOrgId; })
+                        .map(function (s) {
+                            return {
+                                sysId: s.sysId, client: s.client, sysType: s.sysType, hostName: s.hostName,
+                                platform: s.platform || "", region: s.region || "", sector: s.sector || "",
+                                lastConnectionStatus: s.lastConnectionStatus || "UNKNOWN",
+                                connectionState: s.lastConnectionStatus === "ONLINE" ? "Success" : s.lastConnectionStatus === "OFFLINE" ? "Error" : "None"
+                            };
+                        });
+                    oDetailsModel.setProperty("/orgSystems", aRows);
+                });
+        },
+
+        // Jira Integration tab - one row of settings per Organization (see
+        // db/tenant/jira-settings.cds). apiToken is write-only: the backend
+        // never returns it, just whether one is on file (hasToken), so a
+        // blank API Token field on save means "keep the existing token".
+        _loadJiraSettings: function (sOrgId, oDetailsModel) {
+            var oSession = Session.get();
+            if (!oSession) { return Promise.resolve(); }
+
+            return fetch(Config.AUTH_BASE_URL + "/api/organization/getJiraSettings", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: oSession.subdomain, organizationId: sOrgId })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { return; }
+                    oDetailsModel.setProperty("/jiraSettings", oData.settings);
+                    // Seed the 3 mapping Selects with whatever's already saved, so
+                    // they show the real mapping on load without forcing a live
+                    // Jira fetch just to see what's already configured.
+                    this._mergeJiraStatusOptions(oDetailsModel, [
+                        oData.settings.statusCreated, oData.settings.statusInProgress, oData.settings.statusResolved
+                    ].filter(Boolean));
+                }.bind(this));
+        },
+
+        // Keeps the blank "use default category" option plus every distinct
+        // status name seen so far (saved mapping + whatever the last live
+        // fetch returned) - so switching back to an already-mapped value
+        // never goes blank just because it isn't in the latest fetch result.
+        _mergeJiraStatusOptions: function (oDetailsModel, aNames) {
+            var aExisting = oDetailsModel.getProperty("/jiraStatusOptions") || [];
+            var oSeen = {};
+            var aMerged = [{ key: "", text: "-- Use Jira's default category --" }];
+            aExisting.concat(aNames.map(function (n) { return { key: n, text: n }; })).forEach(function (o) {
+                if (o.key && !oSeen[o.key]) { oSeen[o.key] = true; aMerged.push(o); }
+            });
+            oDetailsModel.setProperty("/jiraStatusOptions", aMerged);
+        },
+
+        // Reads whatever's currently in the form (site/email/project - token
+        // falls back to the one on file if left blank) and lists that
+        // project's real statuses from Jira, live - so the mapping dropdowns
+        // reflect this specific board, not a guess.
+        onFetchJiraStatuses: function () {
+            var that = this;
+            var oSession = Session.get();
+            if (!oSession || !this._orgDbId) { MessageBox.error("No active session or organization."); return; }
+
+            var oPayload = {
+                subdomain: oSession.subdomain,
+                organizationId: this._orgDbId,
+                siteUrl: (this.byId("jiraSiteUrlInput").getValue() || "").trim(),
+                email: (this.byId("jiraEmailInput").getValue() || "").trim(),
+                apiToken: this.byId("jiraApiTokenInput").getValue() || "",
+                projectKey: (this.byId("jiraProjectKeyInput").getValue() || "").trim()
+            };
+            if (!oPayload.siteUrl || !oPayload.email || !oPayload.projectKey) {
+                MessageBox.error("Fill in Site URL, Email, and Project Key first.");
+                return;
+            }
+
+            GlobalLoading.show("Fetching Jira Statuses", 0, true, true);
+            fetch(Config.AUTH_BASE_URL + "/api/organization/getJiraStatusOptions", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(oPayload)
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    GlobalLoading.hide();
+                    if (!oData.success) { MessageBox.error(oData.message || "Could not fetch statuses from Jira."); return; }
+                    that._mergeJiraStatusOptions(that.getView().getModel("orgDetailsModel"), oData.statuses || []);
+                    MessageToast.show((oData.statuses || []).length + " status(es) loaded from Jira.");
+                })
+                .catch(function () {
+                    GlobalLoading.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
+        },
+
+        onSaveJiraSettings: function () {
+            var that = this;
+            var oSession = Session.get();
+            if (!oSession || !this._orgDbId) { MessageBox.error("No active session or organization to update."); return; }
+
+            var sSiteUrl = (this.byId("jiraSiteUrlInput").getValue() || "").trim();
+            var sEmail = (this.byId("jiraEmailInput").getValue() || "").trim();
+            var sProjectKey = (this.byId("jiraProjectKeyInput").getValue() || "").trim();
+            var bEnabled = this.byId("jiraEnabledSwitch").getState();
+
+            if (bEnabled && (!sSiteUrl || !sEmail || !sProjectKey)) {
+                MessageBox.error("Site URL, Email, and Project Key are required to enable Jira ticket creation.");
+                return;
+            }
+
+            var oPayload = {
+                subdomain: oSession.subdomain,
+                organizationId: this._orgDbId,
+                enabled: bEnabled,
+                siteUrl: sSiteUrl,
+                email: sEmail,
+                apiToken: this.byId("jiraApiTokenInput").getValue() || "",
+                projectKey: sProjectKey,
+                issueType: (this.byId("jiraIssueTypeInput").getValue() || "Task").trim(),
+                statusCreated: this.byId("jiraStatusCreatedSelect").getSelectedKey(),
+                statusInProgress: this.byId("jiraStatusInProgressSelect").getSelectedKey(),
+                statusResolved: this.byId("jiraStatusResolvedSelect").getSelectedKey(),
+                performedBy: oSession.email,
+                performedByRole: oSession.role
+            };
+
+            GlobalLoading.show("Saving Jira Settings", 0, true, true);
+            fetch(Config.AUTH_BASE_URL + "/api/organization/updateJiraSettings", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(oPayload)
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (oData) {
+                    GlobalLoading.hide();
+                    if (!oData.success) { MessageBox.error(oData.message || "Could not update Jira settings."); return; }
+                    that.byId("jiraApiTokenInput").setValue("");
+                    that._loadJiraSettings(that._orgDbId, that.getView().getModel("orgDetailsModel"));
+                    MessageToast.show("Jira settings updated.");
+                })
+                .catch(function () {
+                    GlobalLoading.hide();
+                    MessageBox.error("Could not reach the server. Is xyra-core running?");
+                });
         },
 
         onNavBack: function () {

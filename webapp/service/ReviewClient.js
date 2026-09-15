@@ -127,6 +127,20 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "sap/m/MessageTo
 
         return {
             ticketId: r.ticketNumber || "",
+            // Real Jira issue when review_engine's createRemediationTicket
+            // found an enabled JiraSettings row for the deviation's
+            // Organization; null for the local STUB placeholder number.
+            ticketUrl: r.ticketUrl || "",
+            // Kept fresh by xyra-core's jiraSync poller, not by this app -
+            // empty/false for local STUB tickets (nothing to sync). Named
+            // jiraStatus*, not ticketStatus*, to avoid colliding with this
+            // object's own pre-existing ticketStatus/ticketStatusState pair
+            // below (the review's workflow label, e.g. "Remediation
+            // Required" - a completely different concept from the Jira
+            // issue's own real status).
+            ticketResolved: !!r.ticketResolved,
+            jiraStatusText: r.ticketResolved ? "Resolved" : (r.ticketStatus || (r.ticketUrl ? "Open" : "")),
+            jiraStatusState: r.ticketResolved ? "Success" : (r.ticketUrl ? "Warning" : "None"),
             reportId: r.id,
             controlId: r.controlId,
             reportName: r.controlDescription,

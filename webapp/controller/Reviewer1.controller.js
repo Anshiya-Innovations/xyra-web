@@ -195,16 +195,19 @@ sap.ui.define([
             if (oSideNav) { oSideNav.setSelectedKey("History"); }
         },
 
+        // ponytail: used to read from the queue table's checkbox selection
+        // (mode="MultiSelect"), a separate mechanism from the row press that
+        // opens the Detailed Review Analysis slide - onReportRowPress never
+        // ticks that checkbox, so after clicking into a report and typing
+        // RCA text (bound to /selectedReport), every decision handler here
+        // was silently grabbing /reports/0 instead - a different report,
+        // whose own (usually blank) rcaText triggered the "RCA is mandatory"
+        // error even though the one on screen had it filled in.
+        // /selectedReport IS what the whole detail slide is bound to, so
+        // read that directly.
         _getSelectedReport: function () {
-            var oTable = this.byId("reviewer1Table");
-            var aSelected = oTable ? oTable.getSelectedItems() : [];
             var oModel = this.getView().getModel("reviewer1Model");
-
-            if (aSelected.length > 0) {
-                var oContext = aSelected[0].getBindingContext("reviewer1Model");
-                return oContext ? oContext.getObject() : oModel.getProperty("/reports/0");
-            }
-            return oModel.getProperty("/reports/0");
+            return oModel.getProperty("/selectedReport") || oModel.getProperty("/reports/0");
         },
 
         onReportRowPress: function (oEvent) {
@@ -282,11 +285,13 @@ sap.ui.define([
 
             var oDialog = this.byId("itemLogsDialog");
             if (oDialog) {
+                oDialog.setBusy(true);
                 oDialog.open();
             }
 
             this._getRunLogs().then(function (aLogs) {
                 that.getView().getModel("logsModel").setProperty("/logEntries", aLogs);
+                if (oDialog) { oDialog.setBusy(false); }
             });
         },
 
@@ -313,6 +318,16 @@ sap.ui.define([
 
         onDownloadLogs: function () {
             MessageToast.show("Downloading automation execution log trace...");
+        },
+
+        // Opens the real Jira issue when this ticket was created there
+        // (ticketUrl set by review_engine.createRemediationTicket) - the
+        // detail panel binds an absolute path (no row context), the history
+        // table row does, so try the row context first.
+        onTicketPress: function (oEvent) {
+            var oCtx = oEvent.getSource().getBindingContext("reviewer1Model");
+            var sUrl = oCtx ? oCtx.getProperty("ticketUrl") : this.getView().getModel("reviewer1Model").getProperty("/selectedHistoryItem/ticketUrl");
+            if (sUrl) { window.open(sUrl, "_blank"); }
         },
 
         onSelectionChange: function (oEvent) {

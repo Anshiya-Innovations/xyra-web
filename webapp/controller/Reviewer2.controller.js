@@ -191,16 +191,15 @@ sap.ui.define([
             if (oSideNav) { oSideNav.setSelectedKey("History"); }
         },
 
+        // ponytail: same fix as Reviewer1.controller.js's _getSelectedReport
+        // - this used to read the queue table's checkbox selection, a
+        // separate mechanism from the row press that opens the detail
+        // slide, so it grabbed the wrong report (usually /reports/0) once a
+        // reviewer clicked into a report and filled in RCA text there.
+        // /selectedReport is what the detail slide is actually bound to.
         _getSelectedReport: function () {
-            var oTable = this.byId("reviewer2Table");
-            var aSelected = oTable ? oTable.getSelectedItems() : [];
             var oModel = this.getView().getModel("reviewer2Model");
-
-            if (aSelected.length > 0) {
-                var oContext = aSelected[0].getBindingContext("reviewer2Model");
-                return oContext ? oContext.getObject() : oModel.getProperty("/reports/0");
-            }
-            return oModel.getProperty("/reports/0");
+            return oModel.getProperty("/selectedReport") || oModel.getProperty("/reports/0");
         },
 
         onReportRowPress: function (oEvent) {
@@ -278,11 +277,13 @@ sap.ui.define([
 
             var oDialog = this.byId("itemLogsDialog");
             if (oDialog) {
+                oDialog.setBusy(true);
                 oDialog.open();
             }
 
             this._getRunLogs().then(function (aLogs) {
                 that.getView().getModel("logsModel").setProperty("/logEntries", aLogs);
+                if (oDialog) { oDialog.setBusy(false); }
             });
         },
 
@@ -309,6 +310,16 @@ sap.ui.define([
 
         onDownloadLogs: function () {
             MessageToast.show("Downloading automation execution log trace...");
+        },
+
+        // Opens the real Jira issue when this ticket was created there
+        // (ticketUrl set by review_engine.createRemediationTicket) - the
+        // detail panel binds an absolute path (no row context), the history
+        // table row does, so try the row context first.
+        onTicketPress: function (oEvent) {
+            var oCtx = oEvent.getSource().getBindingContext("reviewer2Model");
+            var sUrl = oCtx ? oCtx.getProperty("ticketUrl") : this.getView().getModel("reviewer2Model").getProperty("/selectedHistoryItem/ticketUrl");
+            if (sUrl) { window.open(sUrl, "_blank"); }
         },
 
         onSelectionChange: function (oEvent) {

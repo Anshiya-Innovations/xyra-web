@@ -24,6 +24,7 @@
                     alignItems="Center"
                     direction="Column"
                     renderType="Div"
+                    visible="false"
                     class="xyraFlowPane">
 
                     <core:HTML content='&lt;div class="xyraFlowScene"&gt;
@@ -198,6 +199,15 @@
                             width="100%"
                             press="onLogin"
                             class="xyraLoginBtn"/>
+
+                        <core:HTML content="&lt;div class=&quot;xyraLoginOrDivider&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;em&gt;OR&lt;/em&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;"/>
+
+                        <Button id="ssoLoginBtn"
+                            text="Sign in with SSO"
+                            icon="sap-icon://key"
+                            width="100%"
+                            press="onSsoLogin"
+                            class="xyraSsoBtn"/>
 
                         <VBox id="_IDGenVBox1"
                             width="100%"

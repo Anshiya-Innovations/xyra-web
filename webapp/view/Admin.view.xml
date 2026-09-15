@@ -273,7 +273,7 @@
                                     <Column width="18%"><Text text="Detected"/></Column>
                                 </columns>
                                 <items>
-                                    <ColumnListItem>
+                                    <ColumnListItem type="Navigation" press="onFindingPress">
                                         <cells>
                                             <Text text="{adminModel>finding}" class="boldText"/>
                                             <Text text="{adminModel>control}" class="boldText"/>

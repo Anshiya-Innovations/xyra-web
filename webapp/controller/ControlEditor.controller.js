@@ -219,9 +219,19 @@ sap.ui.define([
             });
         },
 
+        // ponytail: sap.m.Select defaults to forceSelection=true - setting
+        // selectedKey to "" once items exist gets silently corrected back to
+        // the first item, but that correction doesn't fire "change" (only a
+        // real user pick does), so onOrganizationChange never ran and the
+        // System Type selects stayed empty even though Organization visibly
+        // showed one selected. Pick the same default ourselves and filter
+        // against it directly, instead of trusting a blank selectedKey to
+        // stick.
         _resetForm: function () {
-            if (this.byId("organizationSelect")) { this.byId("organizationSelect").setSelectedKey(""); }
-            this._filterSystemsByOrg("");
+            var aOrgs = this.getView().getModel("organizationsModel").getProperty("/organizations") || [];
+            var sDefaultOrgId = aOrgs.length ? aOrgs[0].id : "";
+            if (this.byId("organizationSelect")) { this.byId("organizationSelect").setSelectedKey(sDefaultOrgId); }
+            this._filterSystemsByOrg(sDefaultOrgId);
             if (this.byId("controlIdInput")) { this.byId("controlIdInput").setValue(""); }
             if (this.byId("controlDescInput")) { this.byId("controlDescInput").setValue(""); }
             if (this.byId("sysType1Select")) { this.byId("sysType1Select").setSelectedKey(""); }

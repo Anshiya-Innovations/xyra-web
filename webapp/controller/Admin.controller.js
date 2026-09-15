@@ -77,6 +77,16 @@ sap.ui.define([
             });
         },
 
+        // Same target/params as DeviationReport.controller.js's own
+        // onControlLinkPress - one row here is the same AlertHeaderEntry.
+        onFindingPress: function (oEvent) {
+            var oItem = oEvent.getSource().getBindingContext("adminModel").getObject();
+            this.getOwnerComponent().getRouter().navTo("AlertItem", {
+                alertId: oItem.alertId || "ALT-1001",
+                controlId: oItem.control || "NLG08"
+            });
+        },
+
         navToRoute: function (sRouteName) {
             var oRouter = UIComponent.getRouterFor(this) || (this.getOwnerComponent() && this.getOwnerComponent().getRouter());
             if (oRouter) {

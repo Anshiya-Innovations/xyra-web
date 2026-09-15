@@ -121,7 +121,8 @@
                             <VBox class="sapUiMediumMargin">
                                 <Title text="{escManagerModel>/selectedHistoryItem/reportName}" level="H3" class="sapUiTinyMarginBottom"/>
                                 <HBox alignItems="Center" class="sapUiSmallMarginBottom">
-                                    <ObjectStatus text="Ticket ID: {escManagerModel>/selectedHistoryItem/ticketId}" state="Information" class="sapUiTinyMarginEnd fontWeightBold"/>
+                                    <ObjectStatus text="Ticket ID: {escManagerModel>/selectedHistoryItem/ticketId}" state="Information" class="sapUiTinyMarginEnd fontWeightBold" active="{= !!${escManagerModel>/selectedHistoryItem/ticketUrl} }" press="onTicketPress"/>
+                                    <ObjectStatus text="{escManagerModel>/selectedHistoryItem/jiraStatusText}" state="{escManagerModel>/selectedHistoryItem/jiraStatusState}" visible="{= !!${escManagerModel>/selectedHistoryItem/jiraStatusText} }" class="sapUiTinyMarginEnd"/>
                                     <ObjectStatus text="Report: {escManagerModel>/selectedHistoryItem/reportId}" state="None" class="sapUiTinyMarginEnd"/>
                                     <ObjectStatus text="Control: {escManagerModel>/selectedHistoryItem/controlId}" state="None"/>
                                 </HBox>
@@ -450,7 +451,10 @@
                                     <items>
                                         <ColumnListItem highlight="{= ${escManagerModel>decision} === 'Approved' ? 'Success' : 'Error' }">
                                             <cells>
-                                                <ObjectStatus text="{escManagerModel>ticketId}" state="Information" class="fontWeightBold"/>
+                                                <HBox alignItems="Center">
+                                                    <ObjectStatus text="{escManagerModel>ticketId}" state="Information" class="fontWeightBold sapUiTinyMarginEnd" active="{= !!${escManagerModel>ticketUrl} }" press="onTicketPress"/>
+                                                    <ObjectStatus text="{escManagerModel>jiraStatusText}" state="{escManagerModel>jiraStatusState}" visible="{= !!${escManagerModel>jiraStatusText} }"/>
+                                                </HBox>
                                                 <Text text="{escManagerModel>reportId}"/>
                                                 <Text text="{escManagerModel>controlId}"/>
                                                 <ObjectIdentifier title="{escManagerModel>reportName}"/>

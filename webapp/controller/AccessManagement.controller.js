@@ -34,6 +34,7 @@ sap.ui.define([
                     userId: oUser.id,
                     name: oUser.name,
                     email: oUser.email,
+                    organization: oUser.organization || "",
                     persona: ROLE_TO_PERSONA[oUser.role] || oUser.role,
                     role: oUser.role,
                     status: oUser.status || "ACTIVE",
@@ -41,7 +42,9 @@ sap.ui.define([
                 };
             });
             this.getView().setModel(new JSONModel({ users: aInitialUsers, busy: false }), "userModel");
+            this.getView().setModel(new JSONModel({ organizations: [] }), "orgModel");
             this._loadUsers();
+            this._loadOrganizations();
         },
 
         onAfterRendering: function () {
@@ -164,6 +167,7 @@ sap.ui.define([
                                 userId: oUser.id,
                                 name: oUser.name,
                                 email: oUser.email,
+                                organization: oUser.organization || "",
                                 persona: ROLE_TO_PERSONA[oUser.role] || oUser.role,
                                 role: oUser.role,
                                 status: oUser.status || "ACTIVE",
@@ -201,19 +205,43 @@ sap.ui.define([
             this.getOwnerComponent().getRouter().navTo("Admin");
         },
 
+        _loadOrganizations: function () {
+            var oOrgModel = this.getView().getModel("orgModel");
+            if (!oOrgModel) { return Promise.resolve(); }
+
+            return fetch(Config.AUTH_BASE_URL + "/api/organization/listOrganizations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subdomain: Config.TEST_SUBDOMAIN })
+            })
+                .then(function (oResponse) { return oResponse.json(); })
+                .then(function (oData) {
+                    if (!oData.success) { throw new Error(oData.message || "Could not load organizations."); }
+                    oOrgModel.setProperty("/organizations", oData.organizations || []);
+                })
+                .catch(function () {
+                    oOrgModel.setProperty("/organizations", []);
+                    MessageToast.show("Could not load organizations.", { duration: 4000 });
+                });
+        },
+
         onOpenCreateUserDialog: function () {
             var oNameInput = this.byId("createNameInput");
             var oEmailInput = this.byId("createEmailInput");
             var oPasswordInput = this.byId("createPasswordInput");
+            var oOrgSelect = this.byId("createOrgSelect");
             var oPersonaSelect = this.byId("createPersonaSelect");
             if (oNameInput) { oNameInput.setValue(""); }
             if (oEmailInput) { oEmailInput.setValue(""); }
             if (oPasswordInput) { oPasswordInput.setValue(""); }
+            if (oOrgSelect) { oOrgSelect.setSelectedKey(""); }
             if (oPersonaSelect) { oPersonaSelect.setSelectedKey(""); }
 
             var oDialog = this.byId("createUserDialog");
             if (oDialog) {
-                oDialog.open();
+                this._loadOrganizations().then(function () {
+                    oDialog.open();
+                });
             }
         },
 
@@ -227,15 +255,18 @@ sap.ui.define([
         onSubmitCreateUser: function () {
             var oNameInput = this.byId("createNameInput");
             var oEmailInput = this.byId("createEmailInput");
+            var oOrgSelect = this.byId("createOrgSelect");
             var oPersonaSelect = this.byId("createPersonaSelect");
 
             var sName = oNameInput ? oNameInput.getValue().trim() : "";
             var sEmail = oEmailInput ? oEmailInput.getValue().trim() : "";
             var sPassword = "TemporaryPassword123!";
+            var oSelectedOrg = oOrgSelect ? oOrgSelect.getSelectedItem() : null;
+            var sOrganization = oSelectedOrg ? oSelectedOrg.getText() : "";
             var sPersona = oPersonaSelect ? oPersonaSelect.getSelectedKey() : "";
 
-            if (!sName || !sEmail || !sPersona) {
-                MessageBox.error("Please fill in Name, Email, and select a Persona.");
+            if (!sName || !sEmail || !sOrganization || !sPersona) {
+                MessageBox.error("Please fill in Name, Email, Organization, and select a Persona.");
                 return;
             }
 
@@ -255,7 +286,8 @@ sap.ui.define([
                     name: sName,
                     email: sEmail,
                     password: sPassword,
-                    roleCode: sRoleCode
+                    roleCode: sRoleCode,
+                    organization: sOrganization
                 })
             })
                 .then(function (oResponse) { return oResponse.json(); })
