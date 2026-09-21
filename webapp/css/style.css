@@ -6399,7 +6399,6 @@ span.sapMColumnHeaderContent,
   box-shadow: none !important;
 }
 
-
 /* Reviewer History Tables Action Column & Button Width Fix (Prevents button cut-off) */
 #reviewerHistoryTable td:last-child,
 #reviewerHistoryTable2 td:last-child,
