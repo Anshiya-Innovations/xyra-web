@@ -223,6 +223,50 @@ sap.ui.define([
             this.navToRoute("OrganizationDetails", { orgId: oItem.dbId });
         },
 
+        onDeleteOrganization: function (oEvent) {
+            var oItem = oEvent.getSource().getBindingContext("orgModel").getObject();
+            var oSession = Session.get();
+            if (!oSession) {
+                MessageBox.error("No active session. Please log in again.");
+                return;
+            }
+
+            var that = this;
+            MessageBox.confirm(
+                "Are you sure you want to delete Organization '" + oItem.orgId + "' (" + oItem.companyName + ")? " +
+                "This permanently deletes its " + oItem.sapSystems + " and everything tied to them - control runs, alerts, reviews and history. This cannot be undone.",
+                {
+                    title: "Delete Organization",
+                    actions: ["Confirm", "Cancel"],
+                    emphasizedAction: "Confirm",
+                    onClose: function (oAction) {
+                        if (oAction !== "Confirm") { return; }
+
+                        GlobalLoading.show("Deleting Organization", 0, true, true);
+                        fetch(Config.AUTH_BASE_URL + "/api/organization/deleteOrganization", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ subdomain: oSession.subdomain, id: oItem.dbId, performedBy: oSession.email, performedByRole: oSession.role })
+                        })
+                            .then(function (r) { return r.json(); })
+                            .then(function (oData) {
+                                GlobalLoading.hide();
+                                if (!oData.success) {
+                                    MessageBox.error(oData.message || "Could not delete organization.");
+                                    return;
+                                }
+                                MessageToast.show("Organization '" + oItem.orgId + "' deleted.");
+                                that._loadOrganizations();
+                            })
+                            .catch(function () {
+                                GlobalLoading.hide();
+                                MessageBox.error("Could not reach the server. Is xyra-core running?");
+                            });
+                    }
+                }
+            );
+        },
+
         navToRoute: function (sRouteName, oParams) {
             var oRouter = UIComponent.getRouterFor(this) || (this.getOwnerComponent() && this.getOwnerComponent().getRouter());
             if (oRouter) {

@@ -627,6 +627,15 @@ span.sapTntNLITagContainer {
   opacity: 1 !important;
 }
 
+/* Real MessageBox message-text class in this UI5 version is .sapMMsgBoxText
+   (Msg, not Message) - the .sapMMessageBoxText rules above target a class
+   name that was never actually applied, same mismatch as .sapMDialogIcon
+   above. */
+.sapMMsgBoxText {
+  font-size: 1.05rem !important;
+  line-height: 1.6 !important;
+}
+
 /* Hide SAPUI5 accessibility screen-reader elements cleanly */
 .sapVH,
 .sapUiHidden,
@@ -653,6 +662,53 @@ span.sapTntNLITagContainer {
   color: #0f172a !important;
   font-weight: 700 !important;
   font-size: 1.1rem !important;
+}
+
+/* ===== MessageBox header icon ===== sap.m.Dialog renders MessageBox's `icon`
+   as a bare .sapMDialogIcon glyph in the header (Dialog.js _applyIconToHeader
+   -> contentMiddle), not inside the content row - the .sapMMessageBoxIcon
+   rules above target a body-row DOM shape this UI5 version doesn't produce,
+   so they never match anything, leaving this a tiny unstyled glyph. Give it
+   an actual colored badge, tinted per MessageBox type via the style class
+   MessageBox.show() already puts on the dialog (sapMMessageBoxQuestion/
+   Error/Warning/Success/Info). */
+.sapMDialogIcon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  min-width: 1.75rem !important;
+  border-radius: 50% !important;
+  margin-right: 0.6rem !important;
+  font-size: 1rem !important;
+  flex-shrink: 0 !important;
+}
+
+.sapMMessageBoxQuestion .sapMDialogIcon,
+.sapMMessageBoxStandard .sapMDialogIcon {
+  background-color: #eef2ff !important;
+  color: #533bff !important;
+}
+
+.sapMMessageBoxError .sapMDialogIcon {
+  background-color: #fee2e2 !important;
+  color: #dc2626 !important;
+}
+
+.sapMMessageBoxWarning .sapMDialogIcon {
+  background-color: #fef3c7 !important;
+  color: #f59e0b !important;
+}
+
+.sapMMessageBoxSuccess .sapMDialogIcon {
+  background-color: #d1fae5 !important;
+  color: #10b981 !important;
+}
+
+.sapMMessageBoxInfo .sapMDialogIcon {
+  background-color: #dbeafe !important;
+  color: #3b82f6 !important;
 }
 
 /* ===== ABSOLUTE REMOVAL OF THREE-DOT OVERFLOW BUTTON (...) EVERYWHERE ===== */

@@ -254,10 +254,13 @@
                                             <ObjectStatus text="{orgModel>sapSystems}" state="Information"/>
                                             <ObjectStatus text="{orgModel>status}" state="{orgModel>statusState}"/>
                                             <Text text="{orgModel>createdDate}"/>
-                                            <Button
-                                                text="View Details &gt;"
-                                                type="Default"
-                                                press="onViewDetails"/>
+                                            <HBox justifyContent="Center" alignItems="Center" class="xyraTableActionsHBox">
+                                                <Button
+                                                    text="View Details &gt;"
+                                                    type="Default"
+                                                    press="onViewDetails"/>
+                                                <Button icon="sap-icon://delete" type="Reject" press="onDeleteOrganization" tooltip="Delete Organization"/>
+                                            </HBox>
                                         </cells>
                                     </ColumnListItem>
                                 </items>
