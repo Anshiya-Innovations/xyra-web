@@ -192,7 +192,13 @@ sap.ui.define([
                 performedByRole: oSession && oSession.role
             };
 
-            GlobalLoading.show("Creating Organization", 0, true, true);
+            // ponytail: same fix as Configuration.controller.js's System dialogs -
+            // GlobalLoading renders into the main content area, behind this
+            // Dialog's own popup layer, so it was invisible. addOrgBusyOverlay
+            // is a plain VBox inside the dialog's own popup layer instead.
+            var oOverlay = this.byId("addOrgBusyOverlay");
+            if (oOverlay) { oOverlay.setVisible(true); }
+
             fetch(Config.AUTH_BASE_URL + "/api/organization/createOrganization", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -200,14 +206,14 @@ sap.ui.define([
             })
                 .then(function (r) { return r.json(); })
                 .then(function (oData) {
-                    GlobalLoading.hide();
+                    if (oOverlay) { oOverlay.setVisible(false); }
                     if (!oData.success) { MessageBox.error(oData.message || "Could not create organization."); return; }
                     that.onCloseAddOrgDialog();
                     MessageToast.show("Organization '" + sCompanyName + "' created successfully!");
                     that._loadOrganizations();
                 })
                 .catch(function () {
-                    GlobalLoading.hide();
+                    if (oOverlay) { oOverlay.setVisible(false); }
                     MessageBox.error("Could not reach the server. Is xyra-core running?");
                 });
         },

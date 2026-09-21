@@ -64,7 +64,11 @@
                         title="Create Organization"
                         contentWidth="620px" stretch="{device>/system/phone}">
                         <content>
-                            <VBox class="sapUiMediumMargin">
+                            <VBox class="sapUiMediumMargin xyraDialogBusyHost">
+                                <VBox id="addOrgBusyOverlay" visible="false" alignItems="Center" justifyContent="Center" class="xyraLoadingState xyraDialogBusyOverlay">
+                                    <core:HTML content="&lt;div class=&quot;xyraSpinnerRing&quot;&gt;&lt;/div&gt;"/>
+                                    <Text text="Creating Organization…" class="textMuted sapUiSmallMarginTop"/>
+                                </VBox>
                                 <MessageStrip
                                     text="Register a new enterprise customer or company unit. Detailed SAP configurations and policies can be assigned inside Organization Details."
                                     type="Information"
