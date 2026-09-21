@@ -64,7 +64,7 @@
                     <Dialog
                         id="addSystemDialog"
                         title="Add New SAP System Configuration"
-                        contentWidth="720px">
+                        contentWidth="960px">
                         <content>
                             <VBox class="sapUiMediumMargin xyraDialogBusyHost">
                                 <VBox id="addSystemBusyOverlay" visible="false" alignItems="Center" justifyContent="Center" class="xyraLoadingState xyraDialogBusyOverlay">
@@ -78,7 +78,7 @@
                                     class="sapUiSmallMarginBottom"/>
 
                                 <Title text="System Identification" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
-                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraSystemFormRow">
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraFieldRow">
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="System ID (SID)" required="true" class="xyraLoginLabel"/>
                                         <Input id="newSysId" placeholder="e.g. MY8, MQ8, MP8"/>
@@ -112,7 +112,7 @@
                                 </HBox>
 
                                 <Title text="Environment &amp; Network" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
-                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraSystemFormRow">
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraFieldRow">
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="Sector" class="xyraLoginLabel"/>
                                         <Input id="newSector" value="MedTech" placeholder="e.g. MedTech"/>
@@ -152,7 +152,7 @@
                                 </HBox>
 
                                 <Title text="Connection &amp; Credentials" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
-                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraSystemFormRow">
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraFieldRow">
                                     <VBox width="100%" class="xyraFieldGroup">
                                         <Label text="Endpoint (base URL)" class="xyraLoginLabel"/>
                                         <Input id="newEndpoint" placeholder="e.g. http://localhost:8000"/>
@@ -180,7 +180,7 @@
                     <Dialog
                         id="editSystemDialog"
                         title="Edit SAP System Configuration"
-                        contentWidth="720px">
+                        contentWidth="960px">
                         <content>
                             <VBox class="sapUiMediumMargin xyraDialogBusyHost">
                                 <VBox id="editSystemBusyOverlay" visible="false" alignItems="Center" justifyContent="Center" class="xyraLoadingState xyraDialogBusyOverlay">
@@ -194,7 +194,7 @@
                                     class="sapUiSmallMarginBottom"/>
 
                                 <Title text="System Identification" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
-                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraFieldRow">
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="System ID (SID)" required="true" class="xyraLoginLabel"/>
                                         <Input id="editSysId" editable="false"/>
@@ -228,7 +228,7 @@
                                 </HBox>
 
                                 <Title text="Environment &amp; Network" level="H5" class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
-                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraFieldRow">
                                     <VBox width="47%" class="xyraFieldGroup">
                                         <Label text="Sector" class="xyraLoginLabel"/>
                                         <Input id="editSector"/>
@@ -273,7 +273,7 @@
                                     type="Information"
                                     showIcon="true"
                                     class="sapUiTinyMarginBottom"/>
-                                <HBox wrap="Wrap" justifyContent="SpaceBetween">
+                                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraFieldRow">
                                     <VBox width="100%" class="xyraFieldGroup">
                                         <Label text="Endpoint (base URL)" class="xyraLoginLabel"/>
                                         <Input id="editEndpoint" placeholder="e.g. http://localhost:8000"/>

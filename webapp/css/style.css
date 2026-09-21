@@ -461,23 +461,52 @@ span.sapTntNLITagContainer {
 /* ===== Add/Edit System dialog (Configuration page) — field spacing =====
    SimpleForm/ColumnLayout's own cell sizing kept clipping the fields' custom
    46px height (its cells assume the theme's default compact height) — swapped
-   the dialog's markup for a plain wrapping HBox of Label+Input VBox pairs,
-   which has no framework-owned cell to fight. This is just the gap between
-   those wrapped field groups. */
+   the dialog's markup for a plain wrapping HBox of Label+Input VBox pairs.
+
+   flex-wrap turned out to be the wrong tool: each row mixes Input and Select
+   fields, which the theme renders at different intrinsic heights, so the
+   browser's line-breaking (does this pair fit on one line at 47% width?)
+   wasn't landing where the markup assumed - some rows got double gaps, some
+   got none. Forcing this HBox into a real 2-column CSS grid removes the
+   ambiguity entirely: items land in fixed column tracks in document order,
+   gap is a single deterministic value in both directions, unaffected by any
+   field's own height. align-items:start stops the taller field in a row
+   from stretching its shorter neighbour and puffing out that row's gap.
+   .xyraFieldGroup's own margin-bottom (below, shared with 9 other pages)
+   is turned off here so it can't stack with the grid gap. */
+[id$="--addSystemDialog"] .xyraFieldGroup,
+[id$="--editSystemDialog"] .xyraFieldGroup {
+  margin-bottom: 0 !important;
+  padding-bottom: 1rem !important;
+}
+
+[id$="--addSystemDialog"],
+[id$="--editSystemDialog"] {
+  width: 960px !important;
+  max-width: calc(100vw - 2rem) !important;
+}
+
 .xyraFieldGroup {
   margin-bottom: 1rem !important;
 }
 
-[id$="--addSystemDialog"] .xyraFieldGroup {
-  margin-bottom: 1rem !important;
-}
-
-[id$="--addSystemDialog"] .sapMFlexItem:has(> .xyraFieldGroup) {
-  margin-bottom: 1rem !important;
-}
-
-.xyraSystemFormRow {
+.xyraFieldRow {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  align-items: start !important;
+  column-gap: 1.5rem !important;
   row-gap: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.xyraFieldRow > .xyraFieldGroup {
+  width: 100% !important;
+}
+
+/* The two full-width fields (System Details, Endpoint) carry width:100% in
+   the view - reused here (instead of a new class) to span both grid columns. */
+.xyraFieldRow > .xyraFieldGroup[style*="100%"] {
+  grid-column: 1 / -1 !important;
 }
 
 .xyraCreateUserForm {
@@ -677,6 +706,20 @@ span.sapTntNLITagContainer {
 [id$="--createUserDialog"].sapMDialog {
   width: min(600px, calc(100vw - 2rem)) !important;
   max-width: min(600px, calc(100vw - 2rem)) !important;
+}
+
+[id$="--addSystemDialog"].sapMDialog,
+[id$="--editSystemDialog"].sapMDialog {
+  width: min(960px, calc(100vw - 2rem)) !important;
+  max-width: min(960px, calc(100vw - 2rem)) !important;
+}
+
+[id$="--addSystemDialog"] .sapMDialogScrollCont,
+[id$="--addSystemDialog"] .sapMDialogContent,
+[id$="--editSystemDialog"] .sapMDialogScrollCont,
+[id$="--editSystemDialog"] .sapMDialogContent {
+  width: 100% !important;
+  max-width: none !important;
 }
 
 [id$="--createUserDialog"] .sapMDialogScrollCont,
@@ -6032,6 +6075,10 @@ span.sapMColumnHeaderContent,
 .xyraFieldGroup .sapMSelect,
 .xyraFieldGroup .sapMSlt {
   width: 100% !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+  box-sizing: border-box !important;
 }
 
 /* Dropdown list items & picker overrides */
