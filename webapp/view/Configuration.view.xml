@@ -66,7 +66,11 @@
                         title="Add New SAP System Configuration"
                         contentWidth="720px">
                         <content>
-                            <VBox class="sapUiMediumMargin">
+                            <VBox class="sapUiMediumMargin xyraDialogBusyHost">
+                                <VBox id="addSystemBusyOverlay" visible="false" alignItems="Center" justifyContent="Center" class="xyraLoadingState xyraDialogBusyOverlay">
+                                    <core:HTML content="&lt;div class=&quot;xyraSpinnerRing&quot;&gt;&lt;/div&gt;"/>
+                                    <Text text="Saving System…" class="textMuted sapUiSmallMarginTop"/>
+                                </VBox>
                                 <MessageStrip
                                     text="Fill in SAP System connectivity and environment details below."
                                     type="Information"
@@ -178,7 +182,11 @@
                         title="Edit SAP System Configuration"
                         contentWidth="720px">
                         <content>
-                            <VBox class="sapUiMediumMargin">
+                            <VBox class="sapUiMediumMargin xyraDialogBusyHost">
+                                <VBox id="editSystemBusyOverlay" visible="false" alignItems="Center" justifyContent="Center" class="xyraLoadingState xyraDialogBusyOverlay">
+                                    <core:HTML content="&lt;div class=&quot;xyraSpinnerRing&quot;&gt;&lt;/div&gt;"/>
+                                    <Text text="Saving Changes…" class="textMuted sapUiSmallMarginTop"/>
+                                </VBox>
                                 <MessageStrip
                                     text="Modify SAP System connectivity and environment details."
                                     type="Information"

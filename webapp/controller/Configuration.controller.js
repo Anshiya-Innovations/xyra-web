@@ -11,9 +11,16 @@ sap.ui.define([
     "xyraweb/model/sidebarState",
     "xyraweb/model/mockData",
     "xyraweb/model/GlobalLoading",
-    "xyraweb/model/NotificationPopover"
-], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, Config, Session, killFocusRing, SidebarState, MockData, GlobalLoading, NotificationPopover) {
+    "xyraweb/model/NotificationPopover",
+    "xyraweb/service/AuditLogClient"
+], function (Controller, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, Config, Session, killFocusRing, SidebarState, MockData, GlobalLoading, NotificationPopover, AuditLogClient) {
     "use strict";
+
+    var SYSTEM_HISTORY_ACTION_LABELS = {
+        SYSTEM_CREATE: "System Created",
+        SYSTEM_UPDATE: "System Modified",
+        SYSTEM_DELETE: "System Deleted"
+    };
 
     // ponytail: shown only when the tenant has zero Systems on file yet, so a
     // fresh install's Health tab isn't just blank — never blended with real
@@ -65,17 +72,9 @@ sap.ui.define([
             this.getView().setModel(new JSONModel({ organizations: [] }), "organizationsModel");
             this._loadOrganizations();
 
-            // System History stays mock data — nothing in the schema tracks a
-            // change log for Systems yet (only Rules/Reviews have history
-            // tables), and the CRUD ask here didn't cover adding one.
-            var oHistoryData = {
-                entries: [
-                    { timestamp: "07-Aug-2026 16:45 IST", action: "System Created", sysId: "MY8", user: "Admin", status: "Active", statusState: "Success" },
-                    { timestamp: "07-Aug-2026 15:30 IST", action: "System Modified", sysId: "MQ8", user: "Admin", status: "Decommissioned", statusState: "Warning" },
-                    { timestamp: "06-Aug-2026 11:20 IST", action: "System Verified", sysId: "MP8", user: "AuditLead", status: "Connected", statusState: "Success" }
-                ]
-            };
-            this.getView().setModel(new JSONModel(oHistoryData), "historyModel");
+            // Populated for real from AuditLogs (objectType 'System') when the
+            // System History dialog is opened - see onOpenSystemHistory.
+            this.getView().setModel(new JSONModel({ entries: [] }), "historyModel");
 
             this._initHealthModel();
             this._loadSystems();
@@ -616,15 +615,13 @@ sap.ui.define([
                 performedByRole: oSession.role
             };
 
-            // ponytail: GlobalLoading renders into the main content area, but
-            // a Dialog pops out to its own top-level UI5 popup layer above
-            // it - the overlay was showing/hiding correctly, just invisibly
-            // behind the modal. Dialog.setBusy is the mechanism this app
-            // already uses for in-dialog loading (see the Automation
-            // Execution Logs dialog fix) - it renders inside the popup layer
-            // itself, so it's actually visible.
-            var oDialog = this.byId("addSystemDialog");
-            if (oDialog) { oDialog.setBusy(true); }
+            // ponytail: Dialog.setBusy() renders via .sapUiLocalBusyIndicator,
+            // which style.css suppresses site-wide (see "SUPPRESS NATIVE OLD SAP
+            // UI5 THREE-DOT BUSY INDICATOR POPUP") - it was rendering, just
+            // invisibly. addSystemBusyOverlay is a plain VBox inside the dialog's
+            // own popup layer, toggled via visible instead.
+            var oOverlay = this.byId("addSystemBusyOverlay");
+            if (oOverlay) { oOverlay.setVisible(true); }
 
             fetch(Config.AUTH_BASE_URL + "/api/system-config/createSystem", {
                 method: "POST",
@@ -633,7 +630,7 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    if (oDialog) { oDialog.setBusy(false); }
+                    if (oOverlay) { oOverlay.setVisible(false); }
                     if (!oData.success) {
                         MessageBox.error(oData.message || "Could not create system.");
                         return;
@@ -643,7 +640,7 @@ sap.ui.define([
                     this._loadSystems();
                 }.bind(this))
                 .catch(function () {
-                    if (oDialog) { oDialog.setBusy(false); }
+                    if (oOverlay) { oOverlay.setVisible(false); }
                     MockData.notice(MessageToast);
                     oPayload.id = "sys" + Date.now();
                     MockData.systems.push(oPayload);
@@ -722,7 +719,12 @@ sap.ui.define([
                 performedByRole: oSession.role
             };
 
-            GlobalLoading.show("Updating System", 0, true, true);
+            // ponytail: same fix as Add System (see onSaveNewSystem) - Dialog.setBusy()
+            // renders via .sapUiLocalBusyIndicator, which style.css suppresses
+            // site-wide. editSystemBusyOverlay is a plain VBox inside the dialog's
+            // own popup layer, toggled via visible instead.
+            var oOverlay = this.byId("editSystemBusyOverlay");
+            if (oOverlay) { oOverlay.setVisible(true); }
 
             fetch(Config.AUTH_BASE_URL + "/api/system-config/updateSystem", {
                 method: "POST",
@@ -731,7 +733,7 @@ sap.ui.define([
             })
                 .then(function (oResponse) { return oResponse.json(); })
                 .then(function (oData) {
-                    GlobalLoading.hide();
+                    if (oOverlay) { oOverlay.setVisible(false); }
                     if (!oData.success) {
                         MessageBox.error(oData.message || "Could not update system.");
                         return;
@@ -741,7 +743,7 @@ sap.ui.define([
                     this._loadSystems();
                 }.bind(this))
                 .catch(function () {
-                    GlobalLoading.hide();
+                    if (oOverlay) { oOverlay.setVisible(false); }
                     MockData.notice(MessageToast);
                     var oExisting = MockData.systems.filter(function (oSys) { return oSys.id === oPayload.id; })[0];
                     if (oExisting) {
@@ -817,7 +819,7 @@ sap.ui.define([
                     fetch(Config.AUTH_BASE_URL + "/api/system-config/deleteSystem", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ subdomain: oSession.subdomain, id: oItem.id })
+                        body: JSON.stringify({ subdomain: oSession.subdomain, id: oItem.id, performedBy: oSession.email, performedByRole: oSession.role })
                     })
                         .then(function (oResponse) { return oResponse.json(); })
                         .then(function (oData) {
@@ -842,9 +844,35 @@ sap.ui.define([
 
         onOpenSystemHistory: function () {
             var oDialog = this.byId("systemHistoryDialog");
-            if (oDialog) {
-                oDialog.open();
-            }
+            if (!oDialog) { return; }
+
+            var oModel = this.getView().getModel("historyModel");
+            GlobalLoading.show("Loading System History", 0, true, true);
+            AuditLogClient.listAuditLogs()
+                .then(function (aLogs) {
+                    var aEntries = aLogs
+                        .filter(function (oLog) { return oLog.objectType === "System"; })
+                        .map(function (oLog) {
+                            var dTimestamp = new Date(oLog.timestamp);
+                            return {
+                                timestamp: isNaN(dTimestamp.getTime()) ? oLog.timestamp : dTimestamp.toLocaleString(),
+                                action: SYSTEM_HISTORY_ACTION_LABELS[oLog.action] || oLog.action,
+                                sysId: oLog.systemId,
+                                user: oLog.adminUser,
+                                status: oLog.result,
+                                statusState: oLog.resultState
+                            };
+                        });
+                    oModel.setProperty("/entries", aEntries);
+                })
+                .catch(function () {
+                    MessageBox.error("Could not reach the server to load System History.");
+                    oModel.setProperty("/entries", []);
+                })
+                .then(function () {
+                    GlobalLoading.hide();
+                    oDialog.open();
+                });
         },
 
         onCloseSystemHistoryDialog: function () {

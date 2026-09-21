@@ -5074,6 +5074,21 @@ div[id*="-text"] {
   }
 }
 
+/* In-dialog save/update overlay: Dialog.setBusy() renders via the suppressed
+   .sapUiLocalBusyIndicator above, so dialogs that need a visible busy state
+   while saving use this overlay (positioned relative to the dialog's own
+   popup layer) instead. */
+.xyraDialogBusyHost {
+  position: relative !important;
+}
+
+.xyraDialogBusyOverlay {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 10 !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+}
+
 /* ==========================================================================
    XYRA COMPACT DATE RANGE PICKER & CALENDAR POPUP STYLING
    ========================================================================== */
@@ -6337,11 +6352,6 @@ span.sapMColumnHeaderContent,
   box-shadow: none !important;
 }
 
-/* Accelerated MessageToast Animation (eliminates slow 1s transition delay) */
-.sapMMessageToast {
-  transition: opacity 150ms ease !important;
-  -webkit-transition: opacity 150ms ease !important;
-}
 
 /* Reviewer History Tables Action Column & Button Width Fix (Prevents button cut-off) */
 #reviewerHistoryTable td:last-child,

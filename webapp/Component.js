@@ -4,9 +4,15 @@ sap.ui.define([
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/NotificationService",
     "sap/ui/core/Popup",
-    "sap/m/Select"
-], (UIComponent, models, GlobalLoading, NotificationService, Popup, Select) => {
+    "sap/m/Select",
+    "sap/m/MessageToast"
+], (UIComponent, models, GlobalLoading, NotificationService, Popup, Select, MessageToast) => {
     "use strict";
+
+    // ponytail: app-wide "no toast notifications" - dozens of controllers call
+    // MessageToast.show(...) individually, so patching the one static entry
+    // point here beats editing every call site.
+    MessageToast.show = function () {};
 
     return UIComponent.extend("xyraweb.Component", {
         metadata: {

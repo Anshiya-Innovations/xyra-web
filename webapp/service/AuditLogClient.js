@@ -36,6 +36,7 @@ sap.ui.define(["xyraweb/model/config", "xyraweb/model/session", "xyraweb/service
                             adminUser: r.performedBy,
                             action: r.action,
                             module: r.module,
+                            objectType: r.objectType,
                             objectId: r.objectLabel || r.objectId,
                             description: r.description,
                             previousValue: r.previousValue,
