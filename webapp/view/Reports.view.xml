@@ -162,11 +162,11 @@
                                     <HBox width="32%" justifyContent="SpaceBetween" alignItems="Start" class="xyraDateFilterPair">
                                         <VBox width="48%" class="xyraFieldGroup">
                                             <Label text="Start Date" class="xyraLoginLabel"/>
-                                            <DatePicker id="historyStartDate" width="100%" placeholder="Select Start Date"/>
+                                            <DatePicker id="historyStartDate" width="100%" placeholder="Select Start Date" calendarType="Gregorian" displayFormat="MM/dd/yyyy" pickerStyleClass="xyraReportsCalendar" class="xyraReportsDatePicker"/>
                                         </VBox>
                                         <VBox width="48%" class="xyraFieldGroup">
                                             <Label text="End Date" class="xyraLoginLabel"/>
-                                            <DatePicker id="historyEndDate" width="100%" placeholder="Select End Date"/>
+                                            <DatePicker id="historyEndDate" width="100%" placeholder="Select End Date" calendarType="Gregorian" displayFormat="MM/dd/yyyy" pickerStyleClass="xyraReportsCalendar" class="xyraReportsDatePicker"/>
                                         </VBox>
                                     </HBox>
                                 </HBox>

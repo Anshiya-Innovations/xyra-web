@@ -1975,6 +1975,39 @@ textarea.sapMTextAreaInner {
   padding: 0.25rem 0.25rem 0 !important;
 }
 
+.xyraReportsDatePicker .sapMInputBaseContentWrapper {
+  display: flex !important;
+  align-items: center !important;
+  position: relative !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.xyraReportsDatePicker .sapMInputBaseContentWrapper:focus-within {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.xyraReportsDatePicker .sapMInputBaseIconContainer {
+  height: 100% !important;
+  width: 2rem !important;
+  min-width: 2rem !important;
+  right: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.xyraReportsDatePicker .sapMInputBaseIcon {
+  position: static !important;
+  height: auto !important;
+  line-height: normal !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
 .xyraRuleDialogForm .xyraRuleFieldRow3 {
   gap: 1rem !important;
   margin-bottom: 0.25rem !important;
@@ -6796,4 +6829,45 @@ span.sapMColumnHeaderContent,
   padding: 0 0.65rem !important;
   border-radius: 6px !important;
   font-size: 0.85rem !important;
+}
+
+/* Reports uses the standard UI5 DatePicker. Keep its field and popup
+   borderless after the later global field rules have been applied. */
+.xyraReportsDatePicker .sapMInputBaseContentWrapper,
+.xyraReportsDatePicker .sapMInputBaseContentWrapper:focus-within {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.xyraReportsDatePicker .sapMInputBaseContentWrapper:hover,
+.xyraReportsDatePicker .sapMInputBaseContentWrapper:focus-within {
+  border: 1px solid #533bff !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(83, 59, 255, 0.15) !important;
+}
+
+.xyraReportsCalendar,
+.xyraReportsCalendar .sapMPopoverCont,
+.xyraReportsCalendar .sapMPopoverContent,
+.xyraReportsCalendar .sapMPopoverScroll {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* The standard DatePicker popup can add its own right-side frame outside the
+   pickerStyleClass wrapper. Remove that edge and its generated frame. */
+.sapMDatePickerPicker,
+.sapMDatePickerPicker .sapMPopoverCont,
+.sapMDatePickerPicker .sapMPopoverContent,
+.sapMDatePickerPicker .sapMPopoverScroll,
+.sapMDatePickerPicker::before,
+.sapMDatePickerPicker::after,
+.sapMDatePickerPicker .sapMPopoverCont::before,
+.sapMDatePickerPicker .sapMPopoverCont::after {
+  border: none !important;
+  border-right: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
