@@ -41,7 +41,8 @@ sap.ui.define([
                     endDate: null
                 },
                 rows: [],
-                summary: { total: 0, passed: 0, deviations: 0 }
+                summary: { total: 0, passed: 0, deviations: 0 },
+                reportGenerated: false
             });
             this.getView().setModel(oModel, "reportModel");
             this.getView().setModel(new JSONModel({
@@ -146,6 +147,7 @@ sap.ui.define([
                 .then(function (oData) {
                     if (!oData.success) {
                         MessageBox.error(oData.message || "Could not load control history.");
+                        oModel.setProperty("/reportGenerated", false);
                         oModel.setProperty("/rows", []);
                         oModel.setProperty("/summary", { total: 0, passed: 0, deviations: 0 });
                         return;
@@ -159,15 +161,41 @@ sap.ui.define([
                     var iDeviations = aRows.filter(function (r) { return r.deviationFlag; }).length;
                     oModel.setProperty("/rows", aRows);
                     oModel.setProperty("/summary", { total: aRows.length, passed: aRows.length - iDeviations, deviations: iDeviations });
+                    oModel.setProperty("/reportGenerated", true);
                 })
                 .catch(function () {
                     MessageBox.error("Could not reach the server. Is xyra-core running?");
+                    oModel.setProperty("/reportGenerated", false);
                     oModel.setProperty("/rows", []);
                     oModel.setProperty("/summary", { total: 0, passed: 0, deviations: 0 });
                 })
                 .then(function () {
                     GlobalLoading.hide();
                 });
+        },
+
+        onResetFilters: function () {
+            var oModel = this.getView().getModel("reportModel");
+            oModel.setProperty("/filters", {
+                controlId: "",
+                systemId: "All",
+                client: "All",
+                region: "All",
+                platform: "All",
+                sector: "All",
+                startDate: null,
+                endDate: null
+            });
+
+            var oStartDatePicker = this.byId("historyStartDate");
+            var oEndDatePicker = this.byId("historyEndDate");
+            if (oStartDatePicker) { oStartDatePicker.setDateValue(null); }
+            if (oEndDatePicker) { oEndDatePicker.setDateValue(null); }
+
+            oModel.setProperty("/rows", []);
+            oModel.setProperty("/summary", { total: 0, passed: 0, deviations: 0 });
+            oModel.setProperty("/reportGenerated", false);
+            MessageToast.show("Filters reset.");
         },
 
         onExportCsv: function () {

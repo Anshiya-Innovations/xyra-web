@@ -72,7 +72,6 @@
                         </VBox>
                         <ToolbarSpacer/>
 
-                        <Button icon="sap-icon://home" tooltip="Admin Dashboard" type="Transparent" press="onAdmin" class="sapUiTinyMarginEnd"/>
                         <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
                         <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
                     </OverflowToolbar>
@@ -87,8 +86,9 @@
                                 <OverflowToolbar>
                                     <Title text="Control History Data Review" level="H4"/>
                                     <ToolbarSpacer/>
-                                    <Button text="Generate History" type="Emphasized" icon="sap-icon://history" press="onGenerateHistory" class="sapUiTinyMarginEnd"/>
                                     <Button text="Export CSV" type="Default" icon="sap-icon://document" press="onExportCsv"/>
+                                    <Button text="Reset Filters" type="Transparent" icon="sap-icon://reset" press="onResetFilters" class="sapUiTinyMarginEnd"/>
+                                    <Button text="Generate Report" type="Emphasized" icon="sap-icon://document-text" press="onGenerateHistory" class="sapUiTinyMarginEnd"/>
                                 </OverflowToolbar>
                             </headerToolbar>
                             <content>
@@ -159,15 +159,16 @@
                                         </Select>
                                     </VBox>
 
-                                    <VBox width="15.8%" class="xyraFieldGroup">
-                                        <Label text="Start Date" class="xyraLoginLabel"/>
-                                        <DatePicker id="historyStartDate" width="100%" placeholder="Select Start Date"/>
-                                    </VBox>
-
-                                    <VBox width="15.8%" class="xyraFieldGroup">
-                                        <Label text="End Date" class="xyraLoginLabel"/>
-                                        <DatePicker id="historyEndDate" width="100%" placeholder="Select End Date"/>
-                                    </VBox>
+                                    <HBox width="32%" justifyContent="SpaceBetween" alignItems="Start" class="xyraDateFilterPair">
+                                        <VBox width="48%" class="xyraFieldGroup">
+                                            <Label text="Start Date" class="xyraLoginLabel"/>
+                                            <DatePicker id="historyStartDate" width="100%" placeholder="Select Start Date"/>
+                                        </VBox>
+                                        <VBox width="48%" class="xyraFieldGroup">
+                                            <Label text="End Date" class="xyraLoginLabel"/>
+                                            <DatePicker id="historyEndDate" width="100%" placeholder="Select End Date"/>
+                                        </VBox>
+                                    </HBox>
                                 </HBox>
                             </content>
                         </Panel>
@@ -175,7 +176,7 @@
                         <!-- EVIDENCE SUMMARY - the whole point of this page vs. Deviation
                              Report: every value the control ever examined, pass or fail,
                              not just the ones that became incidents. -->
-                        <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                        <HBox wrap="Wrap" justifyContent="SpaceBetween" visible="{reportModel>/reportGenerated}" class="sapUiSmallMarginBottom">
                             <VBox width="32%" class="sapUiSmallMarginBottom xyraKpiCardContainer">
                                 <Text text="Total Values Extracted" class="textMuted fontSizeSmall fontWeightBold"/>
                                 <ObjectNumber number="{reportModel>/summary/total}" state="None" class="sapUiTinyMarginTop"/>

@@ -48,7 +48,6 @@
                         </VBox>
                         <ToolbarSpacer/>
 
-                        <Button icon="sap-icon://home" tooltip="Back to Queue" type="Transparent" press="onBackToDashboard" class="sapUiTinyMarginEnd"/>
                         <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
                         <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
                     </OverflowToolbar>

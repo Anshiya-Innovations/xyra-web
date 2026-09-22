@@ -169,6 +169,7 @@
                             <Text text="Manage organizations, company access and organization-specific configurations." class="textMuted sapUiNoMargin"/>
                         </VBox>
                         <ToolbarSpacer/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
                         <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
                     </OverflowToolbar>
                 </customHeader>

@@ -92,6 +92,7 @@
                         </VBox>
                         <ToolbarSpacer/>
                         <Button icon="sap-icon://refresh" tooltip="Refresh Items" type="Transparent" press="onRefresh" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
                         <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
                     </OverflowToolbar>
                 </customHeader>

@@ -8,8 +8,9 @@ sap.ui.define([
     "xyraweb/model/focusRing",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/config",
-    "xyraweb/model/session"
-], function (Controller, MessageToast, MessageBox, UIComponent, JSONModel, SidebarState, killFocusRing, GlobalLoading, Config, Session) {
+    "xyraweb/model/session",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, MessageToast, MessageBox, UIComponent, JSONModel, SidebarState, killFocusRing, GlobalLoading, Config, Session, NotificationPopover) {
     "use strict";
 
     function slaSummaryText(s) {
@@ -391,6 +392,10 @@ sap.ui.define([
 
         onNavBack: function () {
             this.navToRoute("Organization");
+        },
+
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         },
 
         onFilterParameters: function () {

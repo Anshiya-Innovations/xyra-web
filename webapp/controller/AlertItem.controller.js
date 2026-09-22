@@ -6,8 +6,9 @@ sap.ui.define([
     "xyraweb/service/AuditLogClient",
     "xyraweb/model/GlobalLoading",
     "xyraweb/model/config",
-    "xyraweb/model/session"
-], function (Controller, MessageToast, JSONModel, DeviationService, AuditLogClient, GlobalLoading, Config, Session) {
+    "xyraweb/model/session",
+    "xyraweb/model/NotificationPopover"
+], function (Controller, MessageToast, JSONModel, DeviationService, AuditLogClient, GlobalLoading, Config, Session, NotificationPopover) {
     "use strict";
 
     return Controller.extend("xyraweb.controller.AlertItem", {
@@ -162,6 +163,10 @@ sap.ui.define([
             }).then(function () {
                 GlobalLoading.hide();
             });
+        },
+
+        onNotificationPress: function (oEvent) {
+            NotificationPopover.toggle(oEvent, this);
         },
 
         onAdmin: function () { this.getOwnerComponent().getRouter().navTo("Admin"); },

@@ -248,6 +248,7 @@
                         </VBox>
                         <ToolbarSpacer/>
                         <ObjectStatus text="{orgDetailsModel>/currentOrg/status}" state="{orgDetailsModel>/currentOrg/statusState}" icon="sap-icon://shield" class="sapUiSmallMarginEnd"/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
                     </OverflowToolbar>
                 </customHeader>
 
