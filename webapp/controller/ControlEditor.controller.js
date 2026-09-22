@@ -40,8 +40,6 @@ sap.ui.define([
     var KNOWN_GENERAL = ["Password Changed", "User Type", "Locked", "Failed Logins", "Roles Assigned", "Security Policy", "SDMI_* Exists", "Super User", "SAP_ALL", "S_A.TMSADM", "Update Tool"];
     var KNOWN_EXPECTED = ["1000", "Yes", "No", "A (Dialog User)", "B (System User)", "C (Communication User)", "S (Service User)", "L (Reference User)", "G (Guest User)", "0", "1", "Z_NOEXPIRY", "SUPER", "SWPM (Software Provisioning Manager)", "SAPup (System Upgrade)", "SAPehpi (Enhancement Package Installer)", "STARTUP (Software Update Manager)", "SUM (SAP Upgrade Manager)", "None", "SAP delivered roles"];
 
-    var DEFAULT_RULE = { id: 1, stepLabel: "Rule 1", sapObject: "SAP*", client: "All", parameterType: "SET/GET Parameter", parameter: "", operator: "", expectedValue: "" };
-
     // Save direction: one working rule row (with its preset+custom pairs) -> the
     // single resolved-value-only shape the backend expects.
     function resolveRule(r) {
@@ -106,7 +104,7 @@ sap.ui.define([
         onInit: function () {
             this.getView().setModel(new JSONModel({ systems: [], systemsWithNone: [], allSystems: [] }), "systemsModel");
             this.getView().setModel(new JSONModel({ organizations: [] }), "organizationsModel");
-            this.getView().setModel(new JSONModel({ rules: [] }), "ruleModel");
+            this.getView().setModel(new JSONModel({ rules: [], draft: {} }), "ruleModel");
             this.getView().setModel(new JSONModel({ title: "Create Security Control Master", isEdit: false }), "editorModel");
 
             var oRouter = UIComponent.getRouterFor(this);
@@ -242,7 +240,8 @@ sap.ui.define([
             if (this.byId("cronInput")) { this.byId("cronInput").setValue(""); }
             if (this.byId("vboxCron")) { this.byId("vboxCron").setVisible(false); }
             if (this.byId("totalRunInput")) { this.byId("totalRunInput").setValue("365"); }
-            this.getView().getModel("ruleModel").setProperty("/rules", [Object.assign({}, DEFAULT_RULE)]);
+            this.getView().getModel("ruleModel").setProperty("/rules", []);
+            this._resetRuleDraft();
         },
 
         _enterCreateMode: function () {
@@ -313,8 +312,37 @@ sap.ui.define([
                 this.byId("totalRunInput").setValue(ControlFrequency.calculateTotalRun(sFreqUi, oControl.cronExpression));
             }
 
-            var aRules = oControl.rules && oControl.rules.length ? oControl.rules.map(unresolveRule, this) : [Object.assign({}, DEFAULT_RULE)];
+            var aRules = oControl.rules && oControl.rules.length ? oControl.rules.map(unresolveRule, this) : [];
             this.getView().getModel("ruleModel").setProperty("/rules", aRules);
+            this._resetRuleDraft();
+        },
+
+        _resetRuleDraft: function () {
+            this.getView().getModel("ruleModel").setProperty("/draft", {
+                id: Date.now(),
+                sapObject: "",
+                client: "",
+                customClient: "",
+                parameterType: "",
+                parameter: "",
+                parameterSetGet: "",
+                parameterUserDef: "",
+                parameterGeneral: "",
+                customParameter: "",
+                operator: "",
+                expectedValue: "",
+                customExpectedValue: ""
+            });
+        },
+
+        _getRuleDialog: function () {
+            return this.byId("ruleDialog");
+        },
+
+        _openRuleDialog: function () {
+            this._resetRuleDraft();
+            var oDialog = this._getRuleDialog();
+            if (oDialog) { oDialog.open(); }
         },
 
         onParameterSelectChange: function (oEvent) {
@@ -329,6 +357,29 @@ sap.ui.define([
                     oRuleModel.setProperty(sPath + "/customParameter", "");
                 }
             }
+        },
+
+        onDraftParameterSelectChange: function (oEvent) {
+            var oModel = this.getView().getModel("ruleModel");
+            var sKey = oEvent.getSource().getSelectedKey();
+            oModel.setProperty("/draft/parameter", sKey);
+            if (sKey !== "Custom") { oModel.setProperty("/draft/customParameter", ""); }
+        },
+
+        onDraftParameterTypeChange: function (oEvent) {
+            var oModel = this.getView().getModel("ruleModel");
+            oModel.setProperty("/draft/parameterType", oEvent.getSource().getSelectedKey());
+            oModel.setProperty("/draft/parameter", "");
+            oModel.setProperty("/draft/parameterSetGet", "");
+            oModel.setProperty("/draft/parameterUserDef", "");
+            oModel.setProperty("/draft/parameterGeneral", "");
+            oModel.setProperty("/draft/customParameter", "");
+        },
+
+        onDraftParameterValueChange: function (oEvent) {
+            var oModel = this.getView().getModel("ruleModel");
+            var sKey = oEvent.getSource().getSelectedKey();
+            oModel.setProperty("/draft/parameter", sKey);
         },
 
         onParameterTypeChange: function (oEvent) {
@@ -416,19 +467,24 @@ sap.ui.define([
         },
 
         onAddRule: function () {
+            this._openRuleDialog();
+        },
+
+        onConfirmAddRule: function () {
             var oRuleModel = this.getView().getModel("ruleModel");
+            var oDraft = Object.assign({}, oRuleModel.getProperty("/draft"));
+            oDraft.stepLabel = this._getRuleLabel((oRuleModel.getProperty("/rules") || []).length);
+            if (!this._validateRules([oDraft])) { return; }
             var aRules = oRuleModel.getProperty("/rules") || [];
-            aRules.push({
-                id: Date.now(),
-                stepLabel: this._getRuleLabel(aRules.length),
-                sapObject: "SAP*",
-                client: "000",
-                parameterType: "SET/GET Parameter",
-                parameter: "",
-                operator: "",
-                expectedValue: ""
-            });
+            aRules.push(oDraft);
             oRuleModel.setProperty("/rules", aRules);
+            var oDialog = this._getRuleDialog();
+            if (oDialog) { oDialog.close(); }
+        },
+
+        onCancelAddRule: function () {
+            var oDialog = this._getRuleDialog();
+            if (oDialog) { oDialog.close(); }
         },
 
         onDeleteRule: function (oEvent) {

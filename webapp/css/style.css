@@ -791,6 +791,13 @@ span.sapTntNLITagContainer {
   max-width: none !important;
 }
 
+/* Rule entry needs room for its two-column form on desktop, while remaining
+   constrained to the viewport on phones. */
+[id$="--ruleDialog"].sapMDialog {
+  width: min(900px, calc(100vw - 2rem)) !important;
+  max-width: min(900px, calc(100vw - 2rem)) !important;
+}
+
 .sapMDialogContent,
 .sapMDialogScrollCont {
   max-height: calc(100vh - 160px) !important;
@@ -816,6 +823,22 @@ span.sapTntNLITagContainer {
 .sapMPopover:not(.xyraCustomNotificationPopover) {
   max-width: min(680px, calc(100vw - 24px)) !important;
   box-sizing: border-box !important;
+}
+
+/* UI5 gives select popovers a viewport-sized outer shell when their option
+   list is scrollable. Let the shell wrap the actual list instead of leaving
+   an empty block below the last visible option. */
+.sapMPopover:has(.sapMSelectList),
+.sapMPopover:has(.sapMSltList-CTX),
+.sapMPopover:has(.sapMSelectList) .sapMPopoverContent,
+.sapMPopover:has(.sapMSltList-CTX) .sapMPopoverContent,
+.sapMPopover:has(.sapMSelectList) .sapMPopoverCont,
+.sapMPopover:has(.sapMSltList-CTX) .sapMPopoverCont,
+.sapMPopover:has(.sapMSelectList) .sapMPopoverScroll,
+.sapMPopover:has(.sapMSltList-CTX) .sapMPopoverScroll {
+  height: auto !important;
+  min-height: 0 !important;
+  flex: 0 1 auto !important;
 }
 
 /* Single Header Container */
@@ -1928,6 +1951,58 @@ textarea.sapMTextAreaInner {
   color: #1e293b !important;
 }
 
+.xyraRulesTable {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+}
+
+.xyraRulesTable .sapMListTblHeaderCell {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+
+.xyraRulesTable .sapMListTblCell {
+  vertical-align: middle !important;
+  padding-top: 0.7rem !important;
+  padding-bottom: 0.7rem !important;
+}
+
+.xyraRuleDialogForm {
+  padding: 0.25rem 0.25rem 0 !important;
+}
+
+.xyraRuleDialogForm .xyraRuleFieldRow3 {
+  gap: 1rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.xyraRuleDialogForm .xyraRuleFieldRow3 > .sapMFlexItem {
+  flex-basis: calc(50% - 0.5rem) !important;
+  max-width: calc(50% - 0.5rem) !important;
+}
+
+.xyraRuleDialogForm .xyraRuleDialogFields3 {
+  gap: 1rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.xyraRuleDialogForm .xyraRuleDialogFields3 > .sapMFlexItem {
+  flex-basis: calc(33.333% - 0.67rem) !important;
+  max-width: calc(33.333% - 0.67rem) !important;
+}
+
+@media (max-width: 600px) {
+  .xyraRuleDialogForm .xyraRuleFieldRow3 > .sapMFlexItem,
+  .xyraRuleDialogForm .xyraRuleDialogFields3 > .sapMFlexItem {
+    flex-basis: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
 /* 3-equal-column rule field rows (SAP Object/Client/Parameter Type,
    Parameter/Validation/Expected Value). Same fix as the 2-column version
    used elsewhere: a child control's own "width" doesn't size the
@@ -2158,6 +2233,8 @@ textarea.sapMTextAreaInner {
   background-color: #ffffff !important;
   overflow: hidden !important;
   box-sizing: border-box !important;
+  height: auto !important;
+  bottom: auto !important;
   max-width: calc(100vw - 24px) !important;
 }
 
@@ -2195,6 +2272,9 @@ textarea.sapMTextAreaInner {
   padding: 0 !important;
   margin: 0 !important;
   overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 0 !important;
+  flex: 0 1 auto !important;
 }
 
 /* Dropdown List: remove horizontal padding so items extend edge-to-edge */
@@ -2203,6 +2283,8 @@ textarea.sapMTextAreaInner {
   background-color: #ffffff !important;
   padding: 0.25rem 0 !important;
   margin: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
   width: 100% !important;
   box-sizing: border-box !important;
   border: none !important;
