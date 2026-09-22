@@ -180,18 +180,24 @@ body,
   color: #94a3b8 !important;
 }
 
-/* Expand/collapse caret on group items (e.g. "Control Management") -
-   theme colors it via var(--sapList_TextColor), which on our dark sidebar
-   resolves dark/black instead of following the same white/muted scheme as
-   the item's own text+icon above. Theme also hides it by default when the
-   sidebar is in its collapsed icon-rail state (".sapTntNLCollapsed
-   .sapTntNLIExpandIcon{display:none}", only shown again on hover/focus) -
-   forced always-visible here instead. */
+/* Expand/collapse caret on group items (e.g. "Control Management") */
 .sapTntNLIExpandIcon {
   color: #ffffff !important;
   display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
+}
+
+/* Group carets have no place in the collapsed icon rail. Keeping one visible
+   takes space from the group's icon and leaves it visibly off-center. */
+.sapTntToolPageAsideCollapsed .sapTntNLIExpandIcon,
+.sapTntNLCollapsed .sapTntNLIExpandIcon,
+.sapTntToolPageAsideCollapsed .sapTntNLIExpandIcon::before,
+.sapTntToolPageAsideCollapsed .sapTntNLIExpandIcon::after,
+.sapTntNLCollapsed .sapTntNLIExpandIcon::before,
+.sapTntNLCollapsed .sapTntNLIExpandIcon::after {
+  display: none !important;
+  visibility: hidden !important;
 }
 
 /* Bold prominent navigation button style */
