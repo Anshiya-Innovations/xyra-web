@@ -10,7 +10,6 @@ sap.ui.define(
     "xyraweb/model/NotificationPopover",
     "xyraweb/model/config",
     "xyraweb/model/session",
-    "xyraweb/model/mockData",
     "xyraweb/model/controlFrequency",
   ],
   function (
@@ -24,7 +23,6 @@ sap.ui.define(
     NotificationPopover,
     Config,
     Session,
-    MockData,
     ControlFrequency,
   ) {
     "use strict";
@@ -193,27 +191,8 @@ sap.ui.define(
       return out;
     }
 
-    // Dedupe + drop empty/"None" slots from the 3 System Type selects.
-    function collectSystemIds(s1, s2, s3) {
-      var out = [];
-      [s1, s2, s3].forEach(function (id) {
-        if (id && id !== "None" && out.indexOf(id) === -1) {
-          out.push(id);
-        }
-      });
-      return out;
-    }
-
     return Controller.extend("xyraweb.controller.ControlEditor", {
       onInit: function () {
-        this.getView().setModel(
-          new JSONModel({ systems: [], systemsWithNone: [], allSystems: [] }),
-          "systemsModel",
-        );
-        this.getView().setModel(
-          new JSONModel({ organizations: [] }),
-          "organizationsModel",
-        );
         this.getView().setModel(
           new JSONModel({ rules: [], draft: {} }),
           "ruleModel",
@@ -267,94 +246,8 @@ sap.ui.define(
         return "Then: Rule " + iNum;
       },
 
-      _loadSystems: function () {
-        var that = this;
-        return Promise.all([
-          fetch(Config.AUTH_BASE_URL + "/api/system-config/listSystems", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ subdomain: this._getSubdomain() }),
-          }).then(function (r) {
-            return r.json();
-          }),
-          fetch(Config.AUTH_BASE_URL + "/api/organization/listOrganizations", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ subdomain: this._getSubdomain() }),
-          }).then(function (r) {
-            return r.json();
-          }),
-        ])
-          .then(function (aResults) {
-            var oSystemsData = aResults[0],
-              oOrgData = aResults[1];
-            if (!oSystemsData.success) {
-              throw new Error(oSystemsData.message || "listSystems failed");
-            }
-            that
-              .getView()
-              .getModel("organizationsModel")
-              .setProperty(
-                "/organizations",
-                (oOrgData.success && oOrgData.organizations) || [],
-              );
-            that
-              .getView()
-              .getModel("systemsModel")
-              .setProperty("/allSystems", oSystemsData.systems || []);
-          })
-          .catch(function () {
-            MockData.notice(MessageToast);
-            that
-              .getView()
-              .getModel("systemsModel")
-              .setProperty(
-                "/allSystems",
-                (MockData.systems || []).map(function (s) {
-                  return { id: s.id, sysId: s.sysId };
-                }),
-              );
-          });
-      },
-
-      // Control creation is scoped to one Organization at a time - picking
-      // an Organization narrows the 3 System Type selects down to just
-      // that org's Systems (Tenant -> many Organizations -> each org's own
-      // Systems). No Organization selected yet = nothing selectable, same
-      // "narrow before you pick" flow the org selector implies.
-      _filterSystemsByOrg: function (sOrgId) {
-        var aAll =
-          this.getView().getModel("systemsModel").getProperty("/allSystems") ||
-          [];
-        var aFiltered = sOrgId
-          ? aAll.filter(function (s) {
-              return s.organizationId === sOrgId;
-            })
-          : [];
-        var oSystemsModel = this.getView().getModel("systemsModel");
-        oSystemsModel.setProperty("/systems", aFiltered);
-        oSystemsModel.setProperty(
-          "/systemsWithNone",
-          [{ id: "None", sysId: "-- None --" }].concat(aFiltered),
-        );
-      },
-
-      onOrganizationChange: function (oEvent) {
-        this._filterSystemsByOrg(oEvent.getParameter("selectedItem").getKey());
-        // Previously-picked systems belonged to the old org - clear them
-        // rather than silently leaving a stale, now-invisible selection.
-        if (this.byId("sysType1Select")) {
-          this.byId("sysType1Select").setSelectedKey("");
-        }
-        if (this.byId("sysType2Select")) {
-          this.byId("sysType2Select").setSelectedKey("None");
-        }
-        if (this.byId("sysType3Select")) {
-          this.byId("sysType3Select").setSelectedKey("None");
-        }
-      },
-
-      // One continuous busy period covering the systems-list fetch AND
+      // One continuous busy period covering the control-detail fetch (edit
+      // mode only - see _onRouteMatched).
       // the control-detail fetch that follows it - previously used
       // sap.ui.core.BusyIndicator here, but GlobalLoading.js patches
       // BusyIndicator.show into a complete no-op app-wide ("Suppress
@@ -365,60 +258,28 @@ sap.ui.define(
       //
       // Edit mode only: there's an actual Security Control record being
       // fetched, worth the overlay. Create mode has nothing to "load" -
-      // the systems-list fetch behind it is just populating dropdowns on
-      // an otherwise-blank form, not worth a full-page overlay for.
+      // the form starts blank.
       _onRouteMatched: function (oEvent) {
         var sControlId = oEvent.getParameter("arguments").controlId;
         if (sControlId) {
           GlobalLoading.show("Loading Security Control", 0, true, true);
-        }
-        this._loadSystems()
-          .then(
-            function () {
-              return sControlId
-                ? this._enterEditMode(sControlId)
-                : this._enterCreateMode();
-            }.bind(this),
-          )
-          .then(function () {
-            if (sControlId) {
-              GlobalLoading.hide();
-            }
+          this._enterEditMode(sControlId).then(function () {
+            GlobalLoading.hide();
           });
+        } else {
+          this._enterCreateMode();
+        }
       },
 
-      // ponytail: sap.m.Select defaults to forceSelection=true - setting
-      // selectedKey to "" once items exist gets silently corrected back to
-      // the first item, but that correction doesn't fire "change" (only a
-      // real user pick does), so onOrganizationChange never ran and the
-      // System Type selects stayed empty even though Organization visibly
-      // showed one selected. Pick the same default ourselves and filter
-      // against it directly, instead of trusting a blank selectedKey to
-      // stick.
       _resetForm: function () {
-        var aOrgs =
-          this.getView()
-            .getModel("organizationsModel")
-            .getProperty("/organizations") || [];
-        var sDefaultOrgId = aOrgs.length ? aOrgs[0].id : "";
-        if (this.byId("organizationSelect")) {
-          this.byId("organizationSelect").setSelectedKey(sDefaultOrgId);
-        }
-        this._filterSystemsByOrg(sDefaultOrgId);
         if (this.byId("controlIdInput")) {
           this.byId("controlIdInput").setValue("");
         }
         if (this.byId("controlDescInput")) {
           this.byId("controlDescInput").setValue("");
         }
-        if (this.byId("sysType1Select")) {
-          this.byId("sysType1Select").setSelectedKey("");
-        }
-        if (this.byId("sysType2Select")) {
-          this.byId("sysType2Select").setSelectedKey("None");
-        }
-        if (this.byId("sysType3Select")) {
-          this.byId("sysType3Select").setSelectedKey("None");
+        if (this.byId("severitySelect")) {
+          this.byId("severitySelect").setSelectedKey("MEDIUM");
         }
         if (this.byId("frequencySelect")) {
           this.byId("frequencySelect").setSelectedKey("Daily");
@@ -500,37 +361,10 @@ sap.ui.define(
         if (this.byId("controlDescInput")) {
           this.byId("controlDescInput").setValue(oControl.description);
         }
-
-        var aIds = (oControl.systemIds || []).slice();
-        if (aIds.length > 3) {
-          aIds = aIds.slice(0, 3);
-        }
-
-        // A Control's systems all belong to one Organization (that's the
-        // whole point of the org picker narrowing the System selects) -
-        // infer it from whichever system this control already has, then
-        // filter before setting the selected keys so those keys exist in
-        // the (now-filtered) items list.
-        var aAllSystems =
-          this.getView().getModel("systemsModel").getProperty("/allSystems") ||
-          [];
-        var oPrimarySystem = aAllSystems.filter(function (s) {
-          return s.id === aIds[0];
-        })[0];
-        var sOrgId = (oPrimarySystem && oPrimarySystem.organizationId) || "";
-        if (this.byId("organizationSelect")) {
-          this.byId("organizationSelect").setSelectedKey(sOrgId);
-        }
-        this._filterSystemsByOrg(sOrgId);
-
-        if (this.byId("sysType1Select")) {
-          this.byId("sysType1Select").setSelectedKey(aIds[0] || "");
-        }
-        if (this.byId("sysType2Select")) {
-          this.byId("sysType2Select").setSelectedKey(aIds[1] || "None");
-        }
-        if (this.byId("sysType3Select")) {
-          this.byId("sysType3Select").setSelectedKey(aIds[2] || "None");
+        if (this.byId("severitySelect")) {
+          this.byId("severitySelect").setSelectedKey(
+            oControl.severity || "MEDIUM",
+          );
         }
 
         var sFreqUi =
@@ -749,33 +583,6 @@ sap.ui.define(
         return true;
       },
 
-      _validateSystemTypes: function (sSys1, sSys2, sSys3) {
-        if (!sSys1 || sSys1 === "None") {
-          MessageBox.error("System Type is mandatory.");
-          return false;
-        }
-        var aSelected = [sSys1];
-        if (sSys2 && sSys2 !== "None") {
-          if (aSelected.indexOf(sSys2) !== -1) {
-            MessageBox.error(
-              "Do not allow duplicate environment selections (" + sSys2 + ").",
-            );
-            return false;
-          }
-          aSelected.push(sSys2);
-        }
-        if (sSys3 && sSys3 !== "None") {
-          if (aSelected.indexOf(sSys3) !== -1) {
-            MessageBox.error(
-              "Do not allow duplicate environment selections (" + sSys3 + ").",
-            );
-            return false;
-          }
-          aSelected.push(sSys3);
-        }
-        return true;
-      },
-
       onAddRule: function () {
         this._openRuleDialog();
       },
@@ -855,23 +662,13 @@ sap.ui.define(
       onSaveControl: function () {
         var sId = this.byId("controlIdInput").getValue().trim();
         var sDesc = this.byId("controlDescInput").getValue().trim();
-        var sOrgId = this.byId("organizationSelect").getSelectedKey();
-        var sSys1 = this.byId("sysType1Select").getSelectedKey();
-        var sSys2 = this.byId("sysType2Select").getSelectedKey();
-        var sSys3 = this.byId("sysType3Select").getSelectedKey();
+        var sSeverity = this.byId("severitySelect").getSelectedKey();
         var sFreq = this.byId("frequencySelect").getSelectedKey();
         var sCron = this.byId("cronInput").getValue().trim();
         var sControlType = this.byId("controlTypeSelect").getSelectedKey();
 
         if (!sId || !sDesc) {
           MessageBox.error("Control ID and Control Description are mandatory.");
-          return;
-        }
-        if (!sOrgId) {
-          MessageBox.error("Please select an Organization first.");
-          return;
-        }
-        if (!this._validateSystemTypes(sSys1, sSys2, sSys3)) {
           return;
         }
         if (sFreq === "Cron Expression" && !sCron) {
@@ -885,17 +682,16 @@ sap.ui.define(
           return;
         }
 
-        var aSystemIds = collectSystemIds(sSys1, sSys2, sSys3);
         var aResolvedRules = aRules.map(resolveRule);
         var oRouter = UIComponent.getRouterFor(this);
 
         if (this._mode === "edit") {
           this._saveEdit(
             sDesc,
+            sSeverity,
             sFreq,
             sCron,
             sControlType,
-            aSystemIds,
             aResolvedRules,
             oRouter,
           );
@@ -903,10 +699,10 @@ sap.ui.define(
           this._saveCreate(
             sId,
             sDesc,
+            sSeverity,
             sFreq,
             sCron,
             sControlType,
-            aSystemIds,
             aResolvedRules,
             oRouter,
           );
@@ -916,10 +712,10 @@ sap.ui.define(
       _saveCreate: function (
         sId,
         sDesc,
+        sSeverity,
         sFreq,
         sCron,
         sControlType,
-        aSystemIds,
         aResolvedRules,
         oRouter,
       ) {
@@ -933,10 +729,9 @@ sap.ui.define(
             description: sDesc,
             category: null,
             controlType: sControlType,
+            severity: sSeverity,
             frequency: ControlFrequency.FREQ_UI_TO_BE[sFreq] || "DAILY",
             cronExpression: sCron || null,
-            critical: false,
-            systemIds: aSystemIds,
             rules: aResolvedRules,
             performedBy: (Session.get() || {}).email,
             performedByRole: (Session.get() || {}).role,
@@ -952,7 +747,7 @@ sap.ui.define(
               return;
             }
             MessageToast.show(
-              "Security Control '" + sId + "' Created Successfully!",
+              "Security Control '" + sId + "' Created Successfully! Map it to a system from System Control Config.",
             );
             oRouter.navTo("ControlManagement");
           })
@@ -966,10 +761,10 @@ sap.ui.define(
 
       _saveEdit: function (
         sDesc,
+        sSeverity,
         sFreq,
         sCron,
         sControlType,
-        aSystemIds,
         aResolvedRules,
         oRouter,
       ) {
@@ -986,18 +781,16 @@ sap.ui.define(
             subdomain: this._getSubdomain(),
             id: oEditing.id,
             description: sDesc,
-            // No UI collects category/critical/enabled - round-trip the
-            // control's own last-known values so updateControl's
-            // overwrite-not-merge behavior doesn't silently reset them.
-            // controlType now IS collected (controlTypeSelect), so the
-            // real selected value is sent instead of an echo.
+            // No UI collects category/enabled - round-trip the control's own
+            // last-known values so updateControl's overwrite-not-merge
+            // behavior doesn't silently reset them. controlType/severity ARE
+            // collected, so the real selected values are sent instead of an echo.
             category: oEditing.category,
             controlType: sControlType,
-            critical: oEditing.critical,
+            severity: sSeverity,
             enabled: oEditing.enabled,
             frequency: ControlFrequency.FREQ_UI_TO_BE[sFreq] || "DAILY",
             cronExpression: sCron || null,
-            systemIds: aSystemIds,
             rules: aResolvedRules,
             performedBy: (Session.get() || {}).email,
             performedByRole: (Session.get() || {}).role,
@@ -1063,6 +856,9 @@ sap.ui.define(
       },
       onControlManagement: function () {
         UIComponent.getRouterFor(this).navTo("ControlManagement");
+      },
+      onSystemControlConfig: function () {
+        UIComponent.getRouterFor(this).navTo("SystemControlConfig");
       },
       onDeviationReport: function () {
         UIComponent.getRouterFor(this).navTo("DeviationReport");

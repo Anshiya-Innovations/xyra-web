@@ -16,6 +16,7 @@
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
                     <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" expanded="true" selectable="false" select="onToggleSideNavGroup">
                         <tnt:NavigationListItem text="Controls Config" key="ControlManagement" select="onControlManagement"/>
+                        <tnt:NavigationListItem text="System Control Config" key="SystemControlConfig" select="onSystemControlConfig"/>
                         <tnt:NavigationListItem text="Deviation Report" key="DeviationReport" select="onDeviationReport"/>
                     </tnt:NavigationListItem>
                     <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights" select="onAIInsights">
@@ -137,31 +138,34 @@
                         class="sapUiTinyMarginBegin sapUiTinyMarginTop"/>
 
                     <VBox class="sapUiMediumMargin xyraEditorContent">
+                        <MessageStrip
+                            text="System mapping moved to System Control Config — save this control first, then map it to one or more systems from that page."
+                            type="Information"
+                            showIcon="true"
+                            class="sapUiTinyMarginBottom"/>
+
                         <layout:Grid defaultSpan="XL6 L6 M12 S12" class="xyraCreateControlGrid">
                             <VBox>
-                                <VBox class="xyraFormField">
-                                    <Label text="Organization" required="true" class="xyraFormLabel"/>
-                                    <Select id="organizationSelect" width="100%" items="{organizationsModel>/organizations}" change="onOrganizationChange">
-                                        <core:Item key="{organizationsModel>id}" text="{organizationsModel>orgCode} - {organizationsModel>name}"/>
-                                    </Select>
-                                </VBox>
-
                                 <VBox class="xyraFormField">
                                     <Label text="Control ID" required="true" class="xyraFormLabel"/>
                                     <Input id="controlIdInput" editable="{= !${editorModel>/isEdit} }" placeholder="e.g. XYRA-08, XYRA-28, XYRA-001"/>
                                 </VBox>
 
                                 <VBox class="xyraFormField">
-                                    <Label text="System Type (Primary)" required="true" class="xyraFormLabel"/>
-                                    <Select id="sysType1Select" width="100%" items="{systemsModel>/systems}">
-                                        <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
+                                    <Label text="Severity" required="true" class="xyraFormLabel"/>
+                                    <Select id="severitySelect" selectedKey="MEDIUM" width="100%">
+                                        <core:Item key="LOW" text="Low"/>
+                                        <core:Item key="MEDIUM" text="Medium"/>
+                                        <core:Item key="HIGH" text="High"/>
                                     </Select>
                                 </VBox>
 
                                 <VBox class="xyraFormField">
-                                    <Label text="System Type (Secondary)" class="xyraFormLabel"/>
-                                    <Select id="sysType2Select" selectedKey="None" width="100%" items="{systemsModel>/systemsWithNone}">
-                                        <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
+                                    <Label text="Control Type" required="true" class="xyraFormLabel"/>
+                                    <Select id="controlTypeSelect" selectedKey="SECURITY" width="100%">
+                                        <core:Item key="SECURITY" text="Security"/>
+                                        <core:Item key="BASIS" text="Basis"/>
+                                        <core:Item key="GXP" text="GxP"/>
                                     </Select>
                                 </VBox>
                             </VBox>
@@ -188,24 +192,8 @@
                                 </VBox>
 
                                 <VBox class="xyraFormField">
-                                    <Label text="Control Type" required="true" class="xyraFormLabel"/>
-                                    <Select id="controlTypeSelect" selectedKey="SECURITY" width="100%">
-                                        <core:Item key="SECURITY" text="Security"/>
-                                        <core:Item key="BASIS" text="Basis"/>
-                                        <core:Item key="GXP" text="GxP"/>
-                                    </Select>
-                                </VBox>
-
-                                <VBox class="xyraFormField">
                                     <Label text="Total Run (Read-Only)" class="xyraFormLabel"/>
                                     <Input id="totalRunInput" value="365" editable="false"/>
-                                </VBox>
-
-                                <VBox class="xyraFormField">
-                                    <Label text="System Type (Tertiary)" class="xyraFormLabel"/>
-                                    <Select id="sysType3Select" selectedKey="None" width="100%" items="{systemsModel>/systemsWithNone}">
-                                        <core:Item key="{systemsModel>id}" text="{systemsModel>sysId}"/>
-                                    </Select>
                                 </VBox>
                             </VBox>
                         </layout:Grid>

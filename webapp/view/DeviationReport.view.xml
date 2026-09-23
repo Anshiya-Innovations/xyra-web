@@ -18,6 +18,7 @@
                     <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin"/>
                     <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" expanded="true" selectable="false" select="onToggleSideNavGroup">
                         <tnt:NavigationListItem text="Controls Config" key="ControlManagement" select="onControlManagement"/>
+                        <tnt:NavigationListItem text="System Control Config" key="SystemControlConfig"/>
                         <tnt:NavigationListItem text="Deviation Report" key="DeviationReport" select="onDeviationReport"/>
                     </tnt:NavigationListItem>
                     <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights">

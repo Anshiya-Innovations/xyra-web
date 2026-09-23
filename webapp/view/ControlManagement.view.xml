@@ -17,6 +17,7 @@
 
                     <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" expanded="true" selectable="false" select="onToggleSideNavGroup">
                         <tnt:NavigationListItem text="Controls Config" key="ControlManagement" select="onControlManagement"/>
+                        <tnt:NavigationListItem text="System Control Config" key="SystemControlConfig" select="onSystemControlConfig"/>
                         <tnt:NavigationListItem text="Deviation Report" key="DeviationReport" select="onDeviationReport"/>
                     </tnt:NavigationListItem>
 
@@ -105,16 +106,15 @@
                                     </OverflowToolbar>
                                 </headerToolbar>
 
-                                <!-- TABLE COLUMNS: HEADERS SAY "System Type" WITHOUT NUMBERS -->
                                 <columns>
-                                    <Column width="12%"><Text text="Control ID"/></Column>
-                                    <Column width="24%"><Text text="Control Description"/></Column>
-                                    <Column width="9%"><Text text="System Type"/></Column>
-                                    <Column width="9%"><Text text="System Type"/></Column>
-                                    <Column width="9%"><Text text="System Type"/></Column>
-                                    <Column width="20%"><Text text="Frequency Run"/></Column>
-                                    <Column width="10%"><Text text="Total Run"/></Column>
-                                    <Column width="7%" hAlign="End"><Text text="Actions"/></Column>
+                                    <Column width="11%"><Text text="Control ID"/></Column>
+                                    <Column width="27%"><Text text="Control Description"/></Column>
+                                    <Column width="10%"><Text text="Severity"/></Column>
+                                    <Column width="10%"><Text text="Control Type"/></Column>
+                                    <Column width="12%"><Text text="Systems Mapped"/></Column>
+                                    <Column width="17%"><Text text="Frequency Run"/></Column>
+                                    <Column width="7%"><Text text="Total Run"/></Column>
+                                    <Column width="6%" hAlign="End"><Text text="Actions"/></Column>
                                 </columns>
 
                                 <items>
@@ -123,9 +123,9 @@
                                             <ObjectIdentifier title="{controlsModel>id}"/>
                                             <Text text="{controlsModel>description}"/>
 
-                                            <ObjectStatus text="{controlsModel>sysType1}" state="Information"/>
-                                            <ObjectStatus text="{controlsModel>sysType2}" state="{= ${controlsModel>sysType2} === 'None' ? 'None' : 'Information' }"/>
-                                            <ObjectStatus text="{controlsModel>sysType3}" state="{= ${controlsModel>sysType3} === 'None' ? 'None' : 'Information' }"/>
+                                            <ObjectStatus text="{controlsModel>severity}" state="{controlsModel>severityState}"/>
+                                            <Text text="{controlsModel>controlType}"/>
+                                            <ObjectStatus text="{controlsModel>systemsMappedText}" state="{= ${controlsModel>systemsMapped} > 0 ? 'Success' : 'None' }"/>
                                             <Text text="{controlsModel>frequencyRun}" wrapping="false"/>
 
                                             <ObjectStatus text="{controlsModel>totalRun}" state="Success"/>

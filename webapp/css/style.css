@@ -2110,6 +2110,104 @@ textarea.sapMTextAreaInner {
   font-size: 0.78rem !important;
 }
 
+/* Risk Analytics dashboard */
+.xyraRiskPage {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+}
+
+.xyraRiskIntro {
+  padding: 0.5rem 0 1rem !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.xyraRiskKpi {
+  min-height: 9rem !important;
+  height: auto !important;
+  overflow: visible !important;
+  padding: 1.15rem !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  box-sizing: border-box !important;
+}
+
+.xyraRiskKpiScore {
+  border-top: 3px solid #533bff !important;
+}
+
+.xyraRiskKpiNumber {
+  margin: 0.55rem 0 0.2rem !important;
+}
+
+.xyraRiskKpiNumber .sapMObjectNumberText {
+  font-size: 1.55rem !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+.xyraRiskKpiNumber .sapMObjectNumberUnit {
+  font-size: 0.9rem !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+.xyraRiskPanel {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+}
+
+.xyraRiskPanel .sapMPanelHdr,
+.xyraRiskPanel .sapMTB {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.xyraRiskDomainTable .sapMListTblCell,
+.xyraRiskFindingsTable .sapMListTblCell {
+  padding-top: 0.8rem !important;
+  padding-bottom: 0.8rem !important;
+  vertical-align: middle !important;
+}
+
+.xyraRiskDomainTable .sapMPI {
+  height: 0.8rem !important;
+}
+
+.xyraRiskDomainTable .sapMPIBar,
+.xyraRiskDomainTable .sapMPIValue {
+  border-radius: 999px !important;
+}
+
+.xyraRiskSourceRow {
+  padding: 0.85rem 1rem !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+@media (max-width: 900px) {
+  .xyraRiskKpi {
+    width: 48.5% !important;
+    margin-bottom: 0.75rem !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .xyraRiskKpi {
+    width: 100% !important;
+  }
+  .xyraRiskIntro {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+}
+
 @media (max-width: 900px) {
   .xyraFlowPane {
     display: none !important;

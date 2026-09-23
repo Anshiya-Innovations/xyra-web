@@ -40,18 +40,13 @@ sap.ui.define([
 
         onInit: function () {
             this.getView().setModel(new JSONModel({ controls: [] }), "controlsModel");
-            this.getView().setModel(new JSONModel({ systems: [], systemsWithNone: [] }), "systemsModel");
 
-            // One continuous loading overlay covering both fetches - was
-            // sap.ui.core.BusyIndicator before, but GlobalLoading.js patches
-            // BusyIndicator.show into a no-op app-wide, so nothing was ever
-            // visible here: the page just sat on an empty table until data
-            // quietly arrived.
+            // Was sap.ui.core.BusyIndicator before, but GlobalLoading.js
+            // patches BusyIndicator.show into a no-op app-wide, so nothing
+            // was ever visible here: the page just sat on an empty table
+            // until data quietly arrived.
             GlobalLoading.show("Loading Controls", 0, true, true);
-            var that = this;
-            this._loadSystemsForDisplay()
-                .then(function () { return that._loadControls(); })
-                .then(function () { GlobalLoading.hide(); });
+            this._loadControls().then(function () { GlobalLoading.hide(); });
         },
 
         _getSubdomain: function () {
@@ -59,59 +54,35 @@ sap.ui.define([
             return (oSession && oSession.subdomain) || Config.TEST_SUBDOMAIN;
         },
 
-        // Real Systems, used to translate a Control's systemIds back into
-        // display text (sysType1/2/3 columns) for the table.
-        _loadSystemsForDisplay: function () {
-            var that = this;
-            return fetch(Config.AUTH_BASE_URL + "/api/system-config/listSystems", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ subdomain: this._getSubdomain() })
-            })
-                .then(function (r) { return r.json(); })
-                .then(function (oData) {
-                    if (!oData.success) { throw new Error(oData.message || "listSystems failed"); }
-                    that._applySystemsList(oData.systems || []);
-                })
-                .catch(function () {
-                    MockData.notice(MessageToast);
-                    that._applySystemsList((MockData.systems || []).map(function (s) { return { id: s.id, sysId: s.sysId }; }));
-                });
-        },
-
-        _applySystemsList: function (aSystems) {
-            this._systemsById = {};
-            aSystems.forEach(function (s) { this._systemsById[s.id] = s.sysId; }.bind(this));
-            var oSystemsModel = this.getView().getModel("systemsModel");
-            oSystemsModel.setProperty("/systems", aSystems);
-            oSystemsModel.setProperty("/systemsWithNone", [{ id: "None", sysId: "-- None --" }].concat(aSystems));
-        },
-
-        _sysDisplay: function (sId) {
-            if (!sId) { return "None"; }
-            return (this._systemsById && this._systemsById[sId]) || sId;
+        _severityState: function (sSeverity) {
+            if (sSeverity === "HIGH") { return "Error"; }
+            if (sSeverity === "LOW") { return "Success"; }
+            return "Warning";
         },
 
         // Bridges one backend ControlEntry to a table row - carries both the
-        // display-only fields the table renders (sysType1/2/3, frequencyRun,
-        // totalRun) and the raw fields edit/delete/run need (dbId, code as `id`
-        // for display continuity, systemIds, frequency).
+        // display-only fields the table renders (severity, frequencyRun,
+        // totalRun, systemsMapped) and the raw fields edit/delete/run need
+        // (dbId, code as `id` for display continuity, frequency). System
+        // mapping itself lives on the System Control Config page now -
+        // systemsMapped here is just a read-only count of it.
         _mapControlEntryToRow: function (c) {
             var aIds = c.systemIds || [];
             var sFreqUi = ControlFrequency.FREQ_BE_TO_UI[c.frequency] || "Daily";
+            var sSeverity = c.severity || "MEDIUM";
             return {
                 id: c.code,
                 dbId: c.id,
                 description: c.description,
-                sysType1: this._sysDisplay(aIds[0]),
-                sysType2: this._sysDisplay(aIds[1]),
-                sysType3: this._sysDisplay(aIds[2]),
+                severity: sSeverity.charAt(0) + sSeverity.slice(1).toLowerCase(),
+                severityState: this._severityState(sSeverity),
+                systemsMapped: aIds.length,
+                systemsMappedText: aIds.length === 1 ? "1 system" : aIds.length + " systems",
                 frequencyRun: sFreqUi,
                 cronExpr: c.cronExpression || "",
                 totalRun: ControlFrequency.calculateTotalRun(sFreqUi, c.cronExpression),
                 category: c.category,
                 controlType: c.controlType,
-                critical: c.critical,
                 enabled: c.enabled,
                 systemIds: aIds,
                 frequency: c.frequency,
@@ -280,13 +251,12 @@ sap.ui.define([
             if (sQuery) {
                 var oFilterId = new Filter("id", FilterOperator.Contains, sQuery);
                 var oFilterDesc = new Filter("description", FilterOperator.Contains, sQuery);
-                var oFilterSys1 = new Filter("sysType1", FilterOperator.Contains, sQuery);
-                var oFilterSys2 = new Filter("sysType2", FilterOperator.Contains, sQuery);
-                var oFilterSys3 = new Filter("sysType3", FilterOperator.Contains, sQuery);
+                var oFilterSeverity = new Filter("severity", FilterOperator.Contains, sQuery);
+                var oFilterType = new Filter("controlType", FilterOperator.Contains, sQuery);
                 var oFilterFreq = new Filter("frequencyRun", FilterOperator.Contains, sQuery);
 
                 aFilters.push(new Filter({
-                    filters: [oFilterId, oFilterDesc, oFilterSys1, oFilterSys2, oFilterSys3, oFilterFreq],
+                    filters: [oFilterId, oFilterDesc, oFilterSeverity, oFilterType, oFilterFreq],
                     and: false
                 }));
             }
@@ -303,6 +273,7 @@ sap.ui.define([
         onAdmin: function () { UIComponent.getRouterFor(this).navTo("Admin"); },
         onNavAutomationMonitoring: function () { UIComponent.getRouterFor(this).navTo("AutomationMonitoring"); },
         onControlManagement: function () { UIComponent.getRouterFor(this).navTo("ControlManagement"); },
+        onSystemControlConfig: function () { UIComponent.getRouterFor(this).navTo("SystemControlConfig"); },
         onAIInsights: function () { UIComponent.getRouterFor(this).navTo("AIInsights"); },
         onSOXCompliance: function () { UIComponent.getRouterFor(this).navTo("SOXCompliance"); },
         onReports: function () { UIComponent.getRouterFor(this).navTo("Reports"); },

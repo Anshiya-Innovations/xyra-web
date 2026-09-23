@@ -1,0 +1,175 @@
+<mvc:View
+    controllerName="xyraweb.controller.SystemControlConfig"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="systemControlConfigToolPage" sideExpanded="true">
+
+        <!-- ENTERPRISE MANAGEMENT SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="SystemControlConfig" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList selectedKey="SystemControlConfig">
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" expanded="true" selectable="false" select="onToggleSideNavGroup">
+                        <tnt:NavigationListItem text="Controls Config" key="ControlManagement" select="onControlManagement"/>
+                        <tnt:NavigationListItem text="System Control Config" key="SystemControlConfig" select="onSystemControlConfig"/>
+                        <tnt:NavigationListItem text="Deviation Report" key="DeviationReport" select="onDeviationReport"/>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights" select="onAIInsights">
+                        <tnt:tag><ObjectStatus text="New" state="Indication15" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance">
+                        <tnt:tag><ObjectStatus text="98.4%" state="Indication16" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+                    <tnt:NavigationListItem text="Organization" icon="sap-icon://building" key="Organization" select="onOrganization"/>
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics">
+                        <tnt:tag><ObjectStatus text="3 Risks" state="Indication18" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                </tnt:NavigationList>
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="systemControlConfigPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <dependents>
+                    <!-- ADD MAPPING DIALOG / POPUP -->
+                    <Dialog id="addMappingDialog" title="Map Control to System" contentWidth="640px">
+                        <content>
+                            <VBox class="sapUiMediumMargin">
+                                <MessageStrip
+                                    text="Pick a Control and a System — the control will run against that system starting from its next scheduled run."
+                                    type="Information"
+                                    showIcon="true"
+                                    class="sapUiSmallMarginBottom"/>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="Control" required="true" class="xyraFormLabel"/>
+                                    <Select id="mappingControlSelect" width="100%" items="{addModel>/controls}" change="onMappingSelectionChange">
+                                        <core:Item key="{addModel>id}" text="{addModel>code} — {addModel>description}"/>
+                                    </Select>
+                                </VBox>
+
+                                <VBox class="xyraFormField">
+                                    <Label text="System" required="true" class="xyraFormLabel"/>
+                                    <Select id="mappingSystemSelect" width="100%" items="{addModel>/systems}" change="onMappingSelectionChange">
+                                        <core:Item key="{addModel>id}" text="{addModel>sysId} (Client {addModel>client})"/>
+                                    </Select>
+                                </VBox>
+
+                                <!-- SUMMARY: "this control will run on this system at this frequency, status Active" -->
+                                <Panel visible="{= !!${addModel>/summary/controlCode} }" headerText="Summary" class="sapUiMediumMarginTop">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Text text="{= ${addModel>/summary/controlCode} + ' will run on ' + ${addModel>/summary/systemCode} + ' every ' + ${addModel>/summary/frequency} + '.' }" class="fontWeightBold"/>
+                                        <HBox alignItems="Center" class="sapUiTinyMarginTop">
+                                            <Text text="Status on save: " class="textMuted sapUiTinyMarginEnd"/>
+                                            <ObjectStatus text="Active" state="Success" icon="sap-icon://status-positive"/>
+                                        </HBox>
+                                    </VBox>
+                                </Panel>
+                            </VBox>
+                        </content>
+                        <beginButton>
+                            <Button text="Save Mapping" type="Emphasized" icon="sap-icon://save" press="onSaveMapping"/>
+                        </beginButton>
+                        <endButton>
+                            <Button text="Cancel" press="onCloseAddMappingDialog"/>
+                        </endButton>
+                    </Dialog>
+                </dependents>
+
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            tooltip="Toggle Navigation"
+                            icon="sap-icon://menu2"
+                            type="Transparent"
+                            press="onSideNavToggle"
+                            class="sapUiTinyMarginBegin"/>
+                        <VBox justifyContent="Center">
+                            <Title text="System Control Config" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Map each Control to the Systems it should run on, and activate or deactivate that mapping." class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+                        <Panel expandable="false" class="sapUiSmallMarginBottom">
+                            <Table id="mappingsTable" items="{mappingsModel>/mappings}" mode="None" width="100%" noDataText="No control-to-system mappings yet. Click Add to create one.">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Control ↔ System Mappings" level="H3"/>
+                                        <ToolbarSpacer/>
+                                        <SearchField id="searchMappings" width="16rem" placeholder="Search..." search="onSearchMappings" liveChange="onSearchMappings"/>
+                                        <Button text="Add" icon="sap-icon://add" type="Emphasized" press="onAddMapping"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+
+                                <columns>
+                                    <Column width="10%"><Text text="Control ID"/></Column>
+                                    <Column width="20%"><Text text="Control Description"/></Column>
+                                    <Column width="10%"><Text text="System"/></Column>
+                                    <Column width="9%"><Text text="Severity"/></Column>
+                                    <Column width="12%"><Text text="Frequency"/></Column>
+                                    <Column width="9%"><Text text="Status"/></Column>
+                                    <Column width="10%"><Text text="Runs Completed"/></Column>
+                                    <Column width="10%" hAlign="End"><Text text="Actions"/></Column>
+                                </columns>
+
+                                <items>
+                                    <ColumnListItem type="Active" press="onOpenDetails">
+                                        <cells>
+                                            <ObjectIdentifier title="{mappingsModel>controlCode}"/>
+                                            <Text text="{mappingsModel>controlDescription}"/>
+                                            <Text text="{= ${mappingsModel>systemCode} + '/' + ${mappingsModel>systemClient} }"/>
+                                            <ObjectStatus text="{mappingsModel>severityText}" state="{mappingsModel>severityState}"/>
+                                            <Text text="{mappingsModel>frequencyText}"/>
+                                            <ObjectStatus text="{mappingsModel>statusText}" state="{mappingsModel>statusState}" icon="{mappingsModel>statusIcon}"/>
+                                            <Text text="{mappingsModel>runCount}"/>
+                                            <HBox justifyContent="End" style="gap: 0.5rem;">
+                                                <Button icon="sap-icon://play" type="Transparent" tooltip="Run Now" enabled="{mappingsModel>enabled}" press="onRunNow"/>
+                                                <Button icon="sap-icon://accept" type="Accept" tooltip="Activate" visible="{= !${mappingsModel>enabled} }" press="onActivate"/>
+                                                <Button icon="sap-icon://stop" type="Reject" tooltip="Deactivate" visible="{= ${mappingsModel>enabled} }" press="onDeactivate"/>
+                                                <Button icon="sap-icon://detail-view" type="Transparent" tooltip="View Details" press="onOpenDetails"/>
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </Panel>
+                    </VBox>
+                </content>
+
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations"/>
+                        <ToolbarSpacer/>
+                        <ObjectStatus text="July 30, 2026" icon="sap-icon://appointment-2" state="Information"/>
+                    </OverflowToolbar>
+                </footer>
+
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>

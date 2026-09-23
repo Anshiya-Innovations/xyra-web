@@ -34,9 +34,9 @@ sap.ui.define([], function () {
             description: "SAP System Security Baseline & Parameter Enforcement",
             category: "Security",
             controlType: "SECURITY",
+            severity: "HIGH",
             frequency: "DAILY",
             cronExpression: null,
-            critical: true,
             enabled: true,
             systemIds: ["sys1", "sys2", "sys3"],
             rules: [
@@ -57,9 +57,9 @@ sap.ui.define([], function () {
             description: "SAP Java Audit Log Filters & Security Event Monitoring",
             category: "Security",
             controlType: "SECURITY",
+            severity: "MEDIUM",
             frequency: "DAILY",
             cronExpression: null,
-            critical: false,
             enabled: true,
             systemIds: ["sys1"],
             rules: [
@@ -72,6 +72,30 @@ sap.ui.define([], function () {
             createdAt: "2026-08-10T00:00:00Z",
             modifiedBy: "ADMIN",
             modifiedAt: "2026-08-10T00:00:00Z"
+        }
+    ];
+
+    // ponytail: shaped like a backend SystemControlConfigEntry (see xyra-core
+    // SystemControlConfigService) so SystemControlConfig's offline fallback
+    // runs the same real->row mapping function unmodified.
+    var systemControlConfigs = [
+        {
+            id: "mock-scc1",
+            controlId: "mock-nlg01",
+            controlCode: "NLG01",
+            controlDescription: "SAP System Security Baseline & Parameter Enforcement",
+            controlSeverity: "HIGH",
+            controlType: "SECURITY",
+            controlFrequency: "DAILY",
+            systemId: "sys2",
+            systemCode: "MQ8",
+            systemClient: "100",
+            enabled: true,
+            createdAt: "2026-08-11T00:00:00Z",
+            deactivatedAt: null,
+            runCount: 12,
+            lastRunAt: "2026-09-20T06:00:00Z",
+            lastRunStatus: "PASS"
         }
     ];
 
@@ -90,6 +114,7 @@ sap.ui.define([], function () {
         systems: systems,
         profile: profile,
         controls: controls,
+        systemControlConfigs: systemControlConfigs,
         notice: notice
     };
 });

@@ -1,0 +1,171 @@
+<mvc:View
+    controllerName="xyraweb.controller.SystemControlConfigDetails"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="detailsToolPage" sideExpanded="true">
+
+        <!-- ENTERPRISE NAVIGATION SIDEBAR -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="SystemControlConfig" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement"/>
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights">
+                        <tnt:tag><ObjectStatus text="New" state="Indication15" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance">
+                        <tnt:tag><ObjectStatus text="98.4%" state="Indication16" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs"/>
+                    <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" key="Configuration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement"/>
+                    <tnt:NavigationListItem text="Organization" icon="sap-icon://building" key="Organization"/>
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics">
+                        <tnt:tag><ObjectStatus text="3 Risks" state="Indication18" inverted="true"/></tnt:tag>
+                    </tnt:NavigationListItem>
+                </tnt:NavigationList>
+
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page
+                id="systemControlConfigDetailsPage"
+                showHeader="true"
+                enableScrolling="true"
+                class="sapUiContentPadding">
+
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button
+                            text="Back to System Control Config"
+                            icon="sap-icon://nav-back"
+                            type="Emphasized"
+                            press="onNavBack"
+                            tooltip="Back to System Control Config"
+                            class="sapUiTinyMarginBegin xyraBoldBtn fontWeightBold"/>
+                        <VBox justifyContent="Center">
+                            <Title text="{= 'Mapping Details — ' + ${detailsModel>/controlCode} + ' on ' + ${detailsModel>/systemCode} }" level="H4" class="sapUiNoMargin"/>
+                            <Text text="Lifecycle, run history and logs for this Control-to-System mapping" class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress" class="sapUiTinyMarginEnd"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox width="100%" class="sapUiMediumMarginTop sapUiResponsiveContentPadding">
+
+                        <!-- OVERVIEW CARD -->
+                        <Panel expandable="false" headerText="Mapping Overview" class="sapUiSmallMarginBottom">
+                            <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMargin">
+                                <VBox width="23%" class="sapUiSmallMarginBottom">
+                                    <Text text="Control" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <Title text="{= ${detailsModel>/controlCode} + ' — ' + ${detailsModel>/controlDescription} }" level="H5" class="sapUiTinyMarginTop"/>
+                                </VBox>
+                                <VBox width="23%" class="sapUiSmallMarginBottom">
+                                    <Text text="System" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <Text text="{= ${detailsModel>/systemCode} + ' / Client ' + ${detailsModel>/systemClient} }" class="sapUiTinyMarginTop fontSizeLarge fontWeightBold"/>
+                                </VBox>
+                                <VBox width="23%" class="sapUiSmallMarginBottom">
+                                    <Text text="Severity / Control Type" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <HBox class="sapUiTinyMarginTop">
+                                        <ObjectStatus text="{detailsModel>/severityText}" state="{detailsModel>/severityState}" class="sapUiTinyMarginEnd"/>
+                                        <Text text="{detailsModel>/controlType}"/>
+                                    </HBox>
+                                </VBox>
+                                <VBox width="23%" class="sapUiSmallMarginBottom">
+                                    <Text text="Status" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <ObjectStatus text="{detailsModel>/statusText}" state="{detailsModel>/statusState}" icon="{detailsModel>/statusIcon}" class="sapUiTinyMarginTop fontWeightBold"/>
+                                </VBox>
+
+                                <VBox width="23%" class="sapUiSmallMarginBottom">
+                                    <Text text="Frequency" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <Text text="{detailsModel>/frequencyText}" class="sapUiTinyMarginTop"/>
+                                </VBox>
+                                <VBox width="23%" class="sapUiSmallMarginBottom">
+                                    <Text text="Created On" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <Text text="{detailsModel>/createdText}" class="sapUiTinyMarginTop textMuted"/>
+                                </VBox>
+                                <VBox width="23%" class="sapUiSmallMarginBottom">
+                                    <Text text="Stopped On" class="textMuted fontSizeSmall fontWeightBold"/>
+                                    <Text text="{detailsModel>/deactivatedText}" class="sapUiTinyMarginTop textMuted"/>
+                                </VBox>
+                                <VBox width="23%" class="sapUiSmallMarginBottom">
+                                    <HBox justifyContent="End" style="gap: 0.5rem;">
+                                        <Button icon="sap-icon://play" text="Run Now" type="Emphasized" enabled="{detailsModel>/enabled}" press="onRunNow"/>
+                                        <Button icon="sap-icon://accept" text="Activate" type="Accept" visible="{= !${detailsModel>/enabled} }" press="onActivate"/>
+                                        <Button icon="sap-icon://stop" text="Deactivate" type="Reject" visible="{= ${detailsModel>/enabled} }" press="onDeactivate"/>
+                                    </HBox>
+                                </VBox>
+                            </HBox>
+                        </Panel>
+
+                        <!-- RUN STATS CARD -->
+                        <Panel expandable="false" headerText="Run History" class="sapUiSmallMarginBottom">
+                            <VBox class="sapUiSmallMargin">
+                                <HBox justifyContent="Start" alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <VBox width="33%" class="sapUiMediumMarginEnd">
+                                        <Text text="Runs Completed" class="textMuted fontSizeSmall"/>
+                                        <Title text="{detailsModel>/runCount}" level="H4" class="fontWeightBold"/>
+                                    </VBox>
+                                    <VBox width="33%">
+                                        <Text text="Last Run" class="textMuted fontSizeSmall"/>
+                                        <Title text="{detailsModel>/lastRunText}" level="H5" class="fontWeightBold"/>
+                                    </VBox>
+                                    <VBox width="33%">
+                                        <Text text="Last Run Status" class="textMuted fontSizeSmall"/>
+                                        <ObjectStatus text="{detailsModel>/lastRunStatusText}" state="{detailsModel>/lastRunStatusState}"/>
+                                    </VBox>
+                                </HBox>
+                            </VBox>
+                        </Panel>
+
+                        <!-- RECENT RUN LOGS TABLE -->
+                        <Panel expandable="false" headerText="Recent Run Logs" class="sapUiSmallMarginBottom">
+                            <Table items="{detailsModel>/logs}" mode="None" width="100%" noDataText="No run logs yet for this mapping.">
+                                <columns>
+                                    <Column width="24%"><Text text="Timestamp" class="fontWeightBold"/></Column>
+                                    <Column width="12%"><Text text="Level"/></Column>
+                                    <Column width="64%"><Text text="Message"/></Column>
+                                </columns>
+
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{detailsModel>timestampText}" class="fontSizeSmall textMuted"/>
+                                            <ObjectStatus text="{detailsModel>level}" state="{detailsModel>levelState}"/>
+                                            <Text text="{detailsModel>message}"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </Panel>
+
+                    </VBox>
+                </content>
+
+                <footer>
+                    <OverflowToolbar>
+                        <Text text="© 2026 Forte Innovations"/>
+                        <ToolbarSpacer/>
+                        <ObjectStatus text="July 30, 2026" icon="sap-icon://appointment-2" state="Information"/>
+                    </OverflowToolbar>
+                </footer>
+
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>

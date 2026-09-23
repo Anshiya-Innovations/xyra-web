@@ -214,6 +214,16 @@
           "target": "ControlEditor"
         },
         {
+          "name": "SystemControlConfig",
+          "pattern": "SystemControlConfig",
+          "target": "SystemControlConfig"
+        },
+        {
+          "name": "SystemControlConfigDetails",
+          "pattern": "SystemControlConfigDetails/:configId:",
+          "target": "SystemControlConfigDetails"
+        },
+        {
           "name": "AutomationMonitoring",
           "pattern": "AutomationMonitoring",
           "target": "AutomationMonitoring"
@@ -268,6 +278,11 @@
           "name": "OrganizationDetails",
           "pattern": "OrganizationDetails/:orgId:",
           "target": "OrganizationDetails"
+        },
+        {
+          "name": "RiskAnalytics",
+          "pattern": "RiskAnalytics",
+          "target": "RiskAnalytics"
         }
       ],
 
@@ -323,6 +338,12 @@
         "ControlEditor": {
           "viewName": "ControlEditor"
         },
+        "SystemControlConfig": {
+          "viewName": "SystemControlConfig"
+        },
+        "SystemControlConfigDetails": {
+          "viewName": "SystemControlConfigDetails"
+        },
         "AutomationMonitoring": {
           "viewName": "AutomationMonitoring"
         },
@@ -350,6 +371,9 @@
         },
         "OrganizationDetails": {
           "viewName": "OrganizationDetails"
+        },
+        "RiskAnalytics": {
+          "viewName": "RiskAnalytics"
         }
       }
     }

@@ -1,0 +1,150 @@
+<mvc:View
+    controllerName="xyraweb.controller.RiskAnalytics"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:tnt="sap.tnt"
+    height="100%">
+
+    <tnt:ToolPage id="riskAnalyticsToolPage" sideExpanded="true">
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" expanded="true" selectedKey="RiskAnalytics" itemSelect="onSideNavItemSelect">
+                <tnt:NavigationList selectedKey="RiskAnalytics">
+                    <tnt:NavigationListItem text="Admin Dashboard" icon="sap-icon://home" key="Admin" select="onAdmin"/>
+                    <tnt:NavigationListItem text="Control Management" icon="sap-icon://shield" key="ControlManagement" select="onControlManagement"/>
+                    <tnt:NavigationListItem text="AI Insights" icon="sap-icon://lightbulb" key="AIInsights" select="onAIInsights"/>
+                    <tnt:NavigationListItem text="SOX Compliance" icon="sap-icon://accept" key="SOXCompliance" select="onSOXCompliance"/>
+                    <tnt:NavigationListItem text="Reports" icon="sap-icon://document-text" key="Reports" select="onReports"/>
+                    <tnt:NavigationListItem text="Audit Logs" icon="sap-icon://history" key="AuditLogs" select="onAuditLogs"/>
+                    <tnt:NavigationListItem text="System Configuration" icon="sap-icon://action-settings" key="Configuration" select="onConfiguration"/>
+                    <tnt:NavigationListItem text="Access Management" icon="sap-icon://key-user-settings" key="AccessManagement" select="onAccessManagement"/>
+                    <tnt:NavigationListItem text="Organization" icon="sap-icon://building" key="Organization" select="onOrganization"/>
+                    <tnt:NavigationListItem text="Risk Analytics" icon="sap-icon://bar-chart" key="RiskAnalytics" select="onRiskAnalytics"/>
+                </tnt:NavigationList>
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Profile" icon="sap-icon://person-placeholder" key="Profile" select="onProfile"/>
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <Page id="riskAnalyticsPage" showHeader="true" enableScrolling="true" class="sapUiContentPadding">
+                <customHeader>
+                    <OverflowToolbar height="4.5rem">
+                        <Button tooltip="Toggle Navigation" icon="sap-icon://menu2" type="Transparent" press="onSideNavToggle" class="sapUiTinyMarginBegin"/>
+                        <VBox justifyContent="Center">
+                            <Title text="XYRA - Risk Analytics" level="H4" class="sapUiNoMargin"/>
+                            <Text text="SAP security posture, control risk and evidence readiness" class="textMuted sapUiNoMargin"/>
+                        </VBox>
+                        <ToolbarSpacer/>
+                        <Button icon="sap-icon://refresh" tooltip="Refresh risk posture" type="Transparent" press="onRefresh"/>
+                        <Button icon="sap-icon://bell" tooltip="Notifications" type="Transparent" press="onNotificationPress"/>
+                        <Button icon="sap-icon://log" text="Logout" type="Reject" press="onLogout" class="sapUiTinyMarginEnd"/>
+                    </OverflowToolbar>
+                </customHeader>
+
+                <content>
+                    <VBox class="sapUiMediumMarginTop sapUiResponsiveContentPadding xyraRiskPage">
+                        <HBox justifyContent="SpaceBetween" alignItems="Center" class="xyraRiskIntro">
+                            <VBox>
+                                <Title text="Security risk posture" level="H2" class="sapUiNoMargin"/>
+                                <Text text="Live deviation and control posture from the tenant data source." class="textMuted"/>
+                            </VBox>
+                            <ObjectStatus text="Live data · {riskModel>/generatedAt}" state="Information" icon="sap-icon://cloud"/>
+                        </HBox>
+
+                        <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginTop sapUiSmallMarginBottom">
+                            <VBox width="23.5%" class="xyraRiskKpi xyraRiskKpiScore">
+                                <Text text="Overall risk score" class="textMuted fontWeightBold"/>
+                                <ObjectNumber number="{riskModel>/kpis/score}" unit="/100" state="Warning" class="xyraRiskKpiNumber"/>
+                                <Text text="Moderate exposure" class="textMuted"/>
+                            </VBox>
+                            <VBox width="23.5%" class="xyraRiskKpi">
+                                <Text text="Critical findings" class="textMuted fontWeightBold"/>
+                                <ObjectNumber number="{riskModel>/kpis/critical}" state="Error" class="xyraRiskKpiNumber"/>
+                                <Text text="Require immediate action" class="textMuted"/>
+                            </VBox>
+                            <VBox width="23.5%" class="xyraRiskKpi">
+                                <Text text="Open risk items" class="textMuted fontWeightBold"/>
+                                <ObjectNumber number="{riskModel>/kpis/open}" state="Warning" class="xyraRiskKpiNumber"/>
+                                <Text text="Across monitored domains" class="textMuted"/>
+                            </VBox>
+                            <VBox width="23.5%" class="xyraRiskKpi">
+                                <Text text="Compliance rate" class="textMuted fontWeightBold"/>
+                                <ObjectNumber number="{riskModel>/kpis/evidence}" unit="%" state="Success" class="xyraRiskKpiNumber"/>
+                                <Text text="From deviation service" class="textMuted"/>
+                            </VBox>
+                        </HBox>
+
+                        <Panel class="sapUiSmallMarginBottom xyraRiskPanel" expandable="false">
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <Title text="Risk domains" level="H4"/>
+                                    <ToolbarSpacer/>
+                                    <Select selectedKey="{riskModel>/filters/domain}" width="12rem">
+                                        <core:Item key="All" text="All domains"/>
+                                        <core:Item key="Identity &amp; Privileged Access" text="Identity &amp; access"/>
+                                        <core:Item key="Gateway &amp; RFC Security" text="Gateway &amp; RFC"/>
+                                        <core:Item key="Audit Logging &amp; Monitoring" text="Audit logging"/>
+                                    </Select>
+                                    <Button text="Reset" icon="sap-icon://reset" type="Transparent" press="onResetFilters"/>
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <content>
+                                <Table items="{riskModel>/domains}" mode="None" noDataText="No live deviation data available." class="xyraRiskDomainTable">
+                                    <columns>
+                                        <Column><Text text="Domain"/></Column>
+                                        <Column width="14rem"><Text text="Posture"/></Column>
+                                        <Column width="8rem"><Text text="Risk"/></Column>
+                                        <Column width="7rem" hAlign="End"><Text text="Findings"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{riskModel>name}" class="fontWeightBold"/>
+                                                <ProgressIndicator percentValue="{riskModel>score}" displayValue="{riskModel>score}/100" state="{= ${riskModel>risk} === 'Low' ? 'Success' : ${riskModel>risk} === 'Medium' ? 'Warning' : 'Error' }"/>
+                                                <ObjectStatus text="{riskModel>risk}" state="{= ${riskModel>risk} === 'Low' ? 'Success' : ${riskModel>risk} === 'Medium' ? 'Warning' : 'Error' }"/>
+                                                <ObjectNumber number="{riskModel>findings}" state="{= ${riskModel>risk} === 'High' ? 'Error' : 'Warning' }"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </content>
+                        </Panel>
+
+                        <Panel class="sapUiSmallMarginBottom xyraRiskPanel" expandable="false">
+                            <headerToolbar><OverflowToolbar><Title text="Priority findings" level="H4"/><ToolbarSpacer/><ObjectStatus text="Action queue" state="Warning"/></OverflowToolbar></headerToolbar>
+                            <content>
+                                <Table items="{riskModel>/findings}" mode="None" noDataText="No live findings available." class="xyraRiskFindingsTable">
+                                    <columns>
+                                        <Column><Text text="Finding"/></Column>
+                                        <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Domain"/></Column>
+                                        <Column width="7rem"><Text text="Severity"/></Column>
+                                        <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Owner"/></Column>
+                                        <Column width="8rem"><Text text="Due"/></Column>
+                                        <Column width="9rem"><Text text="Alert ID"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{riskModel>title}" class="fontWeightBold"/>
+                                                <Text text="{riskModel>domain}"/>
+                                                <ObjectStatus text="{riskModel>severity}" state="{= ${riskModel>severity} === 'Critical' ? 'Error' : ${riskModel>severity} === 'High' ? 'Warning' : 'Information' }"/>
+                                                <Text text="{riskModel>owner}"/>
+                                                <Text text="{riskModel>due}"/>
+                                                <ObjectStatus text="{riskModel>source}" state="Information"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </content>
+                        </Panel>
+
+                    </VBox>
+                </content>
+            </Page>
+        </tnt:mainContents>
+    </tnt:ToolPage>
+</mvc:View>
