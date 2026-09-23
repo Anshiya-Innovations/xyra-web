@@ -30,6 +30,10 @@ sap.ui.define(
           items: [],
         });
         this.getView().setModel(oModel, "alertModel");
+        this.getView().setModel(
+          new JSONModel({ loading: false }),
+          "logsUiModel",
+        );
 
         this.getOwnerComponent()
           .getRouter()
@@ -102,6 +106,7 @@ sap.ui.define(
         var oHeader =
           this.getView().getModel("alertModel").getProperty("/header") || {};
         var that = this;
+        this._activeAlertItem = oItem;
 
         var sControlId = oHeader.controlId || "";
         var sControlName = oHeader.controlName || "";
@@ -132,7 +137,7 @@ sap.ui.define(
 
         var oDialog = this.byId("itemLogsDialog");
         if (oDialog) {
-          oDialog.setBusy(true);
+          this.getView().getModel("logsUiModel").setProperty("/loading", true);
           oDialog.open();
         }
 
@@ -141,9 +146,7 @@ sap.ui.define(
             .getView()
             .getModel("logsModel")
             .setProperty("/logEntries", aLogs);
-          if (oDialog) {
-            oDialog.setBusy(false);
-          }
+          that.getView().getModel("logsUiModel").setProperty("/loading", false);
         });
       },
 
@@ -207,7 +210,103 @@ sap.ui.define(
       },
 
       onDownloadLogs: function () {
-        MessageToast.show("Downloading automation execution log trace...");
+        var oLogsModel = this.getView().getModel("logsModel");
+        var aLogs =
+          this._aCachedLogs ||
+          (oLogsModel && oLogsModel.getProperty("/logEntries")) ||
+          [];
+        if (!aLogs.length) {
+          MessageToast.show("No execution logs available to download.");
+          return;
+        }
+
+        var escapeCsv = function (sValue) {
+          return (
+            '"' + String(sValue == null ? "" : sValue).replace(/"/g, '""') + '"'
+          );
+        };
+        var oHeader =
+          this.getView().getModel("alertModel").getProperty("/header") || {};
+        var oItem = this._activeAlertItem || {};
+        var sAlertId = this._sAlertId || "";
+        var sControlId = this._sControlId || oHeader.controlId || "";
+        var sSeverity = oItem.severity || oHeader.severity || "Unknown";
+        var sOutcome = oItem.status === "Resolved" ? "success" : "failure";
+        var sSource = oHeader.system || oHeader.systemId || "XYRA";
+        var aCsvRows = [
+          [
+            "@timestamp",
+            "event.id",
+            "event.kind",
+            "event.category",
+            "event.action",
+            "event.outcome",
+            "event.severity",
+            "event.code",
+            "observer.vendor",
+            "observer.product",
+            "source.name",
+            "source.client",
+            "source.region",
+            "source.platform",
+            "source.sector",
+            "alert.id",
+            "control.id",
+            "control.name",
+            "alert.item_id",
+            "log.level",
+            "message",
+          ]
+            .map(escapeCsv)
+            .join(","),
+        ];
+        aLogs.forEach(function (oLog, iIndex) {
+          var sEventId =
+            oLog.eventId || oLog.id || sAlertId + "-" + (iIndex + 1);
+          aCsvRows.push(
+            [
+              oLog.timestamp,
+              sEventId,
+              "event",
+              "control_monitoring",
+              "control_execution_log",
+              sOutcome,
+              sSeverity,
+              sControlId,
+              "XYRA",
+              "XYRA GRC",
+              sSource,
+              oHeader.client || "",
+              oHeader.region || "",
+              oHeader.platform || "",
+              oHeader.sector || "",
+              sAlertId,
+              sControlId,
+              oHeader.controlName || oHeader.controlDescription || "",
+              oItem.itemId || "",
+              oLog.level,
+              oLog.message,
+            ]
+              .map(escapeCsv)
+              .join(","),
+          );
+        });
+
+        var oBlob = new Blob(["\uFEFF" + aCsvRows.join("\r\n")], {
+          type: "text/csv;charset=utf-8;",
+        });
+        var sUrl = URL.createObjectURL(oBlob);
+        var oLink = document.createElement("a");
+        sControlId = (sControlId || "alert").replace(/[^a-z0-9_-]/gi, "_");
+        sAlertId = (sAlertId || "logs").replace(/[^a-z0-9_-]/gi, "_");
+        oLink.href = sUrl;
+        oLink.download =
+          "XYRA_Execution_Logs_" + sControlId + "_" + sAlertId + ".csv";
+        document.body.appendChild(oLink);
+        oLink.click();
+        document.body.removeChild(oLink);
+        URL.revokeObjectURL(sUrl);
+        MessageToast.show("Execution logs downloaded as CSV.");
       },
 
       onRefresh: function () {

@@ -46,7 +46,11 @@
                         title="Automation Execution Logs"
                         contentWidth="700px" stretch="{device>/system/phone}">
                         <content>
-                            <VBox class="sapUiMediumMargin">
+                            <VBox class="sapUiMediumMargin xyraDialogBusyHost">
+                                <VBox visible="{logsUiModel>/loading}" alignItems="Center" justifyContent="Center" class="xyraDialogBusyOverlay xyraLogsLoadingOverlay">
+                                    <core:HTML content="&lt;div class=&quot;xyraSpinnerRing&quot;&gt;&lt;/div&gt;"/>
+                                    <Text text="Loading execution logs..." class="textMuted sapUiSmallMarginTop"/>
+                                </VBox>
                                 <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
                                     <VBox>
                                         <Title id="logItemIdTitle" text="Control ID: NLG08" level="H3"/>
