@@ -171,13 +171,11 @@ sap.ui.define(
       },
 
       onResetFilters: function () {
-        this.getView()
-          .getModel("riskModel")
-          .setProperty("/filters", {
-            domain: "All",
-            severity: "All",
-            status: "All",
-          });
+        this.getView().getModel("riskModel").setProperty("/filters", {
+          domain: "All",
+          severity: "All",
+          status: "All",
+        });
         MessageToast.show("Risk filters reset.");
       },
 
