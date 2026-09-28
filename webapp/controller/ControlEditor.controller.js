@@ -69,8 +69,7 @@ sap.ui.define(
 
     // The exact preset option lists from the view XML - used to detect whether a
     // resolved backend value matches a known preset (show it selected) or needs
-    // the "Custom"/"Other Clients" fallback (see unresolveRule).
-    var KNOWN_CLIENTS = ["All", "000", "001", "066", "100", "200", "300"];
+    // the "Custom" fallback (see unresolveRule).
     var KNOWN_SETGET = ["BUK", "WRK", "VKO", "VTEG", "SPA", "KOK", "EKO"];
     var KNOWN_USERDEF = [
       "Decimal Notation",
@@ -121,10 +120,6 @@ sap.ui.define(
     function resolveRule(r) {
       return {
         sapObject: (r.sapObject || "").trim(),
-        client:
-          r.client === "Other Clients"
-            ? (r.customClient || "").trim()
-            : (r.client || "").trim(),
         parameterType: PARAM_TYPE_UI_TO_BE[r.parameterType] || "GENERAL",
         parameter:
           r.parameter === "Custom"
@@ -139,8 +134,8 @@ sap.ui.define(
     }
 
     // Load-for-edit direction: a resolved backend rule -> a working rule row,
-    // reverse-detecting "Custom"/"Other Clients" for values that aren't a known
-    // preset. Called as aRules.map(unresolveRule, oController) so `this` inside is
+    // reverse-detecting "Custom" for values that aren't a known preset.
+    // Called as aRules.map(unresolveRule, oController) so `this` inside is
     // the controller (for this._getRuleLabel).
     function unresolveRule(rule, index) {
       var out = {
@@ -150,12 +145,6 @@ sap.ui.define(
         operator: OPERATOR_BE_TO_UI[rule.operator] || rule.operator,
         parameterType: PARAM_TYPE_BE_TO_UI[rule.parameterType] || "General",
       };
-
-      out.client =
-        KNOWN_CLIENTS.indexOf(rule.client) !== -1
-          ? rule.client
-          : "Other Clients";
-      out.customClient = out.client === "Other Clients" ? rule.client : "";
 
       var presetList =
         out.parameterType === "SET/GET Parameter"
@@ -404,8 +393,6 @@ sap.ui.define(
         this.getView().getModel("ruleModel").setProperty("/draft", {
           id: Date.now(),
           sapObject: "",
-          client: "",
-          customClient: "",
           parameterType: "",
           parameter: "",
           parameterSetGet: "",
@@ -495,9 +482,6 @@ sap.ui.define(
         for (var i = 0; i < aRules.length; i++) {
           var r = aRules[i];
           var sObj = (r.sapObject || "").trim();
-          var sCli = (
-            r.client === "Other Clients" ? r.customClient || "" : r.client || ""
-          ).trim();
           var sParam = (
             r.parameter === "Custom"
               ? r.customParameter || ""
@@ -514,14 +498,6 @@ sap.ui.define(
           if (!sObj || sObj.indexOf("-- Select") === 0) {
             MessageBox.error(
               "Rule Validation Failure: Please select SAP Object for " +
-                sRuleNum +
-                ".",
-            );
-            return false;
-          }
-          if (!sCli || sCli.indexOf("-- Select") === 0) {
-            MessageBox.error(
-              "Rule Validation Failure: Please select Client for " +
                 sRuleNum +
                 ".",
             );

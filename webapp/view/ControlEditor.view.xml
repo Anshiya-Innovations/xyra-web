@@ -54,20 +54,13 @@
                         <content>
                             <VBox class="xyraRuleDialogForm">
                                 <HBox wrap="Wrap" justifyContent="SpaceBetween" class="xyraRuleDialogFields3">
-                                    <VBox class="xyraFormField" width="31%">
+                                    <VBox class="xyraFormField" width="48%">
                                         <Label text="SAP Object" required="true" class="xyraFormLabel"/>
                                         <Select selectedKey="{ruleModel>/draft/sapObject}" width="100%">
                                             <core:Item key="" text="-- Select --"/><core:Item key="SAP*" text="SAP*"/><core:Item key="DDIC" text="DDIC"/><core:Item key="SAPCPIC" text="SAPCPIC"/><core:Item key="TMSADM" text="TMSADM"/><core:Item key="WF-BATCH" text="WF-BATCH"/><core:Item key="SAP_WFRT" text="SAP_WFRT"/><core:Item key="EARLYWATCH" text="EARLYWATCH"/><core:Item key="SDMI_*" text="SDMI_*"/><core:Item key="J2EE_ADMIN" text="J2EE_ADMIN"/><core:Item key="J2EE_GUEST" text="J2EE_GUEST"/><core:Item key="SAPJSF" text="SAPJSF"/><core:Item key="ADSUSER" text="ADSUSER"/>
                                         </Select>
                                     </VBox>
-                                    <VBox class="xyraFormField" width="31%">
-                                        <Label text="Client" required="true" class="xyraFormLabel"/>
-                                        <Select selectedKey="{ruleModel>/draft/client}" width="100%">
-                                            <core:Item key="" text="-- Client --"/><core:Item key="All" text="All"/><core:Item key="000" text="000"/><core:Item key="001" text="001"/><core:Item key="066" text="066"/><core:Item key="100" text="100"/><core:Item key="200" text="200"/><core:Item key="300" text="300"/><core:Item key="Other Clients" text="Other Clients"/>
-                                        </Select>
-                                        <Input value="{ruleModel>/draft/customClient}" placeholder="Enter client ID..." visible="{= ${ruleModel>/draft/client} === 'Other Clients' }" width="100%" class="sapUiTinyMarginTop"/>
-                                    </VBox>
-                                    <VBox class="xyraFormField" width="31%">
+                                    <VBox class="xyraFormField" width="48%">
                                         <Label text="Parameter Type" required="true" class="xyraFormLabel"/>
                                         <Select selectedKey="{ruleModel>/draft/parameterType}" width="100%" change="onDraftParameterTypeChange">
                                             <core:Item key="" text="-- Select Type --"/><core:Item key="SET/GET Parameter" text="SET/GET Parameter"/><core:Item key="User Default Value" text="User Default Value"/><core:Item key="General" text="General Parameter"/>
@@ -213,7 +206,6 @@
                                 <columns>
                                     <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Rule"/></Column>
                                     <Column><Text text="SAP Object"/></Column>
-                                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Client"/></Column>
                                     <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Parameter Type"/></Column>
                                     <Column><Text text="Parameter"/></Column>
                                     <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Validation"/></Column>
@@ -224,7 +216,6 @@
                                         <cells>
                                             <Text text="{ruleModel>stepLabel}"/>
                                             <Text text="{ruleModel>sapObject}"/>
-                                            <Text text="{= ${ruleModel>client} === 'Other Clients' ? ${ruleModel>customClient} : ${ruleModel>client} }"/>
                                             <Text text="{ruleModel>parameterType}"/>
                                             <Text text="{= ${ruleModel>parameter} === 'Custom' ? ${ruleModel>customParameter} : ${ruleModel>parameter} }"/>
                                             <Text text="{ruleModel>operator}"/>
